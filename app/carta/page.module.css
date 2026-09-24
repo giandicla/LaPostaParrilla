@@ -38,6 +38,13 @@
   gap: var(--sp-16);
 }
 
+/* El índice de categorías ancla acá. La navbar fija más el toggle
+   sticky de SelectorLocal tapan más que el scroll-padding-top global
+   por sí solo, así que este bloque suma su propio margen. */
+.categoria {
+  scroll-margin-top: calc(var(--alto-navbar) + 5rem);
+}
+
 .tituloCategoria {
   font-size: var(--fs-h2);
   color: var(--bordo-900);

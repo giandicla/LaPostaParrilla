@@ -10,6 +10,15 @@ import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/
 import { getCarta, formatearPrecio } from '../../src/data/menu.js';
 import estilos from './page.module.css';
 
+// Los nombres de categoría llevan espacios y acentos; un id HTML no puede.
+const aSlug = (texto) =>
+  texto
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+
 export function CartaContenido() {
   const parametros = useSearchParams();
   const router = useRouter();
@@ -53,7 +62,7 @@ export function CartaContenido() {
           {carta.map((seccion) => (
             <a
               key={seccion.categoria}
-              href={`#${idActivo}-${seccion.categoria}`}
+              href={`#${idActivo}-${aSlug(seccion.categoria)}`}
               className={estilos.enlaceIndice}
             >
               {seccion.categoria}
@@ -65,13 +74,13 @@ export function CartaContenido() {
           {carta.map((seccion) => (
             <section
               key={seccion.categoria}
-              id={`${idActivo}-${seccion.categoria}`}
+              id={`${idActivo}-${aSlug(seccion.categoria)}`}
               className={estilos.categoria}
             >
               <h2 className={estilos.tituloCategoria}>{seccion.categoria}</h2>
               <ul className={estilos.platos}>
                 {seccion.platos.map((plato) => (
-                  <li key={plato.nombre} className={estilos.plato}>
+                  <li key={plato.nombre}>
                     <div className={estilos.lineaPlato}>
                       <h3 className={estilos.nombrePlato}>{plato.nombre}</h3>
                       <span className={estilos.puntos} aria-hidden="true" />
