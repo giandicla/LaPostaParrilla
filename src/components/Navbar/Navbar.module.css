@@ -1,0 +1,150 @@
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: var(--alto-navbar);
+  background: transparent;
+  transition: background-color var(--transicion), box-shadow var(--transicion);
+}
+
+.solida {
+  background-color: var(--bordo-900);
+  box-shadow: var(--sombra-md);
+}
+
+.contenedor {
+  max-width: var(--ancho-max);
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 var(--sp-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  z-index: 2;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radio-sm);
+  object-fit: cover;
+}
+
+.nombreMarca {
+  font-family: var(--font-titulo);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--crema);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Mobile: panel deslizante ---------- */
+.enlaces {
+  position: fixed;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-8);
+  background-color: var(--bordo-900);
+  transform: translateX(100%);
+  transition: transform var(--transicion);
+  visibility: hidden;
+}
+
+.enlacesAbiertos {
+  transform: translateX(0);
+  visibility: visible;
+}
+
+.enlace {
+  color: var(--crema);
+  font-size: 1.5rem;
+  font-weight: 500;
+  padding: var(--sp-2) var(--sp-3);
+  border-bottom: 2px solid transparent;
+  transition: border-color var(--transicion), color var(--transicion);
+}
+
+.enlace:hover {
+  color: var(--brasa);
+}
+
+.enlaceActivo {
+  border-bottom-color: var(--brasa);
+}
+
+.botonReservar {
+  display: inline-block;
+  background-color: var(--brasa);
+  color: var(--carbon);
+  font-weight: 600;
+  padding: var(--sp-3) var(--sp-6);
+  border-radius: var(--radio-md);
+  transition: background-color var(--transicion), transform var(--transicion);
+}
+
+.botonReservar:hover {
+  background-color: var(--crema);
+  transform: translateY(-1px);
+}
+
+.hamburguesa {
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.barra {
+  display: block;
+  width: 26px;
+  height: 2px;
+  margin: 0 auto;
+  background-color: var(--crema);
+  border-radius: 2px;
+  transition: transform var(--transicion), opacity var(--transicion);
+}
+
+.barraX1 { transform: translateY(7px) rotate(45deg); }
+.barraX2 { transform: translateY(-7px) rotate(-45deg); }
+.barraOculta { opacity: 0; }
+
+/* ---------- Desktop ---------- */
+@media (min-width: 768px) {
+  .enlaces {
+    position: static;
+    flex-direction: row;
+    gap: var(--sp-6);
+    background: none;
+    transform: none;
+    visibility: visible;
+    inset: auto;
+  }
+
+  .enlace {
+    font-size: var(--fs-body);
+  }
+
+  .hamburguesa {
+    display: none;
+  }
+}
