@@ -32,6 +32,7 @@ export const LOCALES = [
       '20:00', '20:30', '21:00', '21:30', '22:00',
     ],
     imagenes: {
+      card: '/img/parrilla/card.svg',
       hero: '/img/parrilla/hero.svg',
       galeria: [
         { src: '/img/parrilla/galeria-1.svg', alt: 'Salón de la parrilla con mesas de madera' },
@@ -65,6 +66,7 @@ export const LOCALES = [
       '19:30', '20:00', '20:30', '21:00', '21:30',
     ],
     imagenes: {
+      card: '/img/restaurante/card.svg',
       hero: '/img/restaurante/hero.svg',
       galeria: [
         { src: '/img/restaurante/galeria-1.svg', alt: 'Salón del restaurante a media luz' },
