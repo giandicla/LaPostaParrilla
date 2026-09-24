@@ -1,0 +1,83 @@
+.historia {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.locales {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-16);
+}
+
+.local {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+  align-items: center;
+}
+
+.galeria {
+  min-width: 0;
+}
+
+.textoLocal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.nombreLocal {
+  color: var(--bordo-900);
+}
+
+.taglineLocal {
+  color: var(--madera);
+  font-style: italic;
+  font-weight: 500;
+}
+
+.grillaInfo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+  align-items: stretch;
+}
+
+.contactoComun {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  margin-top: var(--sp-12);
+  padding-top: var(--sp-8);
+  border-top: 1px solid var(--gris-300);
+  text-align: center;
+  color: var(--gris-600);
+}
+
+.enlaceComun {
+  font-weight: 600;
+  color: var(--bordo-900);
+}
+
+.enlaceComun:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 900px) {
+  .local {
+    grid-template-columns: 1.1fr 1fr;
+    gap: var(--sp-12);
+  }
+
+  /* El segundo local invierte el orden: la galería pasa a la derecha */
+  .localInvertido .galeria {
+    order: 2;
+  }
+
+  .grillaInfo {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
