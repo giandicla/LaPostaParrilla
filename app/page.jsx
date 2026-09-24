@@ -2,10 +2,15 @@ import Hero from '../src/components/Hero/Hero.jsx';
 import Section from '../src/components/Section/Section.jsx';
 import Boton from '../src/components/Boton/Boton.jsx';
 import LocalCard from '../src/components/LocalCard/LocalCard.jsx';
+import PlatoCard from '../src/components/PlatoCard/PlatoCard.jsx';
 import { MARCA } from '../src/data/marca.js';
 import { TEXTOS } from '../src/data/textos.js';
 import { LOCALES } from '../src/data/locales.js';
+import { getDestacados } from '../src/data/menu.js';
 import estilos from './page.module.css';
+
+// Los datos son estáticos: no hace falta recalcularlos en cada render.
+const DESTACADOS = getDestacados();
 
 const FOTOS_BIENVENIDA = [
   { src: '/img/comunes/bienvenida-1.svg', alt: 'Salón de La Posta con mesas de madera' },
@@ -64,6 +69,31 @@ export default function Inicio() {
           {LOCALES.map((local) => (
             <LocalCard key={local.id} local={local} />
           ))}
+        </div>
+      </Section>
+
+      <Section
+        fondo="bordo"
+        titulo="Para empezar por algún lado"
+        bajada="Dos platos de cada salón. La carta completa tiene bastante más."
+      >
+        <div className={estilos.grillaPlatos}>
+          {DESTACADOS.map((plato) => (
+            <PlatoCard
+              key={`${plato.idLocal}-${plato.nombre}`}
+              nombre={plato.nombre}
+              descripcion={plato.descripcion}
+              precio={plato.precio}
+              imagen={plato.imagen}
+              etiquetaLocal={plato.nombreLocal}
+            />
+          ))}
+        </div>
+
+        <div className={estilos.accionesPlatos}>
+          <Boton to="/carta" variante="contorno" tamano="lg">
+            Ver las dos cartas
+          </Boton>
         </div>
       </Section>
     </main>
