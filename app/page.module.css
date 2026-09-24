@@ -49,3 +49,16 @@
     gap: var(--sp-16);
   }
 }
+
+/* ---------- Nuestros dos salones ---------- */
+.grillaLocales {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+}
+
+@media (min-width: 900px) {
+  .grillaLocales {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

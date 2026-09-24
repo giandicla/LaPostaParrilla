@@ -1,8 +1,10 @@
 import Hero from '../src/components/Hero/Hero.jsx';
 import Section from '../src/components/Section/Section.jsx';
 import Boton from '../src/components/Boton/Boton.jsx';
+import LocalCard from '../src/components/LocalCard/LocalCard.jsx';
 import { MARCA } from '../src/data/marca.js';
 import { TEXTOS } from '../src/data/textos.js';
+import { LOCALES } from '../src/data/locales.js';
 import estilos from './page.module.css';
 
 const FOTOS_BIENVENIDA = [
@@ -49,6 +51,19 @@ export default function Inicio() {
               />
             ))}
           </div>
+        </div>
+      </Section>
+
+      <Section
+        id="salones"
+        fondo="bordoClaro"
+        titulo="Nuestros dos salones"
+        bajada="Dos propuestas de la misma familia, a pocas cuadras una de la otra. Elegí con cuál tenés ganas hoy."
+      >
+        <div className={estilos.grillaLocales}>
+          {LOCALES.map((local) => (
+            <LocalCard key={local.id} local={local} />
+          ))}
         </div>
       </Section>
     </main>
