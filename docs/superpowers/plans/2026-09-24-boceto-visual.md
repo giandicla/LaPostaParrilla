@@ -6,7 +6,7 @@
 
 **Architecture:** Next.js con App Router. Los dos locales son datos (`LOCALES` en `src/data/locales.js`), no rutas: los componentes iteran sobre el array y reciben el local por props. Estilos con CSS Modules sobre una capa de custom properties en `tokens.css`. Todo el contenido editable del restaurante vive en `src/data/`, fuera del JSX.
 
-**Tech Stack:** Next.js 15 (App Router), React 19, CSS Modules, `next/font` (Playfair Display + Inter). Sin TypeScript, sin librerías de UI, sin backend.
+**Tech Stack:** Next.js 16 (App Router), React 19, CSS Modules, `next/font` (Playfair Display + Inter). Sin TypeScript, sin librerías de UI, sin backend.
 
 > **Enmienda del 2026-09-24 — cambio de stack a mitad de ejecución.**
 > Este plan se escribió para Vite + React Router y se ejecutó así durante seis
@@ -4640,7 +4640,7 @@ restaurante.
 
 ## Stack
 
-Next.js 15 con App Router + React 19 + CSS Modules. JavaScript, no TypeScript.
+Next.js 16 con App Router + React 19 + CSS Modules. JavaScript, no TypeScript.
 Sin librerías de UI, sin backend. Deploy automático a Vercel en cada push a `main`.
 
 - Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
@@ -4988,7 +4988,7 @@ Abre en `http://localhost:5173`.
 
 ## Stack
 
-Next.js 15 (App Router) · React 19 · CSS Modules
+Next.js 16 (App Router) · React 19 · CSS Modules
 
 Front puro: sin backend, sin base de datos.
 

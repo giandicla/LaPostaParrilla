@@ -59,7 +59,7 @@ preparado para que entren sin reescribir lo hecho.
 ### Criterio de éxito
 
 - `npm run dev` levanta el sitio sin errores ni warnings.
-- `npm run build` produce `dist/` desplegable.
+- `npm run build` compila sin errores y las cinco rutas quedan estáticas.
 - Las cuatro rutas navegan entre sí y se ven correctas en mobile (360px), tablet
   (768px) y desktop (1440px).
 - Los dos locales están representados en Inicio, Carta, Reservas y Contacto, y se
@@ -80,9 +80,9 @@ preparado para que entren sin reescribir lo hecho.
 
 | Decisión | Elección | Motivo |
 |---|---|---|
-| Framework | Next.js 15, App Router | **Requisito del profesor.** No se evaluó contra alternativas: es la consigna. |
+| Framework | Next.js 16, App Router | **Requisito del profesor.** No se evaluó contra alternativas: es la consigna. |
 | Ruteo | Sistema de archivos de Next (`app/`) | Viene con el framework. Reemplaza a React Router. |
-| Framework UI | React 19 | Lo que Next 15 usa. |
+| Framework UI | React 19 | Lo que Next 16 usa. |
 | Estilos | CSS Modules + custom properties | CSS real y defendible ante el profesor, sin dependencias ni clases mágicas. Revisable con el profesor más adelante. |
 | Lenguaje | JavaScript (JSX), no TypeScript | La cátedra trabaja en JS; TS sumaría fricción sin sumar nota. |
 | Tipografías | Google Fonts: Playfair Display + Inter | Gratuitas, con `display=swap`. |
