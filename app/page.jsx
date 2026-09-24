@@ -3,6 +3,7 @@ import Section from '../src/components/Section/Section.jsx';
 import Boton from '../src/components/Boton/Boton.jsx';
 import LocalCard from '../src/components/LocalCard/LocalCard.jsx';
 import PlatoCard from '../src/components/PlatoCard/PlatoCard.jsx';
+import InfoLocal from '../src/components/InfoLocal/InfoLocal.jsx';
 import { MARCA } from '../src/data/marca.js';
 import { TEXTOS } from '../src/data/textos.js';
 import { LOCALES } from '../src/data/locales.js';
@@ -94,6 +95,18 @@ export default function Inicio() {
           <Boton to="/carta" variante="contorno" tamano="lg">
             Ver las dos cartas
           </Boton>
+        </div>
+      </Section>
+
+      <Section
+        id="visitanos"
+        titulo="Visitanos"
+        bajada="Horarios, dirección y contacto de cada salón."
+      >
+        <div className={estilos.grillaInfo}>
+          {LOCALES.map((local) => (
+            <InfoLocal key={local.id} local={local} />
+          ))}
         </div>
       </Section>
     </main>

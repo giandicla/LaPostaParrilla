@@ -87,3 +87,17 @@
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+/* ---------- Visitanos ---------- */
+.grillaInfo {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+  align-items: stretch;
+}
+
+@media (min-width: 900px) {
+  .grillaInfo {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
