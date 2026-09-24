@@ -61,20 +61,22 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
       por local" que promete su propio comentario.
 - [ ] `LocalCard` lee `local.horarios[0]` sin verificar que el array tenga
       elementos. Un tercer local sin horarios cargados rompería el render.
-- [ ] El proyecto usa tres breakpoints distintos para la misma idea: 600px en la
+- [x] El proyecto usaba tres breakpoints distintos para la misma idea: 600px en la
       grilla de platos, 768px en navbar y footer, 900px en las grillas de locales y
-      bienvenida. Conviene unificar.
-- [ ] `--madera` sobre `--crema` da un contraste de ~4.88:1 en los precios. Pasa AA
-      (mínimo 4.5:1) pero con poco margen. Oscurecer el token arreglaría todo el
-      sitio de una vez.
+      bienvenida. Resuelto en la tarea 14: la grilla de platos pasó a 768px, igual
+      que navbar y footer (900px queda aparte, para las grillas de locales).
+- [x] `--madera` sobre `--crema` daba un contraste de ~4.88:1 en los precios. Pasa
+      AA (mínimo 4.5:1) pero con poco margen. Resuelto en la tarea 14: se oscureció
+      el token a `#7A5134` (~6.02:1 sobre `--crema`).
 - [ ] El input de fecha de `/reservas` no tiene `min`, así que se puede pedir una
       fecha pasada. Se difirió a propósito: calcular la fecha de hoy durante el
       render de una página prerenderizada arriesga un desajuste de hidratación, y el
       formulario todavía no envía nada. Va junto con la validación real del CRUD.
-- [ ] El panel mobile del navbar no maneja foco: no enfoca al abrirse, no cierra con
-      Escape, no devuelve el foco al botón al cerrar.
-- [ ] El contrato de `GaleriaGrid` (exactamente 3 imágenes, la segunda vertical)
-      vive solo en un comentario del CSS; convendría documentarlo en el `.jsx`.
+- [x] El panel mobile del navbar no manejaba foco: no cerraba con Escape ni
+      devolvía el foco al botón al cerrar. Resuelto en la tarea 14.
+- [x] El contrato de `GaleriaGrid` (exactamente 3 imágenes, la segunda vertical)
+      vivía solo en un comentario del CSS. Resuelto en la tarea 14: ahora también
+      está documentado en el `.jsx`.
 - [ ] `aSlug` en `app/carta/page.jsx` podría devolver cadena vacía si una categoría
       fuera puramente simbólica, produciendo ids que colisionan. Ninguna categoría
       real lo dispara.

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MARCA } from '../../data/marca.js';
@@ -16,6 +16,7 @@ export default function Navbar() {
   const [scrolleada, setScrolleada] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const pathname = usePathname();
+  const botonHamburguesaRef = useRef(null);
 
   // La navbar arranca translúcida sobre el hero y se vuelve sólida al bajar
   useEffect(() => {
@@ -39,6 +40,22 @@ export default function Navbar() {
     return () => {
       document.body.style.overflow = '';
     };
+  }, [menuAbierto]);
+
+  // Escape cierra el panel mobile y devuelve el foco al botón que lo abrió.
+  // El listener solo existe mientras el panel está abierto.
+  useEffect(() => {
+    if (!menuAbierto) return undefined;
+
+    const alPresionarTecla = (evento) => {
+      if (evento.key === 'Escape') {
+        setMenuAbierto(false);
+        botonHamburguesaRef.current?.focus();
+      }
+    };
+
+    document.addEventListener('keydown', alPresionarTecla);
+    return () => document.removeEventListener('keydown', alPresionarTecla);
   }, [menuAbierto]);
 
   // Fuera del inicio la navbar es siempre sólida: no hay hero debajo
@@ -75,6 +92,7 @@ export default function Navbar() {
         </ul>
 
         <button
+          ref={botonHamburguesaRef}
           type="button"
           className={estilos.hamburguesa}
           onClick={() => setMenuAbierto((abierto) => !abierto)}

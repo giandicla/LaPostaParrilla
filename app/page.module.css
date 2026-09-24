@@ -76,7 +76,7 @@
   margin-top: var(--sp-12);
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   .grillaPlatos {
     grid-template-columns: repeat(2, 1fr);
   }
