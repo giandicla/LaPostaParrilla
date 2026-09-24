@@ -1,0 +1,57 @@
+# La Posta — contexto para Claude
+
+Sitio web de **La Posta**, negocio gastronómico familiar en Villa La Angostura,
+Neuquén. Es a la vez un TP de la materia Programación Web y una web real para el
+restaurante.
+
+## Lo que hay que saber antes de tocar nada
+
+- **Son DOS locales** bajo la misma marca: la parrilla y el restaurante. Comparten
+  dueños, identidad e Instagram; se diferencian en carta, ambiente y dirección.
+- Los locales son **datos, no rutas**. Viven en `src/data/locales.js` como el array
+  `LOCALES`. Los componentes iteran sobre él o reciben un local por props.
+  **Nunca escribir `'parrilla'` ni `'restaurante'` a mano en un componente.**
+- El profesor pidió **solo el front en React**. No agregar backend, API routes ni
+  base de datos.
+- La etapa actual es **maqueta visual**: el formulario de reservas no guarda nada.
+  No agregar `localStorage`, `fetch` ni capa de servicios sin que lo pidan.
+
+## Stack
+
+Next.js 16 con App Router + React 19 + CSS Modules. JavaScript, no TypeScript.
+Sin librerías de UI, sin backend. Deploy automático a Vercel en cada push a `main`.
+
+- Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
+- **Server Components por defecto.** `'use client'` solo va en `Navbar`,
+  `SelectorLocal`, `app/carta/page.jsx` y `app/reservas/page.jsx`.
+- Navegación con `next/link`. La prop de `Boton` se llama `to`, no `href`.
+
+## Convenciones
+
+- Código, nombres y contenido en **español**. Mensajes de commit en inglés.
+- Colores **solo** desde las custom properties de `src/styles/tokens.css`.
+  El bordo de marca es `#5F0004`, muestreado del logo real.
+- Un componente = una carpeta: `Nombre/Nombre.jsx` + `Nombre.module.css`.
+- CSS **mobile first**. Breakpoints principales: 768px y 1100px (algunas grillas
+  puntuales usan otros; ver el hallazgo sobre breakpoints en `docs/PENDIENTES.md`).
+- Datos sin confirmar se marcan con `// PENDIENTE`. Buscarlos:
+  `grep -rn "PENDIENTE" src/`
+- Un dato que falta **se omite**, no se inventa: si un local no tiene teléfono
+  cargado, la UI esconde el botón en vez de mostrar un link roto.
+
+## Comandos
+
+```bash
+npm run dev           # servidor de desarrollo
+npm run build         # build de producción a .next/
+npm run placeholders  # regenera los SVG placeholder de public/img/
+```
+
+## Dónde está el resto
+
+- `docs/CONTEXTO.md` — el restaurante, la consigna, las decisiones y por qué
+- `docs/ESTRUCTURA.md` — qué contiene cada página y componente
+- `docs/BITACORA.md` — log de cambios, lo más nuevo arriba
+- `docs/PENDIENTES.md` — lo que falta: datos, fotos, etapas futuras
+- `docs/superpowers/specs/` — los diseños aprobados
+- `docs/superpowers/plans/` — los planes de implementación
