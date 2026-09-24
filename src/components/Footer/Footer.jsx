@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import { MARCA } from '../../data/marca.js';
 import { LOCALES } from '../../data/locales.js';
 import estilos from './Footer.module.css';
@@ -36,10 +36,10 @@ export default function Footer() {
 
         <nav className={estilos.columna} aria-label="Navegación del pie">
           <h3 className={estilos.tituloColumna}>Secciones</h3>
-          <Link to="/" className={estilos.enlace}>Inicio</Link>
-          <Link to="/carta" className={estilos.enlace}>Carta</Link>
-          <Link to="/reservas" className={estilos.enlace}>Reservas</Link>
-          <Link to="/nosotros" className={estilos.enlace}>Nosotros</Link>
+          <Link href="/" className={estilos.enlace}>Inicio</Link>
+          <Link href="/carta" className={estilos.enlace}>Carta</Link>
+          <Link href="/reservas" className={estilos.enlace}>Reservas</Link>
+          <Link href="/nosotros" className={estilos.enlace}>Nosotros</Link>
         </nav>
       </div>
 

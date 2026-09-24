@@ -1,6 +1,7 @@
 node_modules/
-dist/
-dist-ssr/
+.next/
+out/
+build/
 *.local
 .env
 .env.*
@@ -9,4 +10,4 @@ dist-ssr/
 .DS_Store
 Thumbs.db
 *.log
-.vite/
+next-env.d.ts

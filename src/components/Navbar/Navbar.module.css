@@ -128,6 +128,10 @@
 .barraX2 { transform: translateY(-7px) rotate(-45deg); }
 .barraOculta { opacity: 0; }
 
+.itemReservar {
+  margin-top: var(--sp-4);
+}
+
 /* ---------- Desktop ---------- */
 @media (min-width: 768px) {
   .enlaces {
@@ -146,5 +150,10 @@
 
   .hamburguesa {
     display: none;
+  }
+
+  .itemReservar {
+    margin-top: 0;
+    margin-left: var(--sp-2);
   }
 }

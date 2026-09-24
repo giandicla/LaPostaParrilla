@@ -18,8 +18,8 @@
   --gris-300: #D8D0C6;
 
   /* ---------- Tipografía ---------- */
-  --font-titulo: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --font-cuerpo: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-titulo: var(--fuente-titulo), Georgia, 'Times New Roman', serif;
+  --font-cuerpo: var(--fuente-cuerpo), system-ui, -apple-system, 'Segoe UI', sans-serif;
 
   --fs-hero: clamp(2.5rem, 8vw, 5rem);
   --fs-h1: clamp(2rem, 5vw, 3rem);

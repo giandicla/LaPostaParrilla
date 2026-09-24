@@ -1,9 +1,9 @@
-import Hero from '../../components/Hero/Hero.jsx';
-import Section from '../../components/Section/Section.jsx';
-import Boton from '../../components/Boton/Boton.jsx';
-import { MARCA } from '../../data/marca.js';
-import { TEXTOS } from '../../data/textos.js';
-import estilos from './Inicio.module.css';
+import Hero from '../src/components/Hero/Hero.jsx';
+import Section from '../src/components/Section/Section.jsx';
+import Boton from '../src/components/Boton/Boton.jsx';
+import { MARCA } from '../src/data/marca.js';
+import { TEXTOS } from '../src/data/textos.js';
+import estilos from './page.module.css';
 
 const FOTOS_BIENVENIDA = [
   { src: '/img/comunes/bienvenida-1.svg', alt: 'Salón de La Posta con mesas de madera' },
@@ -32,8 +32,8 @@ export default function Inicio() {
         <div className={estilos.bienvenida}>
           <div className={estilos.textoBienvenida}>
             <h2>{TEXTOS.bienvenida.titulo}</h2>
-            {TEXTOS.bienvenida.parrafos.map((parrafo) => (
-              <p key={parrafo.slice(0, 24)}>{parrafo}</p>
+            {TEXTOS.bienvenida.parrafos.map((parrafo, i) => (
+              <p key={i}>{parrafo}</p>
             ))}
             <Boton to="/nosotros" variante="texto">Conocé nuestra historia</Boton>
           </div>

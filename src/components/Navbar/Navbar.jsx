@@ -1,5 +1,8 @@
+'use client';
+
 import { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { MARCA } from '../../data/marca.js';
 import estilos from './Navbar.module.css';
 
@@ -12,7 +15,7 @@ const ENLACES = [
 export default function Navbar() {
   const [scrolleada, setScrolleada] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false);
-  const { pathname } = useLocation();
+  const pathname = usePathname();
 
   // La navbar arranca translúcida sobre el hero y se vuelve sólida al bajar
   useEffect(() => {
@@ -41,10 +44,12 @@ export default function Navbar() {
   // Fuera del inicio la navbar es siempre sólida: no hay hero debajo
   const solida = scrolleada || menuAbierto || pathname !== '/';
 
+  const esActivo = (ruta) => (ruta === '/' ? pathname === '/' : pathname.startsWith(ruta));
+
   return (
     <header className={`${estilos.navbar} ${solida ? estilos.solida : ''}`}>
       <nav className={estilos.contenedor} aria-label="Navegación principal">
-        <Link to="/" className={estilos.marca}>
+        <Link href="/" className={estilos.marca}>
           <img src={MARCA.logo} alt="" className={estilos.logo} />
           <span className={estilos.nombreMarca}>{MARCA.nombre}</span>
         </Link>
@@ -52,19 +57,17 @@ export default function Navbar() {
         <ul className={`${estilos.enlaces} ${menuAbierto ? estilos.enlacesAbiertos : ''}`}>
           {ENLACES.map((enlace) => (
             <li key={enlace.a}>
-              <NavLink
-                to={enlace.a}
-                className={({ isActive }) =>
-                  `${estilos.enlace} ${isActive ? estilos.enlaceActivo : ''}`
-                }
-                end={enlace.a === '/'}
+              <Link
+                href={enlace.a}
+                className={`${estilos.enlace} ${esActivo(enlace.a) ? estilos.enlaceActivo : ''}`}
+                aria-current={esActivo(enlace.a) ? 'page' : undefined}
               >
                 {enlace.texto}
-              </NavLink>
+              </Link>
             </li>
           ))}
           <li className={estilos.itemReservar}>
-            <Link to="/reservas" className={estilos.botonReservar}>
+            <Link href="/reservas" className={estilos.botonReservar}>
               Reservar
             </Link>
           </li>

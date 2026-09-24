@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import Link from 'next/link';
 import estilos from './Boton.module.css';
 
 export default function Boton({
@@ -12,10 +12,10 @@ export default function Boton({
 }) {
   const clases = `${estilos.boton} ${estilos[variante]} ${estilos[tamano]} ${className}`;
 
-  // Navegación interna: Link de React Router, para no recargar la página
+  // Navegación interna: Link de Next, para no recargar la página
   if (to) {
     return (
-      <Link to={to} className={clases} {...resto}>
+      <Link href={to} className={clases} {...resto}>
         {children}
       </Link>
     );
