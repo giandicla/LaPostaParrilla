@@ -1,0 +1,51 @@
+/* ---------- Bienvenida ---------- */
+.bienvenida {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-12);
+  align-items: center;
+}
+
+.textoBienvenida {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  align-items: flex-start;
+}
+
+.textoBienvenida h2 {
+  margin-bottom: var(--sp-2);
+}
+
+.fotosBienvenida {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-3);
+}
+
+.fotoBienvenida {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: var(--radio-md);
+  box-shadow: var(--sombra-sm);
+}
+
+/* La segunda foto es la vertical: ocupa la columna derecha entera */
+.fotoBienvenida:nth-child(2) {
+  grid-row: span 2;
+  grid-column: 2;
+}
+
+.fotoBienvenida:nth-child(1),
+.fotoBienvenida:nth-child(3) {
+  grid-column: 1;
+  aspect-ratio: 4 / 3;
+}
+
+@media (min-width: 900px) {
+  .bienvenida {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--sp-16);
+  }
+}

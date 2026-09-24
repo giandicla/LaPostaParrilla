@@ -1,3 +1,56 @@
+import Hero from '../../components/Hero/Hero.jsx';
+import Section from '../../components/Section/Section.jsx';
+import Boton from '../../components/Boton/Boton.jsx';
+import { MARCA } from '../../data/marca.js';
+import { TEXTOS } from '../../data/textos.js';
+import estilos from './Inicio.module.css';
+
+const FOTOS_BIENVENIDA = [
+  { src: '/img/comunes/bienvenida-1.svg', alt: 'Salón de La Posta con mesas de madera' },
+  { src: '/img/comunes/bienvenida-2.svg', alt: 'Detalle de la parrilla encendida' },
+  { src: '/img/comunes/bienvenida-3.svg', alt: 'Plato servido en la mesa' },
+];
+
 export default function Inicio() {
-  return <main><h1>Inicio</h1></main>;
+  return (
+    <main>
+      <Hero
+        imagen="/img/comunes/hero-marca.svg"
+        alt=""
+        conLogo
+        titulo={MARCA.nombre}
+        bajada={MARCA.bajada}
+        acciones={
+          <>
+            <Boton to="/reservas" tamano="lg">Reservar mesa</Boton>
+            <Boton to="/carta" variante="contorno" tamano="lg">Ver la carta</Boton>
+          </>
+        }
+      />
+
+      <Section>
+        <div className={estilos.bienvenida}>
+          <div className={estilos.textoBienvenida}>
+            <h2>{TEXTOS.bienvenida.titulo}</h2>
+            {TEXTOS.bienvenida.parrafos.map((parrafo) => (
+              <p key={parrafo.slice(0, 24)}>{parrafo}</p>
+            ))}
+            <Boton to="/nosotros" variante="texto">Conocé nuestra historia</Boton>
+          </div>
+
+          <div className={estilos.fotosBienvenida}>
+            {FOTOS_BIENVENIDA.map((foto) => (
+              <img
+                key={foto.src}
+                src={foto.src}
+                alt={foto.alt}
+                loading="lazy"
+                className={estilos.fotoBienvenida}
+              />
+            ))}
+          </div>
+        </div>
+      </Section>
+    </main>
+  );
 }
