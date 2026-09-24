@@ -1,0 +1,225 @@
+.columnas {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-12);
+  align-items: start;
+}
+
+/* ---------- Formulario ---------- */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  background-color: var(--blanco);
+  padding: var(--sp-6);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-sm);
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-4);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.etiqueta {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--carbon);
+}
+
+.opcional {
+  font-weight: 400;
+  color: var(--gris-600);
+}
+
+.control {
+  width: 100%;
+  padding: var(--sp-3);
+  background-color: var(--crema);
+  border: 1px solid var(--gris-300);
+  border-radius: var(--radio-md);
+  transition: border-color var(--transicion), box-shadow var(--transicion);
+}
+
+.control:focus {
+  outline: none;
+  border-color: var(--bordo-900);
+  box-shadow: 0 0 0 3px var(--bordo-100);
+}
+
+textarea.control {
+  resize: vertical;
+  min-height: 96px;
+}
+
+/* ---------- Selector de local ---------- */
+.grupoLocal {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.opcionesLocal {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+}
+
+.tarjetaLocal {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  padding: var(--sp-4);
+  background-color: var(--crema);
+  border: 2px solid var(--gris-300);
+  border-radius: var(--radio-md);
+  cursor: pointer;
+  transition: border-color var(--transicion), background-color var(--transicion);
+}
+
+.tarjetaLocal:hover {
+  border-color: var(--madera);
+}
+
+.tarjetaLocalActiva {
+  border-color: var(--bordo-900);
+  background-color: var(--bordo-100);
+}
+
+/* El radio real sigue existiendo para teclado y lectores de pantalla */
+.radioOculto {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.radioOculto:focus-visible + .nombreLocal {
+  outline: 3px solid var(--brasa);
+  outline-offset: 3px;
+  border-radius: var(--radio-sm);
+}
+
+.nombreLocal {
+  font-weight: 600;
+  color: var(--bordo-900);
+}
+
+.taglineLocal {
+  font-size: var(--fs-small);
+  color: var(--gris-600);
+  font-style: italic;
+}
+
+.botonEnviar {
+  align-self: flex-start;
+}
+
+.avisoMaqueta {
+  font-size: var(--fs-small);
+  color: var(--gris-600);
+  font-style: italic;
+  padding-top: var(--sp-2);
+  border-top: 1px dashed var(--gris-300);
+}
+
+/* ---------- Panel lateral ---------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  background-color: var(--bordo-100);
+  padding: var(--sp-6);
+  border-radius: var(--radio-lg);
+  border-top: 4px solid var(--bordo-900);
+}
+
+.tituloPanel {
+  font-size: var(--fs-h3);
+  color: var(--bordo-900);
+}
+
+.condiciones {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.condicion {
+  position: relative;
+  padding-left: var(--sp-6);
+  font-size: var(--fs-small);
+  color: var(--carbon);
+}
+
+.condicion::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 8px;
+  height: 8px;
+  background-color: var(--brasa);
+  border-radius: 50%;
+}
+
+.contactoPanel {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-3);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--gris-300);
+}
+
+.subtituloPanel {
+  font-size: 1.05rem;
+  color: var(--bordo-900);
+}
+
+.sinContacto {
+  font-size: var(--fs-small);
+  color: var(--gris-600);
+  font-style: italic;
+}
+
+.instagram {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--bordo-900);
+}
+
+.instagram:hover {
+  text-decoration: underline;
+}
+
+@media (min-width: 600px) {
+  .fila {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .opcionesLocal {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1100px) {
+  .columnas {
+    grid-template-columns: 1.6fr 1fr;
+    gap: var(--sp-12);
+  }
+
+  .formulario {
+    padding: var(--sp-8);
+  }
+}
