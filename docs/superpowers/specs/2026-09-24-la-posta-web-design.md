@@ -9,8 +9,10 @@
 
 ## 1. Contexto
 
-La Posta Parrilla & Restaurante es un restaurante familiar en Villa La Angostura,
-Neuquén. El sitio cumple dos objetivos a la vez:
+La Posta es un negocio gastronómico familiar en Villa La Angostura, Neuquén,
+compuesto por **dos locales bajo la misma marca**: la parrilla y el restaurante.
+Comparten dueños, identidad visual y nombre; se diferencian en carta, ambiente y
+dirección. El sitio cumple dos objetivos a la vez:
 
 1. **Académico:** trabajo práctico de la materia Programación Web. El profesor pidió
    explícitamente: convertir todo a React, crear cuenta en Vercel, enlazarla con
@@ -19,7 +21,27 @@ Neuquén. El sitio cumple dos objetivos a la vez:
    eventualmente pagos.
 
 El repositorio destino es `https://github.com/giandicla/LaPostaParrilla` (vacío al
-momento de escribir este documento). Instagram del local: `@lapostavla`.
+momento de escribir este documento). Instagram compartido: `@lapostavla`.
+
+### Modelo de dos locales
+
+De los tres patrones evaluados, se adopta **"un sitio, dos salones"**:
+
+- La marca manda. Hay **una sola home**, un solo hero, una sola identidad.
+- La división entre locales aparece **solo donde cambia la información**: la carta,
+  el formulario de reservas y el bloque de contacto.
+- No hay portada de elección previa (perdería visitantes antes de mostrar nada) ni
+  selector global persistente (las cartas son distintas, así que esconder un local
+  detrás del otro empobrece el sitio).
+
+Los dos patrones descartados fueron: **hub con sub-sitios por local** (`/parrilla`,
+`/restaurante`), casi el doble de trabajo y una fricción de entrada innecesaria; y
+**selector global en el navbar**, que solo conviene cuando el contenido es casi
+idéntico entre sucursales.
+
+Consecuencia técnica: los locales son **datos, no rutas**. Un array `LOCALES` en
+`src/data/locales.js` con un objeto por local, y los componentes iteran sobre él.
+Agregar un tercer local en el futuro es agregar un objeto al array, no crear páginas.
 
 ### Alcance de esta etapa
 
@@ -40,6 +62,8 @@ preparado para que entren sin reescribir lo hecho.
 - `npm run build` produce `dist/` desplegable.
 - Las cuatro rutas navegan entre sí y se ven correctas en mobile (360px), tablet
   (768px) y desktop (1440px).
+- Los dos locales están representados en Inicio, Carta, Reservas y Contacto, y se
+  entiende sin explicación que son dos salones de la misma marca.
 - El sitio está en GitHub y desplegado en Vercel con URL pública.
 - Un chat nuevo de Claude puede leer `CLAUDE.md` y entender el proyecto sin
   explicaciones adicionales.
@@ -87,7 +111,10 @@ LaPostaParrilla/
 │   └── superpowers/specs/        # este documento y los que vengan
 ├── public/
 │   ├── logo.jpg                  # logo actual (baja calidad, a reemplazar)
-│   └── img/                      # fotos del restaurante (placeholders por ahora)
+│   └── img/
+│       ├── parrilla/             # fotos del local parrilla
+│       ├── restaurante/          # fotos del local restaurante
+│       └── comunes/              # marca, texturas, fotos genéricas
 └── src/
     ├── main.jsx                  # monta React, define el router
     ├── App.jsx                   # layout: Navbar + <Outlet/> + Footer
@@ -95,8 +122,9 @@ LaPostaParrilla/
     │   ├── tokens.css            # variables CSS: color, tipografía, espaciado
     │   └── global.css            # reset, base, utilidades mínimas
     ├── data/
-    │   ├── restaurante.js        # nombre, dirección, horarios, teléfono, redes
-    │   ├── menu.js               # categorías y platos de ejemplo
+    │   ├── locales.js            # array LOCALES: los dos salones y sus datos
+    │   ├── marca.js              # nombre, redes, textos comunes a ambos
+    │   ├── menu.js               # cartas, indexadas por id de local
     │   └── textos.js             # copys largos (bienvenida, historia)
     ├── components/
     │   ├── Navbar/
@@ -104,9 +132,11 @@ LaPostaParrilla/
     │   ├── Hero/
     │   ├── Section/              # wrapper con título y ancho máximo
     │   ├── Boton/
+    │   ├── LocalCard/            # tarjeta grande de un local
+    │   ├── SelectorLocal/        # toggle Parrilla / Restaurante
     │   ├── PlatoCard/
     │   ├── GaleriaGrid/
-    │   └── InfoPractica/
+    │   └── InfoLocal/            # horarios, mapa y contacto de UN local
     └── pages/
         ├── Inicio/
         ├── Carta/
@@ -121,6 +151,35 @@ vive en archivos de datos planos. Cuando la familia pida "cambiá el horario del
 domingo", se toca un solo archivo y no se busca el string perdido en un componente.
 También deja el camino listo para que, cuando exista backend, esos módulos se
 reemplacen por llamadas a la API sin tocar los componentes.
+
+### La forma de `locales.js`
+
+Es la pieza central del modelo de dos locales. Un array de objetos con esta forma:
+
+```js
+export const LOCALES = [
+  {
+    id: 'parrilla',              // clave estable; se usa en URLs, menú y formularios
+    nombre: 'La Posta Parrilla',
+    tagline: 'Brasas, cordero y fuegos patagónicos',
+    descripcion: '…',
+    direccion: '…',              // PENDIENTE
+    mapaEmbedUrl: '…',           // PENDIENTE
+    telefono: '…',               // PENDIENTE
+    whatsapp: '…',               // PENDIENTE
+    horarios: [ { dia: 'Lunes a Jueves', franja: '…' }, … ],
+    franjasReserva: ['12:30', '13:00', …],
+    imagenes: { hero: '…', galeria: [ … ] },
+  },
+  { id: 'restaurante', … },
+];
+
+export const getLocal = (id) => LOCALES.find((l) => l.id === id);
+```
+
+Ningún componente escribe `'parrilla'` o `'restaurante'` a mano: todos iteran sobre
+`LOCALES` o reciben un objeto local por props. Eso es lo que hace que sumar un tercer
+local sea agregar un objeto y nada más.
 
 Cada componente vive en su propia carpeta con `Componente.jsx` y
 `Componente.module.css` al lado. Un componente, una carpeta, un archivo de estilos.
@@ -213,7 +272,7 @@ Ruteo con `createBrowserRouter`. `App.jsx` es el layout compartido: Navbar arrib
 
 ### 5.1 Inicio — la sección que se trabaja a fondo
 
-Seis bloques, en orden:
+Siete bloques, en orden:
 
 1. **Navbar** — fija arriba. Arranca translúcida sobre el hero y pasa a bordo sólido
    al scrollear más de 80px. Logo a la izquierda, links al centro (Inicio, Carta,
@@ -227,35 +286,62 @@ Seis bloques, en orden:
    "Parrilla & Restaurante · Villa La Angostura", y dos botones — "Reservar mesa"
    (relleno bordo) y "Ver la carta" (contorno crema).
 
+   El hero habla de **la marca**, no de un local. Es el único lugar del sitio donde
+   los dos salones se presentan como una sola cosa.
+
 3. **Bienvenida** — fondo crema. Texto corto a la izquierda sobre la propuesta del
    lugar; a la derecha, grilla de 3 fotos con proporciones distintas.
 
-4. **Destacados** — fondo bordo. Cuatro `PlatoCard` en grilla (4 columnas en
+4. **Nuestros dos salones** — fondo crema, el bloque que resuelve la división.
+   Título de sección y una bajada de una línea que aclara que son dos propuestas de
+   la misma familia. Debajo, dos `LocalCard` grandes, lado a lado en desktop y
+   apiladas en mobile. Cada card: foto del local, nombre, tagline, dirección,
+   horario resumido, y dos acciones — "Ver carta" (lleva a `/carta` con ese local ya
+   seleccionado) y "Reservar acá" (lleva a `/reservas` con el local precargado).
+
+   Se renderiza con `LOCALES.map(...)`. No hay dos bloques escritos a mano.
+
+5. **Destacados** — fondo bordo. Cuatro `PlatoCard` en grilla (4 columnas en
    desktop, 2 en tablet, 1 en mobile). Cada card: foto, nombre, descripción de una
-   línea, precio. Los datos salen de `src/data/menu.js`, marcados como ejemplo.
+   línea, precio, y una etiqueta chica que dice de qué local es. Dos platos de cada
+   uno, para que el bloque muestre las dos cocinas. Los datos salen de
+   `src/data/menu.js`, marcados como ejemplo.
 
-5. **Info práctica** — fondo crema. Tres columnas: horarios (tabla simple),
-   dirección con mapa de Google embebido en `<iframe>` con `loading="lazy"`, y
-   contacto (botón WhatsApp, link a Instagram).
+6. **Info práctica** — fondo crema. Un `InfoLocal` por cada local, uno al lado del
+   otro: horarios (tabla simple), dirección con mapa de Google embebido en
+   `<iframe>` con `loading="lazy"`, y contacto (botón WhatsApp, link a Instagram).
+   El Instagram `@lapostavla` es compartido y aparece una sola vez, en el footer.
 
-6. **Footer** — fondo bordo. Logo, links de navegación repetidos, redes, dirección,
-   y línea de crédito.
+7. **Footer** — fondo bordo. Logo, links de navegación repetidos, las dos direcciones
+   en columnas, Instagram `@lapostavla`, y línea de crédito.
 
 ### 5.2 Carta
 
-Encabezado con el nombre de la sección. Debajo, navegación por categorías (Entradas,
-Parrilla, Principales, Pastas, Postres, Bebidas) que hace scroll suave a cada bloque.
-Cada categoría lista sus platos con nombre, descripción y precio, en tipografía de
-carta clásica con línea punteada entre el nombre y el precio.
+Encabezado con el nombre de la sección. Debajo, el `SelectorLocal`: un toggle de dos
+opciones, Parrilla y Restaurante, pegajoso al scrollear para que no haya que volver
+arriba para cambiar. Al elegir uno se cambia la carta que se muestra.
+
+El local elegido vive en la URL como query param (`/carta?local=parrilla`), no en
+estado interno. Tres razones: el link se puede compartir apuntando a una carta
+concreta, el botón "atrás" del navegador funciona como se espera, y las `LocalCard`
+del Inicio pueden linkear directo a la carta correcta. Si no hay query param, se
+muestra el primer local del array.
+
+Para el local activo: navegación por categorías (Entradas, Parrilla, Principales,
+Pastas, Postres, Bebidas) que hace scroll suave a cada bloque. Cada categoría lista
+sus platos con nombre, descripción y precio, en tipografía de carta clásica con línea
+punteada entre el nombre y el precio. Las categorías salen de los datos, así que cada
+local muestra solo las suyas.
 
 Al final, un bloque destacado con botón hacia la carta oficial en Canva:
 `https://www.canva.com/design/DAGkMvwV_fU/XfpQdDldp_dO58eCMU5Sdg/edit`
 
 > **Nota de contenido:** todos los platos y precios de esta etapa son de ejemplo y
-> están marcados como tales en `src/data/menu.js`. Se reemplazan cuando llegue el PDF
-> real de la carta. El link de Canva es de solo lectura y la familia lo actualiza
-> desde ahí, por lo que a futuro conviene evaluar si la carta del sitio se mantiene
-> a mano o se enlaza directamente.
+> están marcados como tales en `src/data/menu.js`. Se reemplazan cuando lleguen los
+> PDF reales — **uno por local**. El link de Canva actual corresponde a una sola de
+> las dos cartas; falta confirmar cuál, y si existe un segundo link para la otra. El
+> link es de solo lectura y la familia lo actualiza desde ahí, por lo que a futuro
+> conviene evaluar si la carta del sitio se mantiene a mano o se enlaza directamente.
 
 ### 5.3 Reservas — maqueta
 
@@ -263,13 +349,18 @@ Formulario de dos columnas en desktop, una en mobile:
 
 | Campo | Tipo | Nota |
 |---|---|---|
+| **Local** | radio (2 tarjetas) | **Primer campo del formulario.** Se precarga desde `?local=` si viene de una `LocalCard` |
 | Nombre y apellido | texto | |
 | Teléfono | tel | |
 | Email | email | |
 | Fecha | date | |
-| Hora | select | Franjas fijas, definidas en `restaurante.js` |
+| Hora | select | Franjas del local elegido (`franjasReserva` en `locales.js`) |
 | Cantidad de personas | number | 1 a 12 |
 | Comentarios | textarea | Alergias, cumpleaños, ubicación preferida |
+
+El local va primero porque condiciona las franjas horarias disponibles. Se muestra
+como dos tarjetas seleccionables, no como un `<select>`: ocupa más lugar pero deja
+claro de entrada que hay dos salones.
 
 El botón "Confirmar reserva" está presente y estilado pero **no envía nada**. Al
 costado, un panel con las condiciones de reserva (tolerancia, grupos grandes,
@@ -281,8 +372,12 @@ todavía.
 
 ### 5.4 Nosotros / Contacto
 
-Historia del restaurante (texto en `textos.js`), galería de fotos del salón, y un
-bloque de contacto con mapa, dirección, teléfono, Instagram y horarios.
+Historia de la familia y de la marca (texto en `textos.js`), que es común a los dos
+locales. Debajo, un bloque por local: galería de fotos de ese salón, su texto propio,
+y su `InfoLocal` con mapa, dirección, teléfono y horarios. Los bloques alternan la
+foto de lado (izquierda / derecha) para que no se lean como una lista.
+
+Cierra con el contacto compartido: Instagram `@lapostavla` y email.
 
 ---
 
@@ -291,18 +386,24 @@ bloque de contacto con mapa, dirección, teléfono, Instagram y horarios.
 | Componente | Props | Responsabilidad |
 |---|---|---|
 | `Navbar` | — | Navegación, estado de scroll, menú mobile |
-| `Footer` | — | Links, redes, datos del local |
+| `Footer` | — | Links, redes, las dos direcciones |
 | `Hero` | `titulo`, `bajada`, `imagen`, `acciones[]` | Bloque de portada reutilizable en todas las páginas |
 | `Section` | `titulo`, `fondo`, `children` | Ancho máximo, padding vertical, color de fondo |
 | `Boton` | `variante`, `to`, `href`, `onClick`, `children` | Botón o link según las props; variantes `primario`, `contorno`, `texto` |
-| `PlatoCard` | `nombre`, `descripcion`, `precio`, `imagen` | Card de plato |
+| `LocalCard` | `local` | Tarjeta grande de un salón: foto, nombre, tagline, dirección, horario y sus dos CTA |
+| `SelectorLocal` | `localActivoId`, `onChange` | Toggle Parrilla / Restaurante. Controlado: no sabe de dónde sale ni a dónde va el estado |
+| `PlatoCard` | `nombre`, `descripcion`, `precio`, `imagen`, `etiquetaLocal?` | Card de plato |
 | `GaleriaGrid` | `imagenes[]` | Grilla de fotos responsiva |
-| `InfoPractica` | — | Horarios, mapa, contacto |
+| `InfoLocal` | `local` | Horarios, mapa y contacto de **un** local |
 
 Cada uno debe entenderse sin leer su interior: se sabe qué hace por su nombre y sus
-props. Ninguno accede a `src/data/` directamente salvo `Navbar`, `Footer` e
-`InfoPractica`, que consumen `restaurante.js` porque muestran datos globales del
-local; el resto recibe todo por props.
+props. Los que muestran datos de un local (`LocalCard`, `InfoLocal`) reciben el objeto
+completo por props y nunca importan `locales.js`. Solo `Navbar` y `Footer` acceden a
+los datos directamente, porque muestran información de marca presente en todas las
+páginas.
+
+`SelectorLocal` es controlado a propósito: en Carta el estado vive en la URL, y si el
+componente lo manejara internamente habría dos fuentes de verdad.
 
 ---
 
@@ -312,9 +413,18 @@ Al momento de escribir esto no hay fotos reales en buena calidad. El único asse
 disponible es `LogoLaPosta.jpg` (150×150px, insuficiente para el hero).
 
 Estrategia interina: `public/img/` se llena con placeholders de tono cálido y
-proporción correcta, nombrados con la intención final — `hero-salon.jpg`,
-`galeria-1.jpg`, `plato-bife.jpg`. Cuando lleguen las fotos reales se reemplazan los
-archivos conservando los nombres y no hace falta tocar código.
+proporción correcta, nombrados con la intención final y separados por local:
+
+```
+public/img/
+├── comunes/     hero-marca.jpg, textura-madera.jpg
+├── parrilla/    hero.jpg, galeria-1.jpg, plato-cordero.jpg
+└── restaurante/ hero.jpg, galeria-1.jpg, plato-trucha.jpg
+```
+
+Cuando lleguen las fotos reales se reemplazan los archivos conservando los nombres y
+no hace falta tocar código. Las rutas se arman desde `locales.js`, no se escriben en
+el JSX.
 
 Todas las `<img>` llevan `alt` descriptivo en español y `loading="lazy"` salvo la del
 hero.
@@ -355,19 +465,29 @@ no lo enlazaba; con el primer commit el problema desaparece.
 
 ## 10. Datos pendientes de confirmar
 
-Van como placeholder en `src/data/restaurante.js`, cada uno marcado con
-`// PENDIENTE` para encontrarlos con un grep:
+Van como placeholder en `src/data/locales.js` y `src/data/marca.js`, cada uno marcado
+con `// PENDIENTE` para encontrarlos con un grep.
 
-- Dirección exacta y código postal
-- Horarios por día, incluyendo si cierra algún día
+**Por cada uno de los dos locales:**
+
+- Nombre exacto y cómo se lo llama en la práctica
+- Dirección y código postal
+- URL de embed del mapa de Google
+- Horarios por día, incluyendo días de cierre y temporada baja
 - Teléfono y número de WhatsApp
-- Email de contacto
-- Año de fundación e historia real del local
-- **Si son dos locales distintos** — el usuario mencionó "ambos restaurantes". Si son
-  dos, el sitio necesita resolver cómo los presenta, y eso cambia la navegación.
-- Carta real en PDF, para ambos locales
+- Franjas horarias de reserva
+- Tagline / descripción de una línea
+- Carta real en PDF
 - Fotos en alta del salón, la parrilla y los platos
+
+**Comunes a la marca:**
+
+- Email de contacto
+- Año de fundación e historia real de la familia
 - Logo en alta resolución o vectorial
+- Si el Instagram `@lapostavla` cubre los dos locales o hay una cuenta por local
+- A cuál de las dos cartas corresponde el link de Canva actual, y si existe un
+  segundo link para la otra
 
 ---
 
