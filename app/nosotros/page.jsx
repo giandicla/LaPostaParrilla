@@ -40,14 +40,14 @@ export default function Nosotros() {
                 indice % 2 === 1 ? estilos.localInvertido : ''
               }`}
             >
-              <div className={estilos.galeria}>
-                <GaleriaGrid imagenes={local.imagenes.galeria} />
-              </div>
-
               <div className={estilos.textoLocal}>
                 <h3 className={estilos.nombreLocal}>{local.nombre}</h3>
                 <p className={estilos.taglineLocal}>{local.tagline}</p>
                 <p>{local.descripcion}</p>
+              </div>
+
+              <div className={estilos.galeria}>
+                <GaleriaGrid imagenes={local.imagenes.galeria} />
               </div>
             </article>
           ))}

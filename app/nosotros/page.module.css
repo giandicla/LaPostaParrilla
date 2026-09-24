@@ -72,9 +72,15 @@
     gap: var(--sp-12);
   }
 
-  /* El segundo local invierte el orden: la galería pasa a la derecha */
+  /* La galería va a la izquierda por defecto y a la derecha en los bloques
+     invertidos. El texto va primero en el markup para las dos, así el nombre
+     del salón se lee antes que sus fotos en cualquier orden de lectura. */
+  .local .galeria {
+    order: -1;
+  }
+
   .localInvertido .galeria {
-    order: 2;
+    order: 1;
   }
 
   .grillaInfo {
