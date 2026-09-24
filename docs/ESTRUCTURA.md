@@ -37,8 +37,13 @@
 | `GaleriaGrid` | `imagenes[]` | Grilla de 3 fotos, la del medio vertical |
 | `InfoLocal` | `local` | Horarios, mapa y contacto de UN local |
 
-**Regla:** solo `Navbar`, `Footer` y las páginas importan de `src/data/`.
-Los demás reciben todo por props.
+**Regla:** ningún componente importa `locales.js` salvo `Footer`, que muestra las dos
+direcciones en todas las páginas. Todos los demás reciben el local por props, y por eso
+sumar un tercer local no obliga a tocarlos.
+
+Aparte de eso, algunos componentes importan constantes que no son de local:
+`Navbar` y `Hero` leen `MARCA` (logo y nombre de la marca), y `PlatoCard` usa
+`formatearPrecio` de `menu.js` para que el formato de precio viva en un solo lugar.
 
 ## Datos
 
