@@ -4640,8 +4640,13 @@ restaurante.
 
 ## Stack
 
-Vite + React 19 + React Router 7 + CSS Modules. JavaScript, no TypeScript.
-Sin librerías de UI. Deploy automático a Vercel en cada push a `main`.
+Next.js 15 con App Router + React 19 + CSS Modules. JavaScript, no TypeScript.
+Sin librerías de UI, sin backend. Deploy automático a Vercel en cada push a `main`.
+
+- Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
+- **Server Components por defecto.** `'use client'` solo va en `Navbar`,
+  `SelectorLocal`, `app/carta/page.jsx` y `app/reservas/page.jsx`.
+- Navegación con `next/link`. La prop de `Boton` se llama `to`, no `href`.
 
 ## Convenciones
 
@@ -4659,7 +4664,7 @@ Sin librerías de UI. Deploy automático a Vercel en cada push a `main`.
 
 ```bash
 npm run dev           # servidor de desarrollo
-npm run build         # build de producción a dist/
+npm run build         # build de producción a .next/
 npm run placeholders  # regenera los SVG placeholder de public/img/
 ```
 
@@ -4727,10 +4732,15 @@ Se evaluaron tres formas de dividir el sitio:
 **Consecuencia:** los locales son **datos, no rutas**. Un array `LOCALES` y
 componentes que iteran. Sumar un tercer local es agregar un objeto.
 
-### Por qué Vite y no Next.js
+### Por qué Next.js
 
-Next trae SSR y API routes. Choca con "solo el front" y agrega superficie que el
-profesor no pidió. Vite compila a estático puro y Vercel lo detecta solo.
+Lo pidió el profesor. El proyecto arrancó en Vite y se migró en la tarea 6M; el
+detalle está en la sección 2.bis del spec.
+
+Next incluye backend, pero **este proyecto no usa nada de eso**: no hay `app/api/`,
+no hay Server Actions, no hay base de datos. Se usa como generador del front, que es
+compatible con el "solo el React del front" que pidió la cátedra. Las cinco rutas
+compilan como estáticas, y eso conviene verificarlo en cada build.
 
 ### Por qué CSS Modules y no Tailwind
 
@@ -4856,7 +4866,9 @@ Primera sesión. De cero a sitio desplegado.
 - Bordo de marca muestreado del logo real: `#5F0004`.
 
 **Construido**
-- Scaffolding Vite + React + React Router. Repo enlazado con Vercel.
+- Scaffolding inicial en Vite + React + React Router. Repo enlazado con Vercel.
+- **Migración a Next.js App Router** (tarea 6M), después de que el profesor definiera
+  el stack. Sobrevivieron sin cambios la capa de datos, los tokens y los CSS Modules.
 - `tokens.css` y `global.css` — paleta, tipografías, espaciado.
 - Capa de datos: `marca.js`, `locales.js`, `menu.js`, `textos.js`.
 - Generador de placeholders: `scripts/gen-placeholders.mjs`.
@@ -4970,13 +4982,13 @@ Abre en `http://localhost:5173`.
 | Comando | Qué hace |
 |---|---|
 | `npm run dev` | Servidor de desarrollo |
-| `npm run build` | Build de producción a `dist/` |
-| `npm run preview` | Sirve el build local, para revisar antes de pushear |
+| `npm run build` | Build de producción a `.next/` |
+| `npm run start` | Sirve el build local, para revisar antes de pushear |
 | `npm run placeholders` | Regenera los SVG placeholder de `public/img/` |
 
 ## Stack
 
-Vite · React 19 · React Router 7 · CSS Modules
+Next.js 15 (App Router) · React 19 · CSS Modules
 
 Front puro: sin backend, sin base de datos.
 
