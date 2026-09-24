@@ -44,7 +44,8 @@ export default function Navbar() {
   // Fuera del inicio la navbar es siempre sólida: no hay hero debajo
   const solida = scrolleada || menuAbierto || pathname !== '/';
 
-  const esActivo = (ruta) => (ruta === '/' ? pathname === '/' : pathname.startsWith(ruta));
+  const esActivo = (ruta) =>
+    ruta === '/' ? pathname === '/' : pathname === ruta || pathname.startsWith(`${ruta}/`);
 
   return (
     <header className={`${estilos.navbar} ${solida ? estilos.solida : ''}`}>

@@ -1,4 +1,3 @@
-import Link from 'next/link';
 import Section from '../src/components/Section/Section.jsx';
 import Boton from '../src/components/Boton/Boton.jsx';
 
