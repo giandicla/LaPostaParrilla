@@ -165,13 +165,14 @@ export const LOCALES = [
     descripcion: '…',
     direccion: '…',              // PENDIENTE
     mapaEmbedUrl: '…',           // PENDIENTE
-    telefono: '…',               // PENDIENTE
-    whatsapp: '…',               // PENDIENTE
+    telefono: '+54 9 2944 96-6199',
+    whatsapp: '5492944966199',   // mismo número, formato para wa.me
+    cartaUrl: 'https://www.canva.com/design/DAGkMvwV_fU/…',
     horarios: [ { dia: 'Lunes a Jueves', franja: '…' }, … ],
     franjasReserva: ['12:30', '13:00', …],
     imagenes: { hero: '…', galeria: [ … ] },
   },
-  { id: 'restaurante', … },
+  { id: 'restaurante', … },     // teléfono y cartaUrl PENDIENTES
 ];
 
 export const getLocal = (id) => LOCALES.find((l) => l.id === id);
@@ -333,15 +334,20 @@ sus platos con nombre, descripción y precio, en tipografía de carta clásica c
 punteada entre el nombre y el precio. Las categorías salen de los datos, así que cada
 local muestra solo las suyas.
 
-Al final, un bloque destacado con botón hacia la carta oficial en Canva:
-`https://www.canva.com/design/DAGkMvwV_fU/XfpQdDldp_dO58eCMU5Sdg/edit`
+Al final, un bloque destacado con botón hacia la carta oficial en Canva **del local
+activo**. El link vive en `locales.js` como `cartaUrl`, no en el componente:
+
+- Parrilla: `https://www.canva.com/design/DAGkMvwV_fU/XfpQdDldp_dO58eCMU5Sdg/edit`
+- Restaurante: existe un segundo Canva, pendiente de que la familia lo pase.
+
+Mientras falte el segundo link, la carta del restaurante muestra el bloque sin el
+botón. No se cae ni muestra un link roto: `cartaUrl` en `null` esconde el botón.
 
 > **Nota de contenido:** todos los platos y precios de esta etapa son de ejemplo y
 > están marcados como tales en `src/data/menu.js`. Se reemplazan cuando lleguen los
-> PDF reales — **uno por local**. El link de Canva actual corresponde a una sola de
-> las dos cartas; falta confirmar cuál, y si existe un segundo link para la otra. El
-> link es de solo lectura y la familia lo actualiza desde ahí, por lo que a futuro
-> conviene evaluar si la carta del sitio se mantiene a mano o se enlaza directamente.
+> PDF reales — **uno por local**. La familia actualiza los Canva y los cambios se ven
+> solos en ese link, así que a futuro conviene evaluar si la carta del sitio se
+> mantiene a mano o se enlaza directamente al Canva.
 
 ### 5.3 Reservas — maqueta
 
@@ -468,14 +474,34 @@ no lo enlazaba; con el primer commit el problema desaparece.
 Van como placeholder en `src/data/locales.js` y `src/data/marca.js`, cada uno marcado
 con `// PENDIENTE` para encontrarlos con un grep.
 
-**Por cada uno de los dos locales:**
+### Confirmado
 
-- Nombre exacto y cómo se lo llama en la práctica
-- Dirección y código postal
-- URL de embed del mapa de Google
-- Horarios por día, incluyendo días de cierre y temporada baja
-- Teléfono y número de WhatsApp
+- Son dos locales bajo la misma marca: **parrilla** y **restaurante**.
+- El Instagram `@lapostavla` **cubre los dos**. Va una sola vez, en el footer.
+- Cada local tiene su propio teléfono y WhatsApp.
+- Parrilla — teléfono y WhatsApp: `+54 9 2944 96-6199`
+- El link de Canva conocido es la carta de **la parrilla**.
+- Existe un segundo Canva para la carta del restaurante.
+
+### Pendiente
+
+**Parrilla:**
+
+- Dirección y URL de embed del mapa
+- Horarios por día, con días de cierre y temporada baja
 - Franjas horarias de reserva
+
+**Restaurante:**
+
+- Nombre exacto con el que se lo conoce
+- Dirección y URL de embed del mapa
+- Horarios por día, con días de cierre y temporada baja
+- Teléfono y WhatsApp
+- Franjas horarias de reserva
+- Link del segundo Canva
+
+**Los dos:**
+
 - Tagline / descripción de una línea
 - Carta real en PDF
 - Fotos en alta del salón, la parrilla y los platos
@@ -485,9 +511,6 @@ con `// PENDIENTE` para encontrarlos con un grep.
 - Email de contacto
 - Año de fundación e historia real de la familia
 - Logo en alta resolución o vectorial
-- Si el Instagram `@lapostavla` cubre los dos locales o hay una cuenta por local
-- A cuál de las dos cartas corresponde el link de Canva actual, y si existe un
-  segundo link para la otra
 
 ---
 
