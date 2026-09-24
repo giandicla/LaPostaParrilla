@@ -72,8 +72,13 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
       fecha pasada. Se difirió a propósito: calcular la fecha de hoy durante el
       render de una página prerenderizada arriesga un desajuste de hidratación, y el
       formulario todavía no envía nada. Va junto con la validación real del CRUD.
-- [x] El panel mobile del navbar no manejaba foco: no cerraba con Escape ni
-      devolvía el foco al botón al cerrar. Resuelto en la tarea 14.
+- [x] El panel mobile del navbar ahora cierra con Escape y devuelve el foco al botón
+      hamburguesa al cerrarse. Resuelto en la tarea 14.
+- [ ] Al abrirse, el panel mobile todavía no mueve el foco hacia adentro. Quien lo
+      abre con teclado queda con el foco en el botón, detrás del panel. Se dejó
+      pendiente a propósito en la etapa 1: mover el foco bien exige también atraparlo
+      dentro del panel mientras está abierto, y eso es más trabajo del que justifica
+      una maqueta.
 - [x] El contrato de `GaleriaGrid` (exactamente 3 imágenes, la segunda vertical)
       vivía solo en un comentario del CSS. Resuelto en la tarea 14: ahora también
       está documentado en el `.jsx`.
