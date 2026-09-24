@@ -1,0 +1,60 @@
+:root {
+  /* ---------- Marca ---------- */
+  --bordo-900: #5F0004;  /* muestreado del logo real */
+  --bordo-700: #7A1218;
+  --bordo-100: #F2E3E3;
+
+  /* ---------- Superficie ---------- */
+  --crema: #F5EFE6;
+  --blanco: #FFFFFF;
+
+  /* ---------- Acentos ---------- */
+  --madera: #8B5E3C;
+  --brasa: #E8A33D;
+
+  /* ---------- Texto ---------- */
+  --carbon: #1C1512;
+  --gris-600: #5A524C;
+  --gris-300: #D8D0C6;
+
+  /* ---------- Tipografía ---------- */
+  --font-titulo: 'Playfair Display', Georgia, 'Times New Roman', serif;
+  --font-cuerpo: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+  --fs-hero: clamp(2.5rem, 8vw, 5rem);
+  --fs-h1: clamp(2rem, 5vw, 3rem);
+  --fs-h2: clamp(1.5rem, 3.5vw, 2.25rem);
+  --fs-h3: clamp(1.15rem, 2vw, 1.4rem);
+  --fs-body: 1rem;
+  --fs-small: 0.875rem;
+
+  --lh-titulo: 1.15;
+  --lh-cuerpo: 1.65;
+
+  /* ---------- Espaciado (escala de 4px) ---------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-12: 3rem;
+  --sp-16: 4rem;
+  --sp-24: 6rem;
+
+  /* ---------- Forma ---------- */
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 16px;
+
+  /* Sombras cálidas, nunca negro puro */
+  --sombra-sm: 0 2px 8px rgba(28, 21, 18, 0.08);
+  --sombra-md: 0 4px 16px rgba(28, 21, 18, 0.10);
+  --sombra-lg: 0 12px 32px rgba(28, 21, 18, 0.16);
+
+  /* ---------- Layout ---------- */
+  --ancho-max: 1180px;
+  --alto-navbar: 72px;
+
+  --transicion: 200ms ease;
+}
