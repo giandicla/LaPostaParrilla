@@ -72,11 +72,17 @@ preparado para que entren sin reescribir lo hecho.
 
 ## 2. Stack y decisiones técnicas
 
+> **Enmienda del 2026-09-24, posterior a la aprobación.** El profesor definió que el
+> trabajo **no puede ser Vite: tiene que ser Next.js**. La elección de stack es suya,
+> no del plan, así que esta sección se reescribe y las decisiones originales quedan
+> abajo, en "Rechazadas", con el motivo real por el que cayeron. La migración se hizo
+> con seis tareas ya implementadas; el detalle está en la sección 2.bis.
+
 | Decisión | Elección | Motivo |
 |---|---|---|
-| Build tool | Vite 6 | Arranque instantáneo, build a estático puro, Vercel lo autodetecta. |
-| Framework | React 19 | Requisito de la cátedra. |
-| Ruteo | React Router 7 (`createBrowserRouter`) | Estándar de facto para SPA en React. |
+| Framework | Next.js 15, App Router | **Requisito del profesor.** No se evaluó contra alternativas: es la consigna. |
+| Ruteo | Sistema de archivos de Next (`app/`) | Viene con el framework. Reemplaza a React Router. |
+| Framework UI | React 19 | Lo que Next 15 usa. |
 | Estilos | CSS Modules + custom properties | CSS real y defendible ante el profesor, sin dependencias ni clases mágicas. Revisable con el profesor más adelante. |
 | Lenguaje | JavaScript (JSX), no TypeScript | La cátedra trabaja en JS; TS sumaría fricción sin sumar nota. |
 | Tipografías | Google Fonts: Playfair Display + Inter | Gratuitas, con `display=swap`. |
@@ -85,24 +91,89 @@ preparado para que entren sin reescribir lo hecho.
 
 ### Rechazadas
 
-- **Next.js:** trae API routes y SSR. Choca con la consigna "solo el front" y agrega
-  superficie que el profesor no pidió.
+- **Vite + React Router:** era la elección original de este spec, y se implementó
+  durante seis tareas antes de que el profesor definiera Next.js. El motivo por el
+  que cae no es técnico: es la consigna de la materia.
+- **Next.js con Pages Router:** en modo mantenimiento desde 2023. El profesor no
+  aclaró cuál de los dos routers quiere; se eligió App Router por ser el que la
+  documentación oficial enseña hoy y el que va a estar usando si más adelante da
+  pagos. Si la cátedra trabaja con `pages/`, conviene revisarlo.
 - **Create React App:** deprecado desde 2023, sin mantenimiento.
 - **Tailwind:** más veloz de escribir, pero satura el JSX de clases y varias cátedras
   lo penalizan por ocultar el CSS.
 
+## 2.bis. La migración a Next.js
+
+El cambio llegó con seis tareas implementadas. Se migró en ese momento y no al final,
+porque lo que existía era casi todo reutilizable y cada página nueva escrita en Vite
+habría que reescribirla después.
+
+### Qué sobrevive sin cambios
+
+- **`src/data/` entero.** La capa de datos no sabe nada del framework.
+- **`tokens.css` y `global.css`**, que pasan a importarse desde el layout raíz.
+- **Los CSS Modules de cada componente.** Next los soporta de forma nativa.
+- **El modelo de dos locales**, que es lo que define el proyecto y es independiente
+  del ruteo.
+
+### Qué cambia
+
+| Antes (Vite) | Ahora (Next) |
+|---|---|
+| `index.html` | `export const metadata` en `app/layout.jsx` |
+| `createBrowserRouter` en `main.jsx` | Carpetas dentro de `app/` |
+| `App.jsx` con `<Outlet/>` | `app/layout.jsx` con `{children}` |
+| `src/pages/Carta/Carta.jsx` | `app/carta/page.jsx` |
+| `<Link to=...>` de React Router | `<Link href=...>` de `next/link` |
+| `useSearchParams` de React Router | `useSearchParams` de `next/navigation` (solo lectura; para escribir se usa `router.replace`) |
+| Ruta `*` → redirect | `app/not-found.jsx` |
+| `ScrollAlTope` casero | Next restaura el scroll solo; se elimina |
+| `dist/` | `.next/` |
+
+### La regla nueva: Server Components por defecto
+
+En App Router todo componente es de servidor salvo que declare `'use client'` en su
+primera línea. Un componente necesita esa directiva cuando usa estado, efectos,
+handlers de eventos o hooks de navegación.
+
+Lo llevan: `Navbar` (estado de scroll y menú), `Carta` (lee la query string),
+`Reservas` (formulario controlado) y `SelectorLocal` (tiene `onClick`).
+
+No lo llevan, y es deliberado: `Footer`, `Hero`, `Section`, `Boton`, `LocalCard`,
+`PlatoCard`, `GaleriaGrid`, `InfoLocal` y las páginas Inicio y Nosotros. Son
+presentación pura y se renderizan en el servidor, que es más rápido y mejor para SEO
+— algo que a un restaurante le importa de verdad.
+
+### Sobre "solo el front"
+
+El profesor pidió que la IA hiciera solo el React del front, y después definió Next
+como framework. Next incluye backend (API routes, Server Actions), pero **este
+proyecto no usa nada de eso**: no hay `app/api/`, no hay Server Actions, no hay
+acceso a base de datos. Se usa Next como generador de sitio, que es compatible con la
+consigna. Cuando llegue la etapa de pagos, esa decisión se revisa con el profesor.
+
 ---
 
 ## 3. Estructura de archivos
+
+> Actualizado por la enmienda de stack. Las páginas viven en `app/`, no en
+> `src/pages/`; `src/components/`, `src/data/` y `src/styles/` no se movieron.
 
 ```
 LaPostaParrilla/
 ├── CLAUDE.md                     # contexto que Claude carga solo
 ├── README.md                     # cómo correr el proyecto
 ├── .gitignore
-├── index.html
 ├── package.json
-├── vite.config.js
+├── next.config.mjs
+├── jsconfig.json                 # alias @/ hacia la raíz
+├── app/
+│   ├── layout.jsx                # metadata, fuentes, Navbar + Footer
+│   ├── page.jsx                  # /
+│   ├── not-found.jsx             # 404
+│   ├── carta/page.jsx
+│   ├── reservas/page.jsx
+│   └── nosotros/page.jsx
 ├── docs/
 │   ├── CONTEXTO.md
 │   ├── ESTRUCTURA.md
@@ -116,8 +187,6 @@ LaPostaParrilla/
 │       ├── restaurante/          # fotos del local restaurante
 │       └── comunes/              # marca, texturas, fotos genéricas
 └── src/
-    ├── main.jsx                  # monta React, define el router
-    ├── App.jsx                   # layout: Navbar + <Outlet/> + Footer
     ├── styles/
     │   ├── tokens.css            # variables CSS: color, tipografía, espaciado
     │   └── global.css            # reset, base, utilidades mínimas
@@ -137,12 +206,11 @@ LaPostaParrilla/
     │   ├── PlatoCard/
     │   ├── GaleriaGrid/
     │   └── InfoLocal/            # horarios, mapa y contacto de UN local
-    └── pages/
-        ├── Inicio/
-        ├── Carta/
-        ├── Reservas/
-        └── Nosotros/
 ```
+
+Cada página vive entera en su `app/<ruta>/page.jsx`, con su `page.module.css` al
+lado. No hay una capa intermedia entre la ruta y su contenido: en un sitio de cuatro
+páginas solo agregaría un salto más para leer lo mismo.
 
 ### Por qué `src/data/` separado del JSX
 
@@ -458,14 +526,20 @@ Cinco archivos, cada uno con un trabajo distinto:
 1. `git remote add origin https://github.com/giandicla/LaPostaParrilla.git`
 2. `git push -u origin main`
 3. En Vercel: **Add New → Project → Import** el repositorio.
-4. Vercel autodetecta Vite. Framework Preset `Vite`, build `npm run build`, output
-   `dist`. No se toca nada más.
+4. Vercel autodetecta Next.js. Framework Preset **`Next.js`**, build `npm run build`.
+   No se toca el Output Directory: Next lo maneja solo.
 5. Deploy. Queda `lapostaparrilla.vercel.app` (o similar).
 
 Desde ahí, cada push a `main` redespliega solo. El repo estaba vacío y por eso Vercel
 no lo enlazaba; con el primer commit el problema desaparece.
 
-`.gitignore` cubre `node_modules/`, `dist/`, `.env*`, `.vercel`, `.DS_Store`.
+> **Si el proyecto ya se creó en Vercel con el preset `Vite`** (como pasó antes de la
+> enmienda de stack): Settings → Build and Deployment → Framework Preset → `Next.js`,
+> limpiar Output Directory para que vuelva al valor automático, guardar y redeployar.
+> Vercel y Next son del mismo equipo, así que con el preset correcto no hace falta
+> ninguna configuración adicional — en particular, **no hace falta `vercel.json`**.
+
+`.gitignore` cubre `node_modules/`, `.next/`, `out/`, `.env*`, `.vercel`, `.DS_Store`.
 
 ---
 

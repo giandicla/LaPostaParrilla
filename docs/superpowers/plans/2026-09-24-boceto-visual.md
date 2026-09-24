@@ -4,9 +4,16 @@
 
 **Goal:** Sitio React de 4 páginas para La Posta, maquetado y desplegado en Vercel, que presenta los dos locales de la marca sin lógica de datos ni backend.
 
-**Architecture:** SPA con Vite + React Router. Los dos locales son datos (`LOCALES` en `src/data/locales.js`), no rutas: los componentes iteran sobre el array y reciben el local por props. Estilos con CSS Modules sobre una capa de custom properties en `tokens.css`. Todo el contenido editable del restaurante vive en `src/data/`, fuera del JSX.
+**Architecture:** Next.js con App Router. Los dos locales son datos (`LOCALES` en `src/data/locales.js`), no rutas: los componentes iteran sobre el array y reciben el local por props. Estilos con CSS Modules sobre una capa de custom properties en `tokens.css`. Todo el contenido editable del restaurante vive en `src/data/`, fuera del JSX.
 
-**Tech Stack:** Vite 6, React 19, React Router 7, CSS Modules, Google Fonts (Playfair Display + Inter). Sin TypeScript, sin librerías de UI, sin backend.
+**Tech Stack:** Next.js 15 (App Router), React 19, CSS Modules, `next/font` (Playfair Display + Inter). Sin TypeScript, sin librerías de UI, sin backend.
+
+> **Enmienda del 2026-09-24 — cambio de stack a mitad de ejecución.**
+> Este plan se escribió para Vite + React Router y se ejecutó así durante seis
+> tareas. Después el profesor definió que el trabajo **tiene que ser Next.js**.
+> La Task 6M migra lo construido; las tareas 7 en adelante ya se leen en clave Next.
+> Las tareas 1 a 6 quedan tal como se ejecutaron, como registro de lo que pasó — no
+> las vuelvas a correr.
 
 **Spec:** `docs/superpowers/specs/2026-09-24-la-posta-web-design.md`
 
@@ -30,11 +37,22 @@ Copiados del spec. Aplican a todas las tareas.
 - **Locales como datos:** ningún componente escribe `'parrilla'` o `'restaurante'` a mano. Se itera sobre `LOCALES` o se recibe el objeto por props. Única excepción: el valor por defecto `LOCALES[0]`.
 - **Acceso a datos:** solo `Navbar`, `Footer` y las páginas importan de `src/data/`. Los componentes presentacionales (`LocalCard`, `InfoLocal`, `PlatoCard`, `Hero`, `GaleriaGrid`) reciben todo por props.
 - **Un componente, una carpeta:** `src/components/Nombre/Nombre.jsx` + `Nombre.module.css`.
+- **Next.js App Router.** Las rutas son carpetas dentro de `app/`. Cada página es
+  `app/<ruta>/page.jsx` con su `page.module.css` al lado.
+- **Server Components por defecto.** Un componente lleva `'use client'` en su primera
+  línea **solo** si usa estado, efectos, handlers de eventos o hooks de navegación.
+  Lo llevan: `Navbar`, `SelectorLocal`, y las páginas Carta y Reservas. No lo llevan,
+  y es deliberado: `Footer`, `Hero`, `Section`, `Boton`, `LocalCard`, `PlatoCard`,
+  `GaleriaGrid`, `InfoLocal`, y las páginas Inicio y Nosotros.
+- **Navegación con `next/link`.** `import Link from 'next/link'` y `href`, nunca `to`.
+  No existe `NavLink`: el link activo se calcula con `usePathname()`.
+- **Nada de backend.** No se crea `app/api/`, ni Server Actions, ni acceso a datos
+  remotos. Next se usa solo como generador del front, que es lo que pidió el profesor.
 - **Mobile first:** el CSS base es mobile. Los `@media` suben desde ahí, nunca al revés.
 - **Breakpoints:** tablet `768px`, desktop `1100px`. Verificar en 360px, 768px y 1440px.
 - **Imágenes:** todas con `alt` descriptivo en español. Todas con `loading="lazy"` salvo la del hero.
 - **Datos faltantes:** se marcan con el comentario `// PENDIENTE` para poder encontrarlos con `grep -rn "PENDIENTE" src/`.
-- **Sin dependencias nuevas** más allá de `react`, `react-dom`, `react-router-dom` y las de Vite. Cualquier agregado necesita aprobación.
+- **Sin dependencias nuevas** más allá de `next`, `react`, `react-dom` y las devDependencies que trae Next (`eslint`, `eslint-config-next`). Cualquier agregado necesita aprobación.
 - **Alcance:** el formulario de reservas **no persiste nada**. No se agrega localStorage, ni fetch, ni capa de servicios.
 
 ## Estructura de archivos
@@ -2063,13 +2081,549 @@ git push
 
 ---
 
+
+## Task 6M: Migración de Vite a Next.js App Router
+
+Tarea agregada por la enmienda de stack. Convierte lo construido en las tareas 1 a 6.
+No agrega ninguna función nueva: al terminar, el sitio se ve exactamente igual que
+antes, corriendo sobre otro framework.
+
+**Files:**
+- Create: `next.config.mjs`, `jsconfig.json`
+- Create: `app/layout.jsx`, `app/page.jsx`, `app/page.module.css`, `app/not-found.jsx`
+- Create: `app/carta/page.jsx`, `app/reservas/page.jsx`, `app/nosotros/page.jsx`
+- Delete: `index.html`, `vite.config.js`, `src/main.jsx`, `src/App.jsx`, `src/pages/` (entero)
+- Modify: `package.json`, `.gitignore`, `src/components/Navbar/Navbar.jsx`, `src/components/Footer/Footer.jsx`, `src/components/Boton/Boton.jsx`
+
+**Interfaces:**
+- Consumes: todo lo de las tareas 1-6
+- Produces: las mismas cuatro rutas, servidas por Next. `Boton`, `Section`, `Hero`,
+  `MARCA`, `LOCALES`, `TEXTOS` conservan exactamente la misma API para las tareas 7-14
+
+### Qué NO se toca
+
+`src/data/`, `src/styles/`, `public/`, `scripts/gen-placeholders.mjs` y los
+`.module.css` de `Hero` y `Section` pasan sin un solo cambio. Si te encontrás
+editándolos, salvo lo que esta tarea dice explícitamente, pará: te fuiste de alcance.
+
+- [ ] **Step 1: Cambiar las dependencias**
+
+```bash
+npm uninstall vite @vitejs/plugin-react react-router-dom
+npm install next@latest
+npm install --save-dev eslint eslint-config-next
+```
+
+`react` y `react-dom` se quedan. `oxlint` se va: Next trae su propio ESLint y
+mantener dos linters sobre el mismo código solo genera reglas en conflicto.
+
+```bash
+npm uninstall oxlint
+rm -f .oxlintrc.json
+```
+
+- [ ] **Step 2: Reescribir los scripts de `package.json`**
+
+```json
+"scripts": {
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "eslint",
+  "placeholders": "node scripts/gen-placeholders.mjs"
+}
+```
+
+Quitar también `"type": "module"` si está: Next maneja los módulos por su cuenta y
+dejarlo hace que `next.config.mjs` y los archivos de config peleen entre sí.
+
+- [ ] **Step 3: `next.config.mjs`**
+
+```js
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+};
+
+export default nextConfig;
+```
+
+- [ ] **Step 4: `jsconfig.json`**
+
+El alias evita los `../../..` al importar desde `app/`, que queda a otra profundidad
+que las viejas páginas.
+
+```json
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
+```
+
+- [ ] **Step 5: Actualizar `.gitignore`**
+
+Reemplazar la línea `dist/` y `dist-ssr/` por lo que genera Next:
+
+```gitignore
+node_modules/
+.next/
+out/
+build/
+*.local
+.env
+.env.*
+!.env.example
+.vercel
+.DS_Store
+Thumbs.db
+*.log
+next-env.d.ts
+```
+
+- [ ] **Step 6: `app/layout.jsx` — reemplaza a `index.html` y a `App.jsx`**
+
+Las fuentes ya no van por `<link>`: `next/font` las descarga en build y las sirve
+desde el mismo dominio, sin request a Google en runtime y sin salto de texto.
+
+```jsx
+import { Playfair_Display, Inter } from 'next/font/google';
+import Navbar from '../src/components/Navbar/Navbar.jsx';
+import Footer from '../src/components/Footer/Footer.jsx';
+import '../src/styles/tokens.css';
+import '../src/styles/global.css';
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+  display: 'swap',
+  variable: '--fuente-titulo',
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  display: 'swap',
+  variable: '--fuente-cuerpo',
+});
+
+export const metadata = {
+  title: 'La Posta · Parrilla & Restaurante · Villa La Angostura',
+  description:
+    'La Posta — Parrilla y Restaurante en Villa La Angostura. Dos salones, cocina patagónica y reservas online.',
+  icons: { icon: '/logo.jpg' },
+};
+
+export const viewport = {
+  themeColor: '#5F0004',
+};
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="es" className={`${playfair.variable} ${inter.variable}`}>
+      <body>
+        <Navbar />
+        {children}
+        <Footer />
+      </body>
+    </html>
+  );
+}
+```
+
+**El `ScrollAlTope` de `App.jsx` no se migra.** Next restaura el scroll al navegar
+por su cuenta; mantenerlo duplicaría ese comportamiento.
+
+- [ ] **Step 7: Conectar `next/font` con los tokens**
+
+`next/font` expone cada familia como una custom property propia. En
+`src/styles/tokens.css`, cambiar **solo estas dos líneas**:
+
+```css
+  --font-titulo: var(--fuente-titulo), Georgia, 'Times New Roman', serif;
+  --font-cuerpo: var(--fuente-cuerpo), system-ui, -apple-system, 'Segoe UI', sans-serif;
+```
+
+Todo el resto de `tokens.css` queda igual. Ningún componente cambia, porque todos
+siguen leyendo `--font-titulo` y `--font-cuerpo`.
+
+- [ ] **Step 8: `app/page.jsx` — la home**
+
+Es el contenido de `src/pages/Inicio/Inicio.jsx` tal cual, con los imports
+reapuntados. No lleva `'use client'`: es presentación pura.
+
+```jsx
+import Hero from '../src/components/Hero/Hero.jsx';
+import Section from '../src/components/Section/Section.jsx';
+import Boton from '../src/components/Boton/Boton.jsx';
+import { MARCA } from '../src/data/marca.js';
+import { TEXTOS } from '../src/data/textos.js';
+import estilos from './page.module.css';
+
+const FOTOS_BIENVENIDA = [
+  { src: '/img/comunes/bienvenida-1.svg', alt: 'Salón de La Posta con mesas de madera' },
+  { src: '/img/comunes/bienvenida-2.svg', alt: 'Detalle de la parrilla encendida' },
+  { src: '/img/comunes/bienvenida-3.svg', alt: 'Plato servido en la mesa' },
+];
+
+export default function Inicio() {
+  return (
+    <main>
+      <Hero
+        imagen="/img/comunes/hero-marca.svg"
+        alt=""
+        conLogo
+        titulo={MARCA.nombre}
+        bajada={MARCA.bajada}
+        acciones={
+          <>
+            <Boton to="/reservas" tamano="lg">Reservar mesa</Boton>
+            <Boton to="/carta" variante="contorno" tamano="lg">Ver la carta</Boton>
+          </>
+        }
+      />
+
+      <Section>
+        <div className={estilos.bienvenida}>
+          <div className={estilos.textoBienvenida}>
+            <h2>{TEXTOS.bienvenida.titulo}</h2>
+            {TEXTOS.bienvenida.parrafos.map((parrafo, i) => (
+              <p key={i}>{parrafo}</p>
+            ))}
+            <Boton to="/nosotros" variante="texto">Conocé nuestra historia</Boton>
+          </div>
+
+          <div className={estilos.fotosBienvenida}>
+            {FOTOS_BIENVENIDA.map((foto) => (
+              <img
+                key={foto.src}
+                src={foto.src}
+                alt={foto.alt}
+                loading="lazy"
+                className={estilos.fotoBienvenida}
+              />
+            ))}
+          </div>
+        </div>
+      </Section>
+    </main>
+  );
+}
+```
+
+La `key` de los párrafos pasa a ser el índice. Esto cierra un minor de la Task 6: la
+lista es estática y no se reordena, así que el índice es estable, mientras que
+`parrafo.slice(0, 24)` colisiona en silencio si dos párrafos llegan a empezar igual.
+
+- [ ] **Step 9: `app/page.module.css`**
+
+Mover `src/pages/Inicio/Inicio.module.css` a `app/page.module.css` **sin cambiarle
+una línea**, y borrar el original.
+
+- [ ] **Step 10: Las otras tres páginas, todavía stubs**
+
+Las tareas 10, 11 y 12 las escriben de verdad. Por ahora, para que las rutas existan:
+
+`app/carta/page.jsx`:
+```jsx
+export default function Carta() {
+  return <main><h1>Carta</h1></main>;
+}
+```
+
+`app/reservas/page.jsx`:
+```jsx
+export default function Reservas() {
+  return <main><h1>Reservas</h1></main>;
+}
+```
+
+`app/nosotros/page.jsx`:
+```jsx
+export default function Nosotros() {
+  return <main><h1>Nosotros</h1></main>;
+}
+```
+
+- [ ] **Step 11: `app/not-found.jsx` — reemplaza al redirect de la ruta `*`**
+
+En Vite, cualquier ruta desconocida redirigía al inicio. Next tiene 404 de verdad,
+que es mejor: un redirect silencioso le miente al usuario y a Google sobre lo que
+pasó.
+
+```jsx
+import Link from 'next/link';
+import Section from '../src/components/Section/Section.jsx';
+import Boton from '../src/components/Boton/Boton.jsx';
+
+export const metadata = {
+  title: 'Página no encontrada · La Posta',
+};
+
+export default function NoEncontrada() {
+  return (
+    <main>
+      <Section
+        ancho="angosto"
+        titulo="No encontramos esa página"
+        bajada="Puede que el link esté viejo o que hayamos movido algo de lugar."
+      >
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1rem', flexWrap: 'wrap' }}>
+          <Boton to="/">Volver al inicio</Boton>
+          <Boton to="/carta" variante="texto">Ver la carta</Boton>
+        </div>
+      </Section>
+    </main>
+  );
+}
+```
+
+- [ ] **Step 12: `Boton` — cambiar React Router por `next/link`**
+
+En `src/components/Boton/Boton.jsx`, cambiar **solo el import y la rama de `to`**:
+
+```jsx
+import Link from 'next/link';
+```
+
+y dentro del componente:
+
+```jsx
+  // Navegación interna: Link de Next, para no recargar la página
+  if (to) {
+    return (
+      <Link href={to} className={clases} {...resto}>
+        {children}
+      </Link>
+    );
+  }
+```
+
+**La prop sigue llamándose `to`.** Se podría renombrar a `href`, pero seis tareas ya
+escritas la llaman `to` y el cambio no compra nada: la prop es de `Boton`, no de Next.
+Dejarla evita tocar código que ya funciona y ya fue revisado.
+
+`Boton` **no** lleva `'use client'`: `next/link` funciona en un Server Component, y
+las llamadas con `onClick` que lo usen vendrán desde componentes que sí la declaren.
+
+- [ ] **Step 13: `Navbar` — `'use client'`, `next/link` y `usePathname`**
+
+Es el archivo que más cambia. `NavLink` no existe en Next: el estado activo se calcula
+con `usePathname()`.
+
+```jsx
+'use client';
+
+import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { MARCA } from '../../data/marca.js';
+import estilos from './Navbar.module.css';
+
+const ENLACES = [
+  { a: '/', texto: 'Inicio' },
+  { a: '/carta', texto: 'Carta' },
+  { a: '/nosotros', texto: 'Nosotros' },
+];
+
+export default function Navbar() {
+  const [scrolleada, setScrolleada] = useState(false);
+  const [menuAbierto, setMenuAbierto] = useState(false);
+  const pathname = usePathname();
+
+  // La navbar arranca translúcida sobre el hero y se vuelve sólida al bajar
+  useEffect(() => {
+    const alScrollear = () => setScrolleada(window.scrollY > 80);
+    alScrollear();
+    window.addEventListener('scroll', alScrollear, { passive: true });
+    return () => window.removeEventListener('scroll', alScrollear);
+  }, []);
+
+  // Cerrar el menú mobile al navegar. Ajuste de estado durante el render
+  // (en vez de un efecto) porque no sincroniza con nada externo.
+  const [pathnameAnterior, setPathnameAnterior] = useState(pathname);
+  if (pathname !== pathnameAnterior) {
+    setPathnameAnterior(pathname);
+    setMenuAbierto(false);
+  }
+
+  // Con el menú abierto, el fondo no debe scrollear
+  useEffect(() => {
+    document.body.style.overflow = menuAbierto ? 'hidden' : '';
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [menuAbierto]);
+
+  // Fuera del inicio la navbar es siempre sólida: no hay hero debajo
+  const solida = scrolleada || menuAbierto || pathname !== '/';
+
+  const esActivo = (ruta) => (ruta === '/' ? pathname === '/' : pathname.startsWith(ruta));
+
+  return (
+    <header className={`${estilos.navbar} ${solida ? estilos.solida : ''}`}>
+      <nav className={estilos.contenedor} aria-label="Navegación principal">
+        <Link href="/" className={estilos.marca}>
+          <img src={MARCA.logo} alt="" className={estilos.logo} />
+          <span className={estilos.nombreMarca}>{MARCA.nombre}</span>
+        </Link>
+
+        <ul className={`${estilos.enlaces} ${menuAbierto ? estilos.enlacesAbiertos : ''}`}>
+          {ENLACES.map((enlace) => (
+            <li key={enlace.a}>
+              <Link
+                href={enlace.a}
+                className={`${estilos.enlace} ${esActivo(enlace.a) ? estilos.enlaceActivo : ''}`}
+                aria-current={esActivo(enlace.a) ? 'page' : undefined}
+              >
+                {enlace.texto}
+              </Link>
+            </li>
+          ))}
+          <li className={estilos.itemReservar}>
+            <Link href="/reservas" className={estilos.botonReservar}>
+              Reservar
+            </Link>
+          </li>
+        </ul>
+
+        <button
+          type="button"
+          className={estilos.hamburguesa}
+          onClick={() => setMenuAbierto((abierto) => !abierto)}
+          aria-expanded={menuAbierto}
+          aria-label={menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
+        >
+          <span className={`${estilos.barra} ${menuAbierto ? estilos.barraX1 : ''}`} />
+          <span className={`${estilos.barra} ${menuAbierto ? estilos.barraOculta : ''}`} />
+          <span className={`${estilos.barra} ${menuAbierto ? estilos.barraX2 : ''}`} />
+        </button>
+      </nav>
+    </header>
+  );
+}
+```
+
+Se agregó `aria-current="page"` en el link activo, que `NavLink` ponía solo y al
+reemplazarlo se habría perdido en silencio.
+
+- [ ] **Step 14: `Navbar.module.css` — agregar la regla que faltaba**
+
+Cierra otro minor de la Task 4: el JSX referenciaba `.itemReservar` y la clase no
+existía. Agregar al final, antes del bloque `@media`:
+
+```css
+.itemReservar {
+  margin-top: var(--sp-4);
+}
+```
+
+y dentro del `@media (min-width: 768px)`:
+
+```css
+  .itemReservar {
+    margin-top: 0;
+    margin-left: var(--sp-2);
+  }
+```
+
+- [ ] **Step 15: `Footer` — `next/link`**
+
+En `src/components/Footer/Footer.jsx`, cambiar el import y las cuatro etiquetas de
+navegación:
+
+```jsx
+import Link from 'next/link';
+```
+
+y cada `<Link to="/x">` pasa a `<Link href="/x">`. Nada más del archivo cambia.
+**No lleva `'use client'`:** no tiene estado ni handlers.
+
+- [ ] **Step 16: Borrar lo que quedó de Vite**
+
+```bash
+rm -f index.html vite.config.js src/main.jsx src/App.jsx
+rm -rf src/pages
+```
+
+Verificar que no quedó nada colgado:
+
+```bash
+grep -rn "react-router\|from 'vite'\|createBrowserRouter\|<Outlet" src/ app/
+```
+Esperado: **cero resultados**.
+
+- [ ] **Step 17: Verificar**
+
+```bash
+npm run build
+```
+Esperado: `✓ Compiled successfully`, y un listado de rutas que incluya `/`, `/carta`,
+`/nosotros`, `/reservas` y `/_not-found`. Sin errores ni warnings.
+
+```bash
+npm run lint
+```
+Esperado: sin errores.
+
+Chequeos de lectura de código, a confirmar en el reporte:
+- Ningún componente sin `'use client'` usa `useState`, `useEffect`, `onClick` o un
+  hook de `next/navigation`. Este es el error más común al migrar y el build lo
+  detecta, pero conviene verificarlo a mano igual.
+- `Navbar` sí lleva la directiva; `Footer`, `Hero`, `Section`, `Boton` y `app/page.jsx`
+  no la llevan.
+- Ninguna `<Link>` quedó con `to=` en vez de `href=`.
+
+```bash
+grep -rn "'parrilla'\|\"parrilla\"\|'restaurante'\|\"restaurante\"" src/ app/ --include=*.jsx
+```
+Esperado: **cero resultados**.
+
+- [ ] **Step 18: Commit y push**
+
+```bash
+git add -A
+git commit -m "refactor: migrate from Vite to Next.js App Router
+
+The course requires Next.js, so the stack decision was never the plan's
+to make. Migrating now rather than at the end keeps the cost to one
+task: the data layer, the design tokens and every CSS module carry over
+untouched, and only routing and the document shell are rewritten.
+
+Routes become folders under app/. The hand-rolled scroll reset goes away
+because Next already restores scroll, and the catch-all redirect becomes
+a real 404 page, since silently redirecting lies to both the visitor and
+to search engines about what happened.
+
+Fonts move to next/font, which self-hosts them at build time instead of
+requesting Google on every visit.
+
+Only Navbar needs 'use client' so far; everything else stays a server
+component. No API routes, no server actions — Next is used purely as a
+front end, which is what the brief asked for.
+
+Also closes two deferred findings this touches anyway: the missing
+.itemReservar rule, and a paragraph key that could collide."
+git push
+```
+
+- [ ] **Step 19: Avisar del cambio en Vercel**
+
+El proyecto en Vercel quedó creado con el preset `Vite`. El push no alcanza: hay que
+cambiar **Settings → Build and Deployment → Framework Preset** a `Next.js`, dejar el
+Output Directory vacío y redeployar. Esto es trabajo manual del usuario en el
+navegador; dejarlo anotado en el reporte.
+
+---
 ## Task 7: LocalCard y el bloque "Nuestros dos salones"
 
 El bloque que resuelve la división del sitio. Es lo que hace que un visitante entienda, sin que se lo expliquen, que hay dos salones de la misma marca.
 
 **Files:**
 - Create: `src/components/LocalCard/LocalCard.jsx`, `src/components/LocalCard/LocalCard.module.css`
-- Modify: `src/pages/Inicio/Inicio.jsx`, `src/pages/Inicio/Inicio.module.css`
+- Modify: `app/page.jsx`, `app/page.module.css`
 
 **Interfaces:**
 - Consumes: `LOCALES` (Task 3), `Section`, `Boton` (Task 5)
@@ -2091,7 +2645,7 @@ export default function LocalCard({ local }) {
     <article className={estilos.card}>
       <div className={estilos.marcoImagen}>
         <img
-          src={`/img/${local.id}/card.svg`}
+          src={local.imagenes.card}
           alt={`Salón de ${local.nombre}`}
           loading="lazy"
           className={estilos.imagen}
@@ -2892,8 +3446,8 @@ El local activo vive en la URL (`/carta?local=parrilla`), no en estado interno. 
 
 **Files:**
 - Create: `src/components/SelectorLocal/SelectorLocal.jsx`, `src/components/SelectorLocal/SelectorLocal.module.css`
-- Modify: `src/pages/Carta/Carta.jsx`
-- Create: `src/pages/Carta/Carta.module.css`
+- Modify: `app/carta/page.jsx`
+- Create: `app/carta/page.module.css`
 
 **Interfaces:**
 - Consumes: `LOCALES`, `getLocal`, `esIdDeLocal`, `ID_LOCAL_POR_DEFECTO` (Task 3), `getCarta`, `formatearPrecio` (Task 3), `Hero` (Task 6), `Section`, `Boton` (Task 5)
@@ -2984,18 +3538,30 @@ Pegajoso al scrollear: sin esto habría que volver arriba de todo para cambiar d
 
 - [ ] **Step 3: Escribir `src/pages/Carta/Carta.jsx`**
 
-```jsx
-import { useSearchParams } from 'react-router-dom';
-import Hero from '../../components/Hero/Hero.jsx';
-import Section from '../../components/Section/Section.jsx';
-import Boton from '../../components/Boton/Boton.jsx';
-import SelectorLocal from '../../components/SelectorLocal/SelectorLocal.jsx';
-import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../data/locales.js';
-import { getCarta, formatearPrecio } from '../../data/menu.js';
-import estilos from './Carta.module.css';
+El `useSearchParams` de Next es de **solo lectura**: devuelve un `URLSearchParams`
+y no trae setter. Para escribir en la URL se usa el router. Además, un componente que
+lee la query string tiene que ir envuelto en `<Suspense>`, porque Next necesita poder
+renderizar el resto de la página antes de conocerla; sin eso el build falla con
+*"useSearchParams should be wrapped in a suspense boundary"*.
 
-export default function Carta() {
-  const [parametros, setParametros] = useSearchParams();
+Por eso la página se parte en dos: un contenedor de servidor con el `<Suspense>`, y
+el contenido en cliente.
+
+```jsx
+'use client';
+
+import { useRouter, useSearchParams } from 'next/navigation';
+import Hero from '../../src/components/Hero/Hero.jsx';
+import Section from '../../src/components/Section/Section.jsx';
+import Boton from '../../src/components/Boton/Boton.jsx';
+import SelectorLocal from '../../src/components/SelectorLocal/SelectorLocal.jsx';
+import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/data/locales.js';
+import { getCarta, formatearPrecio } from '../../src/data/menu.js';
+import estilos from './page.module.css';
+
+export function CartaContenido() {
+  const parametros = useSearchParams();
+  const router = useRouter();
 
   // El local activo sale de la URL. Si el parámetro falta o es basura,
   // se cae al primer local en vez de romper.
@@ -3004,8 +3570,10 @@ export default function Carta() {
   const local = getLocal(idActivo);
   const carta = getCarta(idActivo);
 
-  // replace: cambiar de carta no debería llenar el historial de entradas
-  const cambiarLocal = (id) => setParametros({ local: id }, { replace: true });
+  // replace y no push: cambiar de carta no debería llenar el historial.
+  // scroll: false para no saltar al tope al tocar el toggle.
+  const cambiarLocal = (id) =>
+    router.replace(`/carta?local=${id}`, { scroll: false });
 
   return (
     <main>
@@ -3094,7 +3662,24 @@ export default function Carta() {
 }
 ```
 
-- [ ] **Step 4: Escribir `src/pages/Carta/Carta.module.css`**
+Y en el mismo archivo, al final, el export por defecto que Next usa como página:
+
+```jsx
+import { Suspense } from 'react';
+
+export default function Carta() {
+  return (
+    <Suspense fallback={null}>
+      <CartaContenido />
+    </Suspense>
+  );
+}
+```
+
+El `import { Suspense }` va arriba de todo, junto a los otros imports; se muestra acá
+aparte solo para no repetir el bloque entero.
+
+- [ ] **Step 4: Escribir `app/carta/page.module.css`**
 
 La línea punteada entre el nombre y el precio es el detalle que hace que se lea como una carta de restaurante y no como una tabla.
 
@@ -3259,8 +3844,8 @@ git push
 Sí hay estado local (`useState`), porque un formulario controlado necesita estado para mostrar lo que se escribe. Eso no es persistencia.
 
 **Files:**
-- Modify: `src/pages/Reservas/Reservas.jsx`
-- Create: `src/pages/Reservas/Reservas.module.css`
+- Modify: `app/reservas/page.jsx`
+- Create: `app/reservas/page.module.css`
 
 **Interfaces:**
 - Consumes: `LOCALES`, `getLocal`, `esIdDeLocal`, `ID_LOCAL_POR_DEFECTO` (Task 3), `TEXTOS` (Task 3), `Hero` (Task 6), `Section`, `Boton` (Task 5)
@@ -3269,19 +3854,24 @@ Sí hay estado local (`useState`), porque un formulario controlado necesita esta
 
 El local va **primero** porque condiciona las franjas horarias. Se muestra como dos tarjetas seleccionables, no como un `<select>`: ocupa más lugar, pero deja claro de entrada que hay dos salones.
 
-```jsx
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
-import Hero from '../../components/Hero/Hero.jsx';
-import Section from '../../components/Section/Section.jsx';
-import Boton from '../../components/Boton/Boton.jsx';
-import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../data/locales.js';
-import { TEXTOS } from '../../data/textos.js';
-import { MARCA } from '../../data/marca.js';
-import estilos from './Reservas.module.css';
+Como en la Carta, `useSearchParams` obliga a envolver en `<Suspense>`, así que el
+contenido va en un componente aparte y la página lo envuelve.
 
-export default function Reservas() {
-  const [parametros] = useSearchParams();
+```jsx
+'use client';
+
+import { useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import Hero from '../../src/components/Hero/Hero.jsx';
+import Section from '../../src/components/Section/Section.jsx';
+import Boton from '../../src/components/Boton/Boton.jsx';
+import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/data/locales.js';
+import { TEXTOS } from '../../src/data/textos.js';
+import { MARCA } from '../../src/data/marca.js';
+import estilos from './page.module.css';
+
+export function ReservasContenido() {
+  const parametros = useSearchParams();
   const idInicial = parametros.get('local');
 
   const [idLocal, setIdLocal] = useState(
@@ -3499,7 +4089,20 @@ export default function Reservas() {
 }
 ```
 
-- [ ] **Step 2: Escribir `src/pages/Reservas/Reservas.module.css`**
+Y el export por defecto que Next toma como página, en el mismo archivo (con
+`import { Suspense } from 'react';` arriba, junto a los demás imports):
+
+```jsx
+export default function Reservas() {
+  return (
+    <Suspense fallback={null}>
+      <ReservasContenido />
+    </Suspense>
+  );
+}
+```
+
+- [ ] **Step 2: Escribir `app/reservas/page.module.css`**
 
 ```css
 .columnas {
@@ -3784,8 +4387,8 @@ git push
 ## Task 12: Página Nosotros / Contacto
 
 **Files:**
-- Modify: `src/pages/Nosotros/Nosotros.jsx`
-- Create: `src/pages/Nosotros/Nosotros.module.css`
+- Modify: `app/nosotros/page.jsx`
+- Create: `app/nosotros/page.module.css`
 
 **Interfaces:**
 - Consumes: `LOCALES` (Task 3), `TEXTOS`, `MARCA` (Task 3), `Hero` (Task 6), `Section` (Task 5), `GaleriaGrid`, `InfoLocal` (Task 9)
@@ -3877,7 +4480,7 @@ export default function Nosotros() {
 }
 ```
 
-- [ ] **Step 2: Escribir `src/pages/Nosotros/Nosotros.module.css`**
+- [ ] **Step 2: Escribir `app/nosotros/page.module.css`**
 
 ```css
 .historia {
@@ -4503,7 +5106,15 @@ aparecen en esta búsqueda.
 # 4. Sin dependencias de más
 cat package.json
 ```
-Esperado en `dependencies`: solo `react`, `react-dom`, `react-router-dom`.
+Esperado en `dependencies`: solo `next`, `react`, `react-dom`.
+
+```bash
+# 5. Ningún componente de servidor usando APIs de cliente, y ningún resto de Vite
+grep -rln "use client" app/ src/components/
+grep -rn "react-router\|createBrowserRouter\|<Outlet" src/ app/
+```
+El primero debe listar **solo** `Navbar`, `SelectorLocal`, `app/carta/page.jsx` y
+`app/reservas/page.jsx`. El segundo, **cero resultados**.
 
 - [ ] **Step 5: Verificar el build de producción**
 
@@ -4512,11 +5123,16 @@ El dev server perdona cosas que el build no. Hay que mirar el build real:
 ```bash
 npm run lint
 npm run build
-npm run preview
+npm run start
 ```
 
 `npm run lint` tiene que pasar limpio. Los errores típicos acá son imports sin usar
 que quedaron de las tareas anteriores y variables declaradas y nunca leídas.
+
+`npm run build` imprime la tabla de rutas de Next. Revisala: tienen que aparecer `/`,
+`/carta`, `/nosotros`, `/reservas` y `/_not-found`. Si alguna figura como dinámica
+(`ƒ`) en vez de estática (`○`), algo está leyendo datos de request cuando no debería
+— vale la pena entender por qué antes de seguir.
 
 - [ ] El build termina sin errores **ni warnings**.
 - [ ] En `http://localhost:4173`, recorrer las 4 rutas: se ven igual que en dev.
@@ -4558,9 +5174,12 @@ Abrir la URL de Vercel (no localhost) y confirmar:
 
 - [ ] El último commit está desplegado.
 - [ ] Las 4 rutas andan **navegando desde el sitio**.
-- [ ] **Recargar estando en `/carta`** carga la carta, no un 404. Vercel resuelve
-      esto solo para Vite; si diera 404, agregar `vercel.json` con un rewrite de
-      `/(.*)` a `/index.html`.
+- [ ] **Recargar estando en `/carta`** carga la carta. Con Next esto funciona solo:
+      cada ruta es una página de verdad, no un rewrite de SPA. **No hace falta
+      `vercel.json`.**
+- [ ] El preset del proyecto en Vercel es **`Next.js`**, no `Vite`. El proyecto se
+      creó antes del cambio de stack, así que hay que revisarlo en
+      Settings → Build and Deployment.
 - [ ] `/carta?local=restaurante` abre directo en esa carta.
 - [ ] Probarlo en un celular real, no solo en el emulador de DevTools.
 
