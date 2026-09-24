@@ -104,10 +104,9 @@ textarea.control {
   height: 1px;
 }
 
-.radioOculto:focus-visible + .nombreLocal {
+.tarjetaLocal:has(.radioOculto:focus-visible) {
   outline: 3px solid var(--brasa);
   outline-offset: 3px;
-  border-radius: var(--radio-sm);
 }
 
 .nombreLocal {

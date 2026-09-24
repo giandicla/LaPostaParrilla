@@ -17,8 +17,17 @@ export function ReservasContenido() {
   const [idLocal, setIdLocal] = useState(
     esIdDeLocal(idInicial) ? idInicial : ID_LOCAL_POR_DEFECTO
   );
+  const [hora, setHora] = useState('');
 
   const local = getLocal(idLocal);
+
+  // Las franjas dependen del local, así que al cambiarlo la hora elegida
+  // deja de ser válida. Se limpia a propósito: mejor volver a preguntar
+  // que dejar puesta una hora que el usuario no eligió.
+  const cambiarLocal = (id) => {
+    setIdLocal(id);
+    setHora('');
+  };
 
   // MAQUETA: el formulario no guarda ni envía nada. La lógica de reservas
   // es la etapa 2 y tiene su propio spec. Acá solo se corta el submit para
@@ -56,7 +65,7 @@ export function ReservasContenido() {
                       name="local"
                       value={opcion.id}
                       checked={opcion.id === idLocal}
-                      onChange={() => setIdLocal(opcion.id)}
+                      onChange={() => cambiarLocal(opcion.id)}
                       className={estilos.radioOculto}
                     />
                     <span className={estilos.nombreLocal}>{opcion.nombreCorto}</span>
@@ -132,7 +141,17 @@ export function ReservasContenido() {
                   Hora
                 </label>
                 {/* Las franjas salen del local elegido arriba */}
-                <select id="hora" name="hora" required className={estilos.control}>
+                <select
+                  id="hora"
+                  name="hora"
+                  required
+                  value={hora}
+                  onChange={(evento) => setHora(evento.target.value)}
+                  className={estilos.control}
+                >
+                  <option value="" disabled>
+                    Elegí un horario
+                  </option>
                   {local.franjasReserva.map((franja) => (
                     <option key={franja} value={franja}>
                       {franja}
