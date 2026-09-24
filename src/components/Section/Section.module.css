@@ -1,0 +1,73 @@
+.seccion {
+  padding: var(--sp-16) var(--sp-4);
+}
+
+.crema {
+  background-color: var(--crema);
+  color: var(--carbon);
+}
+
+.bordoClaro {
+  background-color: var(--bordo-100);
+  color: var(--carbon);
+}
+
+.bordo {
+  background-color: var(--bordo-900);
+  color: var(--crema);
+}
+
+.contenedor {
+  margin: 0 auto;
+}
+
+.normal {
+  max-width: var(--ancho-max);
+}
+
+.angosto {
+  max-width: 68ch;
+}
+
+.encabezado {
+  margin-bottom: var(--sp-12);
+  text-align: center;
+}
+
+.titulo {
+  position: relative;
+  display: inline-block;
+  padding-bottom: var(--sp-3);
+}
+
+/* Subrayado corto en brasa, centrado bajo el título */
+.titulo::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 3px;
+  background-color: var(--brasa);
+  border-radius: 2px;
+}
+
+.bajada {
+  margin-top: var(--sp-4);
+  color: var(--gris-600);
+  max-width: 60ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Sobre fondo bordo el texto secundario tiene que aclararse */
+.bordo .bajada {
+  color: rgba(245, 239, 230, 0.85);
+}
+
+@media (min-width: 768px) {
+  .seccion {
+    padding: var(--sp-24) var(--sp-8);
+  }
+}

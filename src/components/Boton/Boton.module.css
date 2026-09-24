@@ -1,0 +1,76 @@
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-2);
+  font-family: var(--font-cuerpo);
+  font-weight: 600;
+  text-align: center;
+  border: 2px solid transparent;
+  border-radius: var(--radio-md);
+  cursor: pointer;
+  transition: background-color var(--transicion), color var(--transicion),
+    border-color var(--transicion), transform var(--transicion);
+}
+
+.boton:hover {
+  transform: translateY(-2px);
+}
+
+.boton:active {
+  transform: translateY(0);
+}
+
+/* ---------- Tamaños ---------- */
+.md {
+  padding: var(--sp-3) var(--sp-6);
+  font-size: var(--fs-body);
+}
+
+.lg {
+  padding: var(--sp-4) var(--sp-8);
+  font-size: 1.05rem;
+}
+
+/* ---------- Variantes ---------- */
+.primario {
+  background-color: var(--bordo-900);
+  color: var(--crema);
+  border-color: var(--bordo-900);
+}
+
+.primario:hover {
+  background-color: var(--bordo-700);
+  border-color: var(--bordo-700);
+}
+
+.contorno {
+  background-color: transparent;
+  color: var(--crema);
+  border-color: var(--crema);
+}
+
+.contorno:hover {
+  background-color: var(--crema);
+  color: var(--bordo-900);
+}
+
+.texto {
+  background: none;
+  border-color: transparent;
+  color: var(--bordo-900);
+  padding-left: 0;
+  padding-right: 0;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.texto:hover {
+  color: var(--madera);
+}
+
+.boton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
