@@ -37,7 +37,62 @@ agente distinto mirándolo.
 sin el código escrito, no es una verificación. La verificación necesita (a) código
 real, (b) un revisor que no escribió lo que revisa.
 
-### 1.2 Falló al asumir datos personales sin preguntar
+### 1.2 El checklist de verificación estaba escrito de forma que ocultaba un bug
+
+**Este es el hallazgo más interesante de todo el proyecto.**
+
+Después de que las catorce tareas pasaran su revisión individual, una revisión general
+de toda la rama encontró un bug **Critical**: en un celular no se podía cerrar el
+menú.
+
+La causa es una regla de CSS fácil de pasar por alto. El botón hamburguesa declaraba
+`z-index: 2` pero no declaraba `position`. Sin `position`, el `z-index` **se ignora
+por completo**. El panel del menú, que es `position: fixed` con fondo opaco, quedaba
+pintado encima del botón: la X no se veía ni se podía tocar.
+
+Lo que hace al caso valioso no es el bug, es **por qué sobrevivió a catorce
+revisiones**:
+
+El checklist de QA manual que la propia IA había escrito decía:
+
+> Con el panel abierto, apretá `Escape` y confirmá que se cierra.
+
+Escape **funcionaba**. Lo que nunca se testeaba era cerrar el menú tocando la X —
+que es la única forma que existe en un teléfono, donde no hay tecla Escape.
+
+Es decir: **la IA escribió el código con el bug, y después escribió el checklist de
+verificación de manera que ese bug no se podía encontrar.** No por mala fe: verificó
+lo que sabía que había implementado (Escape), no lo que un usuario real iba a hacer
+(tocar la X).
+
+Había además un agravante que confirma el patrón: el panel solo cerraba al cambiar de
+ruta, así que tocar el link de la página en la que ya estabas tampoco lo cerraba. Un
+usuario de celular quedaba encerrado.
+
+**Conclusión para la materia:** cuando la misma fuente escribe el código y su plan de
+pruebas, las pruebas tienden a cubrir lo que el autor pensó, no lo que falta. Un
+checklist de verificación **hereda los puntos ciegos de quien lo escribe**. Esto vale
+igual para una persona; la IA simplemente lo hace a mayor velocidad y con más
+confianza aparente.
+
+### 1.3 Eligió mal el contenido destacado, y nadie lo notó hasta el final
+
+La home tiene un bloque de platos destacados. La IA lo implementó tomando una
+**rebanada por posición** del menú de cada local (`.slice(1, 3)`), en vez de marcar
+cuáles destacar.
+
+Resultado, en el bloque estrella de una parrilla: *empanadas* y *tabla de ahumados*.
+Dos entradas. Ni cordero al asador ni bife de chorizo — justo lo que el propio texto
+del local promete.
+
+El código era correcto: devolvía cuatro platos, dos por local, con el formato
+esperado. Todas las verificaciones automáticas pasaban. **Lo que estaba mal era el
+criterio**, y ninguna verificación técnica puede detectar eso.
+
+Lo encontró la revisión final porque tenía instrucción de mirar el proyecto como
+producto, no como código.
+
+### 1.4 Falló al asumir datos personales sin preguntar
 
 El asistente configuró el repositorio con `gianfrancodicla@gmail.com`, tomado de la
 configuración de Claude Code, sin preguntar qué cuenta correspondía. El repositorio
@@ -49,7 +104,7 @@ reescribir la autoría de 13 commits.
 **Patrón:** la IA tenía un dato disponible y lo usó como si fuera el correcto, sin
 verificar que aplicara a este contexto.
 
-### 1.3 Falló al escribir documentación sobre su propio código
+### 1.5 Falló al escribir documentación sobre su propio código
 
 `ESTRUCTURA.md` afirmaba una regla sobre qué componentes importan datos. Era falsa, y
 el agente que escribió el archivo la transcribió del plan sin chequearla contra el
@@ -61,7 +116,7 @@ Lo detectó la revisión, que corrió el `grep` ella misma.
 **Patrón:** un agente puede afirmar de buena fe que verificó algo que no verificó.
 Las afirmaciones de verificación no son verificación.
 
-### 1.4 Describió versiones y rutas que no existían
+### 1.6 Describió versiones y rutas que no existían
 
 El plan decía "Next.js 15"; lo instalado era 16.3.6. Decía que el servidor de
 desarrollo corre en el puerto 5173 (el de Vite); en Next es el 3000. Decía que las
@@ -71,7 +126,7 @@ Los tres los detectó el agente que escribía la documentación, porque se le di
 instrucción explícita: **"si el brief no coincide con el repositorio, gana el
 repositorio"**.
 
-### 1.5 No puede verificar nada visual
+### 1.7 No puede verificar nada visual
 
 Ningún agente puede abrir un navegador. Todo lo visual —responsive, contraste real,
 navegación por teclado, que las cosas no se superpongan— quedó sin verificar.
@@ -180,11 +235,16 @@ más interesante: por qué se decidió algo cuando todavía no se sabía cómo i
 
 Si hay que elegir tres cosas para contar:
 
-1. **La IA escribió un plan con diez defectos y no los vio al revisarse a sí misma.**
-   Los encontró un revisor separado, con el código escrito. (Parte 1.1)
-2. **Los agentes distinguieron entre "esto está mal en el plan, lo reporto" y "esto
-   está mal en el plan, lo corrijo y aviso".** Esa distinción es más difícil de lo que
-   parece y salió bien. (Parte 2.1 y 2.2)
-3. **Lo visual sigue sin poder verificarse por IA.** El sitio compila, pasa todas las
-   verificaciones automáticas, y aun así nadie confirmó todavía que se vea bien.
-   (Parte 1.5)
+1. **La IA escribió el checklist de pruebas de manera que su propio bug no se podía
+   encontrar.** Testeaba cerrar el menú con Escape —que funcionaba— y nunca tocando
+   la X, que es la única forma en un celular. El bug sobrevivió catorce revisiones.
+   (Parte 1.2)
+2. **La IA escribió un plan con diez defectos y no los vio al revisarse a sí misma.**
+   Los encontró un revisor separado, con el código ya escrito. (Parte 1.1)
+3. **Hay errores que ninguna verificación automática puede detectar.** Los platos
+   destacados de la parrilla eran dos entradas: el código era correcto, el criterio
+   estaba mal. (Parte 1.3)
+
+Y como contrapeso honesto: el mismo método que dejó pasar el bug del menú durante
+catorce revisiones lo encontró en la decimoquinta, cuando se le pidió a un revisor que
+mirara el proyecto entero como producto en vez de tarea por tarea.
