@@ -442,3 +442,21 @@ no uno por hallazgo. Se incluyen ademas las grillas repeat(2,1fr) -> auto-fit (5
 lineas) porque vuelven literalmente cierta la promesa del spec de que un tercer local
 es solo datos, y las correcciones de documentacion que quedaron desactualizadas. Si
 sale mal: se revierte un commit.`
+
+=== CIERRE DE LA SESION (agregado despues de copiar el ledger) ===
+Re-review de la tanda de fixes (05a77a9..1b70c3d): los 7 items ADDRESSED, sin
+  regresiones. El reviewer verifico a nivel de bytes que el escape \u0300-\u036f
+  quedo como texto ASCII y no como los caracteres invisibles, corrio getDestacados()
+  en vivo, y calculo para cada una de las 6 grillas auto-fit si con dos locales
+  siguen dando dos columnas al ancho actual. La mas ajustada es .grillaPlatos:
+  necesita 1032px y hay 1036px disponibles en el breakpoint. Margen real pero chico.
+Estado final: 34 commits, arbol limpio, local y remoto sincronizados.
+Workspace .superpowers/ borrado; el historial de git es el registro ahora.
+
+**Ruling — no se invoca el cierre de rama del proceso.**
+`El proceso termina normalmente integrando una rama de trabajo. Aca no aplica: se
+trabajo sobre main por decision previa, todo esta pusheado y desplegado, no hay nada
+que integrar. Invocarlo habria sido ceremonia vacia. Si sale mal: nada, no hay rama.`
+
+**Correccion a lo que le dije al usuario:** le informe 35 commits; son 34. Error de
+conteo mio al cerrar, sin consecuencia sobre el trabajo.
