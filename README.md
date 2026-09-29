@@ -38,6 +38,8 @@ Front puro: sin backend, sin base de datos.
 | `docs/ESTRUCTURA.md` | Qué contiene cada página y componente |
 | `docs/BITACORA.md` | Log de cambios |
 | `docs/PENDIENTES.md` | Lo que falta |
+| `docs/QA-MANUAL.md` | Checklist para verificar el sitio en un navegador |
+| `docs/proceso/` | Registro del trabajo con IA, para la presentación de la materia |
 
 ## Estado
 
