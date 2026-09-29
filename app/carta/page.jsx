@@ -14,12 +14,12 @@ import estilos from './page.module.css';
 const aSlug = (texto) =>
   texto
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-+|-+$/g, '');
 
-export function CartaContenido() {
+function CartaContenido() {
   const parametros = useSearchParams();
   const router = useRouter();
 
@@ -122,6 +122,8 @@ export function CartaContenido() {
 }
 
 export default function Carta() {
+  // useSearchParams() adentro de CartaContenido exige un límite de Suspense
+  // para que la ruta se pueda seguir prerenderizando como estática.
   return (
     <Suspense fallback={null}>
       <CartaContenido />

@@ -10,7 +10,7 @@ import { TEXTOS } from '../../src/data/textos.js';
 import { MARCA } from '../../src/data/marca.js';
 import estilos from './page.module.css';
 
-export function ReservasContenido() {
+function ReservasContenido() {
   const parametros = useSearchParams();
   const idInicial = parametros.get('local');
 
@@ -248,6 +248,8 @@ export function ReservasContenido() {
 }
 
 export default function Reservas() {
+  // useSearchParams() adentro de ReservasContenido exige un límite de
+  // Suspense para que la ruta se pueda seguir prerenderizando como estática.
   return (
     <Suspense fallback={null}>
       <ReservasContenido />

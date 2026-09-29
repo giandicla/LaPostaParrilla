@@ -16,10 +16,10 @@ const CARTAS = {
     {
       categoria: 'De la parrilla',
       platos: [
-        { nombre: 'Cordero patagónico al asador', descripcion: 'Cocción lenta a la cruz, seis horas sobre las brasas', precio: 34000 },
+        { nombre: 'Cordero patagónico al asador', descripcion: 'Cocción lenta a la cruz, seis horas sobre las brasas', precio: 34000, destacado: true },
         { nombre: 'Bife de chorizo', descripcion: '400 g, con papas rústicas al romero', precio: 27000 },
         { nombre: 'Entraña', descripcion: 'A punto, con chimichurri de la casa', precio: 25500 },
-        { nombre: 'Parrillada para dos', descripcion: 'Asado, vacío, chorizo, morcilla y achuras', precio: 48000 },
+        { nombre: 'Parrillada para dos', descripcion: 'Asado, vacío, chorizo, morcilla y achuras', precio: 48000, destacado: true },
       ],
     },
     {
@@ -55,7 +55,7 @@ const CARTAS = {
     {
       categoria: 'Pastas caseras',
       platos: [
-        { nombre: 'Sorrentinos de ciervo', descripcion: 'Con salsa de hongos de pino', precio: 24000 },
+        { nombre: 'Sorrentinos de ciervo', descripcion: 'Con salsa de hongos de pino', precio: 24000, destacado: true },
         { nombre: 'Ñoquis de papa', descripcion: 'Con estofado de cordero de cocción lenta', precio: 22000 },
         { nombre: 'Ravioles de espinaca y ricota', descripcion: 'Con manteca de salvia', precio: 21000 },
       ],
@@ -63,7 +63,7 @@ const CARTAS = {
     {
       categoria: 'Principales',
       platos: [
-        { nombre: 'Trucha del lago a la manteca negra', descripcion: 'Con papas andinas y alcaparras', precio: 28000 },
+        { nombre: 'Trucha del lago a la manteca negra', descripcion: 'Con papas andinas y alcaparras', precio: 28000, destacado: true },
         { nombre: 'Ciervo braseado en Malbec', descripcion: 'Con puré de zanahoria ahumada', precio: 31000 },
         { nombre: 'Risotto de hongos', descripcion: 'Hongos de pino de la zona y queso de cabra', precio: 23000 },
       ],
@@ -88,17 +88,22 @@ const CARTAS = {
 export const getCarta = (idLocal) => CARTAS[idLocal] ?? [];
 
 // Dos platos de cada local, para que la home muestre las dos cocinas.
+// Se marcan a mano con `destacado: true` en la carta de cada local (arriba),
+// en vez de tomar una posición fija: así el destacado es una decisión de
+// contenido, no un accidente del orden en que están escritos los platos.
 // Se deriva de LOCALES en vez de hardcodear ids.
 export const getDestacados = () =>
   LOCALES.flatMap((local) => {
     const carta = getCarta(local.id);
     const platos = carta.flatMap((seccion) => seccion.platos);
-    return platos.slice(1, 3).map((plato, i) => ({
-      ...plato,
-      idLocal: local.id,
-      nombreLocal: local.nombreCorto,
-      imagen: `/img/${local.id}/plato-${i + 1}.svg`,
-    }));
+    return platos
+      .filter((plato) => plato.destacado)
+      .map(({ destacado, ...plato }, i) => ({
+        ...plato,
+        idLocal: local.id,
+        nombreLocal: local.nombreCorto,
+        imagen: `/img/${local.id}/plato-${i + 1}.svg`,
+      }));
   });
 
 export const formatearPrecio = (precio) =>

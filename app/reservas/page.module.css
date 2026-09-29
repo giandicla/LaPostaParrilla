@@ -48,10 +48,11 @@
   transition: border-color var(--transicion), box-shadow var(--transicion);
 }
 
-.control:focus {
-  outline: none;
+/* Mismo anillo que el resto del sitio (ver global.css), más un cambio de
+   borde propio del campo. Antes esto apagaba el anillo global con
+   `outline: none` y lo cambiaba por un halo `--bordo-100` casi invisible. */
+.control:focus-visible {
   border-color: var(--bordo-900);
-  box-shadow: 0 0 0 3px var(--bordo-100);
 }
 
 textarea.control {
@@ -208,7 +209,7 @@ textarea.control {
   }
 
   .opcionesLocal {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
 }
 

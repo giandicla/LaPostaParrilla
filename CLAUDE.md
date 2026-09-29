@@ -24,7 +24,10 @@ Sin librerías de UI, sin backend. Deploy automático a Vercel en cada push a `m
 - Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
 - **Server Components por defecto.** `'use client'` solo va en `Navbar`,
   `SelectorLocal`, `app/carta/page.jsx` y `app/reservas/page.jsx`.
-- Navegación con `next/link`. La prop de `Boton` se llama `to`, no `href`.
+- Navegación con `next/link`. `Boton` tiene dos props de destino, a propósito:
+  `to` renderiza un `next/link` para navegación interna (rutas del sitio);
+  `href` renderiza un `<a target="_blank" rel="noreferrer">` para links
+  externos (el Canva de la carta, WhatsApp). Nunca se usan juntas.
 
 ## Convenciones
 

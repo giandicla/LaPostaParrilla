@@ -79,13 +79,18 @@ export default function Navbar() {
                 href={enlace.a}
                 className={`${estilos.enlace} ${esActivo(enlace.a) ? estilos.enlaceActivo : ''}`}
                 aria-current={esActivo(enlace.a) ? 'page' : undefined}
+                onClick={() => setMenuAbierto(false)}
               >
                 {enlace.texto}
               </Link>
             </li>
           ))}
           <li className={estilos.itemReservar}>
-            <Link href="/reservas" className={estilos.botonReservar}>
+            <Link
+              href="/reservas"
+              className={estilos.botonReservar}
+              onClick={() => setMenuAbierto(false)}
+            >
               Reservar
             </Link>
           </li>

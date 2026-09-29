@@ -55,16 +55,27 @@ Cosas que salieron en revisiones durante la construcción y se dejaron a propós
 para más adelante, porque no bloquean la maqueta visual. Ninguna es una regresión
 introducida por esta tarea de documentación; quedan acá para que no se pierdan.
 
-- [ ] `getDestacados()` en `src/data/menu.js` usa `.slice(1, 3)` sin guarda. Con los
-      datos actuales devuelve 2 platos por local, pero si un local llegara a tener
-      menos platos devolvería menos, en silencio, rompiendo el invariante de "dos
-      por local" que promete su propio comentario.
+- [x] `getDestacados()` en `src/data/menu.js` usaba `.slice(1, 3)` sin guarda:
+      con los datos de ese momento devolvía Empanadas y Tabla de ahumados para la
+      parrilla, dos entradas que no representan la propuesta del local (brasas,
+      cordero). Resuelto en la revisión final: se eliminó el `.slice` y se agregó
+      `destacado: true` a mano en dos platos por local en `CARTAS`
+      (`src/data/menu.js`); `getDestacados()` ahora filtra por ese flag en vez de
+      tomar una posición fija, así que ya no puede devolver menos de lo esperado
+      en silencio ni platos que no representen la cocina del local.
 - [ ] `LocalCard` lee `local.horarios[0]` sin verificar que el array tenga
       elementos. Un tercer local sin horarios cargados rompería el render.
-- [x] El proyecto usaba tres breakpoints distintos para la misma idea: 600px en la
+- [ ] El proyecto usaba tres breakpoints distintos para la misma idea: 600px en la
       grilla de platos, 768px en navbar y footer, 900px en las grillas de locales y
-      bienvenida. Resuelto en la tarea 14: la grilla de platos pasó a 768px, igual
-      que navbar y footer (900px queda aparte, para las grillas de locales).
+      bienvenida. La tarea 14 lo resolvió a medias: la grilla de platos pasó a
+      768px, igual que navbar y footer (900px queda aparte, para las grillas de
+      locales) — pero quedaron otros dos 600px/421px sin tocar ni explicar:
+      `app/reservas/page.module.css` sigue cambiando de layout a los 600px
+      (`.fila` y `.opcionesLocal`), y `SelectorLocal.module.css` tiene su propio
+      breakpoint en 421px para el tamaño de los botones del selector. Reabierto en
+      la revisión final: ninguno de los dos se tocó, porque no forman parte de los
+      hallazgos de esta pasada; falta decidir si se unifican con 768px o si hay una
+      razón real (contenido más angosto) para dejarlos aparte.
 - [x] `--madera` sobre `--crema` daba un contraste de ~4.88:1 en los precios. Pasa
       AA (mínimo 4.5:1) pero con poco margen. Resuelto en la tarea 14: se oscureció
       el token a `#7A5134` (~6.02:1 sobre `--crema`).

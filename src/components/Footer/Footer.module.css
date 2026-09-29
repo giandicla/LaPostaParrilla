@@ -85,6 +85,9 @@
 
 @media (min-width: 1100px) {
   .contenedor {
-    grid-template-columns: 1.4fr 1fr 1fr 1fr;
+    /* La marca mantiene su columna más ancha de forma explícita; las columnas
+       de local + la de navegación son fluidas, para que un tercer local sume
+       una columna más en la misma fila en vez de partirse a una fila aparte. */
+    grid-template-columns: minmax(240px, 1.4fr) repeat(auto-fit, minmax(180px, 1fr));
   }
 }

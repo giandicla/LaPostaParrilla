@@ -59,7 +59,10 @@
 
 @media (min-width: 900px) {
   .grillaLocales {
-    grid-template-columns: repeat(2, 1fr);
+    /* auto-fit + minmax en vez de repeat(2, ...): con los dos locales de hoy
+       arma las mismas dos columnas de siempre; un tercer local sumaría una
+       tercera en la misma fila si entra, o pasaría a la fila de abajo. */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   }
 }
 
@@ -84,7 +87,10 @@
 
 @media (min-width: 1100px) {
   .grillaPlatos {
-    grid-template-columns: repeat(4, 1fr);
+    /* Antes repeat(4, 1fr), pensado para 2 locales x 2 platos. Fluida para
+       que un tercer local (y sus 2 platos destacados) sumen columnas en vez
+       de romper la grilla. */
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
 }
 
@@ -98,6 +104,6 @@
 
 @media (min-width: 900px) {
   .grillaInfo {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   }
 }

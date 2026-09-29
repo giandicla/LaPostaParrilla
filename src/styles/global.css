@@ -66,10 +66,14 @@ ul, ol {
   padding: 0;
 }
 
-/* Foco visible y consistente en todo el sitio */
+/* Foco visible y consistente en todo el sitio.
+   El anillo naranja solo (--brasa sobre --crema) da ~1.89:1 de contraste,
+   casi invisible en fondos claros. El halo oscuro de abajo lo hace legible
+   ahí sin perder el color cálido, y sigue viéndose bien sobre --bordo-900. */
 :focus-visible {
   outline: 3px solid var(--brasa);
   outline-offset: 2px;
+  box-shadow: 0 0 0 5px rgba(28, 21, 18, 0.35);
   border-radius: var(--radio-sm);
 }
 

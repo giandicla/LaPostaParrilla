@@ -59,7 +59,7 @@ Forma de un local:
 ```js
 { id, nombre, nombreCorto, tagline, descripcion, direccion, mapaEmbedUrl,
   telefono, whatsapp, cartaUrl, horarios: [{dia, franja}],
-  franjasReserva: [string], imagenes: { hero, galeria: [{src, alt}] } }
+  franjasReserva: [string], imagenes: { card, hero, galeria: [{src, alt}] } }
 ```
 
 `telefono`, `whatsapp` y `cartaUrl` pueden ser `null`. La UI esconde lo que falta.

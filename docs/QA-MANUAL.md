@@ -206,10 +206,13 @@ direcciones y apretá `Tab`.
 - [ ] Todo lo clickeable (links, botones, campos del formulario) se alcanza
       con `Tab`, en un orden que sigue el orden visual de la página (de
       arriba hacia abajo, de izquierda a derecha).
-- [ ] En cada elemento enfocado aparece un **anillo de foco naranja**, bien
-      visible. Probá especialmente los botones sobre fondo bordo (vino), como
-      los de la navbar y los de la sección "Nuestros dos salones": el anillo
-      tiene que verse igual de bien ahí que sobre fondo claro.
+- [ ] En cada elemento enfocado aparece un **anillo de foco naranja con un
+      halo oscuro alrededor**, bien visible. Probalo sobre todo en fondos
+      **claros** — los campos del formulario de `/reservas`, los links del
+      índice de categorías en `/carta`, cualquier link sobre `--crema` — que es
+      donde antes casi no se veía. Confirmá también que se sigue viendo igual
+      de bien sobre fondo bordo (vino), como los botones de la navbar y los de
+      la sección "Nuestros dos salones".
 - [ ] Angosta la ventana (o usá el Device Toolbar en 360px) hasta que aparezca
       el botón de hamburguesa de la navbar. Con `Tab`, llegá hasta ese botón y
       apretá `Enter`: el panel de menú se abre.
@@ -224,6 +227,13 @@ direcciones y apretá `Tab`.
 - [ ] Inmediatamente después de cerrarse con `Escape`, apretá `Tab` una vez
       (o fijate dónde está el anillo de foco): tiene que estar **de vuelta en
       el botón de hamburguesa**, no perdido en otro lado de la página.
+- [ ] En 360px, con el dedo (o el mouse): abrí el menú tocando el botón de
+      hamburguesa y confirmá que el botón (ahora con forma de X) queda
+      **visible por encima del panel** y se puede tocar para cerrarlo. Cerralo
+      así, tocando la X, sin usar `Escape`.
+- [ ] En 360px, con el menú abierto, tocá el link de la página en la que ya
+      estás (por ejemplo, si estás en `/`, tocá "Inicio"): el menú tiene que
+      **cerrarse igual**, aunque la ruta no cambie.
 - [ ] En `/carta`, el selector de salón ("La Parrilla" / "El Restaurante") se
       puede operar llegando con `Tab` y activando con `Enter` (o con las
       flechas, si el foco está dentro del selector).

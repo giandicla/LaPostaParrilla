@@ -273,7 +273,11 @@ Extraída del logo real (`LogoLaPosta.jpg`, muestreo de píxel: `#5F0004`).
   --blanco:    #FFFFFF;
 
   /* Acentos */
-  --madera:    #8B5E3C;   /* detalles, bordes, guiño a la madera del salón */
+  --madera:    #7A5134;   /* detalles, bordes, guiño a la madera del salón —
+                             oscurecido desde el #8B5E3C original: sobre
+                             --crema daba ~4.88:1 de contraste, por encima del
+                             mínimo AA (4.5:1) pero con poco margen; ahora es
+                             ~6.02:1 (ver docs/BITACORA.md) */
   --brasa:     #E8A33D;   /* CTA secundario, subrayados, calor de brasa */
 
   /* Texto */
