@@ -47,11 +47,35 @@ npm run build         # build de producción a .next/
 npm run placeholders  # regenera los SVG placeholder de public/img/
 ```
 
+## Registro del proceso — OBLIGATORIO
+
+La cátedra pide usar IA **y registrar el proceso**: dónde falla, dónde acierta, y qué
+sale distinto de lo esperado. Ese registro se presenta al final del cuatrimestre, así
+que es entregable, no opcional.
+
+**Al cerrar cada sesión de trabajo, o cuando el usuario lo pida, agregá una entrada**
+en `docs/proceso/`:
+
+- `docs/proceso/sesion-NN-AAAA-MM-DD.md` — una por sesión: qué se pidió, qué se
+  decidió y por qué, qué falló, qué quedó abierto.
+- `docs/proceso/hallazgos.md` — acumulativo. Si en la sesión apareció algo que vale
+  contar en la presentación (un error de la IA con su evidencia, un acierto
+  inesperado, una lección de método), va acá con archivo o commit concreto.
+
+**Reglas:** se registran los errores con su evidencia, no como "hubo un ajuste menor".
+Las entradas viejas no se editan para quedar bien — si algo resultó equivocado, se
+corrige en una entrada nueva dejando el error visible. Se distingue lo que decidió el
+usuario de lo que decidió la IA.
+
+Ver `docs/proceso/README.md` para el formato.
+
 ## Dónde está el resto
 
 - `docs/CONTEXTO.md` — el restaurante, la consigna, las decisiones y por qué
 - `docs/ESTRUCTURA.md` — qué contiene cada página y componente
 - `docs/BITACORA.md` — log de cambios, lo más nuevo arriba
 - `docs/PENDIENTES.md` — lo que falta: datos, fotos, etapas futuras
+- `docs/QA-MANUAL.md` — checklist de verificación visual, para correr en un navegador
+- `docs/proceso/` — registro del trabajo con IA, para la presentación de la materia
 - `docs/superpowers/specs/` — los diseños aprobados
 - `docs/superpowers/plans/` — los planes de implementación
