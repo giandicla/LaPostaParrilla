@@ -9,17 +9,21 @@ export const LOCALES = [
     id: 'parrilla',
     nombre: 'La Posta Parrilla',
     nombreCorto: 'La Parrilla',
-    tagline: 'Brasas, cordero y fuegos patagónicos',
+    tagline: 'Parrilla patagónica',
     descripcion:
-      'Nuestro salón de parrilla, con la leña a la vista y los cortes al asador. ' +
+      'Cordero al asador, cortes a la parrilla y una carta de vinos larga. ' +
       'El lugar para una mesa larga, sin apuro, frente al fuego.',
     direccion: 'Villa La Angostura, Neuquén', // PENDIENTE: dirección exacta
     mapaEmbedUrl:
       'https://maps.google.com/maps?q=Villa%20La%20Angostura&z=14&output=embed', // PENDIENTE: embed del local
     telefono: '+54 9 2944 96-6199',
     whatsapp: '5492944966199', // formato para wa.me, sin + ni espacios
-    cartaUrl:
-      'https://www.canva.com/design/DAGkMvwV_fU/XfpQdDldp_dO58eCMU5Sdg/edit',
+    // La carta es el PDF de la familia, rasterizado hoja por hoja para el
+    // visor de /carta (scripts/procesar-assets.py). Comida y vinos.
+    carta: {
+      pdf: '/cartas/carta-parrilla.pdf',
+      hojas: [1, 2, 3, 4, 5, 6].map((n) => `/cartas/parrilla-${n}.webp`),
+    },
     horarios: [
       // PENDIENTE: horarios reales, incluyendo días de cierre y temporada baja
       { dia: 'Lunes a Jueves', franja: '12:00 – 15:00 · 20:00 – 23:30' },
@@ -32,29 +36,33 @@ export const LOCALES = [
       '20:00', '20:30', '21:00', '21:30', '22:00',
     ],
     imagenes: {
-      card: '/img/parrilla/card.svg',
-      hero: '/img/parrilla/hero.svg',
+      card: '/img/parrilla/card.webp',
+      hero: '/img/parrilla/hero.webp',
       galeria: [
-        { src: '/img/parrilla/galeria-1.svg', alt: 'Salón de la parrilla con mesas de madera' },
-        { src: '/img/parrilla/galeria-2.svg', alt: 'Cortes de carne al asador sobre las brasas' },
-        { src: '/img/parrilla/galeria-3.svg', alt: 'Detalle del fuego y la leña de la parrilla' },
+        { src: '/img/parrilla/cartel.webp', alt: 'Cartel de La Posta Parrilla Patagónica bajo las ramas de un árbol en flor' },
+        { src: '/img/parrilla/cordero-patagonico.webp', alt: 'Costillar de cordero patagónico servido junto a una copa de vino tinto' },
+        { src: '/img/parrilla/abriendo-vino.webp', alt: 'Mozo descorchando un vino en la mesa' },
       ],
     },
   },
   {
     id: 'restaurante',
-    nombre: 'La Posta Restaurante',
-    nombreCorto: 'El Restaurante',
-    tagline: 'Cocina de montaña, pastas y pesca del lago',
+    nombre: 'La Posta II Restaurante',
+    nombreCorto: 'La Posta II',
+    // Es lo que dice el cartel de la entrada
+    tagline: 'Pizzas, pastas y cocina de montaña',
     descripcion:
-      'Nuestro salón de restaurante, más recogido y a media luz. ' +
-      'Platos de olla, pastas caseras y la trucha del lago.',
+      'Una cabaña de troncos con fogón a leña y la pared llena de vinos. ' +
+      'Pastas caseras rellenas, pizzas y platos de olla para las noches frías.',
     direccion: 'Villa La Angostura, Neuquén', // PENDIENTE: dirección exacta
     mapaEmbedUrl:
       'https://maps.google.com/maps?q=Villa%20La%20Angostura&z=14&output=embed', // PENDIENTE: embed del local
     telefono: null, // PENDIENTE: la familia tiene que pasarlo
     whatsapp: null, // PENDIENTE
-    cartaUrl: null, // PENDIENTE: existe un segundo Canva, falta el link
+    carta: {
+      pdf: '/cartas/carta-restaurante.pdf',
+      hojas: [1, 2].map((n) => `/cartas/restaurante-${n}.webp`),
+    },
     horarios: [
       // PENDIENTE: horarios reales
       { dia: 'Martes a Domingo', franja: '12:00 – 15:00 · 19:30 – 23:30' },
@@ -66,12 +74,12 @@ export const LOCALES = [
       '19:30', '20:00', '20:30', '21:00', '21:30',
     ],
     imagenes: {
-      card: '/img/restaurante/card.svg',
-      hero: '/img/restaurante/hero.svg',
+      card: '/img/restaurante/card.webp',
+      hero: '/img/restaurante/hero.webp',
       galeria: [
-        { src: '/img/restaurante/galeria-1.svg', alt: 'Salón del restaurante a media luz' },
-        { src: '/img/restaurante/galeria-2.svg', alt: 'Mesa servida con pastas caseras' },
-        { src: '/img/restaurante/galeria-3.svg', alt: 'Ventanal del restaurante con vista al bosque' },
+        { src: '/img/restaurante/salon.webp', alt: 'Salón de La Posta II con sillas de madera y ventanales' },
+        { src: '/img/restaurante/fogon.webp', alt: 'Fogón a leña encendido en una chimenea de piedra' },
+        { src: '/img/restaurante/vinos.webp', alt: 'Mueble de madera con botellas de vino junto a las mesas' },
       ],
     },
   },

@@ -1,67 +1,77 @@
+/* La foto es la card: formato retrato (las fotos son 4:5) y el texto
+   encima, sobre un degradé que garantiza la lectura. */
 .card {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--crema);
-  color: var(--carbon);
-  border-radius: var(--radio-md);
-  overflow: hidden;
-  box-shadow: var(--sombra-md);
-  transition: transform var(--transicion);
-}
-
-.card:hover {
-  transform: translateY(-4px);
-}
-
-.marcoImagen {
   position: relative;
-  aspect-ratio: 4 / 3;
+  aspect-ratio: 4 / 5;
   overflow: hidden;
+  border-radius: var(--radio-md);
+  background-color: var(--carbon);
+  color: var(--crema);
+  box-shadow: var(--sombra-md);
 }
 
 .imagen {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 600ms ease;
+}
+
+.card:hover .imagen {
+  transform: scale(1.05);
+}
+
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: var(--velo-plato);
+  pointer-events: none;
 }
 
 .etiqueta {
   position: absolute;
+  z-index: 1;
   top: var(--sp-3);
   right: var(--sp-3);
-  background-color: rgba(28, 21, 18, 0.82);
+  background-color: var(--chip-oscuro);
   color: var(--crema);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-etiqueta);
   text-transform: uppercase;
   padding: var(--sp-1) var(--sp-3);
-  border-radius: 999px;
+  border-radius: var(--radio-sm);
 }
 
-.cuerpo {
+.texto {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  bottom: 0;
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  gap: var(--sp-1);
   padding: var(--sp-4);
-  flex: 1;
 }
 
 .nombre {
-  font-size: 1.1rem;
-  color: var(--bordo-900);
+  font-size: clamp(1rem, 1.6vw, 1.2rem);
+  color: var(--blanco);
 }
 
 .descripcion {
-  font-size: var(--fs-small);
-  color: var(--gris-600);
-  flex: 1;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--texto-claro-suave);
 }
 
-.precio {
-  font-family: var(--font-titulo);
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: var(--madera);
-  margin-top: var(--sp-2);
+/* En mobile la grilla es de dos columnas angostas: la descripción no entra */
+@media (max-width: 559px) {
+  .descripcion {
+    display: none;
+  }
 }

@@ -10,7 +10,7 @@ export default function Footer() {
     <footer className={estilos.footer}>
       <div className={estilos.contenedor}>
         <div className={estilos.columnaMarca}>
-          <img src={MARCA.logo} alt="" className={estilos.logo} />
+          <img src={MARCA.logo} alt={MARCA.nombre} className={estilos.logo} />
           <p className={estilos.bajada}>{MARCA.bajada}</p>
           <a
             href={MARCA.instagramUrl}
@@ -24,7 +24,7 @@ export default function Footer() {
 
         {LOCALES.map((local) => (
           <div key={local.id} className={estilos.columna}>
-            <h3 className={estilos.tituloColumna}>{local.nombreCorto}</h3>
+            <h3 className={estilos.tituloColumna}>{local.nombre}</h3>
             <address className={estilos.direccion}>{local.direccion}</address>
             {local.telefono && (
               <a href={`tel:${local.telefono.replace(/\s|-/g, '')}`} className={estilos.enlace}>

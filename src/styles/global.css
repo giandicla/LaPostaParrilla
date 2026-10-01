@@ -29,8 +29,16 @@ h2,
 h3 {
   font-family: var(--font-titulo);
   line-height: var(--lh-titulo);
-  font-weight: 600;
+  font-weight: 400;
   text-wrap: balance;
+}
+
+/* Manual de marca: las mayúsculas sostenidas se reservan para los títulos.
+   h3 queda en mayúsculas y minúsculas, como los subtítulos del manual. */
+h1,
+h2 {
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-titulo);
 }
 
 h1 { font-size: var(--fs-h1); }
@@ -73,7 +81,7 @@ ul, ol {
 :focus-visible {
   outline: 3px solid var(--brasa);
   outline-offset: 2px;
-  box-shadow: 0 0 0 5px rgba(28, 21, 18, 0.35);
+  box-shadow: 0 0 0 5px var(--chip-oscuro);
   border-radius: var(--radio-sm);
 }
 

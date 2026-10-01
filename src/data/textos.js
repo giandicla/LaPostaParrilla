@@ -9,10 +9,29 @@ export const TEXTOS = {
         'Lo llevamos en familia desde hace años, y creció hasta ser dos salones con ' +
         'personalidad propia.',
       'En la parrilla mandan las brasas, el cordero al asador y las mesas largas. ' +
-        'En el restaurante, las pastas caseras, la trucha del lago y una luz más baja. ' +
+        'En La Posta II, las pizzas, las pastas caseras y el fogón a leña. ' +
         'Dos maneras de pasar la misma noche.',
     ],
   },
+  // Textuales del manual de marca (Branding.LaPosta.pdf, hoja 2)
+  valores: [
+    {
+      titulo: 'Tradición',
+      texto:
+        'Celebramos los sabores, los métodos y la hospitalidad propia del sur argentino. ' +
+        'Cada corte, cada fuego, honra la historia de nuestras tierras.',
+    },
+    {
+      titulo: 'Producto noble',
+      texto: 'La materia prima manda, el sabor habla.',
+    },
+    {
+      titulo: 'Dedicación',
+      texto:
+        'Cada preparación lleva su ritmo. Creemos en el valor de esperar lo justo, ' +
+        'en cocinar sin apuros, y en ofrecer un plato que refleje cuidado y oficio.',
+    },
+  ],
   historia: {
     titulo: 'La familia detrás de La Posta',
     parrafos: [

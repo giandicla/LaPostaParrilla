@@ -8,26 +8,29 @@
 - [ ] Horarios reales por día, con días de cierre y temporada baja
 - [ ] Franjas horarias de reserva
 - [x] Teléfono / WhatsApp — `+54 9 2944 96-6199`
-- [x] Link de la carta en Canva
+- [x] Carta en PDF (reemplazó al link de Canva)
 
 ### Restaurante
-- [ ] Nombre exacto con el que se lo conoce
+- [x] Nombre exacto: **La Posta II Restaurante**
 - [ ] Dirección exacta
 - [ ] URL de embed del mapa de Google
 - [ ] Horarios reales por día
 - [ ] Franjas horarias de reserva
 - [ ] Teléfono / WhatsApp
-- [ ] Link del segundo Canva
+- [x] Carta en PDF
+- [ ] Confirmar que la foto `Trucha con salsa.jpg` es la trucha al roquefort
 
 ### Los dos
 - [ ] Tagline real (los actuales son borrador)
-- [ ] Carta en PDF
-- [ ] Fotos en alta: salón, parrilla, platos
+- [x] Carta en PDF
+- [x] Fotos en alta: salón, parrilla, platos
+- [ ] Decidir si la red y clave del WiFi vuelven a la carta pública (se taparon en
+      la web; en el PDF impreso siguen)
 
 ### De la marca
 - [ ] Email de contacto real
 - [ ] Año de fundación e historia real de la familia
-- [ ] Logo en alta resolución o vectorial (el actual es 150×150px)
+- [x] Logo vectorial (`Logo.ai`) y manual de marca
 
 Todos están marcados en el código. Para encontrarlos:
 
@@ -37,17 +40,19 @@ grep -rn "PENDIENTE" src/
 
 ## Assets
 
-- [ ] Reemplazar los SVG placeholder de `public/img/` por las fotos reales,
-      conservando los nombres de archivo y actualizando las extensiones en
-      `src/data/locales.js` y `src/data/menu.js`.
-- [ ] Reemplazar `public/logo.jpg` por la versión en alta.
+- [x] Reemplazar los SVG placeholder de `public/img/` por las fotos reales.
+- [x] Reemplazar `public/logo.jpg` por la versión en alta (ahora SVG en `public/logo/`).
+- [ ] **Cada vez que la familia cambie la carta**, reemplazar el PDF en
+      `Branding y fotos/` y correr `python scripts/procesar-assets.py "../Branding y fotos"`.
+      Las hojas del sitio son una foto del PDF, no se actualizan solas.
 
 ## Decisiones a tomar
 
 - [ ] Consultar con el profesor si prefiere otra forma de estilos (CSS Modules vs
       Tailwind vs CSS plano).
-- [ ] Definir si la carta del sitio se mantiene a mano o se enlaza directo al Canva.
-      Hoy conviven las dos: platos de ejemplo + botón al Canva.
+- [x] Definir si la carta del sitio se mantiene a mano o se enlaza al Canva.
+      Resuelto en la sesión 02 por el usuario: la carta es el PDF, tal cual,
+      hoja por hoja. Se borraron los platos de ejemplo.
 
 ## Hallazgos diferidos de la etapa 1
 
@@ -93,9 +98,8 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
 - [x] El contrato de `GaleriaGrid` (exactamente 3 imágenes, la segunda vertical)
       vivía solo en un comentario del CSS. Resuelto en la tarea 14: ahora también
       está documentado en el `.jsx`.
-- [ ] `aSlug` en `app/carta/page.jsx` podría devolver cadena vacía si una categoría
-      fuera puramente simbólica, produciendo ids que colisionan. Ninguna categoría
-      real lo dispara.
+- [x] `aSlug` en `app/carta/page.jsx` podía devolver cadena vacía. Ya no aplica:
+      la carta escrita a mano (y `aSlug` con ella) se eliminó en la sesión 02.
 
 ## Etapas futuras
 

@@ -7,16 +7,20 @@ Son **dos locales bajo la misma marca**:
 
 | | Parrilla | Restaurante |
 |---|---|---|
-| Propuesta | Brasas, cordero al asador, mesas largas | Pastas caseras, trucha del lago, luz baja |
+| Propuesta | Brasas, cordero al asador, mesas largas | Pizzas, pastas caseras, fogón a leña |
 | Teléfono | +54 9 2944 96-6199 | PENDIENTE |
-| Carta en Canva | Sí, link cargado | Existe, falta el link |
+| Nombre | La Posta Parrilla | La Posta II Restaurante |
+| Carta | PDF de 6 hojas (comida y vinos) | PDF de 2 hojas |
 
 Comparten dueños, identidad visual, nombre e Instagram (`@lapostavla`).
-El local es de madera, acogedor, de montaña. El color de marca es **bordo `#5F0004`**,
-muestreado del logo real.
+El local es de madera, acogedor, de montaña. La identidad sale del **manual de
+marca** (`Branding y fotos/Branding.LaPosta.pdf`): bordo `#600003` y blanco como
+principales, arena `#CBC1B1` secundario, oliva `#757036` destacado; Baskerville
+para títulos y Gill Sans Nova para textos. (En la sesión 1 se había usado `#5F0004`,
+medido de un logo JPEG chico; el manual lo corrigió.)
 
-La familia mantiene las cartas en Canva y las actualiza desde ahí, así que el link
-siempre muestra la versión vigente.
+La carta del sitio es el PDF de la familia, mostrado hoja por hoja tal cual se
+imprime. Cuando cambien precios hay que regenerar las hojas (ver `CLAUDE.md`).
 
 ## La consigna
 

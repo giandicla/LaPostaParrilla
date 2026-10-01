@@ -9,5 +9,8 @@ export const MARCA = {
   instagram: '@lapostavla',
   instagramUrl: 'https://www.instagram.com/lapostavla/',
   email: 'contacto@lapostavla.com', // PENDIENTE: confirmar con la familia
-  logo: '/logo.jpg',
+  // Logo vectorial extraído de Logo.ai (scripts/procesar-assets.py).
+  // Variante blanca para fondos bordo y fotos; bordo para fondos claros.
+  logo: '/logo/logo-blanco.svg',
+  logoOscuro: '/logo/logo-bordo.svg',
 };

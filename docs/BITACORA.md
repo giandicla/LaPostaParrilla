@@ -4,6 +4,40 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-01 — La marca real: manual, logo, fotos y cartas
+
+El usuario trajo la carpeta `Branding y fotos/` con el manual de marca, el `Logo.ai`,
+las dos cartas en PDF y las fotos de cada local. Detalle y decisiones en
+`docs/proceso/sesion-02-2026-10-01.md`.
+
+**Marca**
+- Paleta del manual: bordo `#600003` (antes `#5F0004`), arena `#CBC1B1`, oliva
+  `#757036`. Salieron el naranja "brasa" (queda solo en el foco) y el "madera".
+- Tipografías: Libre Baskerville en títulos, en mayúsculas sostenidas; Gill Sans con
+  respaldo Cabin en textos. Antes: Playfair Display + Inter.
+- Logo vectorial extraído del `.ai`: navbar, footer, hero y favicon (`app/icon.svg`).
+- Radios chicos y líneas finas, como el manual. El fogón del logo como ornamento
+  sobre cada título de sección.
+
+**Contenido**
+- Nombres de los locales: **La Posta Parrilla** y **La Posta II Restaurante**.
+- Fotos reales en todo el sitio (WebP). Se borraron los SVG placeholder y
+  `scripts/gen-placeholders.mjs`; lo reemplaza `scripts/procesar-assets.py`.
+- Inicio: sección nueva "Lo que nos mueve" (valores del manual) y "Algunos de
+  nuestros platos" con 8 fotos, **sin precio**.
+- `/carta`: la carta es el PDF hoja por hoja (componente nuevo `VisorCarta`), con
+  links para ampliar y descargar. Se borró `src/data/menu.js` (platos y precios
+  inventados) y el bloque de Canva. Datos nuevos en `src/data/platos.js`.
+- En la carta de la parrilla se tapó la red y clave del WiFi.
+
+**Verificado**
+- `npm run lint` y `npm run build` limpios; las rutas siguen estáticas.
+- Capturas con Playwright de las cuatro páginas en 1440px y 390px.
+- Visor de carta probado por código: flechas, teclado, miniaturas, swipe y reinicio
+  al cambiar de local, sin errores de consola.
+
+---
+
 ## 2026-09-24 — Etapa 1: boceto visual
 
 Primera sesión. De cero a sitio desplegado.

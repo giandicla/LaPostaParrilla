@@ -7,14 +7,19 @@
   color: var(--carbon);
 }
 
-.bordoClaro {
-  background-color: var(--bordo-100);
+.arena {
+  background-color: var(--arena-100);
   color: var(--carbon);
 }
 
 .bordo {
   background-color: var(--bordo-900);
   color: var(--crema);
+}
+
+.oliva {
+  background-color: var(--oliva);
+  color: var(--blanco);
 }
 
 .contenedor {
@@ -30,40 +35,67 @@
 }
 
 .encabezado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   margin-bottom: var(--sp-12);
   text-align: center;
 }
 
-.titulo {
-  position: relative;
-  display: inline-block;
-  padding-bottom: var(--sp-3);
+/* El fogón del logo como ornamento sobre el título. Es una máscara, así
+   que toma el color de cada fondo sin necesitar un archivo por color. */
+.encabezado::before {
+  content: '';
+  width: 34px;
+  height: 34px;
+  margin-bottom: var(--sp-3);
+  background-color: var(--bordo-900);
+  -webkit-mask: url('/logo/fogon.svg') center / contain no-repeat;
+  mask: url('/logo/fogon.svg') center / contain no-repeat;
 }
 
-/* Subrayado corto en brasa, centrado bajo el título */
+.titulo {
+  position: relative;
+  padding-bottom: var(--sp-4);
+  color: var(--bordo-900);
+}
+
+/* Línea fina bajo el título, como la del logo */
 .titulo::after {
   content: '';
   position: absolute;
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 56px;
-  height: 3px;
-  background-color: var(--brasa);
-  border-radius: 2px;
+  width: 72px;
+  height: 1px;
+  background-color: currentColor;
+  opacity: 0.6;
 }
 
 .bajada {
   margin-top: var(--sp-4);
   color: var(--gris-600);
   max-width: 60ch;
-  margin-left: auto;
-  margin-right: auto;
 }
 
-/* Sobre fondo bordo el texto secundario tiene que aclararse */
-.bordo .bajada {
-  color: rgba(245, 239, 230, 0.85);
+/* Sobre fondos oscuros, título, ornamento y bajada se aclaran */
+.bordo .titulo,
+.oliva .titulo {
+  color: var(--blanco);
+}
+
+.bordo .encabezado::before {
+  background-color: var(--arena);
+}
+
+.oliva .encabezado::before {
+  background-color: var(--blanco);
+}
+
+.bordo .bajada,
+.oliva .bajada {
+  color: var(--texto-claro-suave);
 }
 
 @media (min-width: 768px) {

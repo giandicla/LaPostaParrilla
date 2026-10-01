@@ -1,15 +1,22 @@
 :root {
-  /* ---------- Marca ---------- */
-  --bordo-900: #5F0004;  /* muestreado del logo real */
-  --bordo-700: #7A1218;
-  --bordo-100: #F2E3E3;
+  /* ---------- Marca ----------
+     Paleta del manual de marca (Branding.LaPosta.pdf, hoja "Color"):
+     principal bordo #600003 + blanco, secundario arena #CBC1B1,
+     destacado oliva #757036. */
+  --bordo-900: #600003;  /* principal */
+  --bordo-700: #7A1218;  /* hover del bordo */
+  --arena: #CBC1B1;      /* secundario */
+  --arena-100: #EDE7DD;  /* arena aclarada, para fondos de sección */
+  --oliva: #757036;      /* destacado: solo como fondo (blanco encima ~5.1:1) */
+  --oliva-700: #5E5A2A;  /* oliva oscurecido para texto sobre claro (~6.3:1) */
 
   /* ---------- Superficie ---------- */
-  --crema: #F5EFE6;
+  --crema: #F6F2EC;
   --blanco: #FFFFFF;
 
-  /* ---------- Acentos ---------- */
-  --madera: #7A5134;
+  /* ---------- Acentos ----------
+     La brasa no está en el manual: queda solo para el anillo de foco,
+     que necesita un color que se vea igual sobre claro y sobre bordo. */
   --brasa: #E8A33D;
 
   /* ---------- Texto ---------- */
@@ -17,19 +24,39 @@
   --gris-600: #5A524C;
   --gris-300: #D8D0C6;
 
-  /* ---------- Tipografía ---------- */
-  --font-titulo: var(--fuente-titulo), Georgia, 'Times New Roman', serif;
-  --font-cuerpo: var(--fuente-cuerpo), system-ui, -apple-system, 'Segoe UI', sans-serif;
+  /* ---------- Velos y transparencias ---------- */
+  --velo-hero: linear-gradient(
+    180deg,
+    rgba(96, 0, 3, 0.62) 0%,
+    rgba(28, 21, 18, 0.55) 45%,
+    rgba(28, 21, 18, 0.82) 100%
+  );
+  --velo-plato: linear-gradient(180deg, rgba(28, 21, 18, 0) 45%, rgba(28, 21, 18, 0.88) 100%);
+  --sombra-texto: 0 2px 24px rgba(28, 21, 18, 0.5);
+  --linea-clara: rgba(246, 242, 236, 0.22);
+  --texto-claro-suave: rgba(246, 242, 236, 0.85);
+  --chip-oscuro: rgba(28, 21, 18, 0.72);
+
+  /* ---------- Tipografía ----------
+     Manual: Baskerville para títulos (mayúsculas sostenidas) y Gill Sans
+     Nova para textos. Baskerville llega como Libre Baskerville (Google Fonts).
+     Gill Sans no está en Google Fonts: se usa la instalada si existe (macOS,
+     Windows con Office) y si no, Cabin, una humanista de la misma familia. */
+  --font-titulo: var(--fuente-titulo), Baskerville, Georgia, serif;
+  --font-cuerpo: 'Gill Sans Nova', 'Gill Sans', 'Gill Sans MT', var(--fuente-cuerpo),
+    system-ui, sans-serif;
 
   --fs-hero: clamp(2.5rem, 8vw, 5rem);
-  --fs-h1: clamp(2rem, 5vw, 3rem);
-  --fs-h2: clamp(1.5rem, 3.5vw, 2.25rem);
-  --fs-h3: clamp(1.15rem, 2vw, 1.4rem);
-  --fs-body: 1rem;
-  --fs-small: 0.875rem;
+  --fs-h1: clamp(1.9rem, 5vw, 2.8rem);
+  --fs-h2: clamp(1.4rem, 3.2vw, 2rem);
+  --fs-h3: clamp(1.1rem, 2vw, 1.35rem);
+  --fs-body: 1.0625rem;
+  --fs-small: 0.9rem;
 
-  --lh-titulo: 1.15;
+  --lh-titulo: 1.2;
   --lh-cuerpo: 1.65;
+  --tracking-titulo: 0.08em;
+  --tracking-etiqueta: 0.14em;
 
   /* ---------- Espaciado (escala de 4px) ---------- */
   --sp-1: 0.25rem;
@@ -42,19 +69,20 @@
   --sp-16: 4rem;
   --sp-24: 6rem;
 
-  /* ---------- Forma ---------- */
-  --radio-sm: 4px;
-  --radio-md: 8px;
-  --radio-lg: 16px;
+  /* ---------- Forma ----------
+     El manual es de líneas finas y esquinas rectas: radios chicos. */
+  --radio-sm: 2px;
+  --radio-md: 4px;
+  --radio-lg: 6px;
 
   /* Sombras cálidas, nunca negro puro */
   --sombra-sm: 0 2px 8px rgba(28, 21, 18, 0.08);
   --sombra-md: 0 4px 16px rgba(28, 21, 18, 0.10);
-  --sombra-lg: 0 12px 32px rgba(28, 21, 18, 0.16);
+  --sombra-lg: 0 12px 32px rgba(28, 21, 18, 0.18);
 
   /* ---------- Layout ---------- */
   --ancho-max: 1180px;
-  --alto-navbar: 72px;
+  --alto-navbar: 76px;
 
   --transicion: 200ms ease;
 }

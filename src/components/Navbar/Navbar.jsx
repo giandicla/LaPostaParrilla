@@ -68,8 +68,8 @@ export default function Navbar() {
     <header className={`${estilos.navbar} ${solida ? estilos.solida : ''}`}>
       <nav className={estilos.contenedor} aria-label="Navegación principal">
         <Link href="/" className={estilos.marca}>
-          <img src={MARCA.logo} alt="" className={estilos.logo} />
-          <span className={estilos.nombreMarca}>{MARCA.nombre}</span>
+          {/* El logo ya contiene el nombre: el alt lo lee en voz alta */}
+          <img src={MARCA.logo} alt={MARCA.nombre} className={estilos.logo} />
         </Link>
 
         <ul className={`${estilos.enlaces} ${menuAbierto ? estilos.enlacesAbiertos : ''}`}>

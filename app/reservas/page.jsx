@@ -40,7 +40,7 @@ function ReservasContenido() {
     <main>
       <Hero
         compacto
-        imagen="/img/comunes/hero-marca.svg"
+        imagen="/img/comunes/sirviendo-vino.webp"
         alt=""
         titulo="Reservá tu mesa"
         bajada={MARCA.bajada}

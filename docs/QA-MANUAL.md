@@ -62,15 +62,19 @@ de la lista y en qué página apareció.
 ## Página de Inicio (`/`)
 
 **Qué tiene que verse:**
-- [ ] Un hero grande con el logo, el nombre de la marca, una bajada y dos
+- [ ] Un hero grande con el logo dentro de un marco fino, una bajada y dos
       botones: "Reservar mesa" y "Ver la carta".
 - [ ] Un bloque de bienvenida con texto y tres fotos.
+- [ ] Una franja oliva "Lo que nos mueve" con tres valores: Tradición, Producto
+      noble y Dedicación.
 - [ ] Una sección "Nuestros dos salones" con **dos tarjetas**, una por local
       (Parrilla y Restaurante), cada una con foto, nombre, bajada, descripción,
       dirección, un horario resumido y dos botones: "Reservar acá" y "Ver la
       carta".
-- [ ] Una sección de platos destacados con 4 platos (2 de cada salón) y un
-      botón "Ver las dos cartas".
+- [ ] Una sección "Algunos de nuestros platos" con 8 fotos (4 de cada salón,
+      cada una con la etiqueta de su local) y un botón "Ver las cartas".
+- [ ] **Ningún plato con foto muestra precio.** Es intencional: lo pidió el
+      usuario, los precios están solo en la carta.
 - [ ] Una sección "Visitanos" con la info completa de los dos salones:
       horarios, dirección, mapa embebido, y contacto.
 
@@ -96,43 +100,40 @@ locales bajo una marca" — es lo más importante de probar):**
 
 ## Página de Carta (`/carta`)
 
+> Esta sección se reescribió en la sesión 02: la carta pasó de platos escritos a
+> mano al PDF de la familia, hoja por hoja.
+
 **Qué tiene que verse:**
 - [ ] Un hero con el nombre del salón activo.
-- [ ] Un selector de dos botones ("La Parrilla" / "El Restaurante") que marca
+- [ ] Un selector de dos botones ("La Parrilla" / "La Posta II") que marca
       cuál está activo.
-- [ ] Un índice de categorías (ancla a cada bloque de más abajo).
-- [ ] Los platos del salón activo, agrupados por categoría, cada uno con
-      nombre, descripción y precio.
-- [ ] Un bloque final invitando a abrir la carta oficial en Canva.
+- [ ] La carta como en papel: una hoja a la vez, con flechas a los costados,
+      "Hoja X de N" abajo y miniaturas de todas las hojas.
+- [ ] Dos links: "Abrir el PDF para ampliar" y "Descargar la carta".
+- [ ] En la hoja 1 de la parrilla, abajo a la derecha, **no** aparece la red ni la
+      clave del WiFi (se taparon a propósito).
+
+**Cambiar de hoja:**
+- [ ] Las flechas pasan de hoja. En la primera no hay flecha "atrás"; en la
+      última no hay flecha "adelante".
+- [ ] En desktop, al bajar por una hoja larga, las flechas acompañan el scroll a
+      media altura de la pantalla.
+- [ ] Tocar una miniatura lleva a esa hoja.
+- [ ] Con el foco en la carta (Tab), las flechas del teclado ← → pasan de hoja.
+- [ ] **En un celular de verdad**, deslizar el dedo a la izquierda o derecha sobre
+      la hoja pasa de hoja, y deslizar hacia arriba o abajo sigue scrolleando la
+      página normalmente.
+- [ ] "Abrir el PDF para ampliar" abre el PDF en otra pestaña y se puede hacer zoom.
 
 **El toggle de carta (comportamiento clave a probar):**
 - [ ] Al entrar a `/carta` sin nada en la URL, se abre la carta de **la
-      Parrilla** por defecto.
-- [ ] Al tocar el botón "El Restaurante" del selector, **el contenido cambia**
-      (otros platos, otras categorías) **y la URL cambia** a
-      `/carta?local=restaurante`, sin recargar la página.
-- [ ] Al volver a tocar "La Parrilla", la URL vuelve a
-      `/carta?local=parrilla` (o a `/carta`, según cómo lo arme el toggle) y
-      el contenido vuelve a ser el de la parrilla.
-- [ ] Escribir directamente en la barra de direcciones `/carta?local=restaurante`
-      y apretar Enter: la página tiene que abrir **directo** en la carta del
-      restaurante, con ese botón ya marcado como activo, sin que haya que
-      tocar el selector.
+      Parrilla** por defecto (6 hojas).
+- [ ] Al tocar "La Posta II", la carta cambia (2 hojas), vuelve a la hoja 1, y la
+      URL cambia a `/carta?local=restaurante`, sin recargar la página.
+- [ ] Escribir directamente `/carta?local=restaurante` abre directo en la carta
+      de La Posta II, con ese botón ya marcado.
 - [ ] Escribir un valor sin sentido, por ejemplo `/carta?local=asado123`: la
-      página **no se rompe** y cae de vuelta a la carta de la Parrilla (el
-      salón por defecto), en vez de mostrar un error o una carta vacía.
-- [ ] Los links del índice de categorías, al tocarlos, bajan hasta esa sección
-      sin que la navbar fija tape el título.
-
-**Sobre el Canva de cada salón — esto es intencional, no es un bug:**
-- [ ] Con la carta de **la Parrilla** activa, al final de la página aparece un
-      botón para abrir la carta oficial en Canva.
-- [ ] Con la carta **del Restaurante** activa, en cambio, **no hay botón**:
-      en su lugar aparece un texto que dice que todavía se está cargando la
-      carta digital de ese salón. Esto es correcto — el link de Canva del
-      restaurante todavía no lo pasó la familia (está anotado en
-      `docs/PENDIENTES.md`) — **no lo reportes como un botón roto o
-      faltante**, es un dato pendiente, no un error de código.
+      página **no se rompe** y cae a la carta de la Parrilla.
 
 ---
 
@@ -234,7 +235,7 @@ direcciones y apretá `Tab`.
 - [ ] En 360px, con el menú abierto, tocá el link de la página en la que ya
       estás (por ejemplo, si estás en `/`, tocá "Inicio"): el menú tiene que
       **cerrarse igual**, aunque la ruta no cambie.
-- [ ] En `/carta`, el selector de salón ("La Parrilla" / "El Restaurante") se
+- [ ] En `/carta`, el selector de salón ("La Parrilla" / "La Posta II") se
       puede operar llegando con `Tab` y activando con `Enter` (o con las
       flechas, si el foco está dentro del selector).
 - [ ] En `/reservas`, con el foco dentro del grupo "¿En qué salón?", las

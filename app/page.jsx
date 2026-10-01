@@ -7,30 +7,30 @@ import InfoLocal from '../src/components/InfoLocal/InfoLocal.jsx';
 import { MARCA } from '../src/data/marca.js';
 import { TEXTOS } from '../src/data/textos.js';
 import { LOCALES } from '../src/data/locales.js';
-import { getDestacados } from '../src/data/menu.js';
+import { getPlatosDestacados } from '../src/data/platos.js';
 import estilos from './page.module.css';
 
 // Los datos son estáticos: no hace falta recalcularlos en cada render.
-const DESTACADOS = getDestacados();
+const PLATOS = getPlatosDestacados();
 
 const FOTOS_BIENVENIDA = [
-  { src: '/img/comunes/bienvenida-1.svg', alt: 'Salón de La Posta con mesas de madera' },
-  { src: '/img/comunes/bienvenida-2.svg', alt: 'Detalle de la parrilla encendida' },
-  { src: '/img/comunes/bienvenida-3.svg', alt: 'Plato servido en la mesa' },
+  { src: '/img/comunes/salon-calido.webp', alt: 'Salón de La Posta con lámparas cálidas y ventanales de troncos' },
+  { src: '/img/comunes/sirviendo-vino.webp', alt: 'Mozo sirviendo vino tinto en la mesa' },
+  { src: '/img/comunes/entrada-noche.webp', alt: 'Entrada de La Posta iluminada de noche' },
 ];
 
 export default function Inicio() {
   return (
     <main>
       <Hero
-        imagen="/img/comunes/hero-marca.svg"
+        imagen="/img/comunes/hero-fuego.webp"
         alt=""
         conLogo
-        titulo={MARCA.nombre}
+        titulo={MARCA.nombreCompleto}
         bajada={MARCA.bajada}
         acciones={
           <>
-            <Boton to="/reservas" tamano="lg">Reservar mesa</Boton>
+            <Boton to="/reservas" variante="claro" tamano="lg">Reservar mesa</Boton>
             <Boton to="/carta" variante="contorno" tamano="lg">Ver la carta</Boton>
           </>
         }
@@ -60,11 +60,22 @@ export default function Inicio() {
         </div>
       </Section>
 
+      <Section fondo="oliva" titulo="Lo que nos mueve">
+        <ul className={estilos.valores}>
+          {TEXTOS.valores.map((valor) => (
+            <li key={valor.titulo} className={estilos.valor}>
+              <h3 className={estilos.tituloValor}>{valor.titulo}</h3>
+              <p>{valor.texto}</p>
+            </li>
+          ))}
+        </ul>
+      </Section>
+
       <Section
         id="salones"
-        fondo="bordoClaro"
+        fondo="arena"
         titulo="Nuestros dos salones"
-        bajada="Dos propuestas de la misma familia, a pocas cuadras una de la otra. Elegí con cuál tenés ganas hoy."
+        bajada="Dos propuestas de la misma familia. Elegí con cuál tenés ganas hoy."
       >
         <div className={estilos.grillaLocales}>
           {LOCALES.map((local) => (
@@ -75,16 +86,15 @@ export default function Inicio() {
 
       <Section
         fondo="bordo"
-        titulo="Para empezar por algún lado"
-        bajada="Dos platos de cada salón. La carta completa tiene bastante más."
+        titulo="Algunos de nuestros platos"
+        bajada="Una probadita de cada salón. Los precios y todo lo demás, en la carta."
       >
         <div className={estilos.grillaPlatos}>
-          {DESTACADOS.map((plato) => (
+          {PLATOS.map((plato) => (
             <PlatoCard
               key={`${plato.idLocal}-${plato.nombre}`}
               nombre={plato.nombre}
               descripcion={plato.descripcion}
-              precio={plato.precio}
               imagen={plato.imagen}
               etiquetaLocal={plato.nombreLocal}
             />
@@ -93,7 +103,7 @@ export default function Inicio() {
 
         <div className={estilos.accionesPlatos}>
           <Boton to="/carta" variante="contorno" tamano="lg">
-            Ver las dos cartas
+            Ver las cartas
           </Boton>
         </div>
       </Section>

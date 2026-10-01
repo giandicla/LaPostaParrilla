@@ -21,7 +21,7 @@ Abre en `http://localhost:3000`.
 | `npm run dev` | Servidor de desarrollo |
 | `npm run build` | Build de producción a `.next/` |
 | `npm run start` | Sirve el build local, para revisar antes de pushear |
-| `npm run placeholders` | Regenera los SVG placeholder de `public/img/` |
+| `python scripts/procesar-assets.py "../Branding y fotos"` | Regenera logo, fotos y hojas de carta desde la carpeta de branding |
 
 ## Stack
 

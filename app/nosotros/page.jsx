@@ -12,7 +12,7 @@ export default function Nosotros() {
     <main>
       <Hero
         compacto
-        imagen="/img/comunes/hero-marca.svg"
+        imagen="/img/comunes/salon-calido.webp"
         alt=""
         titulo="Nosotros"
         bajada={MARCA.ciudad}
@@ -28,7 +28,7 @@ export default function Nosotros() {
       </Section>
 
       <Section
-        fondo="bordoClaro"
+        fondo="arena"
         titulo="Los salones por dentro"
         bajada="Cada uno con su clima. Elegí el que vaya con la noche que tenés en mente."
       >

@@ -1,19 +1,16 @@
-import { formatearPrecio } from '../../data/menu.js';
 import estilos from './PlatoCard.module.css';
 
-export default function PlatoCard({ nombre, descripcion, precio, imagen, etiquetaLocal }) {
+// Card de plato con foto. Sin precio, a propósito: los precios están solo en
+// la carta en PDF, que es la que se mantiene al día.
+export default function PlatoCard({ nombre, descripcion, imagen, etiquetaLocal }) {
   return (
     <article className={estilos.card}>
-      <div className={estilos.marcoImagen}>
-        <img src={imagen} alt={nombre} loading="lazy" className={estilos.imagen} />
-        {/* Solo en la home: en la carta el local ya está claro por el contexto */}
-        {etiquetaLocal && <span className={estilos.etiqueta}>{etiquetaLocal}</span>}
-      </div>
+      <img src={imagen} alt={nombre} loading="lazy" className={estilos.imagen} />
+      {etiquetaLocal && <span className={estilos.etiqueta}>{etiquetaLocal}</span>}
 
-      <div className={estilos.cuerpo}>
+      <div className={estilos.texto}>
         <h3 className={estilos.nombre}>{nombre}</h3>
-        <p className={estilos.descripcion}>{descripcion}</p>
-        <p className={estilos.precio}>{formatearPrecio(precio)}</p>
+        {descripcion && <p className={estilos.descripcion}>{descripcion}</p>}
       </div>
     </article>
   );

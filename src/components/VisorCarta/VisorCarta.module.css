@@ -1,0 +1,186 @@
+.visor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+/* Hoja + flechas. En mobile las flechas flotan sobre los bordes de la hoja;
+   desde 768px quedan afuera, a los costados. */
+.escenario {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-4);
+  width: 100%;
+}
+
+.escenario:focus-visible {
+  outline-offset: 6px;
+}
+
+.hoja {
+  width: 100%;
+  max-width: 680px;
+  /* proporción de la hoja del PDF: 612 x 936 pt */
+  aspect-ratio: 612 / 936;
+  overflow: hidden;
+  background-color: var(--blanco);
+  border-radius: var(--radio-sm);
+  box-shadow: var(--sombra-lg);
+  touch-action: pan-y;
+}
+
+.pista {
+  display: flex;
+  height: 100%;
+  transition: transform 350ms ease;
+}
+
+.imagen {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  user-select: none;
+}
+
+.flecha {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  transform: translateY(-50%);
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  font-family: var(--font-titulo);
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--blanco);
+  background-color: var(--bordo-900);
+  border: none;
+  border-radius: 50%;
+  box-shadow: var(--sombra-md);
+  cursor: pointer;
+  transition: background-color var(--transicion), opacity var(--transicion);
+}
+
+.flecha span {
+  /* el glifo ‹ › queda ópticamente alto en Baskerville */
+  transform: translateY(-2px);
+}
+
+.flecha:hover:not(:disabled) {
+  background-color: var(--bordo-700);
+}
+
+.flecha:disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.anterior {
+  left: var(--sp-2);
+}
+
+.siguiente {
+  right: var(--sp-2);
+}
+
+.contador {
+  font-size: var(--fs-small);
+  letter-spacing: var(--tracking-etiqueta);
+  text-transform: uppercase;
+  color: var(--gris-600);
+}
+
+.miniaturas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+}
+
+.miniatura {
+  display: block;
+  width: 52px;
+  padding: 0;
+  aspect-ratio: 612 / 936;
+  overflow: hidden;
+  background: var(--blanco);
+  border: 2px solid transparent;
+  border-radius: var(--radio-sm);
+  opacity: 0.55;
+  cursor: pointer;
+  transition: opacity var(--transicion), border-color var(--transicion);
+}
+
+.miniatura img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.miniatura:hover {
+  opacity: 0.85;
+}
+
+.miniaturaActiva {
+  opacity: 1;
+  border-color: var(--bordo-900);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--sp-2) var(--sp-8);
+  margin-top: var(--sp-2);
+}
+
+.enlacePdf {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  letter-spacing: var(--tracking-etiqueta);
+  text-transform: uppercase;
+  color: var(--bordo-900);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 6px;
+}
+
+.enlacePdf:hover {
+  color: var(--oliva-700);
+}
+
+@media (min-width: 768px) {
+  /* La hoja es más alta que la pantalla: las flechas acompañan el scroll,
+     siempre a media altura de la ventana, para no tener que buscarlas. */
+  .escenario {
+    align-items: flex-start;
+  }
+
+  .flecha {
+    position: sticky;
+    top: calc(50svh - 26px);
+    transform: none;
+    flex-shrink: 0;
+    width: 52px;
+    height: 52px;
+  }
+
+  /* Afuera de la hoja, la flecha deshabilitada conserva su lugar para
+     que la hoja no se corra de costado al llegar a un extremo. */
+  .flecha:disabled {
+    opacity: 0.2;
+  }
+
+  .miniatura {
+    width: 64px;
+  }
+}

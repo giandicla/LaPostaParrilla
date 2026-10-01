@@ -34,18 +34,8 @@
 }
 
 .logo {
-  width: 40px;
-  height: 40px;
-  border-radius: var(--radio-sm);
-  object-fit: cover;
-}
-
-.nombreMarca {
-  font-family: var(--font-titulo);
-  font-size: 1.25rem;
-  font-weight: 600;
-  color: var(--crema);
-  letter-spacing: 0.02em;
+  width: auto;
+  height: 44px;
 }
 
 /* ---------- Mobile: panel deslizante ---------- */
@@ -71,33 +61,38 @@
 
 .enlace {
   color: var(--crema);
-  font-size: 1.5rem;
-  font-weight: 500;
+  font-family: var(--font-titulo);
+  font-size: 1.4rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-titulo);
   padding: var(--sp-2) var(--sp-3);
   border-bottom: 2px solid transparent;
   transition: border-color var(--transicion), color var(--transicion);
 }
 
 .enlace:hover {
-  color: var(--brasa);
+  color: var(--arena);
 }
 
 .enlaceActivo {
-  border-bottom-color: var(--brasa);
+  border-bottom-color: var(--arena);
 }
 
 .botonReservar {
   display: inline-block;
-  background-color: var(--brasa);
-  color: var(--carbon);
+  background-color: var(--blanco);
+  color: var(--bordo-900);
   font-weight: 600;
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-etiqueta);
   padding: var(--sp-3) var(--sp-6);
   border-radius: var(--radio-md);
   transition: background-color var(--transicion), transform var(--transicion);
 }
 
 .botonReservar:hover {
-  background-color: var(--crema);
+  background-color: var(--arena);
   transform: translateY(-1px);
 }
 
@@ -147,7 +142,7 @@
   }
 
   .enlace {
-    font-size: var(--fs-body);
+    font-size: 0.85rem;
   }
 
   .hamburguesa {

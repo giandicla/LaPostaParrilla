@@ -89,12 +89,12 @@ textarea.control {
 }
 
 .tarjetaLocal:hover {
-  border-color: var(--madera);
+  border-color: var(--oliva-700);
 }
 
 .tarjetaLocalActiva {
   border-color: var(--bordo-900);
-  background-color: var(--bordo-100);
+  background-color: var(--arena-100);
 }
 
 /* El radio real sigue existiendo para teclado y lectores de pantalla */
@@ -138,7 +138,7 @@ textarea.control {
   display: flex;
   flex-direction: column;
   gap: var(--sp-6);
-  background-color: var(--bordo-100);
+  background-color: var(--arena-100);
   padding: var(--sp-6);
   border-radius: var(--radio-lg);
   border-top: 4px solid var(--bordo-900);
@@ -169,7 +169,7 @@ textarea.control {
   top: 0.55em;
   width: 8px;
   height: 8px;
-  background-color: var(--brasa);
+  background-color: var(--oliva);
   border-radius: 50%;
 }
 

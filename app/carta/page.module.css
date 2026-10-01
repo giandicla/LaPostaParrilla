@@ -1,110 +1,13 @@
 .aclaracion {
+  margin-top: var(--sp-8);
   text-align: center;
   font-size: var(--fs-small);
   color: var(--gris-600);
   font-style: italic;
-  margin-bottom: var(--sp-8);
-}
-
-.indice {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--sp-2) var(--sp-6);
-  margin-bottom: var(--sp-16);
-  padding-bottom: var(--sp-6);
-  border-bottom: 1px solid var(--gris-300);
-}
-
-.enlaceIndice {
-  font-size: var(--fs-small);
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--madera);
-  padding-bottom: 2px;
-  border-bottom: 2px solid transparent;
-  transition: color var(--transicion), border-color var(--transicion);
-}
-
-.enlaceIndice:hover {
-  color: var(--bordo-900);
-  border-bottom-color: var(--brasa);
-}
-
-.carta {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-16);
-}
-
-/* El índice de categorías ancla acá. La navbar fija más el toggle
-   sticky de SelectorLocal tapan más que el scroll-padding-top global
-   por sí solo, así que este bloque suma su propio margen. */
-.categoria {
-  scroll-margin-top: calc(var(--alto-navbar) + 5rem);
-}
-
-.tituloCategoria {
-  font-size: var(--fs-h2);
-  color: var(--bordo-900);
-  text-align: center;
-  margin-bottom: var(--sp-8);
-}
-
-.platos {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-6);
-  max-width: 62ch;
-  margin: 0 auto;
-}
-
-.lineaPlato {
-  display: flex;
-  align-items: baseline;
-  gap: var(--sp-2);
-}
-
-.nombrePlato {
-  font-size: 1.05rem;
-  font-weight: 600;
-}
-
-/* Línea punteada que rellena el espacio entre el nombre y el precio */
-.puntos {
-  flex: 1;
-  height: 1px;
-  min-width: var(--sp-4);
-  border-bottom: 1px dotted var(--gris-300);
-  transform: translateY(-4px);
-}
-
-.precioPlato {
-  font-family: var(--font-titulo);
-  font-weight: 600;
-  color: var(--madera);
-  white-space: nowrap;
-}
-
-.descripcionPlato {
-  font-size: var(--fs-small);
-  color: var(--gris-600);
-  margin-top: var(--sp-1);
-  max-width: 52ch;
-}
-
-.bloqueCanva {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-4);
-  text-align: center;
 }
 
 .sinCarta {
-  font-size: var(--fs-small);
+  text-align: center;
   color: var(--gris-600);
   font-style: italic;
-  max-width: 46ch;
 }

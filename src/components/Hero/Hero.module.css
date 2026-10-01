@@ -7,10 +7,11 @@
   overflow: hidden;
   text-align: center;
   color: var(--crema);
+  background-color: var(--bordo-900);
 }
 
 .compacto {
-  min-height: 52svh;
+  min-height: 46svh;
 }
 
 .fondo {
@@ -21,15 +22,11 @@
   object-fit: cover;
 }
 
-/* Overlay bordo→carbón: garantiza contraste del texto sobre cualquier foto */
+/* Velo bordo→carbón: garantiza contraste del texto sobre cualquier foto */
 .velo {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(95, 0, 4, 0.55) 0%,
-    rgba(28, 21, 18, 0.75) 100%
-  );
+  background: var(--velo-hero);
 }
 
 .contenido {
@@ -38,32 +35,49 @@
   flex-direction: column;
   align-items: center;
   gap: var(--sp-4);
-  max-width: 62ch;
+  max-width: min(100%, 48rem);
+}
+
+/* Marco fino alrededor del logo, tomado de la portada del manual */
+.marco {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-6);
+  padding: clamp(var(--sp-8), 6vw, var(--sp-16)) clamp(var(--sp-6), 7vw, var(--sp-16));
+  border: 1px solid var(--texto-claro-suave);
 }
 
 .logo {
-  width: clamp(96px, 18vw, 140px);
+  width: clamp(220px, 46vw, 420px);
   height: auto;
-  border-radius: var(--radio-lg);
-  box-shadow: var(--sombra-lg);
-  margin-bottom: var(--sp-2);
+  filter: drop-shadow(var(--sombra-texto));
+}
+
+.bajadaMarco {
+  align-self: stretch;
+  text-wrap: balance;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--texto-claro-suave);
+  font-size: clamp(0.8rem, 1.8vw, 1rem);
+  letter-spacing: var(--tracking-etiqueta);
+  text-transform: uppercase;
 }
 
 .titulo {
   font-size: var(--fs-hero);
-  letter-spacing: 0.01em;
-  text-shadow: 0 2px 24px rgba(28, 21, 18, 0.5);
+  text-shadow: var(--sombra-texto);
 }
 
 .tituloCompacto {
   font-size: var(--fs-h1);
-  text-shadow: 0 2px 24px rgba(28, 21, 18, 0.5);
+  text-shadow: var(--sombra-texto);
 }
 
 .bajada {
-  font-size: clamp(1rem, 2vw, 1.2rem);
+  font-size: clamp(0.85rem, 1.8vw, 1rem);
   opacity: 0.92;
-  letter-spacing: 0.04em;
+  letter-spacing: var(--tracking-etiqueta);
   text-transform: uppercase;
 }
 
@@ -72,5 +86,5 @@
   flex-wrap: wrap;
   justify-content: center;
   gap: var(--sp-4);
-  margin-top: var(--sp-6);
+  margin-top: var(--sp-8);
 }

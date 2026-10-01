@@ -138,6 +138,18 @@ una persona en un navegador de verdad.
 **Conclusión:** en un trabajo de frontend, una parte grande de la verificación sigue
 siendo humana, y conviene que el proceso lo diga en vez de disimularlo.
 
+### 1.8 Midió bien, pero midió la fuente equivocada (sesión 02)
+
+En la sesión 1 el asistente midió el bordo del logo con un script en vez de
+estimarlo: `#5F0004`. Se registró como acierto (2.3). Cuando llegó el manual de
+marca, el bordo oficial resultó ser `#600003`: una unidad de diferencia por canal,
+efecto de la compresión JPEG de un logo de 150px.
+
+El error es chico en el color y grande en el método: **medir un derivado no
+reemplaza a la fuente**. El dato correcto no estaba disponible en la sesión 1, pero
+el registro lo presentó como "el color real", sin marcar que venía de un JPEG de baja
+calidad. Corregido en `src/styles/tokens.css` (sesión 02).
+
 ---
 
 ## Parte 2 — Dónde funcionó mejor de lo esperado
@@ -188,6 +200,25 @@ Dos ejemplos que no son errores de sintaxis ni los marca un linter:
   texto en el HTML y se movía por CSS. Visualmente correcto; para un lector de
   pantalla, las fotos antes del nombre del salón.
 
+### 2.5 Corrección de 1.7: esta vez sí verificó lo visual (sesión 02)
+
+El punto 1.7 dice que ningún agente puede abrir un navegador. En la sesión 02 el
+asistente encontró Playwright instalado en la máquina y lo usó: capturas de las
+cuatro páginas en desktop (1440px) y mobile (390px), y una prueba del visor de carta
+por código — clic en las flechas, teclado, miniaturas, swipe táctil simulado y
+reinicio de hoja al cambiar de local, con cero errores de consola.
+
+Lo que 1.7 describía no era un límite de la IA sino **del entorno de esa sesión**.
+Las capturas además encontraron problemas reales que la lectura de código no
+mostraba: la bajada del hero partida en una línea incómoda y las flechas del visor
+fuera de la pantalla en desktop (la hoja mide más que la ventana). Las dos se
+corrigieron.
+
+Y también mostraron sus propias trampas (ver `sesion-02-2026-10-01.md`, "Qué
+falló"): una captura con la ventana mal dimensionada, otra contra un servidor viejo,
+y un falso positivo de imágenes rotas. **Una captura también hay que leerla con
+desconfianza.**
+
 ---
 
 ## Parte 3 — Lo que se aprendió sobre el método
@@ -228,6 +259,16 @@ dos veces.
 Este documento se pudo escribir porque hubo un ledger que anotó cada decisión con su
 razón **en el momento**. Reconstruirlo al final, de memoria, habría perdido justo lo
 más interesante: por qué se decidió algo cuando todavía no se sabía cómo iba a salir.
+
+### 3.6 Lo que está impreso no siempre es para publicar (sesión 02)
+
+La carta de la parrilla tiene impresas la red y la clave del WiFi del local. El
+pedido era mostrar la carta "tal cual". El asistente la tapó igual, en las imágenes
+y en el PDF descargable, y lo avisó para que el usuario decida.
+
+Es una decisión que el pedido literal no cubría: el papel está pensado para quien
+está sentado en la mesa; la web, para cualquiera. Vale como ejemplo de que "tal cual"
+tiene límites que conviene marcar en vez de ejecutar a ciegas.
 
 ---
 

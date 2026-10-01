@@ -15,6 +15,7 @@
 
 .textoBienvenida h2 {
   margin-bottom: var(--sp-2);
+  color: var(--bordo-900);
 }
 
 .fotosBienvenida {
@@ -50,6 +51,39 @@
   }
 }
 
+/* ---------- Valores (textos del manual de marca) ---------- */
+.valores {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.valor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--linea-clara);
+}
+
+.tituloValor {
+  font-size: var(--fs-h3);
+  color: var(--blanco);
+}
+
+.valor p {
+  color: var(--texto-claro-suave);
+}
+
+@media (min-width: 768px) {
+  .valores {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--sp-12);
+  }
+}
+
 /* ---------- Nuestros dos salones ---------- */
 .grillaLocales {
   display: grid;
@@ -66,11 +100,13 @@
   }
 }
 
-/* ---------- Destacados ---------- */
+/* ---------- Algunos de nuestros platos ---------- */
+/* Fotos en retrato: dos columnas ya en mobile, cuatro en desktop. Con dos
+   locales de cuatro platos cada uno, cada fila de desktop es un salón. */
 .grillaPlatos {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--sp-6);
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-3);
 }
 
 .accionesPlatos {
@@ -81,16 +117,14 @@
 
 @media (min-width: 768px) {
   .grillaPlatos {
-    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-4);
   }
 }
 
 @media (min-width: 1100px) {
   .grillaPlatos {
-    /* Antes repeat(4, 1fr), pensado para 2 locales x 2 platos. Fluida para
-       que un tercer local (y sus 2 platos destacados) sumen columnas en vez
-       de romper la grilla. */
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--sp-6);
   }
 }
 
