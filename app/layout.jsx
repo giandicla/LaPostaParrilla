@@ -1,6 +1,7 @@
 import { Libre_Baskerville, Cabin } from 'next/font/google';
 import Navbar from '../src/components/Navbar/Navbar.jsx';
 import Footer from '../src/components/Footer/Footer.jsx';
+import SesionProvider from '../src/components/SesionProvider/SesionProvider.jsx';
 import '../src/styles/tokens.css';
 import '../src/styles/global.css';
 
@@ -35,9 +36,11 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es" className={`${baskerville.variable} ${cabin.variable}`}>
       <body>
-        <Navbar />
-        {children}
-        <Footer />
+        <SesionProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </SesionProvider>
       </body>
     </html>
   );

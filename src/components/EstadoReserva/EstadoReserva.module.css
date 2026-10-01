@@ -1,0 +1,28 @@
+.estado {
+  display: inline-block;
+  padding: 2px var(--sp-3);
+  border-radius: var(--radio-sm);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-etiqueta);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* El estado no depende solo del color: el texto siempre dice cuál es */
+.pendiente {
+  background-color: var(--arena);
+  color: var(--carbon);
+}
+
+.confirmada {
+  background-color: var(--oliva);
+  color: var(--blanco);
+}
+
+.rechazada,
+.cancelada {
+  background-color: var(--gris-300);
+  color: var(--gris-600);
+  text-decoration: line-through;
+}

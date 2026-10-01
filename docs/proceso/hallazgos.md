@@ -219,6 +219,26 @@ falló"): una captura con la ventana mal dimensionada, otra contra un servidor v
 y un falso positivo de imágenes rotas. **Una captura también hay que leerla con
 desconfianza.**
 
+### 2.6 El recorrido de punta a punta encontró lo que los tests de la base no podían (sesión 02)
+
+Los 33 tests de la base probaban las reglas (quién ve qué, cuándo se puede
+cancelar). Todos en verde. El recorrido con Playwright, sobre el sitio real,
+encontró **cuatro bugs de interfaz** que ningún test de la base podía ver: una
+condición de carrera que vaciaba la lista del panel, una fila que se remontaba y
+perdía un formulario abierto, un aviso de día bloqueado desactualizado y un navbar
+que no entraba en tablets (ver `sesion-02-2026-10-01.md`, sección 8).
+
+La lección es de capas: la seguridad se prueba en la base; la experiencia, en el
+navegador. Ninguna reemplaza a la otra.
+
+### 2.7 Prueba de mutación para compensar un TDD incompleto (sesión 02)
+
+Los tests de la base se escribieron antes que la migración, pero nunca se los vio
+fallar antes de implementar. Un test que nunca falló no prueba nada: podría pasar
+siempre. Se rompieron dos reglas a propósito (índice único y política de notas) y
+fallaron justo los tests que debían. Es una forma barata de recuperar la garantía
+que da el "rojo primero" cuando no se hizo.
+
 ---
 
 ## Parte 3 — Lo que se aprendió sobre el método
@@ -275,6 +295,14 @@ en la carta de La Posta II, y la encontró el usuario, no la IA. Detectar un pro
 por observación (mirar una captura) y no generalizarlo con una búsqueda en todos los
 archivos dejó el arreglo a medias, y lo publicó. Cuando aparece un problema en un
 archivo, la pregunta siguiente es **dónde más está**.
+
+### 3.7 Ante un test que falla, primero mirar la evidencia (sesión 02)
+
+En el recorrido de Playwright hubo más fallos **del test** que del sitio. La
+diferencia la hizo mirar la base y los logs antes de tocar código: cuando un paso
+falló, la base mostraba la reserva confirmada (el sitio funcionaba, el selector del
+test estaba mal); cuando Realtime "falló", su log mostraba que se estaba
+reiniciando. Corregir el código a ciegas habría metido cambios innecesarios.
 
 ---
 

@@ -1,0 +1,90 @@
+/* Piezas de formulario compartidas: reservas, ingresar y panel de admin. */
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+  background-color: var(--blanco);
+  padding: var(--sp-6);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-sm);
+}
+
+.fila {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-4);
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.etiqueta {
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--carbon);
+}
+
+.opcional {
+  font-weight: 400;
+  color: var(--gris-600);
+}
+
+.ayuda {
+  font-size: 0.8rem;
+  color: var(--gris-600);
+}
+
+.control {
+  width: 100%;
+  padding: var(--sp-3);
+  background-color: var(--crema);
+  border: 1px solid var(--gris-300);
+  border-radius: var(--radio-md);
+  transition: border-color var(--transicion);
+}
+
+/* Mismo anillo de foco que el resto del sitio (global.css) más el borde */
+.control:focus-visible {
+  border-color: var(--bordo-900);
+}
+
+textarea.control {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-size: var(--fs-small);
+}
+
+.error,
+.exito {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radio-md);
+  font-size: var(--fs-small);
+}
+
+.error {
+  background-color: var(--arena-100);
+  border-left: 4px solid var(--bordo-900);
+  color: var(--bordo-900);
+}
+
+.exito {
+  background-color: var(--arena-100);
+  border-left: 4px solid var(--oliva);
+  color: var(--carbon);
+}
+
+@media (min-width: 600px) {
+  .fila {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

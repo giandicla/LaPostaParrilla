@@ -45,9 +45,9 @@ export const TEXTOS = {
     ],
   },
   condicionesReserva: [
+    'Tu reserva queda pendiente hasta que la confirmemos. Te avisamos por mail y la ves en "Mis reservas".',
+    'Reservas de hasta 6 personas. Para grupos más grandes, escribinos por WhatsApp.',
+    'Podés cancelar desde la web hasta 2 horas antes. Después, avisanos por WhatsApp.',
     'Guardamos la mesa durante 15 minutos pasada la hora reservada.',
-    'Para grupos de más de 12 personas, escribinos por WhatsApp y lo coordinamos.',
-    'Si no podés venir, avisanos con anticipación así liberamos la mesa.',
-    'Las reservas se confirman por WhatsApp o teléfono.',
   ],
 };

@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MARCA } from '../../data/marca.js';
+import { useSesion } from '../SesionProvider/SesionProvider.jsx';
+import { backendDisponible } from '../../servicios/supabase.js';
+import { salir } from '../../servicios/auth.js';
 import estilos from './Navbar.module.css';
 
 const ENLACES = [
@@ -17,6 +20,7 @@ export default function Navbar() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const pathname = usePathname();
   const botonHamburguesaRef = useRef(null);
+  const { sesion, esAdmin } = useSesion();
 
   // La navbar arranca translúcida sobre el hero y se vuelve sólida al bajar
   useEffect(() => {
@@ -85,6 +89,35 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
+          {/* Cuenta: solo si el backend está configurado */}
+          {backendDisponible && sesion && (
+            <>
+              <li>
+                <Link href="/mis-reservas" className={`${estilos.enlace} ${esActivo('/mis-reservas') ? estilos.enlaceActivo : ''}`}>
+                  Mis reservas
+                </Link>
+              </li>
+              {esAdmin && (
+                <li>
+                  <Link href="/admin" className={`${estilos.enlace} ${esActivo('/admin') ? estilos.enlaceActivo : ''}`}>
+                    Admin
+                  </Link>
+                </li>
+              )}
+              <li>
+                <button type="button" className={estilos.enlace} onClick={() => salir()}>
+                  Salir
+                </button>
+              </li>
+            </>
+          )}
+          {backendDisponible && !sesion && (
+            <li>
+              <Link href="/ingresar" className={`${estilos.enlace} ${esActivo('/ingresar') ? estilos.enlaceActivo : ''}`}>
+                Ingresar
+              </Link>
+            </li>
+          )}
           <li className={estilos.itemReservar}>
             <Link
               href="/reservas"

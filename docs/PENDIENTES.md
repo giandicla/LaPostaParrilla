@@ -104,13 +104,23 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
 
 ## Etapas futuras
 
-### Etapa 2 — CRUD de reservas
-- [ ] Escribir el spec
-- [ ] Capa de servicios aislada, para que el backend real entre después sin
-      reescribir componentes
-- [ ] Listado de reservas (el contenedor ya está previsto al final de `/reservas`)
-- [ ] Panel de administración: listar, editar, confirmar, cancelar
-- [ ] Tests (la etapa 1 no tiene, por ser maqueta sin lógica)
+### Etapa 2 — Backend con Supabase (partes 1 y 2)
+- [x] Spec: `docs/superpowers/specs/2026-10-01-backend-supabase-design.md`
+- [x] Capa de servicios aislada (`src/servicios/`)
+- [x] Cuentas (Google + email), reservas reales, mis reservas, panel de admin,
+      notas, días bloqueados, lista del día, tiempo real, mails con Brevo
+- [x] Tests: 33 pgTAP de la base, 7 de la lógica de mails, recorrido Playwright
+- [ ] **Proyecto remoto**: crear el proyecto en Supabase, migraciones, función,
+      secretos y variables en Vercel (pasos en `docs/BACKEND.md`)
+- [ ] 👤 Credenciales de Google OAuth (Google Cloud Console)
+- [ ] 👤 Cuenta de Brevo, remitente verificado y API key
+- [ ] 👤 Nombrar al primer admin en producción
+- [ ] El link de "Imprimir" del panel abre otra página: probar la impresión real
+      en la computadora del local
+
+### Etapa 2.3 — Admin de contenido (parte 3)
+- [ ] Pasar `cartas.json` a tablas, con interruptor "agotado"
+- [ ] Editar franjas de reserva y horarios de atención desde el panel
 
 ### Etapa 3 — Pagos
 - [ ] Esperar a que el profesor lo enseñe

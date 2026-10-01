@@ -78,3 +78,7 @@ export const ID_LOCAL_POR_DEFECTO = LOCALES[0].id;
 export const getLocal = (id) => LOCALES.find((local) => local.id === id);
 
 export const esIdDeLocal = (id) => LOCALES.some((local) => local.id === id);
+
+// Link a WhatsApp con un mensaje ya escrito, o null si el local no tiene número
+export const enlaceWhatsapp = (local, texto) =>
+  local?.whatsapp ? `https://wa.me/${local.whatsapp}?text=${encodeURIComponent(texto)}` : null;

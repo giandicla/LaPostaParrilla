@@ -4,6 +4,41 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-01 — Backend con Supabase (partes 1 y 2)
+
+Rama `feat/backend-supabase`. Spec: `docs/superpowers/specs/2026-10-01-backend-supabase-design.md`.
+Cómo correrlo y desplegarlo: `docs/BACKEND.md`.
+
+**Base (Postgres, `supabase/migrations/`)**
+- Tablas `locales`, `perfiles` (rol cliente/admin), `franjas_reserva`, `reservas`,
+  `dias_bloqueados`, `notas_reserva`.
+- RLS en todas. El cliente ve y crea solo lo suyo, en estado pendiente; cancela con
+  `cancelar_reserva()` hasta 2 h antes; no puede cambiarse el rol (permiso por columna).
+- Trigger de validación: franja del local, fecha futura, día no bloqueado. Check de
+  1 a 6 personas. Índice único: una reserva activa por usuario, local y día.
+- Realtime sobre `reservas`. Trigger con `pg_net` → Edge Function de mails.
+
+**Mails** — Edge Function `notificar-reserva` (Deno) con Brevo: reserva nueva y
+cancelación del cliente → admin; confirmada, rechazada, movida o cancelada por el
+admin → cliente. Sin API key, solo registra en el log.
+
+**Front**
+- `src/servicios/` (única puerta a Supabase), `SesionProvider`, `RequiereSesion`,
+  `EstadoReserva`, estilos de formulario compartidos.
+- Páginas nuevas: `/ingresar`, `/mis-reservas`, `/admin`, `/admin/dia`. `/reservas`
+  pasó de maqueta a formulario real. Navbar con links de cuenta; su menú
+  horizontal pasó de 768 a 1100 px porque con los links nuevos no entraba.
+- Condiciones de reserva actualizadas (pendiente, 6 personas, 2 horas).
+
+**Verificado**
+- 33 tests pgTAP en verde, y prueba de mutación (sacar el índice único y abrir las
+  notas hace fallar exactamente los tests que corresponden).
+- 7 tests de Deno de la lógica de mails.
+- Recorrido Playwright de 12 pasos contra Supabase local, sin errores de página.
+- `npm run lint` limpio; todas las rutas siguen estáticas.
+
+---
+
 ## 2026-10-01 — La carta vuelve a HTML, con los datos reales
 
 El usuario probó el visor del PDF y no se leía cómodo. Se volvió a una carta en

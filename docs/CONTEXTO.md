@@ -85,6 +85,7 @@ Mezclarlos habría hecho que ninguna de las dos quedara bien.
 
 | Etapa | Qué | Estado |
 |---|---|---|
-| 1 | Boceto visual: 4 páginas maquetadas, dos locales, deploy | En curso |
-| 2 | CRUD de reservas + panel de administración | No empezada |
+| 1 | Boceto visual: 4 páginas maquetadas, dos locales, deploy | Hecha |
+| 2 | Backend con Supabase: cuentas, reservas reales, panel de admin, mails (partes 1 y 2 del spec del backend) | Hecha en local; falta el proyecto remoto (ver `docs/BACKEND.md`) |
+| 2.3 | Admin de la carta y de los horarios (parte 3) | No empezada |
 | 3 | Pagos (después de que el profesor lo enseñe) | No empezada |

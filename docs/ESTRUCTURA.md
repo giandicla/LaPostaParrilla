@@ -6,7 +6,11 @@
 |---|---|---|
 | `/` | Inicio | Los 8 bloques de la home |
 | `/carta` | Carta | La carta completa del local activo en HTML (índice, secciones, vinos por cepa y bodega) + toggle. Acepta `?local=<id>` |
-| `/reservas` | Reservas | Formulario maquetado. Acepta `?local=<id>` |
+| `/reservas` | Reservas | Sin sesión: invita a ingresar. Con sesión: formulario real (franjas de la base, máx. 6 personas, días bloqueados). Acepta `?local=<id>` |
+| `/ingresar` | Cuenta | Ingresar / crear cuenta / recuperar contraseña, con Google o email. Acepta `?volver=<ruta>` |
+| `/mis-reservas` | Cuenta | Próximas y anteriores; cancelar hasta 2 h antes, después WhatsApp |
+| `/admin` | Admin | Reservas por fecha, local y estado; confirmar, rechazar, cancelar, mover; notas internas; días bloqueados; tiempo real |
+| `/admin/dia` | Admin | Lista del día para imprimir. Acepta `?fecha=` y `?local=` |
 | `/nosotros` | Nosotros | Historia + un bloque por local + contacto |
 | `*` | — | `app/not-found.jsx` — página 404 con links de vuelta |
 
@@ -37,6 +41,9 @@
 | `Boton` | `variante` (`primario`/`claro`/`contorno`/`texto`), `tamano`, `to`, `href`, `onClick`, `children` | Link interno, externo o botón según las props |
 | `LocalCard` | `local` | Tarjeta grande de un salón, con sus dos CTA |
 | `SelectorLocal` | `locales`, `localActivoId`, `onChange` | Toggle. Controlado |
+| `SesionProvider` | `children` | Contexto de sesión: `useSesion()` → `sesion`, `perfil`, `cargando`, `esAdmin`, `recargarPerfil()` |
+| `RequiereSesion` | `admin?`, `mensaje?`, `children` | Muestra `children` solo con sesión (y rol admin si se pide); si no, explica y ofrece ingresar. Comodidad, no seguridad |
+| `EstadoReserva` | `estado` | Etiqueta de pendiente / confirmada / rechazada / cancelada |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
 | `SeccionCarta` | `seccion`, `idAncla` | Una sección de la carta: platos (nombre, descripción, traducción EN/PT, uno o más precios) o vinos agrupados por bodega |
 | `GaleriaGrid` | `imagenes[]` | Grilla de 3 fotos, la del medio vertical |
@@ -48,6 +55,17 @@ sumar un tercer local no obliga a tocarlos.
 
 Aparte de eso, algunos componentes importan constantes que no son de local:
 `Navbar`, `Footer` y `Hero` leen `MARCA` (logo y nombre de la marca).
+
+## Servicios (`src/servicios/`)
+
+La única capa que habla con Supabase. Detalle en `docs/BACKEND.md`.
+
+| Archivo | Qué exporta |
+|---|---|
+| `supabase.js` | El cliente, `backendDisponible`, `mensajeDeError(error)` (errores de Postgres/Auth en castellano) |
+| `auth.js` | Ingresar (Google, email), registrarse, recuperar y cambiar clave, salir, perfil |
+| `reservas.js` | Franjas, días bloqueados, crear / listar / cancelar reservas, utilidades de fecha en hora argentina |
+| `admin.js` | Listar y filtrar reservas, cambiar estado, mover, notas, bloqueos, suscripción en tiempo real |
 
 ## Datos
 

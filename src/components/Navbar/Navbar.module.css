@@ -60,6 +60,11 @@
 }
 
 .enlace {
+  /* inline-block en links y en el botón "Salir": misma caja, misma línea */
+  display: inline-block;
+  background: none;
+  border: none;
+  cursor: pointer;
   color: var(--crema);
   font-family: var(--font-titulo);
   font-size: 1.4rem;
@@ -130,7 +135,9 @@
 }
 
 /* ---------- Desktop ---------- */
-@media (min-width: 768px) {
+/* 1100 y no 768: con los links de cuenta (Mis reservas, Admin, Salir) el
+   menú horizontal no entra en una tablet */
+@media (min-width: 1100px) {
   .enlaces {
     position: static;
     flex-direction: row;
@@ -143,6 +150,10 @@
 
   .enlace {
     font-size: 0.85rem;
+  }
+
+  .enlaces {
+    gap: var(--sp-4);
   }
 
   .hamburguesa {

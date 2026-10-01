@@ -129,43 +129,46 @@ locales bajo una marca" — es lo más importante de probar):**
 
 ---
 
-## Página de Reservas (`/reservas`)
+## Cuentas y reservas (con Supabase)
 
-**Qué tiene que verse:**
-- [ ] Un formulario con: selector de salón (dos tarjetas clickeables), nombre,
-      teléfono, email, fecha, hora, cantidad de personas y comentarios.
-      Un panel al costado (o debajo, en mobile) con las condiciones para
-      reservar y el contacto del salón elegido.
-- [ ] Un aviso visible de que "esta sección todavía no está conectada" y que
-      por ahora hay que confirmar por WhatsApp o teléfono. Esto es correcto:
-      el formulario es una maqueta, no guarda nada todavía.
+> Reescrita en la sesión 02: el formulario dejó de ser maqueta. Para probar en
+> local: `npx supabase start`, `npm run db:reset`, `npm run dev`. Usuarios de
+> prueba en `docs/BACKEND.md`.
 
-**Comportamiento a probar:**
-- [ ] Al entrar a `/reservas` sin nada en la URL, el salón preseleccionado es
-      **la Parrilla**.
-- [ ] Al entrar con `/reservas?local=restaurante` en la URL (por ejemplo,
-      llegando desde la tarjeta del Restaurante en Inicio), el salón
-      preseleccionado es **el Restaurante**.
-- [ ] En el campo "Hora", elegí un horario cualquiera (por ejemplo `13:00`).
-- [ ] Con esa hora elegida, cambiá de salón en el selector de arriba (tocá la
-      tarjeta del otro salón).
-- [ ] Confirmá que el campo "Hora" **se vacía** (vuelve a "Elegí un horario")
-      en vez de dejar puesta la hora anterior. Esto es a propósito: las
-      franjas horarias son distintas para cada salón, así que una hora
-      elegida para un salón puede no existir en el otro.
-- [ ] Las horas que aparecen en el desplegable cambian según el salón elegido
-      (la Parrilla y el Restaurante tienen franjas distintas).
-- [ ] Al apretar "Confirmar reserva" con el formulario completo, la página
-      **no recarga** y no aparece ningún error en la consola (el envío está
-      cortado a propósito, es una maqueta).
+**Sin sesión**
+- [ ] `/reservas` muestra "Ingresá para continuar" y un botón a `/ingresar`.
+- [ ] El navbar muestra "Ingresar".
 
-**Sobre el WhatsApp del Restaurante — esto también es intencional:**
-- [ ] En el panel de contacto, con **la Parrilla** elegida, aparece un botón
-      "Reservar por WhatsApp".
-- [ ] Con **el Restaurante** elegido, en cambio, **no hay botón de
-      WhatsApp**: aparece un texto invitando a escribir por Instagram. Esto es
-      correcto — el restaurante todavía no tiene WhatsApp cargado — **no lo
-      reportes como un botón faltante**.
+**Crear cuenta e ingresar**
+- [ ] Crear cuenta con email: al terminar vuelve a la página de la que venía.
+- [ ] Con un email ya usado: "Ya hay una cuenta con ese email".
+- [ ] Contraseña incorrecta: "El email o la contraseña no son correctos".
+- [ ] "Olvidé mi contraseña" manda un mail (en local, verlo en http://127.0.0.1:54324)
+      y el link permite elegir una nueva.
+- [ ] (Producción) "Continuar con Google" funciona y vuelve al sitio.
+
+**Reservar**
+- [ ] Nombre y teléfono vienen precargados del perfil.
+- [ ] Solo deja elegir fechas desde hoy; si es hoy, solo horarios que no pasaron.
+- [ ] Personas: de 1 a 6; el link "Escribinos por WhatsApp" abre el chat del local.
+- [ ] Un día bloqueado muestra el aviso y deshabilita el botón.
+- [ ] Una segunda reserva el mismo día en el mismo local: "Ya tenés una reserva activa…".
+- [ ] Al reservar: "¡Recibimos tu pedido de reserva!", estado pendiente.
+
+**Mis reservas**
+- [ ] Muestra próximas (de la más cercana a la más lejana) y anteriores.
+- [ ] "Cancelar reserva" pide confirmación y la cancela.
+- [ ] Con menos de 2 h, en vez de cancelar aparece el link a WhatsApp.
+
+**Panel de admin** (con `admin@laposta.test`)
+- [ ] Un cliente que entra a `/admin` ve "Sección para el equipo de La Posta".
+- [ ] El contador de pendientes filtra al tocarlo.
+- [ ] Confirmar, rechazar, cancelar y mover funcionan y el cliente lo ve en "Mis reservas".
+- [ ] Con el panel abierto, una reserva nueva aparece sola, con el aviso arriba.
+- [ ] La nota interna se guarda y el cliente **no** la ve.
+- [ ] Bloquear y desbloquear días.
+- [ ] "Imprimir lista del…" abre la lista del día; al imprimir no salen navbar ni footer.
+- [ ] Entre 768 y 1100 px el navbar usa el menú hamburguesa y no se corta nada.
 
 ---
 

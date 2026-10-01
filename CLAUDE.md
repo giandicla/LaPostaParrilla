@@ -11,19 +11,27 @@ restaurante.
 - Los locales son **datos, no rutas**. Viven en `src/data/locales.js` como el array
   `LOCALES`. Los componentes iteran sobre él o reciben un local por props.
   **Nunca escribir `'parrilla'` ni `'restaurante'` a mano en un componente.**
-- El profesor pidió **solo el front en React**. No agregar backend, API routes ni
-  base de datos.
-- La etapa actual es **maqueta visual**: el formulario de reservas no guarda nada.
-  No agregar `localStorage`, `fetch` ni capa de servicios sin que lo pidan.
+- El profesor pidió **solo el front en React**. El backend es **Supabase** (BaaS,
+  decisión del usuario): **no** se escriben API routes, Server Actions ni
+  middleware. El front habla con Supabase desde el navegador y la seguridad la
+  pone la **RLS** en la base. Ver `docs/BACKEND.md`.
+- **Toda llamada a Supabase pasa por `src/servicios/`.** Ningún componente
+  importa `@supabase/supabase-js`. Las reglas de negocio (6 personas, 2 horas,
+  franjas, una reserva por día) viven en la base, no en los componentes.
+- El esquema se cambia **solo con migraciones** (`supabase/migrations/`) y cada
+  regla nueva lleva su test pgTAP (`npm run db:test`).
 
 ## Stack
 
-Next.js 16 con App Router + React 19 + CSS Modules. JavaScript, no TypeScript.
-Sin librerías de UI, sin backend. Deploy automático a Vercel en cada push a `main`.
+Next.js 16 con App Router + React 19 + CSS Modules. JavaScript, no TypeScript
+(salvo la Edge Function, que es Deno + TypeScript). Sin librerías de UI.
+Supabase para auth, base y tiempo real. Deploy automático a Vercel en cada push a `main`.
 
 - Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
-- **Server Components por defecto.** `'use client'` solo va en `Navbar`,
-  `SelectorLocal`, `app/carta/page.jsx` y `app/reservas/page.jsx`.
+- **Server Components por defecto.** `'use client'` va en `Navbar`,
+  `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `app/carta`, y en las
+  páginas que usan la sesión: `reservas`, `ingresar`, `mis-reservas`, `admin`,
+  `admin/dia`. Todas siguen prerenderizándose como estáticas.
 - Navegación con `next/link`. `Boton` tiene dos props de destino, a propósito:
   `to` renderiza un `next/link` para navegación interna (rutas del sitio);
   `href` renderiza un `<a target="_blank" rel="noreferrer">` para links
@@ -50,9 +58,11 @@ Sin librerías de UI, sin backend. Deploy automático a Vercel en cada push a `m
 ```bash
 npm run dev           # servidor de desarrollo
 npm run build         # build de producción a .next/
+npm run db:test       # tests pgTAP de la base (requiere `npx supabase start`)
+npm run db:reset      # base local desde cero: migraciones + usuarios de prueba
 python scripts/procesar-assets.py "../Branding y fotos"
-                      # regenera logo, fotos y hojas de carta desde la carpeta
-                      # de branding (requiere PyMuPDF y Pillow)
+                      # regenera logo, fotos y PDF de las cartas desde la
+                      # carpeta de branding (requiere PyMuPDF y Pillow)
 ```
 
 La carpeta `Branding y fotos/` (al lado del repo, no adentro) tiene el manual de
@@ -88,6 +98,7 @@ Ver `docs/proceso/README.md` para el formato.
 - `docs/BITACORA.md` — log de cambios, lo más nuevo arriba
 - `docs/PENDIENTES.md` — lo que falta: datos, fotos, etapas futuras
 - `docs/QA-MANUAL.md` — checklist de verificación visual, para correr en un navegador
+- `docs/BACKEND.md` — Supabase: cómo correrlo en local y cómo ponerlo en producción
 - `docs/proceso/` — registro del trabajo con IA, para la presentación de la materia
 - `docs/superpowers/specs/` — los diseños aprobados
 - `docs/superpowers/plans/` — los planes de implementación

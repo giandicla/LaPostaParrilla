@@ -1,0 +1,257 @@
+/* Sin hero: la navbar fija taparía el comienzo */
+.main {
+  padding-top: var(--alto-navbar);
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-6);
+}
+
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-4);
+}
+
+.titulo {
+  color: var(--bordo-900);
+}
+
+.contador {
+  padding: var(--sp-2) var(--sp-4);
+  background-color: var(--gris-300);
+  border: none;
+  border-radius: var(--radio-md);
+  font-weight: 600;
+  letter-spacing: var(--tracking-etiqueta);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.contadorActivo {
+  background-color: var(--bordo-900);
+  color: var(--blanco);
+}
+
+.filtros {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: var(--sp-4);
+  align-items: end;
+  padding: var(--sp-4);
+  background-color: var(--blanco);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-sm);
+}
+
+.atajos {
+  display: flex;
+  gap: var(--sp-4);
+  padding-bottom: var(--sp-3);
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+/* ---------- Fila de reserva ---------- */
+.fila {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background-color: var(--blanco);
+  border-left: 4px solid var(--gris-300);
+  border-radius: var(--radio-md);
+  box-shadow: var(--sombra-sm);
+}
+
+.pendiente {
+  border-left-color: var(--bordo-900);
+}
+
+.confirmada {
+  border-left-color: var(--oliva);
+}
+
+.rechazada,
+.cancelada {
+  opacity: 0.65;
+}
+
+.hora {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-3);
+}
+
+.hora span {
+  font-family: var(--font-titulo);
+  font-size: 1.5rem;
+  color: var(--bordo-900);
+}
+
+.hora small {
+  color: var(--gris-600);
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  min-width: 0;
+}
+
+.nombre {
+  font-weight: 600;
+}
+
+.secundario,
+.comentario {
+  font-size: var(--fs-small);
+  color: var(--gris-600);
+}
+
+.secundario a {
+  color: var(--bordo-900);
+  text-decoration: underline;
+}
+
+.comentario {
+  font-style: italic;
+}
+
+.nota {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: flex-start;
+  margin-top: var(--sp-2);
+}
+
+.nota textarea {
+  flex: 1 1 16rem;
+  min-height: 0;
+  padding: var(--sp-2);
+  font-size: var(--fs-small);
+}
+
+.mover {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  align-items: center;
+  margin-top: var(--sp-2);
+}
+
+.mover .control,
+.mover input,
+.mover select {
+  width: auto;
+  padding: var(--sp-2);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+.confirmar,
+.botonChico {
+  padding: var(--sp-2) var(--sp-4);
+  background-color: var(--bordo-900);
+  color: var(--blanco);
+  border: none;
+  border-radius: var(--radio-md);
+  font-weight: 600;
+  font-size: var(--fs-small);
+  cursor: pointer;
+}
+
+.confirmar:hover,
+.botonChico:hover {
+  background-color: var(--bordo-700);
+}
+
+.botonTexto {
+  padding: var(--sp-1);
+  background: none;
+  border: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--bordo-900);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.vacio {
+  color: var(--gris-600);
+  font-style: italic;
+}
+
+/* ---------- Días bloqueados ---------- */
+.bloque {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--gris-300);
+}
+
+.tituloBloque {
+  font-size: var(--fs-h3);
+  color: var(--bordo-900);
+}
+
+.formBloqueo {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--sp-3);
+  align-items: center;
+}
+
+.listaBloqueos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.listaBloqueos li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  background-color: var(--blanco);
+  border-radius: var(--radio-md);
+  font-size: var(--fs-small);
+}
+
+@media (min-width: 768px) {
+  .fila {
+    grid-template-columns: 9rem 1fr auto;
+    align-items: start;
+  }
+
+  .hora {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .acciones {
+    flex-direction: column;
+    align-items: flex-end;
+  }
+}

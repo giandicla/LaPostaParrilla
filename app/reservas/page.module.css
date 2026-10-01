@@ -5,60 +5,8 @@
   align-items: start;
 }
 
-/* ---------- Formulario ---------- */
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-6);
-  background-color: var(--blanco);
-  padding: var(--sp-6);
-  border-radius: var(--radio-lg);
-  box-shadow: var(--sombra-sm);
-}
-
-.fila {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--sp-4);
-}
-
-.campo {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-2);
-}
-
-.etiqueta {
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--carbon);
-}
-
-.opcional {
-  font-weight: 400;
-  color: var(--gris-600);
-}
-
-.control {
-  width: 100%;
-  padding: var(--sp-3);
-  background-color: var(--crema);
-  border: 1px solid var(--gris-300);
-  border-radius: var(--radio-md);
-  transition: border-color var(--transicion), box-shadow var(--transicion);
-}
-
-/* Mismo anillo que el resto del sitio (ver global.css), más un cambio de
-   borde propio del campo. Antes esto apagaba el anillo global con
-   `outline: none` y lo cambiaba por un halo `--bordo-100` casi invisible. */
-.control:focus-visible {
-  border-color: var(--bordo-900);
-}
-
-textarea.control {
-  resize: vertical;
-  min-height: 96px;
-}
+/* Las piezas del formulario (campo, control, etc.) están en
+   src/styles/formulario.module.css, compartidas con /ingresar y /admin. */
 
 /* ---------- Selector de local ---------- */
 .grupoLocal {
@@ -125,12 +73,23 @@ textarea.control {
   align-self: flex-start;
 }
 
-.avisoMaqueta {
-  font-size: var(--fs-small);
-  color: var(--gris-600);
-  font-style: italic;
-  padding-top: var(--sp-2);
-  border-top: 1px dashed var(--gris-300);
+.tituloListo {
+  font-size: var(--fs-h3);
+  color: var(--bordo-900);
+}
+
+.accionesListo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-6);
+}
+
+.enlace {
+  color: var(--bordo-900);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
 /* ---------- Panel lateral ---------- */
@@ -204,10 +163,6 @@ textarea.control {
 }
 
 @media (min-width: 600px) {
-  .fila {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
   .opcionesLocal {
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   }
@@ -217,9 +172,5 @@ textarea.control {
   .columnas {
     grid-template-columns: 1.6fr 1fr;
     gap: var(--sp-12);
-  }
-
-  .formulario {
-    padding: var(--sp-8);
   }
 }
