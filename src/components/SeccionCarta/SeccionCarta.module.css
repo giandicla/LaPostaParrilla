@@ -1,0 +1,135 @@
+/* El índice de la carta ancla acá: la navbar fija y el selector pegajoso
+   tapan más que el scroll-padding-top global. */
+.seccion {
+  scroll-margin-top: calc(var(--alto-navbar) + 5rem);
+}
+
+.encabezado {
+  margin-bottom: var(--sp-6);
+  text-align: center;
+}
+
+.titulo {
+  font-size: var(--fs-h3);
+  color: var(--bordo-900);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-titulo);
+}
+
+.nota {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-small);
+  font-style: italic;
+  color: var(--gris-600);
+}
+
+/* Columnas "Chica · Grande" alineadas con los precios de abajo */
+.tamanos {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--sp-4);
+  margin-bottom: var(--sp-2);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: var(--tracking-etiqueta);
+  text-transform: uppercase;
+  color: var(--oliva-700);
+}
+
+.tamanos span {
+  width: 5.5rem;
+  text-align: right;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.linea {
+  display: flex;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.nombre {
+  font-size: 0.92rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+/* Línea punteada que rellena el espacio entre el nombre y el precio */
+.puntos {
+  flex: 1;
+  min-width: var(--sp-4);
+  border-bottom: 1px dotted var(--gris-300);
+  transform: translateY(-4px);
+}
+
+.precios {
+  display: flex;
+  gap: var(--sp-4);
+}
+
+.precio {
+  font-family: var(--font-titulo);
+  color: var(--bordo-900);
+  white-space: nowrap;
+}
+
+.precios .precio {
+  width: 5.5rem;
+  text-align: right;
+}
+
+.descripcion {
+  margin-top: var(--sp-1);
+  font-size: var(--fs-small);
+  color: var(--carbon);
+}
+
+.traduccion {
+  margin-top: 2px;
+  font-size: 0.8rem;
+  font-style: italic;
+  line-height: 1.45;
+  color: var(--gris-600);
+}
+
+/* ---------- Vinos ---------- */
+.bodega + .bodega {
+  margin-top: var(--sp-6);
+}
+
+.nombreBodega {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--sp-3);
+  margin-bottom: var(--sp-3);
+  padding-bottom: var(--sp-1);
+  border-bottom: 1px solid var(--gris-300);
+  font-family: var(--font-titulo);
+  font-size: 1.05rem;
+  color: var(--oliva-700);
+}
+
+.region {
+  font-family: var(--font-cuerpo);
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--gris-600);
+}
+
+@media (max-width: 420px) {
+  .tamanos span,
+  .precios .precio {
+    width: 4.6rem;
+  }
+
+  .nombre {
+    font-size: 0.85rem;
+  }
+}

@@ -23,7 +23,7 @@ Sin librerías de UI, sin backend. Deploy automático a Vercel en cada push a `m
 
 - Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
 - **Server Components por defecto.** `'use client'` solo va en `Navbar`,
-  `SelectorLocal`, `VisorCarta`, `app/carta/page.jsx` y `app/reservas/page.jsx`.
+  `SelectorLocal`, `app/carta/page.jsx` y `app/reservas/page.jsx`.
 - Navegación con `next/link`. `Boton` tiene dos props de destino, a propósito:
   `to` renderiza un `next/link` para navegación interna (rutas del sitio);
   `href` renderiza un `<a target="_blank" rel="noreferrer">` para links
@@ -35,8 +35,8 @@ Sin librerías de UI, sin backend. Deploy automático a Vercel en cada push a `m
 - Colores **solo** desde las custom properties de `src/styles/tokens.css`.
   La paleta sale del manual de marca: bordo `#600003`, arena `#CBC1B1`,
   oliva `#757036`. Tipografías: Baskerville (títulos, en mayúsculas) y Gill Sans.
-- **Los platos con foto no llevan precio.** Los precios viven solo en la carta en
-  PDF. Lo pidió el usuario.
+- **Los platos con foto no llevan precio.** Los precios viven solo en la carta
+  (`src/data/cartas.json`). Lo pidió el usuario.
 - Un componente = una carpeta: `Nombre/Nombre.jsx` + `Nombre.module.css`.
 - CSS **mobile first**. Breakpoints principales: 768px y 1100px (algunas grillas
   puntuales usan otros; ver el hallazgo sobre breakpoints en `docs/PENDIENTES.md`).

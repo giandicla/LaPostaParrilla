@@ -1,0 +1,1898 @@
+{
+  "parrilla": {
+    "cubierto": 1500,
+    "secciones": [
+      {
+        "id": "entradas",
+        "titulo": "Entradas",
+        "items": [
+          {
+            "nombre": "EMPANADA DE CARNE CORTADA A CUCHILLO",
+            "traduccion": "Fried chopped beef empanada / Empanada de carne cortada á faca",
+            "precio": 6000
+          },
+          {
+            "nombre": "CHORIZO",
+            "traduccion": "Chorizo (spicy pork & meat sausage) - Linguiça toscana",
+            "precio": 6000
+          },
+          {
+            "nombre": "MORCILLA",
+            "traduccion": "Grilled black pudding / Morcela",
+            "precio": 6000
+          },
+          {
+            "nombre": "MOLLEJAS",
+            "traduccion": "Grilled sweetbread / Timo de vitela",
+            "precio": 35000
+          },
+          {
+            "nombre": "PROVOLETA",
+            "traduccion": "Grilled provolone cheese / Provolone",
+            "precio": 18000
+          },
+          {
+            "nombre": "BASTONES DE MUZZARELLA",
+            "traduccion": "Mozzarella sticks / Palitos de muçarela",
+            "precio": 15000
+          },
+          {
+            "nombre": "BUÑUELOS DE ESPINACA",
+            "traduccion": "Spinach fritter / Croquetes de espinafre",
+            "precio": 15000
+          },
+          {
+            "nombre": "SOPA DE VERDURAS",
+            "traduccion": "Vegetable soup / Sopa de legumes",
+            "precio": 12000
+          },
+          {
+            "nombre": "SOPA DEL DÍA",
+            "traduccion": "Roasted squash soup / Sopa do dia",
+            "precio": 12000
+          }
+        ]
+      },
+      {
+        "id": "ensaladas",
+        "titulo": "Ensaladas",
+        "items": [
+          {
+            "nombre": "ENSALADA 2 INGREDIENTES",
+            "traduccion": "Two ingredients salad / Salada 2 ingredientes",
+            "precio": 12500
+          },
+          {
+            "nombre": "ENSALADA MIXTA",
+            "traduccion": "Mixed salad (tomato,lettuce & onion) / Salada mista (tomate,alface & cebola)",
+            "precio": 12500
+          },
+          {
+            "nombre": "RÚCULA y PARMESANO",
+            "traduccion": "Arugula & parmesan cheese salad / Rúcula e parmesão",
+            "precio": 16000
+          },
+          {
+            "nombre": "ENSALADA LA POSTA",
+            "descripcion": "Rúcula, Tomates secos, Muzzarella, Olivas negras.",
+            "traduccion": "Arugula, Dried Tomatoes, Mozzarella, Black Olives. / Rúcula, Tomate seco, Muçarela, Azeitonas pretas.",
+            "precio": 21000
+          },
+          {
+            "nombre": "ENSALADA COMPLETA (6 ingredientes)",
+            "descripcion": "Ingredientes a elección: Lechuga, Tomate, Zanahoria, Cebolla, Remolacha, Chauchas, Choclo, Huevo.",
+            "traduccion": "Ingredients: Lettuce, Tomato, Carrot, Onion, Beetroot, Beans, Sweet corn, Egg / Ingredientes ã escolha: Alface, Tomate, Cenoura, Cebola, Beterraba, Vagem, Milho, Ovo.",
+            "precio": 24000
+          }
+        ]
+      },
+      {
+        "id": "carnes-a-la-parrilla",
+        "titulo": "Carnes a la parrilla",
+        "items": [
+          {
+            "nombre": "PATAMUSLO DESHUESADA",
+            "traduccion": "Grilled chicken leg quarter / Coxa e sobrecoxa de frango desossadas",
+            "precio": 20000
+          },
+          {
+            "nombre": "PECHUGA DE POLLO DESHUESADA",
+            "traduccion": "Grill chicken breast / Peito de frango desossado",
+            "precio": 20000
+          },
+          {
+            "nombre": "BONDIOLA DE CERDO",
+            "traduccion": "Grilled pork collar steak / Paleta suína",
+            "precio": 20000
+          },
+          {
+            "nombre": "BIFE DE CHORIZO",
+            "traduccion": "A typical and delicious Argentinian meat cut / Corte argentino de bife grosso de contra filê",
+            "precio": 35000
+          },
+          {
+            "nombre": "OJO DE BIFE",
+            "traduccion": "Ribeye / Corte bovino argentino tirado do miolo do contra filê",
+            "precio": 37000
+          },
+          {
+            "nombre": "LOMO GRILLADO",
+            "traduccion": "Grilled beef tenderloin / Filê mignon",
+            "precio": 38000
+          },
+          {
+            "nombre": "ENTRAÑA",
+            "traduccion": "Grilled skirt steak / Fraldinha feita na churrasqueira",
+            "precio": 38000
+          },
+          {
+            "nombre": "ASADO ESPECIAL",
+            "traduccion": "bone-in beef roast / churrasco de boi com osso",
+            "precio": 38000
+          },
+          {
+            "nombre": "FALSA ENTRAÑA (para 2)",
+            "traduccion": "Falsa entraña (for 2) a meat cut next to the flank / Grilled skirt steak / Fino corte argentino de carne bovina,feito na churrasqueira",
+            "precio": 60000
+          },
+          {
+            "nombre": "CORDERO AL ASADOR",
+            "traduccion": "Grilled lamb / Cordeiro na churrasqueira",
+            "precio": 39000
+          },
+          {
+            "nombre": "CORDERO AL ASADOR (para 2)",
+            "traduccion": "Grilled lamb (for 2) / Cordeiro na churrasqueira (para 2)",
+            "precio": 78000
+          }
+        ],
+        "nota": "Puntos de la carne: muy jugoso, jugoso, a punto, cocido."
+      },
+      {
+        "id": "guarniciones",
+        "titulo": "Guarniciones",
+        "items": [
+          {
+            "nombre": "HUEVOS FRITOS (2 unidades)",
+            "traduccion": "Sunny - side up fried eggs (2 units) / Ovos fritos",
+            "precio": 5000
+          },
+          {
+            "nombre": "ARROZ BLANCO",
+            "traduccion": "Boiled white rice / Arroz branco",
+            "precio": 9000
+          },
+          {
+            "nombre": "PAPAS AL NATURAL",
+            "traduccion": "Boiled potatoes / Batatas ao natural",
+            "precio": 9000
+          },
+          {
+            "nombre": "PAPAS FRITAS",
+            "traduccion": "Fries / Batatas fritas",
+            "precio": 14000
+          },
+          {
+            "nombre": "PAPAS FRITAS PROVENZAL",
+            "traduccion": "Fries with garlic & parsley topping / Batatas fritas á provençal",
+            "precio": 14500
+          },
+          {
+            "nombre": "PURÉ DE PAPAS",
+            "traduccion": "Mashed potatoes / Purê de batata",
+            "precio": 14000
+          },
+          {
+            "nombre": "PURÉ DE CALABAZAS AL HORNO",
+            "traduccion": "Roasted mashed squash / Purê de abóbora ao forno",
+            "precio": 15000
+          },
+          {
+            "nombre": "PURÉ MIXTO",
+            "traduccion": "Squash mashed potatoes / Purê misto",
+            "precio": 14500
+          },
+          {
+            "nombre": "TORTILLA A LA ESPAÑOLA",
+            "traduccion": "Tortilla Española / Tortilha espanhola",
+            "precio": 20000
+          }
+        ]
+      },
+      {
+        "id": "platos",
+        "titulo": "Platos",
+        "items": [
+          {
+            "nombre": "MILANESA DE CARNE CON GUARNICIÓN",
+            "traduccion": "Beef escalope with a side dish / Milanesa de carne com guarnição",
+            "precio": 29000
+          },
+          {
+            "nombre": "MILANESA NAPOLITANA CON GUARNICIÓN",
+            "traduccion": "Breaded beef cutlet topped with tomato sauce, Melted Mozzarella / & fresh tomato slices / Milanesa coberta com molho de tomate, rodelas de tomate fresco e queijo derretido.",
+            "precio": 32000
+          },
+          {
+            "nombre": "FILETE DE TRUCHA AL LIMÓN C/PAPAS al NATURAL",
+            "traduccion": "Grilled Patagonian Trout Fillet with boiled potatoes / Filé de truta grelhado, acompanhado por batatas cozidas ao natural.",
+            "precio": 38000
+          },
+          {
+            "nombre": "CORDERO BRASEADO DESHUESADO CON PURÉ",
+            "traduccion": "Cordero braseado with mashed potatoes (Boneless lamb cooked on special juicy sauce) / Cordeiro braseado dessosado com purê de batata",
+            "precio": 42000
+          }
+        ]
+      },
+      {
+        "id": "pastas",
+        "titulo": "Pastas",
+        "items": [
+          {
+            "nombre": "ÑOQUIS de Papa C/Salsa",
+            "traduccion": "Gnocchi / Nhoques ao molho sugo",
+            "precio": 24000
+          },
+          {
+            "nombre": "RAVIOLES de RICOTA C/Salsa",
+            "traduccion": "Ravioli (stuffed pasta with ricotta) / Raviolis ao molho sugo",
+            "precio": 25000
+          },
+          {
+            "nombre": "RAVIOLES MASA de ESPINACA C/VERDURA C/Salsa",
+            "traduccion": "Spinach ravioli filled with vegetables / Massa fresca verde recheada com espinafre. Servidos com o molho de sua preferência.",
+            "precio": 25000
+          },
+          {
+            "nombre": "SORRENTINOS de JAMON y MUZZARELLA C/Salsa",
+            "traduccion": "Sorrentino (stuffed pasta with mozzarella & ham) / Sorrentinos ao molho sugo",
+            "precio": 28000
+          },
+          {
+            "nombre": "SORRENTINOS de TRUCHA C/Salsa Crema de Limón",
+            "traduccion": "trout Sorrentino (Argentinian pasta filled with trout) with lemon / & cream sauce /Massa artesanal recheada com truta fresca, servida com molho leve e aromático de limão.",
+            "precio": 32000
+          },
+          {
+            "nombre": "SORRENTINOS de CORDERO C/Salsa de Finas Hierbas",
+            "traduccion": "Lamb Sorrentino ( Argentinian pasta filled with lamb) with aromatic herb-infused sauce. / Massa recheada com cordeiro macio, acompanhada de molho delicado de ervas aromáticas.",
+            "precio": 32000
+          },
+          {
+            "nombre": "SALSA BOLOGNESA",
+            "traduccion": "Bolognese sauce / Molho à bolonhesa",
+            "precio": 6000
+          }
+        ],
+        "nota": "Salsas a elección: fileto, crema o mixta."
+      },
+      {
+        "id": "postres",
+        "titulo": "Postres",
+        "items": [
+          {
+            "nombre": "FLAN CASERO (Con Dulce de Leche y/o Crema)",
+            "traduccion": "Flan casero with dulce de leche and/or cream / Pudim caseiro com doce de leite e/ou crema chantilly",
+            "precio": 10000
+          },
+          {
+            "nombre": "HELADO ARTESANAL (2 Gustos)",
+            "traduccion": "Homemade ice cream / Sorvete artesanal / Flavors: chocolate/strawberry/cream/dulce de leche",
+            "precio": 12000
+          },
+          {
+            "nombre": "QUESO y DULCE",
+            "traduccion": "Queijo com batata doce / Cheese and Sweet Potato Jam",
+            "precio": 10000
+          },
+          {
+            "nombre": "HELADO ARTESANAL CON FRUTOS DEL BOSQUE",
+            "traduccion": "Homemade ice cream & berries sauce topping / Sorvete artesanal com frutas vermelhas",
+            "precio": 14000
+          },
+          {
+            "nombre": "PANQUEQUES (De Dulce de Leche y/o Crema)",
+            "traduccion": "Thin french-style pancakes filled with dulce de leche either cream / Panquecas com doce de leite e/ creme chantilly",
+            "precio": 12000
+          },
+          {
+            "nombre": "BROWNIE CON HELADO ARTESANAL",
+            "traduccion": "Brownie with homemade ice cream / Brownie com sorvete artesanal",
+            "precio": 14000
+          },
+          {
+            "nombre": "CHEESE CAKE CON FRUTOS ROJOS",
+            "traduccion": "Cheese cake & homemade berries sauce / Cheese cake com frutas vermelhas",
+            "precio": 12000
+          },
+          {
+            "nombre": "DON PEDRO",
+            "descripcion": "Con Chivas Regal",
+            "traduccion": "Dessert beverage made with ice cream, nuts and whiskey Dom Pedro: sorvete regado com whisky",
+            "precio": 20000
+          }
+        ]
+      },
+      {
+        "id": "cafeteria",
+        "titulo": "Cafetería",
+        "items": [
+          {
+            "nombre": "TÉ",
+            "precio": 3500
+          },
+          {
+            "nombre": "CAFÉ",
+            "precio": 4500
+          },
+          {
+            "nombre": "CAFÉ EN JARRITO",
+            "precio": 4500
+          },
+          {
+            "nombre": "CAFÉ DOBLE",
+            "precio": 5500
+          }
+        ]
+      },
+      {
+        "id": "bebidas-sin-alcohol",
+        "titulo": "Bebidas sin alcohol",
+        "items": [
+          {
+            "nombre": "COCA COLA",
+            "precio": 5500
+          },
+          {
+            "nombre": "COCA COLA SIN AZUCAR",
+            "precio": 5500
+          },
+          {
+            "nombre": "FANTA",
+            "precio": 5500
+          },
+          {
+            "nombre": "SPRITE",
+            "precio": 5500
+          },
+          {
+            "nombre": "SCHWEPPES POMELO",
+            "precio": 5500
+          },
+          {
+            "nombre": "SCHWEPPES TONICA",
+            "precio": 5500
+          },
+          {
+            "nombre": "AGUA SABORIZADA LEVITE",
+            "precio": 5500
+          },
+          {
+            "nombre": "AGUA CON GAS",
+            "precio": 5500
+          },
+          {
+            "nombre": "AGUA SIN GAS",
+            "precio": 5500
+          },
+          {
+            "nombre": "EXPRIMIDO NATURAL DE NARANJAS",
+            "precio": 9000
+          }
+        ]
+      },
+      {
+        "id": "cervezas",
+        "titulo": "Cervezas",
+        "items": [
+          {
+            "nombre": "ANDES ORIGEN 473 cc",
+            "precio": 8500
+          },
+          {
+            "nombre": "STELLA ARTOIS 473 cc",
+            "precio": 8500
+          },
+          {
+            "nombre": "STELLA ARTOIS NOIRE 473 cc",
+            "precio": 8500
+          },
+          {
+            "nombre": "STELLA ARTOIS 473 cc (Sin Alcohol)",
+            "precio": 7000
+          },
+          {
+            "nombre": "PATAGONIA 730 cc",
+            "precio": 15000
+          },
+          {
+            "nombre": "CORONA 330 cc",
+            "precio": 8500
+          },
+          {
+            "nombre": "CORONA 710 cc",
+            "precio": 16000
+          }
+        ]
+      },
+      {
+        "id": "tragos-aperitivos-y-whiskys",
+        "titulo": "Tragos, aperitivos y whiskys",
+        "items": [
+          {
+            "nombre": "APEROL SPRITZ",
+            "precio": 10000
+          },
+          {
+            "nombre": "GIN TONIC (Limón o Frutos Rojos)",
+            "precio": 10000
+          },
+          {
+            "nombre": "CAMPARI Con Naranja Natural",
+            "precio": 10000
+          },
+          {
+            "nombre": "FERNET BRANCA Con Coca Cola",
+            "precio": 10000
+          },
+          {
+            "nombre": "PISCO SOUR",
+            "precio": 10000
+          },
+          {
+            "nombre": "CINZANO ROSSO",
+            "precio": 8000
+          },
+          {
+            "nombre": "CYNAR (Pomelo o Tónica)",
+            "precio": 8000
+          },
+          {
+            "nombre": "NEGRONI",
+            "precio": 10000
+          },
+          {
+            "nombre": "RAMAZZOTTI",
+            "precio": 7000
+          },
+          {
+            "nombre": "RAMAZZOTTI SPRITZ",
+            "precio": 10000
+          },
+          {
+            "nombre": "TEQUILA JOSÉ CUERVO ESPECIAL",
+            "precio": 10000
+          },
+          {
+            "nombre": "WHISKY CHIVAS REGAL 12 AÑOS",
+            "precio": 12000
+          },
+          {
+            "nombre": "WHISKY JOHNNIE WALKER RED LABEL",
+            "precio": 12000
+          },
+          {
+            "nombre": "WHISKY JOHNNIE WALKER BLACK LABEL",
+            "precio": 15000
+          }
+        ]
+      },
+      {
+        "id": "vinos-malbec",
+        "titulo": "Malbec",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Aleanna",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "EL ENEMIGO",
+                "precio": 46000
+              }
+            ]
+          },
+          {
+            "bodega": "Catena Zapata",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "NICASIA RED BLEND MALBEC",
+                "precio": 25000
+              },
+              {
+                "nombre": "SAINT FELICIEN MALBEC",
+                "precio": 26000
+              },
+              {
+                "nombre": "D.V. CATENA MALBEC MALBEC",
+                "precio": 48000
+              },
+              {
+                "nombre": "ANGELICA ZAPATA MALBEC ALTA",
+                "precio": 65000
+              },
+              {
+                "nombre": "MALBEC ARGENTINO",
+                "precio": 155000
+              }
+            ]
+          },
+          {
+            "bodega": "Ernesto Catena",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "PADRILLOS MALBEC",
+                "precio": 25000
+              },
+              {
+                "nombre": "ANIMAL COLORS MALBEC",
+                "precio": 28000
+              },
+              {
+                "nombre": "TIKAL AMORIO",
+                "precio": 67000
+              },
+              {
+                "nombre": "SIESTA MALBEC SINGLE VINEYARD",
+                "precio": 82000
+              }
+            ]
+          },
+          {
+            "bodega": "Escorihuela Gascón",
+            "region": "Agrelo y Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "FAMILIA GASCON",
+                "precio": 16000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN",
+                "precio": 25000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN GRAN RESERVA",
+                "precio": 35000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN ORGANIC VINEYARD",
+                "precio": 37000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN PEQUEÑAS PRODUCCIONES",
+                "precio": 65000
+              },
+              {
+                "nombre": "DON MIGUEL ESCORIHUELA GASCÓN",
+                "precio": 135000
+              }
+            ]
+          },
+          {
+            "bodega": "Dante Robino",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "GRAN DANTE",
+                "precio": 65000
+              }
+            ]
+          },
+          {
+            "bodega": "Familia Millan",
+            "region": "Lujan de Cuyo y Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "CORDERO CON PIEL DE LOBO",
+                "precio": 20000
+              }
+            ]
+          },
+          {
+            "bodega": "Familia Schroeder",
+            "region": "San Patricio del Chañar, Neuquén Patagonia",
+            "vinos": [
+              {
+                "nombre": "SAURUS ESTATE",
+                "precio": 24000
+              },
+              {
+                "nombre": "SAURUS SELECT",
+                "precio": 29000
+              }
+            ]
+          },
+          {
+            "bodega": "Finca Sophenia",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "FINCA SOPHENIA ESTATE RESERVA",
+                "precio": 32000
+              }
+            ]
+          },
+          {
+            "bodega": "Humberto Canale",
+            "region": "Alto Valle, Rio Negro Patagonia",
+            "vinos": [
+              {
+                "nombre": "HUMBERTO CANALE ESTATE",
+                "precio": 28000
+              }
+            ]
+          },
+          {
+            "bodega": "Makila",
+            "region": "San Rafael, Mendoza",
+            "vinos": [
+              {
+                "nombre": "DOS MAKILAS",
+                "precio": 18000
+              }
+            ]
+          },
+          {
+            "bodega": "Malma",
+            "region": "San Patricio del Chañar, Neuquén Patagonia",
+            "vinos": [
+              {
+                "nombre": "FAMILY RESERVE",
+                "precio": 30000
+              }
+            ]
+          },
+          {
+            "bodega": "Santa Julia",
+            "region": "Maipú, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ALAMBRADOS",
+                "precio": 18000
+              }
+            ]
+          },
+          {
+            "bodega": "Sejanovich",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "MANOS NEGRAS",
+                "precio": 25000
+              },
+              {
+                "nombre": "TINTO NEGRO ALTAMIRA LA ESCUELA",
+                "precio": 52000
+              }
+            ]
+          },
+          {
+            "bodega": "Zuccardi",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ZUCCARDI SERIE A",
+                "precio": 25000
+              },
+              {
+                "nombre": "ZUCCARDI Q",
+                "precio": 38000
+              },
+              {
+                "nombre": "ZUCCARDI POLIGONOS",
+                "precio": 52000
+              },
+              {
+                "nombre": "ZUCCARDI CONCRETO",
+                "precio": 63000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-cabernet-sauvignon",
+        "titulo": "Cabernet Sauvignon",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Catena Zapata",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ANGÉLICA ZAPATA CABERNET SAUVIGNON ALTA",
+                "precio": 58000
+              },
+              {
+                "nombre": "BIRTH OF CABERNET",
+                "precio": 145000
+              }
+            ]
+          },
+          {
+            "bodega": "Escorihuela Gascón",
+            "region": "Agrelo y Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "FAMILIA GASCON",
+                "precio": 16000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN",
+                "precio": 25000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN GRAN RESERVA",
+                "precio": 35000
+              }
+            ]
+          },
+          {
+            "bodega": "Familia Millan",
+            "region": "Lujan de Cuyo y Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "CORDERO CON PIEL DE LOBO",
+                "precio": 20000
+              }
+            ]
+          },
+          {
+            "bodega": "Finca Sophenia",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "FINCA SOPHENIA ESTATE RESERVA",
+                "precio": 32000
+              }
+            ]
+          },
+          {
+            "bodega": "Makila",
+            "region": "San Rafael, Mendoza",
+            "vinos": [
+              {
+                "nombre": "DOS MAKILAS",
+                "precio": 18000
+              }
+            ]
+          },
+          {
+            "bodega": "Santa Julia",
+            "region": "Maipú, Mendoza",
+            "vinos": [
+              {
+                "nombre": "SANTA JULIA",
+                "precio": 16000
+              }
+            ]
+          },
+          {
+            "bodega": "Zuccardi",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ZUCCARDI Q",
+                "precio": 38000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-cabernet-franc",
+        "titulo": "Cabernet Franc",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Aleanna",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "EL ENEMIGO",
+                "precio": 46000
+              }
+            ]
+          },
+          {
+            "bodega": "Catena Zapata",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "NICASIA RED BLEND CABERNET FRANC",
+                "precio": 25000
+              }
+            ]
+          },
+          {
+            "bodega": "Ernesto Catena",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "MARA",
+                "precio": 39000
+              }
+            ]
+          },
+          {
+            "bodega": "Escorihuela Gascón",
+            "region": "Agrelo y Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ESCORIHUELA GASCÓN",
+                "precio": 25000
+              }
+            ]
+          },
+          {
+            "bodega": "Finca Sophenia",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "FINCA SOPHENIA ESTATE RESERVA",
+                "precio": 32000
+              }
+            ]
+          },
+          {
+            "bodega": "Humberto Canale",
+            "region": "Alto Valle, Rio Negro Patagonia",
+            "vinos": [
+              {
+                "nombre": "HUMBERTO CANALE ESTATE",
+                "precio": 28000
+              }
+            ]
+          },
+          {
+            "bodega": "Zuccardi",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ZUCCARDI Q",
+                "precio": 38000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-pinot-noir",
+        "titulo": "Pinot Noir",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Catena Zapata",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "D.V. CATENA PINOT NOIR",
+                "precio": 42000
+              }
+            ]
+          },
+          {
+            "bodega": "Ernesto Catena",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "PADRILLOS",
+                "precio": 28000
+              }
+            ]
+          },
+          {
+            "bodega": "Escorihuela Gascon",
+            "region": "Agrelo y Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ESCORIHUELA GASCÓN",
+                "precio": 25000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN PEQUEÑAS PRODUCCIONES",
+                "precio": 65000
+              }
+            ]
+          },
+          {
+            "bodega": "Familia Schroeder",
+            "region": "San Patricio del Chañar, Neuquén Patagonia",
+            "vinos": [
+              {
+                "nombre": "SAURUS ESTATE",
+                "precio": 27000
+              }
+            ]
+          },
+          {
+            "bodega": "Humberto Canale",
+            "region": "Alto Valle, Rio Negro Patagonia",
+            "vinos": [
+              {
+                "nombre": "GRAN RESERVA",
+                "precio": 70000
+              }
+            ]
+          },
+          {
+            "bodega": "Malma",
+            "region": "San Patricio del Chañar, Neuquén Patagonia",
+            "vinos": [
+              {
+                "nombre": "FAMILY RESERVE",
+                "precio": 36000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-blends",
+        "titulo": "Blends",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Aleanna",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "GRAN ENEMIGO",
+                "precio": 98000,
+                "detalle": "Cabernet Franc - Malbec"
+              }
+            ]
+          },
+          {
+            "bodega": "Catena Zapata",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "SAINT FELICIEN",
+                "precio": 26000,
+                "detalle": "Cabernet Sauvignon - Merlot"
+              },
+              {
+                "nombre": "D.V. CATENA",
+                "precio": 35000,
+                "detalle": "Cabernet Sauvignon - Malbec"
+              }
+            ]
+          },
+          {
+            "bodega": "Ernesto Catena",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ALMA NEGRA",
+                "precio": 75000,
+                "detalle": "Secreto"
+              },
+              {
+                "nombre": "TIKAL NATURAL",
+                "precio": 70000,
+                "detalle": "Malbec - Syrah"
+              }
+            ]
+          },
+          {
+            "bodega": "Escorihuela Gascon",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "THE PRESIDENT BLEND",
+                "precio": 75000,
+                "detalle": "Malbec - Cabernet Sauvignon - Syrah"
+              }
+            ]
+          },
+          {
+            "bodega": "Dante Robino",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "BIOGRAFIA RED BLEND",
+                "precio": 80000,
+                "detalle": "71%Malbec - 15%Cabernet Franc - 14%Bonarda"
+              }
+            ]
+          },
+          {
+            "bodega": "Anaia",
+            "region": "Agrelo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "GRAN ASSAMBLAGE",
+                "precio": 36000,
+                "detalle": "Malbec - Cabernet Sauvignon"
+              }
+            ]
+          },
+          {
+            "bodega": "Familia Millan",
+            "region": "Lujan de Cuyo y Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "SAPO DE OTRO POZO",
+                "precio": 26000,
+                "detalle": "60%Malbec - 20% Syrah - 20%Cabernet Franc"
+              },
+              {
+                "nombre": "MOSQUITA MUERTA",
+                "precio": 31000,
+                "detalle": "70%Malbec - 20%Cabernet Sauvignon - 5%Cabernet Franc - 5%Merlot"
+              }
+            ]
+          },
+          {
+            "bodega": "Familia Schroeder",
+            "region": "San Patricio del Chañar, Neuquén Patagonia",
+            "vinos": [
+              {
+                "nombre": "SAURUS SELECT",
+                "precio": 27000,
+                "detalle": "Cabernet Sauvignon - Cabernet Franc"
+              }
+            ]
+          },
+          {
+            "bodega": "Finca Sophenia",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "SYNTHESIS THE BLEND",
+                "precio": 98000,
+                "detalle": "Malbec - Cabernet Sauvignon - Merlot"
+              }
+            ]
+          },
+          {
+            "bodega": "Malma",
+            "region": "San Patricio del Chañar, Neuquén Patagonia",
+            "vinos": [
+              {
+                "nombre": "MALMA UNIVERSO",
+                "precio": 56000,
+                "detalle": "Cabernet Sauvignon - Malbec"
+              }
+            ]
+          },
+          {
+            "bodega": "Santa Julia",
+            "region": "Maipú, Mendoza",
+            "vinos": [
+              {
+                "nombre": "TENSIÓN RIVERA MALBEC PETIT VERDOT",
+                "precio": 18000,
+                "detalle": "90%Malbec - 10%Petit Verdot"
+              }
+            ]
+          },
+          {
+            "bodega": "Sejanovich",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ZAHA EL CORTE",
+                "precio": 46000,
+                "detalle": "Cabernet Sauvignon - Malbec"
+              }
+            ]
+          },
+          {
+            "bodega": "Zuccardi",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "BRAZOS DE LOS ANDES",
+                "precio": 20000,
+                "detalle": "45%Malbec - 28%Cabernet Sauvignon - 17%Syrah - 10%Bonarda"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-otras-cepas",
+        "titulo": "Otras cepas",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Catena Zapata",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "SAINT FELICIEN SYRAH",
+                "precio": 26000
+              },
+              {
+                "nombre": "ANGELICA ZAPATA MERLOT ALTA",
+                "precio": 58000
+              }
+            ]
+          },
+          {
+            "bodega": "Ernesto Catena",
+            "region": "Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "MARA MERLOT",
+                "precio": 35000
+              }
+            ]
+          },
+          {
+            "bodega": "Escorihuela Gascón",
+            "region": "Agrelo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ESCORIHUELA GASCÓN SANGIOVESE",
+                "precio": 25000
+              }
+            ]
+          },
+          {
+            "bodega": "Dante Robino",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "BONARDA",
+                "precio": 20000
+              }
+            ]
+          },
+          {
+            "bodega": "Makila",
+            "region": "San Rafael, Mendoza",
+            "vinos": [
+              {
+                "nombre": "MAKILA PINOT MEUNIER",
+                "precio": 18000
+              }
+            ]
+          },
+          {
+            "bodega": "Malma",
+            "region": "San Patricio del Chañar, Neuquén Patagonia",
+            "vinos": [
+              {
+                "nombre": "FAMILY RESERVE MERLOT",
+                "precio": 35000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-sauvignon-blanc",
+        "titulo": "Sauvignon Blanc",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Escorihuela Gascon",
+            "region": "Agrelo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ESCORIHUELA GASCÓN",
+                "precio": 25000
+              },
+              {
+                "nombre": "PEQUEÑAS PRODUCCIONES",
+                "precio": 65000
+              }
+            ]
+          },
+          {
+            "bodega": "Santa Julia",
+            "region": "Maipú, Mendoza",
+            "vinos": [
+              {
+                "nombre": "SANTA JULIA",
+                "precio": 16000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-chardonnay",
+        "titulo": "Chardonnay",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Catena Zapata",
+            "region": "Lujan de Cuyo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "SAINT FELICIEN",
+                "precio": 26000
+              },
+              {
+                "nombre": "ANGÉLICA ZAPATA - CHARDONNAY ALTA",
+                "precio": 58000
+              }
+            ]
+          },
+          {
+            "bodega": "Ernesto Catena",
+            "region": "Agrelo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "ANIMAL COLORS CHARDONNAY",
+                "precio": 28000
+              }
+            ]
+          },
+          {
+            "bodega": "Escorihuela Gascón",
+            "region": null,
+            "vinos": [
+              {
+                "nombre": "FAMILIA GASCÓN",
+                "precio": 16000
+              }
+            ]
+          },
+          {
+            "bodega": "Malma",
+            "region": "San Patricio del Chañar, Neuquén Patagonia",
+            "vinos": [
+              {
+                "nombre": "FAMILY RESERVE",
+                "precio": 30000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-blancos-dulces-y-rosados",
+        "titulo": "Blancos dulces y rosados",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Escorihuela Gascón",
+            "region": "Agrelo, Mendoza",
+            "vinos": [
+              {
+                "nombre": "FAMILIA GASCÓN DULCE NATURAL",
+                "precio": 16000
+              },
+              {
+                "nombre": "FAMILIA GASCÓN ROSE",
+                "precio": 16000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN GRAN ROSE",
+                "precio": 35000
+              }
+            ]
+          },
+          {
+            "bodega": "Familia Millan",
+            "region": "Lujan de Cuyo y Valle de Uco, Mendoza",
+            "vinos": [
+              {
+                "nombre": "CORDERO CON PIEL DE LOBO ROSE",
+                "precio": 20000
+              }
+            ]
+          },
+          {
+            "bodega": "Santa Julia",
+            "region": "Maipú, Mendoza",
+            "vinos": [
+              {
+                "nombre": "SANTA JULIA SYRAH ROSE",
+                "precio": 16000
+              },
+              {
+                "nombre": "SANTA JULIA CHENIN DULCE",
+                "precio": 16000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "vinos-espumantes",
+        "titulo": "Espumantes",
+        "grupo": "Vinos",
+        "bodegas": [
+          {
+            "bodega": "Ernesto Catena",
+            "region": null,
+            "vinos": [
+              {
+                "nombre": "ANIMAL EXTRA BRUT ORGANICO",
+                "precio": 29000
+              }
+            ]
+          },
+          {
+            "bodega": "Escorihuela Gascón",
+            "region": null,
+            "vinos": [
+              {
+                "nombre": "FAMILIA GASCON EXTRA BRUT",
+                "precio": 21000
+              },
+              {
+                "nombre": "ESCORIHUELA GASCÓN ROSE EXTRA BRUT",
+                "precio": 26000
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "copas-y-descorche",
+        "titulo": "Copas y descorche",
+        "items": [
+          {
+            "nombre": "COPA DE VINO MALBEC",
+            "precio": 9000
+          },
+          {
+            "nombre": "COPA DE VINO CABERNET SAUVIGNON",
+            "precio": 9000
+          },
+          {
+            "nombre": "COPA DE VINO BLANCO",
+            "precio": 9000
+          },
+          {
+            "nombre": "VALOR DESCORCHE",
+            "precio": 12000
+          }
+        ]
+      }
+    ]
+  },
+  "restaurante": {
+    "cubierto": 2000,
+    "secciones": [
+      {
+        "id": "entradas",
+        "titulo": "Entradas",
+        "items": [
+          {
+            "nombre": "CAZUELA DE MINI ALBONDIGAS",
+            "traduccion": "Mini meatball casserole simmered / Almôndegas mini ao molho",
+            "precio": 16000
+          },
+          {
+            "nombre": "BERENJENAS A LA PARMEGIANA",
+            "traduccion": "Baked eggplant Parmigiana / Berinjela à parmegiana",
+            "precio": 14000
+          },
+          {
+            "nombre": "PROVOLETA ESPECIAL",
+            "descripcion": "Con Peras y Nueces o Rucula y Tomates Secos",
+            "traduccion": "Grilled Provolone cheese With sweet pears and walnuts. or fresh arugula and sun-dried tomatoes / Com peras e nozes ou rúcula e tomate seco",
+            "precio": 18000
+          },
+          {
+            "nombre": "RAVIOLES FRITOS de Bondiola Braseada",
+            "traduccion": "Crispy fried ravioli / Recheado com bondiola (copa-lombo) braseada",
+            "precio": 18000
+          },
+          {
+            "nombre": "SOPA CREMA DE CEBOLLA",
+            "traduccion": "Creamy soup of onion / Sopa de cebola",
+            "precio": 14000
+          },
+          {
+            "nombre": "LANGOSTINOS AL AJILLO",
+            "traduccion": "Sautéed shrimp in garlic oil / Camarão rosa ao alho e óleo",
+            "precio": 20000
+          },
+          {
+            "nombre": "RABAS",
+            "traduccion": "Crispy golden calamari rings / Lula à dorê",
+            "precio": 28000
+          }
+        ]
+      },
+      {
+        "id": "platos-especiales",
+        "titulo": "Platos especiales",
+        "items": [
+          {
+            "nombre": "GOULASH CON SPAETZLE",
+            "precio": 32000
+          },
+          {
+            "nombre": "PASTEL DE PAPAS",
+            "traduccion": "Potato pie layered with beef/Escondidinho carne moída",
+            "precio": 32000
+          },
+          {
+            "nombre": "GUISO DE LENTEJAS",
+            "traduccion": "Traditional lentil stew / Guisado de lentilha",
+            "precio": 28000
+          },
+          {
+            "nombre": "TRUCHA AL ROQUEFORT CON GUARNICION",
+            "traduccion": "Trout topped Roquefort blue cheese cream sauce / Truta ao molho de gorgonzola",
+            "precio": 38000
+          },
+          {
+            "nombre": "MILANESA GRATINADA CON GUARNICION",
+            "traduccion": "Crispy breaded meat gratinéed / Milanesa gratinada",
+            "precio": 32000
+          },
+          {
+            "nombre": "OJO DE BIFE CON GUARNICION",
+            "traduccion": "Ribeye steak / Bife ancho",
+            "precio": 45000
+          },
+          {
+            "nombre": "WOK DE ARROZ YAMANI (Vegetales y Salsa de Soja)",
+            "traduccion": "Yamaní brown rice stir-fry with crisp seasonal vegetables / Wok de arroz integral com legumes e shoyu",
+            "precio": 28000
+          },
+          {
+            "nombre": "RISOTTO DE HONGOS",
+            "traduccion": "Creamy rice risotto cooked with mixed mushrooms / Risoto de cogumelos",
+            "precio": 39000
+          },
+          {
+            "nombre": "HAMBURGUESA",
+            "descripcion": "Con Pepino Queso Provolone y Panceta / (Blend de 120Gr de carne especial)",
+            "traduccion": "Hamburguer with cucumbers, provolone cheese, and bacon / Hambúrguer com pepinos, queijo provolone e bacon",
+            "precio": 28000
+          },
+          {
+            "nombre": "HAMBURGUESA DOBLE",
+            "traduccion": "Doble Burger",
+            "precio": 32000
+          }
+        ],
+        "nota": "Guarniciones a elección: papas fritas, puré de papas, arroz o ensalada."
+      },
+      {
+        "id": "pastas-caseras-rellenas",
+        "titulo": "Pastas caseras rellenas",
+        "items": [
+          {
+            "nombre": "RAVIOLONES DE VERDURA y RICOTA (Masa Verde)",
+            "traduccion": "Jumbo spinach and ricotta ravioli. / Ravióli de verdura e ricota (massa verde)",
+            "precio": 20000
+          },
+          {
+            "nombre": "RAVIOLONES DE RICOTA",
+            "traduccion": "Jumbo ricotta ravioli / Ravióli de ricota",
+            "precio": 20000
+          },
+          {
+            "nombre": "RAVIOLONES DE CORDERO Masa de Hongos de Pino",
+            "traduccion": "Jumbo ravioli stuffed with lamb / Ravióli de cordeiro",
+            "precio": 25000
+          },
+          {
+            "nombre": "CAPPELLETI DE TRUCHA",
+            "traduccion": "Patagonian trout cappelleti / Capeletti de truta",
+            "precio": 25000
+          },
+          {
+            "nombre": "SORRENTINOS CALABAZA, NUEZ y MUZZARELLA",
+            "descripcion": "(Masa Verde)",
+            "traduccion": "Round, large sorrentino pasta filled with sweet pumpkin, walnuts, and mozzarella / Ravióli de ricota e presunto",
+            "precio": 22000
+          },
+          {
+            "nombre": "SORRENTINOS DE JAMÓN Y QUESO",
+            "traduccion": "Round, large sorrentino pasta stuffed with ham and cheese / Sorrentinos de presunto e queijo",
+            "precio": 22000
+          }
+        ]
+      },
+      {
+        "id": "pastas-caseras-simples",
+        "titulo": "Pastas caseras simples",
+        "items": [
+          {
+            "nombre": "ÑOQUIS DE ESPINACA (Gnocchis)",
+            "traduccion": "Spinach Gnocchis / Nhoque espinafre",
+            "precio": 19000
+          },
+          {
+            "nombre": "PAPARDELLE",
+            "traduccion": "Wide flat ribbon pasta / Pappardelle",
+            "precio": 19000
+          },
+          {
+            "nombre": "TAGLIATELLE",
+            "traduccion": "Classic flat ribbon pasta / Tagliatelle",
+            "precio": 19000
+          }
+        ]
+      },
+      {
+        "id": "salsas",
+        "titulo": "Salsas",
+        "items": [
+          {
+            "nombre": "CREMA DE HONGOS",
+            "traduccion": "Creamy mushroom sauce / Cogumelos",
+            "precio": 10000
+          },
+          {
+            "nombre": "CREMA DE ROQUEFORT",
+            "traduccion": "Roquefort blue cheese cream sauce / Gorgonzola",
+            "precio": 10000
+          },
+          {
+            "nombre": "MEDITERRÁNEA",
+            "traduccion": "Mediterranean (tomato, olives, olive oil, and herbs) / Mediterrâneo",
+            "precio": 9000
+          },
+          {
+            "nombre": "BOLOÑESA",
+            "traduccion": "Bolognese / Bolonhesa",
+            "precio": 10000
+          },
+          {
+            "nombre": "PUTANESCA",
+            "traduccion": "Puttanesca (sauce with tomatoes, olive oil, anchovies, capers, and garlic) / Puttanesca",
+            "precio": 9000
+          },
+          {
+            "nombre": "PESTO DE ALBAHACA",
+            "traduccion": "Fresh basil pesto sauce / Pesto de manjericão",
+            "precio": 6000
+          },
+          {
+            "nombre": "POMODORO",
+            "traduccion": "Classic Italian tomato sauce / Pomodoro",
+            "precio": 8000
+          },
+          {
+            "nombre": "CREMA o ROSA",
+            "traduccion": "Smooth cream sauce / Branco / Mixed sauce (Pomodoro and cream blend) / Misto",
+            "precio": 8000
+          }
+        ]
+      },
+      {
+        "id": "lasana",
+        "titulo": "Lasaña",
+        "items": [
+          {
+            "nombre": "LASAÑA DE CARNE, CARNE Y VERDURA",
+            "traduccion": "Meat ricotta and vegetable lasagna / Lasanha de carne ricota e legumes",
+            "precio": 32000
+          }
+        ]
+      },
+      {
+        "id": "pizzas-clasicas",
+        "titulo": "Pizzas clásicas",
+        "items": [
+          {
+            "nombre": "MUZZARELLA",
+            "traduccion": "Tomato sauce, mozzarella, and oregano",
+            "precios": [
+              21000,
+              30000
+            ]
+          },
+          {
+            "nombre": "NAPOLITANA",
+            "traduccion": "Tomato sauce, mozzarella, fresh sliced tomatoes, garlic, and olives",
+            "precios": [
+              24000,
+              32000
+            ]
+          },
+          {
+            "nombre": "ESPECIAL DE JAMÓN Y MORRÓN",
+            "traduccion": "Tomato sauce, mozzarella, cured ham, and roasted red bell peppers / Especial de presunto e pimentão",
+            "precios": [
+              25000,
+              35000
+            ]
+          },
+          {
+            "nombre": "FUGAZZA",
+            "traduccion": "Thick pizza crust loaded with sweet, seasoned sautéed onions and olive oil / Cebola e mussarela",
+            "precios": [
+              21000,
+              30000
+            ]
+          }
+        ],
+        "tamanos": [
+          "Chica",
+          "Grande"
+        ]
+      },
+      {
+        "id": "pizzas-especiales",
+        "titulo": "Pizzas especiales",
+        "items": [
+          {
+            "nombre": "PANCETA Y HONGOS",
+            "traduccion": "Tomato sauce, mozzarella, crispy bacon, and mushrooms / Bacon e cogumelos",
+            "precios": [
+              28000,
+              38000
+            ]
+          },
+          {
+            "nombre": "CUATRO QUESOS",
+            "traduccion": "Four cheese: mozzarella, roquefort, parmesan, provolone",
+            "precios": [
+              28000,
+              38000
+            ]
+          },
+          {
+            "nombre": "RÚCULA, TOMATES SECOS Y PARMESANO",
+            "traduccion": "Tomato sauce, mozzarella, fresh arugula, sun-dried tomatoes, and shaved parmesan / Rúcula, tomate seco e parmesão",
+            "precios": [
+              26000,
+              35000
+            ]
+          },
+          {
+            "nombre": "PERAS NUECES Y ROQUEFORT",
+            "traduccion": "Walnuts, pears and blue cheese / Nozes, peras e roquefort",
+            "precios": [
+              28000,
+              38000
+            ]
+          }
+        ],
+        "tamanos": [
+          "Chica",
+          "Grande"
+        ]
+      },
+      {
+        "id": "empanadas-al-horno",
+        "titulo": "Empanadas al horno",
+        "items": [
+          {
+            "nombre": "CARNE CORTADA A CUCHILLO",
+            "traduccion": "Hand-cut beef spiced / Carne cortada na faca",
+            "precio": 6000
+          },
+          {
+            "nombre": "POLLO",
+            "traduccion": "Seasoned shredded chicken / Frango",
+            "precio": 4500
+          },
+          {
+            "nombre": "JAMÓN Y QUESO",
+            "traduccion": "Diced ham and melted cheese / Presunto e queijo",
+            "precio": 4500
+          },
+          {
+            "nombre": "CEBOLLA Y MUZZARELLA",
+            "traduccion": "Sautéed sweet onions and mozzarella cheese / Cebola e mussarela",
+            "precio": 4500
+          },
+          {
+            "nombre": "QUESO Y VERDURA",
+            "traduccion": "Spinach with rich cheese / Queijo e verdura",
+            "precio": 4500
+          }
+        ]
+      },
+      {
+        "id": "postres",
+        "titulo": "Postres",
+        "items": [
+          {
+            "nombre": "TIRAMISU",
+            "precio": 14000
+          },
+          {
+            "nombre": "CREME BRULEE",
+            "precio": 12000
+          },
+          {
+            "nombre": "CRUMBLE DE MANZANA Con Helado de Canela",
+            "traduccion": "Apple crumble with cinnamon ice cream / Crumble de maçã com sorvete de canela",
+            "precio": 14000
+          },
+          {
+            "nombre": "BUDÍN DE PAN CON NARANJA",
+            "descripcion": "Con Helado de Crema Americana",
+            "traduccion": "Bread pudding with orange and cream ice cream / Pudim de pão com laranja com de sorvete de creme americano",
+            "precio": 12000
+          },
+          {
+            "nombre": "VOLCAN DE CHOCOLATE CON HELADO",
+            "traduccion": "Chocolate lava cake with cream ice cream / Vulcão de chocolate com sorvete de creme",
+            "precio": 19000
+          },
+          {
+            "nombre": "HELADO ARTESANAL (2 GUSTOS)",
+            "traduccion": "Homemade ice cream / Sorvete artesanal / Flavors: chocolate/strawberry/cream/dulce de leche",
+            "precio": 12000
+          },
+          {
+            "nombre": "DEGUSTACION DE DULCES EN ALMIBAR",
+            "traduccion": "Degustação de doces em calda / Preserved fruits tasting in syrup",
+            "precio": 18000
+          },
+          {
+            "nombre": "DON PEDRO",
+            "traduccion": "Ice cream, nuts and whisky / Sorvete regado com whisky",
+            "precio": 20000
+          }
+        ]
+      },
+      {
+        "id": "cafeteria-y-tes",
+        "titulo": "Cafetería y tés",
+        "items": [
+          {
+            "nombre": "TE",
+            "precio": 3500
+          },
+          {
+            "nombre": "CAFE",
+            "precio": 5000
+          },
+          {
+            "nombre": "CAFE EN JARRITO",
+            "precio": 5000
+          },
+          {
+            "nombre": "CAFE DOBLE",
+            "precio": 6000
+          }
+        ]
+      },
+      {
+        "id": "bebidas-sin-alcohol",
+        "titulo": "Bebidas sin alcohol",
+        "items": [
+          {
+            "nombre": "COCA COLA",
+            "precio": 5500
+          },
+          {
+            "nombre": "COCA COLA SIN AZUCAR",
+            "precio": 5500
+          },
+          {
+            "nombre": "FANTA",
+            "precio": 5500
+          },
+          {
+            "nombre": "SPRITE",
+            "precio": 5500
+          },
+          {
+            "nombre": "SCHWEPPES POMELO",
+            "precio": 5500
+          },
+          {
+            "nombre": "SCHWEPPES TONICA",
+            "precio": 5500
+          },
+          {
+            "nombre": "AGUA SABORIZADA LEVITE",
+            "precio": 5500
+          },
+          {
+            "nombre": "AGUA CON GAS o SIN GAS",
+            "precio": 5500
+          },
+          {
+            "nombre": "EXPRIMIDO NATURAL DE NARANJAS",
+            "precio": 9000
+          }
+        ]
+      },
+      {
+        "id": "cervezas",
+        "titulo": "Cervezas",
+        "items": [
+          {
+            "nombre": "STELLA ARTOIS 473 cc o NOIRE 473 cc",
+            "precio": 8500
+          },
+          {
+            "nombre": "STELLA ARTOIS 473 cc (Sin Alcohol)",
+            "precio": 7500
+          },
+          {
+            "nombre": "STELLA ARTOIS PINTA",
+            "precio": 8500
+          },
+          {
+            "nombre": "STELLA ARTOIS MEDIA PINTA",
+            "precio": 6000
+          },
+          {
+            "nombre": "PATAGONIA PINTA",
+            "precio": 8500
+          },
+          {
+            "nombre": "PATAGONIA MEDIA PINTA",
+            "precio": 6000
+          },
+          {
+            "nombre": "CORONA 330 cc",
+            "precio": 8500
+          },
+          {
+            "nombre": "CORONA 710 cc",
+            "precio": 16000
+          }
+        ]
+      },
+      {
+        "id": "tragos-aperitivos-y-whiskys",
+        "titulo": "Tragos, aperitivos y whiskys",
+        "items": [
+          {
+            "nombre": "APEROL SPRITZ",
+            "precio": 10000
+          },
+          {
+            "nombre": "GIN TONIC (Limón o Frutos Rojos)",
+            "precio": 10000
+          },
+          {
+            "nombre": "CAMPARI Con Naranja Natural",
+            "precio": 10000
+          },
+          {
+            "nombre": "FERNET BRANCA Con Coca Cola",
+            "precio": 10000
+          },
+          {
+            "nombre": "PISCO SOUR",
+            "precio": 10000
+          },
+          {
+            "nombre": "CINZANO ROSSO",
+            "precio": 7000
+          },
+          {
+            "nombre": "CYNAR (Pomelo o Tónica)",
+            "precio": 7000
+          },
+          {
+            "nombre": "NEGRONI",
+            "precio": 10000
+          },
+          {
+            "nombre": "RAMAZZOTTI",
+            "precio": 7000
+          },
+          {
+            "nombre": "RAMAZZOTTI SPRITZ",
+            "precio": 10000
+          },
+          {
+            "nombre": "TEQUILA JOSÉ CUERVO ESPECIAL",
+            "precio": 10000
+          },
+          {
+            "nombre": "WHISKY CHIVAS REGAL 12 AÑOS",
+            "precio": 14000
+          },
+          {
+            "nombre": "WHISKY JOHNNIE WALKER RED LABEL",
+            "precio": 14000
+          },
+          {
+            "nombre": "WHISKY JOHNNIE WALKER BLACK LABEL",
+            "precio": 16000
+          }
+        ]
+      }
+    ]
+  }
+}

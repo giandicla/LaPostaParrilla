@@ -10,8 +10,8 @@ Qué hace:
   1. Logo: extrae el vector de Logo.ai (es PDF por dentro) y arma variantes SVG
      recortadas y en un solo color (blanco / bordo), más el favicon.
   2. Fotos: convierte la selección de fotos a WebP de ancho acotado.
-  3. Cartas: rasteriza cada hoja de los PDF a WebP para el visor de /carta y
-     copia los PDF para descargar. En las dos cartas se tapa la red y
+  3. Cartas: copia los PDF para descargar desde /carta. (El contenido de la
+     carta que se ve en el sitio está en src/data/cartas.json, no sale de acá.) En las dos cartas se tapa la red y
      la clave del WiFi: está impresa para la mesa, no para internet.
 """
 
@@ -70,7 +70,6 @@ CARTAS = [
     ('Menu comida y vinos con precio.pdf', 'parrilla', {0: [(434, 852, 592, 896)]}),
     ('Diseño Menu La Posta II Oficio .pdf.pdf', 'restaurante', {1: [(322, 815, 563, 862)]}),
 ]
-ANCHO_HOJA = 1400  # px; la hoja es de 612pt, así que ~2.3x
 
 
 def svg_logo(svg_base, caja, color, fondo=None):
@@ -136,15 +135,9 @@ def cartas(origen):
                 color = tuple(v / 255 for v in muestra.pixel(int(x1) + 2, int((y0 + y1) / 2)))
                 pagina.add_redact_annot(fitz.Rect(x0, y0, x1, y1), fill=color)
             pagina.apply_redactions(images=fitz.PDF_REDACT_IMAGE_NONE)
-        documento.save(destino / f'carta-{id_local}.pdf', garbage=3, deflate=True)
-
-        for indice, pagina in enumerate(documento):
-            escala = ANCHO_HOJA / pagina.rect.width
-            pixmap = pagina.get_pixmap(matrix=fitz.Matrix(escala, escala))
-            imagen = Image.frombytes('RGB', (pixmap.width, pixmap.height), pixmap.samples)
-            salida = destino / f'{id_local}-{indice + 1}.webp'
-            imagen.save(salida, 'WEBP', quality=82, method=6)
-            print(f'{salida.name:30} {imagen.size} {salida.stat().st_size // 1024} KB')
+        salida = destino / f'carta-{id_local}.pdf'
+        documento.save(salida, garbage=3, deflate=True)
+        print(f'{salida.name:30} {salida.stat().st_size // 1024} KB')
 
 
 if __name__ == '__main__':

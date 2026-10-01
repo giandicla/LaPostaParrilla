@@ -30,12 +30,9 @@ export const LOCALES = [
     mapaEmbedUrl: MAPA_EMBED_URL,
     telefono: '+54 9 2944 96-6199',
     whatsapp: '5492944966199', // formato para wa.me, sin + ni espacios
-    // La carta es el PDF de la familia, rasterizado hoja por hoja para el
-    // visor de /carta (scripts/procesar-assets.py). Comida y vinos.
-    carta: {
-      pdf: '/cartas/carta-parrilla.pdf',
-      hojas: [1, 2, 3, 4, 5, 6].map((n) => `/cartas/parrilla-${n}.webp`),
-    },
+    // La carta en sí vive en src/data/cartas.json; acá solo el PDF original,
+    // para quien la quiera descargar.
+    cartaPdf: '/cartas/carta-parrilla.pdf',
     horarios: HORARIOS,
     franjasReserva: FRANJAS_RESERVA,
     imagenes: {
@@ -61,10 +58,7 @@ export const LOCALES = [
     mapaEmbedUrl: MAPA_EMBED_URL,
     telefono: '+54 9 2944 86-1339',
     whatsapp: '5492944861339',
-    carta: {
-      pdf: '/cartas/carta-restaurante.pdf',
-      hojas: [1, 2].map((n) => `/cartas/restaurante-${n}.webp`),
-    },
+    cartaPdf: '/cartas/carta-restaurante.pdf',
     horarios: HORARIOS,
     franjasReserva: FRANJAS_RESERVA,
     imagenes: {

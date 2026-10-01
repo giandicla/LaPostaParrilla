@@ -5,7 +5,7 @@
 | Ruta | Página | Qué tiene |
 |---|---|---|
 | `/` | Inicio | Los 8 bloques de la home |
-| `/carta` | Carta | La carta en PDF del local activo, hoja por hoja, + toggle. Acepta `?local=<id>` |
+| `/carta` | Carta | La carta completa del local activo en HTML (índice, secciones, vinos por cepa y bodega) + toggle. Acepta `?local=<id>` |
 | `/reservas` | Reservas | Formulario maquetado. Acepta `?local=<id>` |
 | `/nosotros` | Nosotros | Historia + un bloque por local + contacto |
 | `*` | — | `app/not-found.jsx` — página 404 con links de vuelta |
@@ -38,7 +38,7 @@
 | `LocalCard` | `local` | Tarjeta grande de un salón, con sus dos CTA |
 | `SelectorLocal` | `locales`, `localActivoId`, `onChange` | Toggle. Controlado |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
-| `VisorCarta` | `hojas[]`, `pdf`, `nombre` | Muestra la carta hoja por hoja: flechas, miniaturas, teclado (← →) y swipe. Links al PDF para ampliar y descargar |
+| `SeccionCarta` | `seccion`, `idAncla` | Una sección de la carta: platos (nombre, descripción, traducción EN/PT, uno o más precios) o vinos agrupados por bodega |
 | `GaleriaGrid` | `imagenes[]` | Grilla de 3 fotos, la del medio vertical |
 | `InfoLocal` | `local` | Horarios, mapa y contacto de UN local |
 
@@ -56,17 +56,18 @@ Aparte de eso, algunos componentes importan constantes que no son de local:
 | `marca.js` | `MARCA` — nombre, bajada, ciudad, Instagram, email, logo (blanco) y logoOscuro (bordo) |
 | `locales.js` | `LOCALES`, `getLocal(id)`, `esIdDeLocal(id)`, `ID_LOCAL_POR_DEFECTO` |
 | `platos.js` | `getPlatosDestacados()` — los platos con foto de la home, por local |
+| `carta.js` + `cartas.json` | `getCarta(idLocal)`, `formatearPrecio(n)`. Las cartas transcriptas de los PDF; la forma está documentada en `carta.js` |
 | `textos.js` | `TEXTOS` — bienvenida, valores de la marca, historia, condiciones de reserva |
 
 Forma de un local:
 
 ```js
 { id, nombre, nombreCorto, tagline, descripcion, direccion, mapaEmbedUrl,
-  telefono, whatsapp, carta: { pdf, hojas: [src] }, horarios: [{dia, franja}],
+  telefono, whatsapp, cartaPdf, horarios: [{dia, franja}],
   franjasReserva: [string], imagenes: { card, hero, galeria: [{src, alt}] } }
 ```
 
-`telefono`, `whatsapp` y `carta` pueden ser `null`. La UI esconde lo que falta.
+`telefono`, `whatsapp` y `cartaPdf` pueden ser `null`. La UI esconde lo que falta.
 
 ## Estilos
 
@@ -83,7 +84,7 @@ Todo lo genera `scripts/procesar-assets.py` desde la carpeta `Branding y fotos/`
 |---|---|
 | `public/img/{parrilla,restaurante,comunes}/` | Fotos reales en WebP, 1000–1638px de ancho |
 | `public/logo/` | Logo vectorial en SVG: blanco, bordo, con y sin "Parrilla Patagónica", y el fogón solo (ornamento de los títulos, usado como máscara CSS) |
-| `public/cartas/` | Cada hoja de cada carta en WebP (1400px) + el PDF para descargar |
+| `public/cartas/` | El PDF de cada carta, para descargar (con el WiFi tapado) |
 | `app/icon.svg` | Favicon: el fogón blanco sobre bordo |
 
 La lista de qué foto va a qué archivo está en el script (`FOTOS`). Para cambiar una

@@ -100,36 +100,28 @@ locales bajo una marca" — es lo más importante de probar):**
 
 ## Página de Carta (`/carta`)
 
-> Esta sección se reescribió en la sesión 02: la carta pasó de platos escritos a
-> mano al PDF de la familia, hoja por hoja.
+> Reescrita dos veces en la sesión 02: primero la carta pasó al PDF hoja por hoja;
+> después, a pedido del usuario (el PDF no se leía cómodo), volvió a HTML con los
+> datos reales transcriptos de los PDF.
 
 **Qué tiene que verse:**
 - [ ] Un hero con el nombre del salón activo.
-- [ ] Un selector de dos botones ("La Parrilla" / "La Posta II") que marca
-      cuál está activo.
-- [ ] La carta como en papel: una hoja a la vez, con flechas a los costados,
-      "Hoja X de N" abajo y miniaturas de todas las hojas.
-- [ ] Dos links: "Abrir el PDF para ampliar" y "Descargar la carta".
-- [ ] En la hoja 1 de la parrilla y en la hoja 2 de La Posta II, abajo a la
-      derecha, **no** aparece la red ni la clave del WiFi (se taparon a propósito).
-
-**Cambiar de hoja:**
-- [ ] Las flechas pasan de hoja. En la primera no hay flecha "atrás"; en la
-      última no hay flecha "adelante".
-- [ ] En desktop, al bajar por una hoja larga, las flechas acompañan el scroll a
-      media altura de la pantalla.
-- [ ] Tocar una miniatura lleva a esa hoja.
-- [ ] Con el foco en la carta (Tab), las flechas del teclado ← → pasan de hoja.
-- [ ] **En un celular de verdad**, deslizar el dedo a la izquierda o derecha sobre
-      la hoja pasa de hoja, y deslizar hacia arriba o abajo sigue scrolleando la
-      página normalmente.
-- [ ] "Abrir el PDF para ampliar" abre el PDF en otra pestaña y se puede hacer zoom.
+- [ ] Un selector de dos botones ("La Parrilla" / "La Posta II").
+- [ ] Un índice de secciones que lleva a cada una sin que la navbar tape el título.
+- [ ] Cada plato con nombre, precio, y abajo la traducción en inglés/portugués en
+      cursiva chica (y la descripción en castellano cuando la carta la tiene).
+- [ ] En las pizzas de La Posta II, dos columnas de precio: Chica y Grande.
+- [ ] En la parrilla, "Vinos" con subsecciones por cepa y, dentro, por bodega con
+      su región.
+- [ ] Al final: el cubierto, la aclaración de temporada y "Descargar la carta en PDF".
+- [ ] Comparar algunos precios contra el PDF (la transcripción se verificó por
+      script: los 188 precios de la parrilla y los 100 de La Posta II coinciden).
 
 **El toggle de carta (comportamiento clave a probar):**
 - [ ] Al entrar a `/carta` sin nada en la URL, se abre la carta de **la
-      Parrilla** por defecto (6 hojas).
-- [ ] Al tocar "La Posta II", la carta cambia (2 hojas), vuelve a la hoja 1, y la
-      URL cambia a `/carta?local=restaurante`, sin recargar la página.
+      Parrilla** por defecto.
+- [ ] Al tocar "La Posta II", la carta cambia y la URL pasa a
+      `/carta?local=restaurante`, sin recargar la página.
 - [ ] Escribir directamente `/carta?local=restaurante` abre directo en la carta
       de La Posta II, con ese botón ya marcado.
 - [ ] Escribir un valor sin sentido, por ejemplo `/carta?local=asado123`: la

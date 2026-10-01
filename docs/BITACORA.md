@@ -4,6 +4,21 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-01 — La carta vuelve a HTML, con los datos reales
+
+El usuario probó el visor del PDF y no se leía cómodo. Se volvió a una carta en
+HTML como la de la etapa 1, pero ahora con el contenido real:
+
+- `src/data/cartas.json`: las dos cartas transcriptas de los PDF por script (posición
+  de cada texto en la hoja → sección, plato, traducción, precio). Parrilla: 11
+  secciones, 10 cepas de vino, copas; La Posta II: 14 secciones. Verificado por
+  script: la lista de precios del JSON es idéntica a la de cada PDF (188 y 100).
+- Se corrigieron errores de tipeo evidentes (ver `sesion-02`, sección 7).
+- Componente nuevo `SeccionCarta`; se borró `VisorCarta` y las hojas en WebP.
+- El JSON tiene la forma pensada para cargarse en la base de datos del backend.
+
+---
+
 ## 2026-10-01 — Datos reales de los locales
 
 - Dirección compartida: Av. Arrayanes 263, Q8407 Villa La Angostura (los locales
