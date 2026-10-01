@@ -41,7 +41,6 @@ const PLATOS = {
       imagen: '/img/restaurante/plato-albondigas.webp',
     },
     {
-      // PENDIENTE: confirmar con la familia que la foto es la trucha al roquefort
       nombre: 'Trucha al roquefort',
       descripcion: 'Trucha con salsa cremosa de queso azul.',
       imagen: '/img/restaurante/plato-trucha.webp',

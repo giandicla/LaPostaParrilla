@@ -28,7 +28,8 @@ las dos cartas en PDF y las fotos de cada local. Detalle y decisiones en
 - `/carta`: la carta es el PDF hoja por hoja (componente nuevo `VisorCarta`), con
   links para ampliar y descargar. Se borró `src/data/menu.js` (platos y precios
   inventados) y el bloque de Canva. Datos nuevos en `src/data/platos.js`.
-- En la carta de la parrilla se tapó la red y clave del WiFi.
+- En la carta de la parrilla se tapó la red y clave del WiFi. Después del primer
+  push se tapó también en la de La Posta II, que se había pasado por alto.
 
 **Verificado**
 - `npm run lint` y `npm run build` limpios; las rutas siguen estáticas.

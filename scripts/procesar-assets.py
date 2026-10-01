@@ -11,8 +11,8 @@ Qué hace:
      recortadas y en un solo color (blanco / bordo), más el favicon.
   2. Fotos: convierte la selección de fotos a WebP de ancho acotado.
   3. Cartas: rasteriza cada hoja de los PDF a WebP para el visor de /carta y
-     copia los PDF para descargar. En la carta de la parrilla se tapa la red y
-     la clave del WiFi del local: está impresa para la mesa, no para internet.
+     copia los PDF para descargar. En las dos cartas se tapa la red y
+     la clave del WiFi: está impresa para la mesa, no para internet.
 """
 
 import re
@@ -68,7 +68,7 @@ FOTOS = [
 # (pdf original, id del local, rectángulos a tapar por hoja)
 CARTAS = [
     ('Menu comida y vinos con precio.pdf', 'parrilla', {0: [(434, 852, 592, 896)]}),
-    ('Diseño Menu La Posta II Oficio .pdf.pdf', 'restaurante', {}),
+    ('Diseño Menu La Posta II Oficio .pdf.pdf', 'restaurante', {1: [(322, 815, 563, 862)]}),
 ]
 ANCHO_HOJA = 1400  # px; la hoja es de 612pt, así que ~2.3x
 

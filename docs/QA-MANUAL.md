@@ -110,8 +110,8 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] La carta como en papel: una hoja a la vez, con flechas a los costados,
       "Hoja X de N" abajo y miniaturas de todas las hojas.
 - [ ] Dos links: "Abrir el PDF para ampliar" y "Descargar la carta".
-- [ ] En la hoja 1 de la parrilla, abajo a la derecha, **no** aparece la red ni la
-      clave del WiFi (se taparon a propósito).
+- [ ] En la hoja 1 de la parrilla y en la hoja 2 de La Posta II, abajo a la
+      derecha, **no** aparece la red ni la clave del WiFi (se taparon a propósito).
 
 **Cambiar de hoja:**
 - [ ] Las flechas pasan de hoja. En la primera no hay flecha "atrás"; en la

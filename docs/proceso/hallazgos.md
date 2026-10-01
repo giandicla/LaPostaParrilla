@@ -270,6 +270,12 @@ Es una decisión que el pedido literal no cubría: el papel está pensado para q
 está sentado en la mesa; la web, para cualquiera. Vale como ejemplo de que "tal cual"
 tiene límites que conviene marcar en vez de ejecutar a ciegas.
 
+**Y la segunda mitad del hallazgo:** la tapó en una sola carta. La misma clave estaba
+en la carta de La Posta II, y la encontró el usuario, no la IA. Detectar un problema
+por observación (mirar una captura) y no generalizarlo con una búsqueda en todos los
+archivos dejó el arreglo a medias, y lo publicó. Cuando aparece un problema en un
+archivo, la pregunta siguiente es **dónde más está**.
+
 ---
 
 ## Para la presentación

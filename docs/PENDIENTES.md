@@ -18,14 +18,14 @@
 - [ ] Franjas horarias de reserva
 - [ ] Teléfono / WhatsApp
 - [x] Carta en PDF
-- [ ] Confirmar que la foto `Trucha con salsa.jpg` es la trucha al roquefort
+- [x] Confirmado: la foto `Trucha con salsa.jpg` es la trucha al roquefort
 
 ### Los dos
 - [ ] Tagline real (los actuales son borrador)
 - [x] Carta en PDF
 - [x] Fotos en alta: salón, parrilla, platos
-- [ ] Decidir si la red y clave del WiFi vuelven a la carta pública (se taparon en
-      la web; en el PDF impreso siguen)
+- [x] La red y clave del WiFi quedan tapadas en las dos cartas de la web
+      (decisión del usuario, 2026-10-01). En las cartas impresas siguen.
 
 ### De la marca
 - [ ] Email de contacto real
