@@ -8,7 +8,8 @@ export const MARCA = {
   // El Instagram es uno solo y cubre los dos locales
   instagram: '@lapostavla',
   instagramUrl: 'https://www.instagram.com/lapostavla/',
-  email: 'contacto@lapostavla.com', // PENDIENTE: confirmar con la familia
+  email: 'lapostavla@gmail.com', // compartido por los dos locales
+  apertura: 'Diciembre de 2020',
   // Logo vectorial extraído de Logo.ai (scripts/procesar-assets.py).
   // Variante blanca para fondos bordo y fotos; bordo para fondos claros.
   logo: '/logo/logo-blanco.svg',

@@ -4,6 +4,20 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-01 — Datos reales de los locales
+
+- Dirección compartida: Av. Arrayanes 263, Q8407 Villa La Angostura (los locales
+  están uno al lado del otro). Un solo mapa de Google para los dos, por ahora.
+- Horario: todos los días de 12 a 23, todo el año.
+- Reservas: 12:00 a 13:00 y 20:00 a 21:00, cada 15 minutos.
+- Teléfono y WhatsApp de La Posta II: +54 9 2944 86-1339.
+- Email compartido: lapostavla@gmail.com. Apertura: diciembre de 2020.
+- Los datos comunes viven una sola vez arriba de `src/data/locales.js` y cada local
+  los referencia: si algún día difieren, se cambia solo el del local.
+- Copys corregidos: "a unas cuadras" / "en la misma cuadra larga" ya no eran ciertos.
+
+---
+
 ## 2026-10-01 — La marca real: manual, logo, fotos y cartas
 
 El usuario trajo la carpeta `Branding y fotos/` con el manual de marca, el `Logo.ai`,

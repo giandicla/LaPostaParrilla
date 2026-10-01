@@ -57,7 +57,7 @@ export default function Nosotros() {
       <Section
         id="contacto"
         titulo="Contacto"
-        bajada="Escribinos o pasá a vernos. Somos los dos, en la misma cuadra larga."
+        bajada="Escribinos o pasá a vernos. Los dos salones están uno al lado del otro."
       >
         <div className={estilos.grillaInfo}>
           {LOCALES.map((local) => (

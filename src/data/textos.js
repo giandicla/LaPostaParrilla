@@ -35,10 +35,11 @@ export const TEXTOS = {
   historia: {
     titulo: 'La familia detrás de La Posta',
     parrafos: [
-      // PENDIENTE: historia real, año de fundación, nombres de la familia
+      // PENDIENTE: historia real y nombres de la familia (abrieron en diciembre
+      // de 2020, ver MARCA.apertura)
       'Empezamos con un solo salón y la idea simple de cocinar como cocinábamos en casa: ' +
         'producto de la zona, cocciones largas y nada apurado.',
-      'Con los años abrimos el segundo local, a unas cuadras del primero, para darle ' +
+      'Con los años abrimos el segundo local, pared de por medio con el primero, para darle ' +
         'lugar propio a la cocina de olla sin sacarle espacio a la parrilla.',
       'Seguimos siendo los mismos: una familia, dos salones y la misma manera de recibir.',
     ],

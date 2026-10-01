@@ -3,20 +3,20 @@
 ## Datos que tiene que pasar la familia
 
 ### Parrilla
-- [ ] Dirección exacta
-- [ ] URL de embed del mapa de Google
-- [ ] Horarios reales por día, con días de cierre y temporada baja
-- [ ] Franjas horarias de reserva
+- [x] Dirección — `Av. Arrayanes 263, Q8407 Villa La Angostura, Neuquén` (compartida)
+- [x] Mapa de Google (por ahora uno solo para los dos: la ficha de La Posta Parrilla Patagónica)
+- [x] Horarios — todos los días 12 a 23, igual en temporada alta y baja
+- [x] Franjas de reserva — 12:00 a 13:00 y 20:00 a 21:00, cada 15 minutos
 - [x] Teléfono / WhatsApp — `+54 9 2944 96-6199`
 - [x] Carta en PDF (reemplazó al link de Canva)
 
 ### Restaurante
 - [x] Nombre exacto: **La Posta II Restaurante**
-- [ ] Dirección exacta
-- [ ] URL de embed del mapa de Google
-- [ ] Horarios reales por día
-- [ ] Franjas horarias de reserva
-- [ ] Teléfono / WhatsApp
+- [x] Dirección — `Av. Arrayanes 263, Q8407 Villa La Angostura, Neuquén` (compartida)
+- [x] Mapa de Google (por ahora uno solo para los dos: la ficha de La Posta Parrilla Patagónica)
+- [x] Horarios — todos los días 12 a 23, igual en temporada alta y baja
+- [x] Franjas de reserva — 12:00 a 13:00 y 20:00 a 21:00, cada 15 minutos
+- [x] Teléfono / WhatsApp — `+54 9 2944 86-1339`
 - [x] Carta en PDF
 - [x] Confirmado: la foto `Trucha con salsa.jpg` es la trucha al roquefort
 
@@ -28,8 +28,9 @@
       (decisión del usuario, 2026-10-01). En las cartas impresas siguen.
 
 ### De la marca
-- [ ] Email de contacto real
-- [ ] Año de fundación e historia real de la familia
+- [x] Email — `lapostavla@gmail.com` (compartido)
+- [x] Apertura — diciembre de 2020 (`MARCA.apertura`)
+- [ ] Historia real de la familia (el texto de `/nosotros` sigue siendo borrador)
 - [x] Logo vectorial (`Logo.ai`) y manual de marca
 
 Todos están marcados en el código. Para encontrarlos:

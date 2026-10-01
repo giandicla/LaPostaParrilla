@@ -8,7 +8,9 @@ Son **dos locales bajo la misma marca**:
 | | Parrilla | Restaurante |
 |---|---|---|
 | Propuesta | Brasas, cordero al asador, mesas largas | Pizzas, pastas caseras, fogón a leña |
-| Teléfono | +54 9 2944 96-6199 | PENDIENTE |
+| Teléfono | +54 9 2944 96-6199 | +54 9 2944 86-1339 |
+| Dirección | Av. Arrayanes 263 — uno al lado del otro | Av. Arrayanes 263 |
+| Horario | Todos los días, 12 a 23 | Todos los días, 12 a 23 |
 | Nombre | La Posta Parrilla | La Posta II Restaurante |
 | Carta | PDF de 6 hojas (comida y vinos) | PDF de 2 hojas |
 

@@ -4,6 +4,19 @@
 // objeto local por props. Nadie escribe 'parrilla' ni 'restaurante' a mano.
 // Sumar un tercer local es agregar un objeto a este array.
 
+// Hoy los dos locales están uno al lado del otro: comparten dirección, ficha
+// de Google Maps, horarios y franjas de reserva. Cada local igual tiene sus
+// propios campos, así que si algún día difieren se cambia solo el suyo.
+const DIRECCION = 'Av. Arrayanes 263, Q8407 Villa La Angostura, Neuquén';
+const MAPA_EMBED_URL =
+  'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d263.345475315839!2d-71.64262525524717!3d-40.762358095137984!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9610bfd98a8cbcb9%3A0x88f442e311f5dc39!2sLa%20Posta%20Parrilla%20Patag%C3%B3nica!5e0!3m2!1ses!2sar!4v1790875164019!5m2!1ses!2sar';
+// Igual en temporada alta y baja
+const HORARIOS = [{ dia: 'Todos los días', franja: '12:00 – 23:00' }];
+const FRANJAS_RESERVA = [
+  '12:00', '12:15', '12:30', '12:45', '13:00',
+  '20:00', '20:15', '20:30', '20:45', '21:00',
+];
+
 export const LOCALES = [
   {
     id: 'parrilla',
@@ -13,9 +26,8 @@ export const LOCALES = [
     descripcion:
       'Cordero al asador, cortes a la parrilla y una carta de vinos larga. ' +
       'El lugar para una mesa larga, sin apuro, frente al fuego.',
-    direccion: 'Villa La Angostura, Neuquén', // PENDIENTE: dirección exacta
-    mapaEmbedUrl:
-      'https://maps.google.com/maps?q=Villa%20La%20Angostura&z=14&output=embed', // PENDIENTE: embed del local
+    direccion: DIRECCION,
+    mapaEmbedUrl: MAPA_EMBED_URL,
     telefono: '+54 9 2944 96-6199',
     whatsapp: '5492944966199', // formato para wa.me, sin + ni espacios
     // La carta es el PDF de la familia, rasterizado hoja por hoja para el
@@ -24,17 +36,8 @@ export const LOCALES = [
       pdf: '/cartas/carta-parrilla.pdf',
       hojas: [1, 2, 3, 4, 5, 6].map((n) => `/cartas/parrilla-${n}.webp`),
     },
-    horarios: [
-      // PENDIENTE: horarios reales, incluyendo días de cierre y temporada baja
-      { dia: 'Lunes a Jueves', franja: '12:00 – 15:00 · 20:00 – 23:30' },
-      { dia: 'Viernes y Sábado', franja: '12:00 – 15:30 · 20:00 – 00:00' },
-      { dia: 'Domingo', franja: '12:00 – 16:00' },
-    ],
-    // PENDIENTE: franjas reales de reserva
-    franjasReserva: [
-      '12:30', '13:00', '13:30', '14:00',
-      '20:00', '20:30', '21:00', '21:30', '22:00',
-    ],
+    horarios: HORARIOS,
+    franjasReserva: FRANJAS_RESERVA,
     imagenes: {
       card: '/img/parrilla/card.webp',
       hero: '/img/parrilla/hero.webp',
@@ -54,25 +57,16 @@ export const LOCALES = [
     descripcion:
       'Una cabaña de troncos con fogón a leña y la pared llena de vinos. ' +
       'Pastas caseras rellenas, pizzas y platos de olla para las noches frías.',
-    direccion: 'Villa La Angostura, Neuquén', // PENDIENTE: dirección exacta
-    mapaEmbedUrl:
-      'https://maps.google.com/maps?q=Villa%20La%20Angostura&z=14&output=embed', // PENDIENTE: embed del local
-    telefono: null, // PENDIENTE: la familia tiene que pasarlo
-    whatsapp: null, // PENDIENTE
+    direccion: DIRECCION,
+    mapaEmbedUrl: MAPA_EMBED_URL,
+    telefono: '+54 9 2944 86-1339',
+    whatsapp: '5492944861339',
     carta: {
       pdf: '/cartas/carta-restaurante.pdf',
       hojas: [1, 2].map((n) => `/cartas/restaurante-${n}.webp`),
     },
-    horarios: [
-      // PENDIENTE: horarios reales
-      { dia: 'Martes a Domingo', franja: '12:00 – 15:00 · 19:30 – 23:30' },
-      { dia: 'Lunes', franja: 'Cerrado' },
-    ],
-    // PENDIENTE: franjas reales de reserva
-    franjasReserva: [
-      '12:30', '13:00', '13:30', '14:00',
-      '19:30', '20:00', '20:30', '21:00', '21:30',
-    ],
+    horarios: HORARIOS,
+    franjasReserva: FRANJAS_RESERVA,
     imagenes: {
       card: '/img/restaurante/card.webp',
       hero: '/img/restaurante/hero.webp',
