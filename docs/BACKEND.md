@@ -43,6 +43,23 @@ npm run dev
 - Los tests de la función de mails corren con Deno:
   `docker run --rm -v "$PWD/supabase/functions/notificar-reserva:/app" -w /app denoland/deno test mensajes.test.ts`
 
+## Producción: estado actual
+
+- Proyecto Supabase **`la-posta`** (ref `dagxitkhqbztgetoultt`, São Paulo), en la
+  organización "TP Web La Posta". Migraciones aplicadas; los tests pgTAP pasan contra él.
+- Función `notificar-reserva` desplegada con sus secretos y los de Vault. Falta
+  `BREVO_API_KEY`: hasta cargarla, los mails solo quedan en el log de la función.
+- Auth: Site URL `https://lapostaparrilla.vercel.app`, confirmación de mail activada,
+  Google activado. Se aplica con `npx supabase config push` (sección `[auth]` de
+  `config.toml`; las credenciales salen de `supabase/.env`, que no se sube).
+- Google: cliente OAuth creado con la cuenta de la facultad, pantalla de
+  consentimiento en **modo Prueba**: solo entran con Google los mails cargados como
+  usuarios de prueba. Para abrirlo a todos hace falta una página de privacidad.
+- La contraseña de la base está en `supabase/.db-password` (ignorado por git).
+
+**Nota:** con `enable_confirmations = true` en `config.toml`, en local también hay
+que confirmar el mail al registrarse (el link llega a http://127.0.0.1:54324).
+
 ## Puesta en producción (una sola vez)
 
 Pasos en orden. Los marcados 👤 los tiene que hacer una persona (cuentas,

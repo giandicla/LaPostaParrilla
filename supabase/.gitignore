@@ -6,3 +6,6 @@
 .env.keys
 .env.local
 .env.*.local
+
+# Contraseña de la base remota (local, nunca al repo)
+.db-password
