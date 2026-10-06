@@ -10,7 +10,6 @@ import { escucharSesion, obtenerPerfil } from '../../servicios/auth.js';
 //   perfil        { id, nombre, telefono, rol }, o null
 //   cargando      true hasta saber si hay sesión (evita parpadeos)
 //   esAdmin       atajo para perfil.rol === 'admin'
-//   recuperando   true si el usuario llegó desde el link de "olvidé mi contraseña"
 //   recargarPerfil()  después de editar nombre o teléfono
 //
 // Que esAdmin sea true solo cambia qué se muestra. Lo que el usuario puede
@@ -21,7 +20,6 @@ export default function SesionProvider({ children }) {
   const [sesion, setSesion] = useState(null);
   const [perfil, setPerfil] = useState(null);
   const [cargando, setCargando] = useState(backendDisponible);
-  const [recuperando, setRecuperando] = useState(false);
 
   const cargarPerfil = useCallback(async (nuevaSesion) => {
     if (!nuevaSesion) {
@@ -40,9 +38,8 @@ export default function SesionProvider({ children }) {
 
     // onAuthStateChange avisa enseguida con la sesión guardada (INITIAL_SESSION)
     // y después con cada ingreso, salida o renovación del token.
-    return escucharSesion((evento, nuevaSesion) => {
+    return escucharSesion((_evento, nuevaSesion) => {
       setSesion(nuevaSesion);
-      if (evento === 'PASSWORD_RECOVERY') setRecuperando(true);
       // Fuera del callback: Supabase recomienda no esperar otras llamadas adentro
       setTimeout(async () => {
         await cargarPerfil(nuevaSesion);
@@ -56,8 +53,6 @@ export default function SesionProvider({ children }) {
     perfil,
     cargando,
     esAdmin: perfil?.rol === 'admin',
-    recuperando,
-    terminarRecuperacion: () => setRecuperando(false),
     recargarPerfil: () => cargarPerfil(sesion),
   };
 

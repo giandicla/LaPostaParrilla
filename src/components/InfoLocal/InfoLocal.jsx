@@ -1,3 +1,4 @@
+import Icono from '../Icono/Icono.jsx';
 import estilos from './InfoLocal.module.css';
 
 export default function InfoLocal({ local }) {
@@ -45,6 +46,7 @@ export default function InfoLocal({ local }) {
             target="_blank"
             rel="noreferrer"
           >
+            <Icono nombre="whatsapp" />
             Escribir por WhatsApp
           </a>
         )}

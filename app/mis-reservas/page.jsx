@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
+import Icono from '../../src/components/Icono/Icono.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
 import { getLocal, enlaceWhatsapp } from '../../src/data/locales.js';
@@ -41,7 +42,7 @@ function TarjetaReserva({ reserva, alCancelar }) {
       {esActiva(reserva) && !sePuedeCancelar(reserva) && faltaParaReserva(reserva) > 0 && (
         <p className={estilos.aviso}>
           Faltan menos de 2 horas: para cancelar,{' '}
-          {whatsapp ? <a href={whatsapp} target="_blank" rel="noreferrer">escribinos por WhatsApp</a> : 'escribinos'}.
+          {whatsapp ? <a href={whatsapp} target="_blank" rel="noreferrer"><Icono nombre="whatsapp" /> escribinos por WhatsApp</a> : 'escribinos'}.
         </p>
       )}
     </li>

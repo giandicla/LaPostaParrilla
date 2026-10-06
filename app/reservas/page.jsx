@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
+import Icono from '../../src/components/Icono/Icono.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
 import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO, enlaceWhatsapp } from '../../src/data/locales.js';
@@ -218,7 +219,7 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
           ¿Son más de {MAXIMO_PERSONAS}?{' '}
           {whatsappGrupo ? (
             <a href={whatsappGrupo} target="_blank" rel="noreferrer" className={estilos.enlace}>
-              Escribinos por WhatsApp
+              <Icono nombre="whatsapp" /> Escribinos por WhatsApp
             </a>
           ) : (
             'Escribinos por Instagram'
@@ -273,8 +274,14 @@ function ReservasContenido() {
 
         <div className={estilos.contactoPanel}>
           <h3 className={estilos.subtituloPanel}>{local.nombre}</h3>
-          {whatsapp && <Boton href={whatsapp}>Consultar por WhatsApp</Boton>}
+          {whatsapp && (
+            <Boton href={whatsapp}>
+              <Icono nombre="whatsapp" />
+              Consultar por WhatsApp
+            </Boton>
+          )}
           <a href={MARCA.instagramUrl} className={estilos.instagram} target="_blank" rel="noreferrer">
+            <Icono nombre="instagram" />
             {MARCA.instagram}
           </a>
         </div>

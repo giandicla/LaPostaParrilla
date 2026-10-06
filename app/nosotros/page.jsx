@@ -5,6 +5,7 @@ import InfoLocal from '../../src/components/InfoLocal/InfoLocal.jsx';
 import { LOCALES } from '../../src/data/locales.js';
 import { TEXTOS } from '../../src/data/textos.js';
 import { MARCA } from '../../src/data/marca.js';
+import Icono from '../../src/components/Icono/Icono.jsx';
 import estilos from './page.module.css';
 
 export default function Nosotros() {
@@ -68,6 +69,7 @@ export default function Nosotros() {
         <div className={estilos.contactoComun}>
           <p>Para cualquiera de los dos salones:</p>
           <a href={MARCA.instagramUrl} target="_blank" rel="noreferrer" className={estilos.enlaceComun}>
+            <Icono nombre="instagram" />
             {MARCA.instagram}
           </a>
           <a href={`mailto:${MARCA.email}`} className={estilos.enlaceComun}>

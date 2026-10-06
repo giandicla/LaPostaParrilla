@@ -19,6 +19,14 @@
      que necesita un color que se vea igual sobre claro y sobre bordo. */
   --brasa: #E8A33D;
 
+  /* ---------- Marcas de terceros ----------
+     Colores oficiales del logo de Google: sus pautas para el botón de
+     "Continuar con Google" piden usarlos tal cual. */
+  --google-azul: #4285F4;
+  --google-rojo: #EA4335;
+  --google-amarillo: #FBBC05;
+  --google-verde: #34A853;
+
   /* ---------- Texto ---------- */
   --carbon: #1C1512;
   --gris-600: #5A524C;

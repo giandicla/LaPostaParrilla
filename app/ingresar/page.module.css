@@ -2,83 +2,60 @@
   display: flex;
   flex-direction: column;
   gap: var(--sp-6);
-  max-width: 28rem;
+  max-width: 26rem;
   margin: 0 auto;
   padding: var(--sp-8) var(--sp-6);
   background-color: var(--blanco);
   border-top: 4px solid var(--bordo-900);
   border-radius: var(--radio-lg);
   box-shadow: var(--sombra-sm);
+  text-align: center;
 }
 
 .titulo {
-  text-align: center;
   font-size: var(--fs-h3);
   color: var(--bordo-900);
 }
 
+.bajada {
+  color: var(--gris-600);
+}
+
+/* Botón con el formato que pide Google: fondo blanco, borde gris y su "G" */
 .google {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: var(--sp-3);
-  padding: var(--sp-3) var(--sp-4);
+  padding: var(--sp-3) var(--sp-6);
   background-color: var(--blanco);
+  color: var(--carbon);
   border: 1px solid var(--gris-300);
   border-radius: var(--radio-md);
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  transition: border-color var(--transicion), background-color var(--transicion);
+  transition: border-color var(--transicion), box-shadow var(--transicion);
 }
 
-.google:hover {
+.google:hover:not(:disabled) {
   border-color: var(--carbon);
-  background-color: var(--crema);
+  box-shadow: var(--sombra-sm);
 }
 
-.g {
-  font-family: var(--font-titulo);
-  font-weight: 700;
-  color: var(--bordo-900);
+.google:disabled {
+  cursor: wait;
+  opacity: 0.7;
 }
 
-.separador {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-3);
+.logoGoogle {
+  width: 1.3em;
+  height: 1.3em;
+}
+
+.letraChica {
   font-size: 0.8rem;
   color: var(--gris-600);
-}
-
-.separador::before,
-.separador::after {
-  content: '';
-  flex: 1;
-  border-top: 1px solid var(--gris-300);
-}
-
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-4);
-}
-
-.enlaces {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-2);
-}
-
-.enlaces button {
-  background: none;
-  border: none;
-  padding: var(--sp-1);
-  font-size: var(--fs-small);
-  color: var(--bordo-900);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  cursor: pointer;
 }
 
 .centrado {

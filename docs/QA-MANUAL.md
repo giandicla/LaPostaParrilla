@@ -139,13 +139,11 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] `/reservas` muestra "Ingresá para continuar" y un botón a `/ingresar`.
 - [ ] El navbar muestra "Ingresar".
 
-**Crear cuenta e ingresar**
-- [ ] Crear cuenta con email: al terminar vuelve a la página de la que venía.
-- [ ] Con un email ya usado: "Ya hay una cuenta con ese email".
-- [ ] Contraseña incorrecta: "El email o la contraseña no son correctos".
-- [ ] "Olvidé mi contraseña" manda un mail (en local, verlo en http://127.0.0.1:54324)
-      y el link permite elegir una nueva.
-- [ ] (Producción) "Continuar con Google" funciona y vuelve al sitio.
+**Ingresar (solo Google)**
+- [ ] `/ingresar` muestra un único botón "Continuar con Google", con el logo de Google.
+- [ ] Lleva a la pantalla de Google y vuelve al sitio, a la página de la que venía.
+- [ ] La primera vez crea la cuenta: el nombre de Google aparece precargado al reservar.
+- [ ] No hay formulario de email ni "crear cuenta" en ningún lado.
 
 **Reservar**
 - [ ] Nombre y teléfono vienen precargados del perfil.
@@ -160,7 +158,12 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] "Cancelar reserva" pide confirmación y la cancela.
 - [ ] Con menos de 2 h, en vez de cancelar aparece el link a WhatsApp.
 
-**Panel de admin** (con `admin@laposta.test`)
+**Logos**
+- [ ] Instagram con su logo en el footer, en `/nosotros` y en el panel de `/reservas`.
+- [ ] WhatsApp con su logo en "Escribir por WhatsApp" (Inicio), "Consultar por WhatsApp"
+      y en los avisos de `/reservas` y `/mis-reservas`.
+
+**Panel de admin** (con una cuenta con rol admin)
 - [ ] Un cliente que entra a `/admin` ve "Sección para el equipo de La Posta".
 - [ ] El contador de pendientes filtra al tocarlo.
 - [ ] Confirmar, rechazar, cancelar y mover funcionan y el cliente lo ve en "Mis reservas".

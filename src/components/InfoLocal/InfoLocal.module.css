@@ -89,6 +89,9 @@
 }
 
 .botonWhatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
   background-color: var(--bordo-900);
   color: var(--crema);
   font-weight: 600;

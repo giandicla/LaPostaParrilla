@@ -58,6 +58,9 @@
 }
 
 .enlaceComun {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
   font-weight: 600;
   color: var(--bordo-900);
 }

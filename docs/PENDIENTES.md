@@ -110,11 +110,10 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
 - [x] Cuentas (Google + email), reservas reales, mis reservas, panel de admin,
       notas, días bloqueados, lista del día, tiempo real, mails con Brevo
 - [x] Tests: 33 pgTAP de la base, 7 de la lógica de mails, recorrido Playwright
-- [ ] **Proyecto remoto**: crear el proyecto en Supabase, migraciones, función,
-      secretos y variables en Vercel (pasos en `docs/BACKEND.md`)
-- [ ] 👤 Credenciales de Google OAuth (Google Cloud Console)
-- [ ] 👤 Cuenta de Brevo, remitente verificado y API key
-- [ ] 👤 Nombrar al primer admin en producción
+- [x] Proyecto remoto `la-posta`: migraciones, función, secretos, auth y variables en Vercel
+- [x] Credenciales de Google OAuth (cuenta de la facultad)
+- [ ] 👤 Cuenta de Brevo, remitente verificado y API key (solo para los mails de reservas: el ingreso es con Google y no manda mails)
+- [x] Primer admin en producción: gdiclaudio@itba.edu.ar
 - [ ] El link de "Imprimir" del panel abre otra página: probar la impresión real
       en la computadora del local
 

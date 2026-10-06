@@ -49,16 +49,17 @@ npm run dev
   organización "TP Web La Posta". Migraciones aplicadas; los tests pgTAP pasan contra él.
 - Función `notificar-reserva` desplegada con sus secretos y los de Vault. Falta
   `BREVO_API_KEY`: hasta cargarla, los mails solo quedan en el log de la función.
-- Auth: Site URL `https://lapostaparrilla.vercel.app`, confirmación de mail activada,
-  Google activado. Se aplica con `npx supabase config push` (sección `[auth]` de
+- Auth: Site URL `https://lapostaparrilla.vercel.app`. **Solo Google**: el proveedor
+  de email está apagado (la API rechaza registrarse con email). Se aplica con `npx supabase config push` (sección `[auth]` de
   `config.toml`; las credenciales salen de `supabase/.env`, que no se sube).
-- Google: cliente OAuth creado con la cuenta de la facultad, pantalla de
-  consentimiento en **modo Prueba**: solo entran con Google los mails cargados como
-  usuarios de prueba. Para abrirlo a todos hace falta una página de privacidad.
+- Google: cliente OAuth creado con la cuenta de la facultad. Ingresar funciona con
+  cualquier cuenta de Google (probado con una personal).
 - La contraseña de la base está en `supabase/.db-password` (ignorado por git).
 
-**Nota:** con `enable_confirmations = true` en `config.toml`, en local también hay
-que confirmar el mail al registrarse (el link llega a http://127.0.0.1:54324).
+**Nota:** como el registro con email está apagado en `config.toml`, en local los
+usuarios de prueba del seed tampoco pueden ingresar con contraseña. Para probar en
+local con sesión hay que agregar `http://127.0.0.1:54321/auth/v1/callback` a las
+URIs de redirección del cliente de Google.
 
 ## Puesta en producción (una sola vez)
 
@@ -90,9 +91,8 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
 10. 👤 Nombrar al primer admin: registrarse en el sitio y, en el SQL Editor,
     `update public.perfiles set rol = 'admin' where id = (select id from auth.users where email = '<mail>');`
 
-## Mails de Auth
+## Mails
 
-Los mails de confirmación de cuenta y de recuperar contraseña los manda Supabase
-Auth con su servidor por defecto, que tiene un límite bajo por hora. Alcanza para
-empezar; si hace falta más, Auth → SMTP Settings permite usar Brevo también
-(host `smtp-relay.brevo.com`, puerto 587, credenciales SMTP de Brevo).
+Al ingresar solo con Google, Supabase Auth no manda mails (no hay confirmaciones
+ni recuperación de contraseña). Los únicos mails son los de reservas, que manda
+la función `notificar-reserva` con Brevo cuando esté cargada `BREVO_API_KEY`.

@@ -4,6 +4,20 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-06 — En producción, y solo con Google
+
+- Proyecto Supabase `la-posta` (São Paulo) creado por CLI; migraciones, función de
+  mails, secretos y Vault cargados; los tests pgTAP pasan contra el remoto.
+- Google OAuth activado (`supabase config push`); variables en Vercel; `main`
+  publicado. Primer admin nombrado por SQL.
+- **Ingreso solo con Google** (decisión del usuario): el servidor de mails de
+  fábrica de Supabase no le entrega a clientes, así que el registro con email no
+  iba a funcionar. Se sacó del front y se apagó el proveedor de email en Supabase.
+- Logos: "G" de Google en el botón de ingreso; Instagram y WhatsApp donde aparecen
+  (componente `Icono`, SVG inline).
+
+---
+
 ## 2026-10-01 — Backend con Supabase (partes 1 y 2)
 
 Rama `feat/backend-supabase`. Spec: `docs/superpowers/specs/2026-10-01-backend-supabase-design.md`.

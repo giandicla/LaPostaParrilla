@@ -15,12 +15,7 @@ export const supabase = url && clave ? createClient(url, clave) : null;
 export const backendDisponible = supabase !== null;
 
 const ERRORES_AUTH = {
-  invalid_credentials: 'El email o la contraseña no son correctos.',
-  email_not_confirmed: 'Todavía no confirmaste tu email: revisá tu casilla.',
-  user_already_exists: 'Ya hay una cuenta con ese email. Probá ingresar.',
-  weak_password: 'La contraseña es muy corta: tiene que tener al menos 6 caracteres.',
-  over_email_send_rate_limit: 'Mandamos demasiados mails seguidos. Probá en unos minutos.',
-  validation_failed: 'Revisá el email ingresado.',
+  provider_disabled: 'El ingreso con Google no está disponible en este momento.',
 };
 
 // Traduce los errores de Postgres y de Auth a mensajes para el usuario.

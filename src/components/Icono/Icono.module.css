@@ -1,0 +1,13 @@
+/* Del tamaño del texto que acompaña, alineado con su línea */
+.icono {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: 1.15em;
+  height: 1.15em;
+  vertical-align: -0.2em;
+}
+
+.icono svg {
+  width: 100%;
+  height: 100%;
+}

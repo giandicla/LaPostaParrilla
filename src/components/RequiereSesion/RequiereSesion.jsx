@@ -35,7 +35,7 @@ export default function RequiereSesion({ admin = false, mensaje, children }) {
       <Aviso titulo="Ingresá para continuar">
         {mensaje ?? 'Necesitás una cuenta para ver esta sección.'}
         <Boton to={`/ingresar?volver=${volver}`} tamano="lg">
-          Ingresar o crear cuenta
+          Ingresar con Google
         </Boton>
       </Aviso>
     );

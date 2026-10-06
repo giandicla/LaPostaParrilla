@@ -15,7 +15,7 @@ cancela sus reservas; la familia (admin) las gestiona desde un panel. Más adela
 |---|---|
 | Backend | Supabase como BaaS, base relacional (Postgres), RLS |
 | ¿Login para reservar? | Sí, siempre |
-| Proveedores | Google + email y contraseña |
+| Proveedores | ~~Google + email y contraseña~~ → **solo Google** (cambio del 2026-10-06, ver sección 12) |
 | Al reservar | Queda **pendiente** hasta que el admin confirma o rechaza |
 | Máximo | **6 personas**; más, por WhatsApp del local |
 | El cliente puede | Ver y **cancelar** (no modificar). Cancelar desde la web hasta **2 horas antes**; después, por WhatsApp |
@@ -121,6 +121,16 @@ funcionando y las pantallas de cuenta y reservas avisan que no están disponible
   actuando como cliente, como otro cliente, como admin y como anónimo.
 - **Front:** lint, build, y recorrido con Playwright contra el Supabase local
   (registro, reserva, cancelación, panel de admin).
+
+## 12. Cambio posterior: solo Google (2026-10-06)
+
+Ya en producción apareció que el servidor de mails de fábrica de Supabase solo
+entrega a miembros del equipo del proyecto: un cliente que se registrara con
+email no recibiría la confirmación. El usuario decidió **dejar solo el ingreso con
+Google** (que ya verifica el mail). Se sacaron de `/ingresar` el registro, el
+ingreso con email y "olvidé mi contraseña", y se apagó el proveedor de email en
+Supabase (`[auth.email] enable_signup = false`), para que tampoco se pueda
+crear una cuenta así llamando a la API.
 
 ## 11. Fuera de alcance
 

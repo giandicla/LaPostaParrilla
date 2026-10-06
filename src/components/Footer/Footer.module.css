@@ -33,6 +33,9 @@
 }
 
 .instagram {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
   color: var(--arena);
   font-weight: 500;
   margin-top: var(--sp-2);

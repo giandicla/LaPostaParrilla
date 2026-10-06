@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { MARCA } from '../../data/marca.js';
 import { LOCALES } from '../../data/locales.js';
+import Icono from '../Icono/Icono.jsx';
 import estilos from './Footer.module.css';
 
 export default function Footer() {
@@ -18,6 +19,7 @@ export default function Footer() {
             target="_blank"
             rel="noreferrer"
           >
+            <Icono nombre="instagram" />
             {MARCA.instagram}
           </a>
         </div>
