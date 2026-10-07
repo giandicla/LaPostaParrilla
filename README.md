@@ -3,7 +3,8 @@
 Sitio web de La Posta, restaurante familiar en Villa La Angostura, Neuquén.
 Trabajo práctico de Programación Web.
 
-**Producción:** desplegado en Vercel desde `main`.
+**Producción:** https://lapostaparrilla.vercel.app — desplegado en Vercel desde `main`.
+Backend: Supabase (proyecto `la-posta`). Ingreso solo con Google.
 
 ## Correrlo
 
@@ -21,13 +22,17 @@ Abre en `http://localhost:3000`.
 | `npm run dev` | Servidor de desarrollo |
 | `npm run build` | Build de producción a `.next/` |
 | `npm run start` | Sirve el build local, para revisar antes de pushear |
-| `python scripts/procesar-assets.py "../Branding y fotos"` | Regenera logo, fotos y hojas de carta desde la carpeta de branding |
+| `npm run db:test` | Tests pgTAP de la base (con `npx supabase start` corriendo) |
+| `npm run db:reset` | Base local desde cero: migraciones + datos de prueba |
+| `python scripts/procesar-assets.py "../Branding y fotos"` | Regenera logo, fotos y PDF de las cartas desde la carpeta de branding |
 
 ## Stack
 
-Next.js 16 (App Router) · React 19 · CSS Modules
+Next.js 16 (App Router) · React 19 · CSS Modules · Supabase (Postgres, Auth,
+Realtime, Edge Functions)
 
-Front puro: sin backend, sin base de datos.
+Sin servidor propio: el front habla con Supabase desde el navegador y la seguridad
+la pone la RLS de la base. Detalle en `docs/BACKEND.md`.
 
 ## Documentación
 

@@ -150,6 +150,35 @@ reemplaza a la fuente**. El dato correcto no estaba disponible en la sesión 1, 
 el registro lo presentó como "el color real", sin marcar que venía de un JPEG de baja
 calidad. Corregido en `src/styles/tokens.css` (sesión 02).
 
+### 1.9 El login con Google: la IA dijo que no se podía y lo resolvió un compañero (sesión 02)
+
+**El error más visible de la segunda sesión.** Al configurar el ingreso con Google,
+la IA le aseguró al usuario que, sin publicar la app en Google, **solo podrían
+entrar los mails cargados como usuarios de prueba**, y que para abrirla a todos
+había que armar una **página de privacidad** y pasar por la publicación. Cuando el
+usuario preguntó si se podía hacer como lo había hecho un compañero, la IA instaló
+la CLI de Google para investigar y concluyó que **por ese lado no se podía**.
+
+Lo destrabó el compañero: su conversación mostraba el camino (cliente creado en la
+consola, `supabase config push`, **sin publicar nada**). Con eso el usuario ingresó,
+y después entró **con una cuenta personal de Google que nunca había registrado como
+usuario de prueba**. La restricción que la IA había anunciado no existía en la
+práctica, y el trabajo extra que proponía (privacidad, publicación) sobraba.
+
+Lo que falló no fue un dato técnico aislado (lo de la CLI de Google era cierto),
+sino el método: **afirmar una limitación sin probarla** y **buscar la respuesta
+investigando en vez de preguntar** por la experiencia que ya tenía alguien al lado.
+La prueba que desmintió a la IA le llevó un minuto al usuario.
+Detalle completo: `sesion-02-2026-10-01.md`, sección 10.
+
+### 1.10 No advirtió que los mails de confirmación no iban a llegar (sesión 02)
+
+La IA propuso registro con email y contraseña además de Google, y no avisó que el
+servidor de mails de fábrica de Supabase solo entrega a los miembros del equipo
+del proyecto: ningún cliente iba a recibir la confirmación. Salió a la luz cuando
+el usuario preguntó por esos mails, ya en producción. El usuario decidió quedarse
+solo con Google (`sesion-02-2026-10-01.md`, sección 9).
+
 ---
 
 ## Parte 2 — Dónde funcionó mejor de lo esperado
@@ -319,6 +348,12 @@ Si hay que elegir tres cosas para contar:
 3. **Hay errores que ninguna verificación automática puede detectar.** Los platos
    destacados de la parrilla eran dos entradas: el código era correcto, el criterio
    estaba mal. (Parte 1.3)
+4. **La IA dijo que el login con Google tenía una restricción que no existía, y el
+   camino lo encontró un compañero.** La IA afirmó que sin publicar la app solo
+   entrarían usuarios de prueba y propuso trabajo extra para evitarlo; siguiendo lo
+   que había hecho un compañero, el usuario entró con una cuenta cualquiera sin
+   registrarla. Lección: una limitación se prueba antes de recomendar cómo
+   esquivarla. (Parte 1.9)
 
 Y como contrapeso honesto: el mismo método que dejó pasar el bug del menú durante
 catorce revisiones lo encontró en la decimoquinta, cuando se le pidió a un revisor que

@@ -15,6 +15,10 @@ restaurante.
   decisión del usuario): **no** se escriben API routes, Server Actions ni
   middleware. El front habla con Supabase desde el navegador y la seguridad la
   pone la **RLS** en la base. Ver `docs/BACKEND.md`.
+- **Se ingresa solo con Google.** El registro con email está apagado en Supabase
+  (`[auth.email] enable_signup = false`): no volver a agregar formularios de email
+  o contraseña sin hablarlo, porque el servidor de mails de fábrica de Supabase no
+  le entrega a clientes.
 - **Toda llamada a Supabase pasa por `src/servicios/`.** Ningún componente
   importa `@supabase/supabase-js`. Las reglas de negocio (6 personas, 2 horas,
   franjas, una reserva por día) viven en la base, no en los componentes.

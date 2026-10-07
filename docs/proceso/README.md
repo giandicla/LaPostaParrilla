@@ -14,7 +14,7 @@ donde no se esperaba, y las decisiones que hubo que tomar a mitad de camino.
 |---|---|
 | `README.md` | Este archivo: cómo funciona el registro |
 | `sesion-01-2026-09-24.md` | Primera sesión: del repo vacío al sitio desplegado |
-| `sesion-02-2026-10-01.md` | Segunda sesión: la marca real, fotos y cartas en PDF |
+| `sesion-02-2026-10-01.md` | Segunda sesión (1 al 7/10): la marca real, la carta, el backend con Supabase, producción y el login con Google |
 | `hallazgos.md` | Lo analítico: dónde falló la IA, dónde sorprendió, qué se aprendió |
 | `metodo.md` | Cómo se organizó el trabajo y por qué |
 | `ledger-sesion-01.md` | El registro crudo de la sesión, sin editar: las decisiones tal como se tomaron |
