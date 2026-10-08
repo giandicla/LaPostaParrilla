@@ -88,7 +88,7 @@ Cada función devuelve el mensaje de error o `''`. La base repite las mismas reg
 | `marca.js` | `MARCA` — nombre, bajada, ciudad, Instagram, email, logo (blanco) y logoOscuro (bordo) |
 | `locales.js` | `LOCALES`, `getLocal(id)`, `esIdDeLocal(id)`, `ID_LOCAL_POR_DEFECTO` |
 | `platos.js` | `getPlatosDestacados()` — los platos con foto de la home, por local |
-| `carta.js` + `cartas.json` | `getCarta(idLocal)`, `formatearPrecio(n)`. Las cartas transcriptas de los PDF; la forma está documentada en `carta.js` |
+| `carta.js` + `cartas.json` + `vinos.json` | `getCarta(idLocal)`, `formatearPrecio(n)`. Las cartas transcriptas de los PDF; la de vinos (con "Copas y descorche") es una sola y `getCarta` la suma al final de cada local. La forma está documentada en `carta.js` |
 | `textos.js` | `TEXTOS` — bienvenida, valores de la marca, historia, condiciones de reserva |
 
 Forma de un local:

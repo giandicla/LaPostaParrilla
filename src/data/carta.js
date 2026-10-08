@@ -10,10 +10,18 @@
 //                        region, vinos: [{ nombre, detalle?, precio }] }] }
 //
 // `precios` (en plural) va con `tamanos`: un precio por tamaño, en orden.
+//
+// La carta de vinos (con "Copas y descorche") es la misma en los dos locales:
+// vive una sola vez, en vinos.json, y se suma al final de cada carta.
 
-import CARTAS from './cartas.json';
+import CARTAS from './cartas.json' with { type: 'json' };
+import VINOS from './vinos.json' with { type: 'json' };
 
-export const getCarta = (idLocal) => CARTAS[idLocal] ?? null;
+export function getCarta(idLocal) {
+  const carta = CARTAS[idLocal];
+  if (!carta) return null;
+  return { ...carta, secciones: [...carta.secciones, ...VINOS.secciones] };
+}
 
 export const formatearPrecio = (precio) =>
   precio.toLocaleString('es-AR', {

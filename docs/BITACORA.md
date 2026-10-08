@@ -4,6 +4,31 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-08 — Vinos en las dos cartas; la carta nueva arranca arriba
+
+Rama `feat/carta-vinos`.
+
+- La carta de vinos es la misma en los dos locales (lo confirmó el usuario): pasa
+  de la carta de la parrilla a `src/data/vinos.json` y `getCarta()` la suma al
+  final de las dos. La Posta II Restaurante ahora muestra vinos y "Copas y
+  descorche". 5 tests nuevos (`src/data/carta.test.js`; `npm test`: 23).
+- `/carta`: al cambiar de local, la página vuelve arriba de todo.
+- El import de los JSON lleva `with { type: 'json' }`: Node lo pide para correr los
+  tests, y Next lo acepta.
+
+---
+
+## 2026-10-08 — Producción: migración, función y merges
+
+- `supabase db push`: migración `20261008130000_reservas_del_local` aplicada en
+  producción (antes, `--dry-run`: era la única pendiente).
+- `supabase functions deploy notificar-reserva`.
+- Merge de los PRs #4 y #6 a `main`; Vercel publicó el sitio con el #6 ("Ready").
+  Verificado: páginas en 200, nombres nuevos en `/reservas` y la API de producción
+  acepta las columnas `origen` y `mail`.
+
+---
+
 ## 2026-10-08 — Reservas del local y nueva página de reservas
 
 Rama `feat/reservas-admin`. Spec: `docs/superpowers/specs/2026-10-08-reservas-admin-design.md`.

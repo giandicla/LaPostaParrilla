@@ -54,7 +54,8 @@ y preview de Vercel en cada PR.
   La paleta sale del manual de marca: bordo `#600003`, arena `#CBC1B1`,
   oliva `#757036`. Tipografías: Baskerville (títulos, en mayúsculas) y Gill Sans.
 - **Los platos con foto no llevan precio.** Los precios viven solo en la carta
-  (`src/data/cartas.json`). Lo pidió el usuario.
+  (`src/data/cartas.json`, y los vinos, que son los mismos en los dos locales, en
+  `src/data/vinos.json`). Lo pidió el usuario.
 - Un componente = una carpeta: `Nombre/Nombre.jsx` + `Nombre.module.css`.
 - CSS **mobile first**. Breakpoints principales: 768px y 1100px (algunas grillas
   puntuales usan otros; ver el hallazgo sobre breakpoints en `docs/PENDIENTES.md`).
