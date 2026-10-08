@@ -12,15 +12,16 @@ update public.perfiles set rol = 'admin' where id = '33333333-3333-3333-3333-333
 set local role authenticated;
 set local request.jwt.claims to '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}';
 
-select throws_ok($$
+-- Desde la sesión 04 alcanza con un nombre no vacío (pedido del usuario)
+select lives_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
-  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 10, '20:30', 2, 'A', '2944111111')
-$$, 'P0001', 'El nombre tiene que tener entre 2 y 80 caracteres.', 'rechaza un nombre de una letra');
+  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 9, '20:30', 2, 'A', '2944111111')
+$$, 'acepta un nombre de una letra');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
   values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 10, '20:30', 2, repeat('a', 81), '2944111111')
-$$, 'P0001', 'El nombre tiene que tener entre 2 y 80 caracteres.', 'rechaza un nombre de más de 80');
+$$, 'P0001', 'El nombre puede tener hasta 80 caracteres.', 'rechaza un nombre de más de 80');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
@@ -34,8 +35,8 @@ $$, 'P0001', 'Ese teléfono no parece válido: tiene que tener entre 8 y 15 díg
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono, comentarios)
-  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 10, '20:30', 2, 'Ana', '2944111111', repeat('x', 501))
-$$, 'P0001', 'Los comentarios pueden tener hasta 500 caracteres.', 'rechaza comentarios de más de 500');
+  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 10, '20:30', 2, 'Ana', '2944111111', repeat('x', 101))
+$$, 'P0001', 'Los comentarios pueden tener hasta 100 caracteres.', 'rechaza comentarios de más de 100');
 
 select lives_ok($$
   insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, nombre, telefono)

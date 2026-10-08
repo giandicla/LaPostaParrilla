@@ -17,10 +17,10 @@ import {
   hayErrores,
 } from './reservas.js';
 
-test('nombre: obligatorio, mínimo 2 letras, máximo 80', () => {
+test('nombre: obligatorio y hasta 80; una sola letra alcanza', () => {
   assert.ok(validarNombre(''));
   assert.ok(validarNombre('   '));
-  assert.ok(validarNombre('A'));
+  assert.equal(validarNombre('A'), '');
   assert.ok(validarNombre('a'.repeat(LIMITES.nombre.max + 1)));
   assert.equal(validarNombre('Ana'), '');
   assert.equal(validarNombre('  Ana  '), '');
@@ -116,6 +116,9 @@ test('comentarios y motivo: opcionales, con máximo', () => {
   assert.equal(validarComentarios(''), '');
   assert.equal(validarComentarios(undefined), '');
   assert.ok(validarComentarios('x'.repeat(LIMITES.comentarios + 1)));
+  assert.equal(LIMITES.comentarios, 100);
+  assert.equal(validarComentarios('x'.repeat(100)), '');
+  assert.ok(validarComentarios('x'.repeat(101)));
   assert.equal(validarMotivo(''), '');
   assert.ok(validarMotivo('x'.repeat(LIMITES.motivo + 1)));
 });

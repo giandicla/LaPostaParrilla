@@ -37,7 +37,7 @@ import estilos from './page.module.css';
 const MAXIMO_ELEGIBLE = LIMITES.personas.maxLocal;
 
 // Orden de los campos en pantalla: al enviar con errores, el foco va al primero
-const CAMPOS = ['fecha', 'hora', 'personas', 'nombre', 'telefono', 'comentarios'];
+const CAMPOS = ['nombre', 'telefono', 'fecha', 'hora', 'personas', 'comentarios'];
 
 // Los salones con su foto. Con onChange son opciones para elegir; sin él,
 // solo se muestran (página sin sesión).
@@ -93,21 +93,26 @@ function SinSesion() {
   };
 
   return (
-    <div className={estilos.formulario}>
-      <Salones />
-      <p className={estilos.textoIngreso}>
-        Para pedir una mesa, ingresá con tu cuenta de Google: así ves y cancelás tus reservas desde acá.
-      </p>
-      <button type="button" className={estilos.google} onClick={conGoogle} disabled={yendo}>
-        <Icono nombre="google" className={estilos.logoGoogle} />
-        {yendo ? 'Abriendo Google…' : 'Ingresar con Google'}
-      </button>
-      {error && <p className={formulario.error} role="alert">{error}</p>}
+    <div className={estilos.pagina}>
+      <div className={estilos.grupo}>
+        <h2 className={estilos.leyenda}>Reservar en:</h2>
+        <Salones />
+      </div>
+      <div className={formulario.formulario}>
+        <p className={estilos.textoIngreso}>
+          Para pedir una mesa, ingresá con tu cuenta de Google: así ves y cancelás tus reservas desde acá.
+        </p>
+        <button type="button" className={estilos.google} onClick={conGoogle} disabled={yendo}>
+          <Icono nombre="google" className={estilos.logoGoogle} />
+          {yendo ? 'Abriendo Google…' : 'Ingresar con Google'}
+        </button>
+        {error && <p className={formulario.error} role="alert">{error}</p>}
+      </div>
     </div>
   );
 }
 
-function FormularioReserva({ idInicial, alCambiarLocal }) {
+function FormularioReserva({ idInicial }) {
   const { sesion, perfil, recargarPerfil } = useSesion();
   const [idLocal, setIdLocal] = useState(idInicial);
   const [valores, setValores] = useState({
@@ -184,7 +189,6 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
   const cambiarLocal = (id) => {
     setIdLocal(id);
     cambiar('hora', ''); // las franjas dependen del local: la hora elegida deja de valer
-    alCambiarLocal(id);
   };
 
   // Grupo: WhatsApp con lo que ya se completó
@@ -246,13 +250,16 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
 
   if (creada) {
     return (
-      <div className={estilos.formulario}>
+      <div className={formulario.formulario}>
         <h2 className={estilos.tituloListo}>Pedido de reserva enviado</h2>
-        <p className={estilos.detalleListo}>
-          {getLocal(creada.local_id).nombre}, {formatearFecha(creada.fecha)} a las {creada.hora.slice(0, 5)},{' '}
-          {creada.personas} {creada.personas === 1 ? 'persona' : 'personas'}, a nombre de {creada.nombre}.
+        <p>
+          <strong>{getLocal(creada.local_id).nombre}</strong>, {formatearFecha(creada.fecha)} a las{' '}
+          {creada.hora.slice(0, 5)}, {creada.personas} {creada.personas === 1 ? 'persona' : 'personas'}, a nombre
+          de {creada.nombre}.
         </p>
-        <p>Te confirmamos por mail; mientras tanto figura como pendiente en &quot;Mis reservas&quot;.</p>
+        <p className={formulario.exito}>
+          Te confirmamos por mail; mientras tanto figura como <strong>pendiente</strong> en &quot;Mis reservas&quot;.
+        </p>
         <div className={estilos.acciones}>
           <Boton to="/mis-reservas">Ver mis reservas</Boton>
           <Boton variante="texto" onClick={otraReserva}>Hacer otra reserva</Boton>
@@ -262,88 +269,23 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
   }
 
   return (
-    <form className={estilos.formulario} onSubmit={alEnviar} noValidate>
-      {intentoEnviar && cantidadErrores > 0 && (
-        <p className={formulario.error} role="alert">
-          {cantidadErrores === 1
-            ? 'Revisá el campo marcado antes de enviar.'
-            : `Revisá los ${cantidadErrores} campos marcados antes de enviar.`}
-        </p>
-      )}
-
+    <form className={estilos.pagina} onSubmit={alEnviar} noValidate>
       <fieldset className={estilos.grupo}>
-        <legend className={estilos.leyenda}>Salón</legend>
+        <legend className={estilos.leyenda}>Reservar en:</legend>
         <Salones idLocal={idLocal} onChange={cambiarLocal} />
       </fieldset>
 
-      <fieldset className={estilos.grupo}>
-        <legend className={estilos.leyenda}>Día y hora</legend>
-        <div className={estilos.fila3}>
-          {/* Un día bloqueado se avisa apenas se elige, sin esperar a salir del campo */}
-          <Campo id="fecha" etiqueta="Fecha" error={errorVisible('fecha') ?? (bloqueo ? errores.fecha : undefined)}>
-            {(props) => (
-              <input
-                {...props}
-                name="fecha"
-                type="date"
-                required
-                min={hoy}
-                value={fecha}
-                onChange={(e) => {
-                  cambiar('fecha', e.target.value, { tocar: true });
-                  cambiar('hora', '');
-                }}
-                onBlur={alSalir('fecha')}
-                className={formulario.control}
-              />
-            )}
-          </Campo>
-          <Campo id="hora" etiqueta="Hora" error={errorVisible('hora')}>
-            {(props) => (
-              <select
-                {...props}
-                name="hora"
-                required
-                value={hora}
-                onChange={(e) => cambiar('hora', e.target.value, { tocar: true })}
-                onBlur={alSalir('hora')}
-                className={formulario.control}
-              >
-                <option value="" disabled>
-                  {franjasDisponibles.length ? 'Elegí un horario' : 'No quedan horarios ese día'}
-                </option>
-                {franjasDisponibles.map((franja) => (
-                  <option key={franja} value={franja}>{franja}</option>
-                ))}
-              </select>
-            )}
-          </Campo>
-          <Campo
-            id="personas"
-            etiqueta="Personas"
-            error={errorVisible('personas')}
-            ayuda={grupo ? `Para más de ${LIMITES.personas.max} la coordinamos por WhatsApp.` : undefined}
-          >
-            {(props) => (
-              <select
-                {...props}
-                name="personas"
-                value={valores.personas}
-                onChange={alEscribir('personas')}
-                className={formulario.control}
-              >
-                {Array.from({ length: MAXIMO_ELEGIBLE }, (_, i) => i + 1).map((n) => (
-                  <option key={n} value={n}>{n}</option>
-                ))}
-              </select>
-            )}
-          </Campo>
-        </div>
-      </fieldset>
+      {/* El resto, en la card de siempre */}
+      <div className={formulario.formulario}>
+        {intentoEnviar && cantidadErrores > 0 && (
+          <p className={formulario.error} role="alert">
+            {cantidadErrores === 1
+              ? 'Revisá el campo marcado antes de enviar.'
+              : `Revisá los ${cantidadErrores} campos marcados antes de enviar.`}
+          </p>
+        )}
 
-      <fieldset className={estilos.grupo}>
-        <legend className={estilos.leyenda}>Tus datos</legend>
-        <div className={estilos.fila2}>
+        <div className={formulario.fila}>
           <Campo id="nombre" etiqueta="A nombre de" error={errorVisible('nombre')}>
             {(props) => (
               <input
@@ -383,6 +325,69 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
           </div>
         </div>
 
+        <div className={formulario.fila}>
+          {/* Un día bloqueado se avisa apenas se elige, sin esperar a salir del campo */}
+          <Campo id="fecha" etiqueta="Fecha" error={errorVisible('fecha') ?? (bloqueo ? errores.fecha : undefined)}>
+            {(props) => (
+              <input
+                {...props}
+                name="fecha"
+                type="date"
+                required
+                min={hoy}
+                value={fecha}
+                onChange={(e) => {
+                  cambiar('fecha', e.target.value, { tocar: true });
+                  cambiar('hora', '');
+                }}
+                onBlur={alSalir('fecha')}
+                className={formulario.control}
+              />
+            )}
+          </Campo>
+          <Campo id="hora" etiqueta="Hora" error={errorVisible('hora')}>
+            {(props) => (
+              <select
+                {...props}
+                name="hora"
+                required
+                value={hora}
+                onChange={(e) => cambiar('hora', e.target.value, { tocar: true })}
+                onBlur={alSalir('hora')}
+                className={formulario.control}
+              >
+                <option value="" disabled>
+                  {franjasDisponibles.length ? 'Elegí un horario' : 'No quedan horarios ese día'}
+                </option>
+                {franjasDisponibles.map((franja) => (
+                  <option key={franja} value={franja}>{franja}</option>
+                ))}
+              </select>
+            )}
+          </Campo>
+        </div>
+
+        <Campo
+          id="personas"
+          etiqueta="Personas"
+          error={errorVisible('personas')}
+          ayuda={grupo ? `Para más de ${LIMITES.personas.max} personas deberá realizar la reserva por WhatsApp.` : undefined}
+        >
+          {(props) => (
+            <select
+              {...props}
+              name="personas"
+              value={valores.personas}
+              onChange={alEscribir('personas')}
+              className={formulario.control}
+            >
+              {Array.from({ length: MAXIMO_ELEGIBLE }, (_, i) => i + 1).map((n) => (
+                <option key={n} value={n}>{n}</option>
+              ))}
+            </select>
+          )}
+        </Campo>
+
         <Campo
           id="comentarios"
           etiqueta="Comentarios"
@@ -404,33 +409,33 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
             />
           )}
         </Campo>
-      </fieldset>
 
-      {error && <p className={formulario.error} role="alert">{error}</p>}
+        {error && <p className={formulario.error} role="alert">{error}</p>}
 
-      <div className={estilos.cierre}>
-        {grupo ? (
-          whatsappGrupo ? (
-            <Boton href={whatsappGrupo} tamano="lg" className={estilos.botonEnviar}>
-              <Icono nombre="whatsapp" />
-              Reservar por WhatsApp
-            </Boton>
+        <div className={estilos.cierre}>
+          {grupo ? (
+            whatsappGrupo ? (
+              <Boton href={whatsappGrupo} tamano="lg" className={estilos.botonEnviar}>
+                <Icono nombre="whatsapp" />
+                Reservar por WhatsApp
+              </Boton>
+            ) : (
+              <p>
+                Para más de {LIMITES.personas.max} personas escribinos por Instagram:{' '}
+                <a href={MARCA.instagramUrl} target="_blank" rel="noreferrer" className={estilos.enlace}>
+                  {MARCA.instagram}
+                </a>
+              </p>
+            )
           ) : (
-            <p>
-              Para más de {LIMITES.personas.max} personas escribinos por Instagram:{' '}
-              <a href={MARCA.instagramUrl} target="_blank" rel="noreferrer" className={estilos.enlace}>
-                {MARCA.instagram}
-              </a>
-            </p>
-          )
-        ) : (
-          <>
-            <p className={estilos.aviso}>{TEXTOS.avisoReserva}</p>
-            <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
-              {enviando ? 'Enviando…' : 'Pedir reserva'}
-            </Boton>
-          </>
-        )}
+            <>
+              <p className={estilos.aviso}>{TEXTOS.avisoReserva}</p>
+              <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
+                {enviando ? 'Enviando…' : 'Pedir reserva'}
+              </Boton>
+            </>
+          )}
+        </div>
       </div>
     </form>
   );
@@ -439,32 +444,12 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
 function ReservasContenido() {
   const parametros = useSearchParams();
   const idPedido = parametros.get('local');
-  const [idLocal, setIdLocal] = useState(esIdDeLocal(idPedido) ? idPedido : ID_LOCAL_POR_DEFECTO);
-  const local = getLocal(idLocal);
-  const whatsapp = enlaceWhatsapp(local, `Hola! Quería consultar por una reserva en ${local.nombre}.`);
-
+  const idInicial = esIdDeLocal(idPedido) ? idPedido : ID_LOCAL_POR_DEFECTO;
+  // El admin no reserva desde acá: RequiereSesion lo lleva al panel
   return (
-    <div className={estilos.pagina}>
-      {/* El admin no reserva desde acá: RequiereSesion lo lleva al panel */}
-      <RequiereSesion soloClientes sinSesion={<SinSesion />}>
-        <FormularioReserva idInicial={idLocal} alCambiarLocal={setIdLocal} />
-      </RequiereSesion>
-
-      <p className={estilos.contacto}>
-        ¿Preferís hablar con alguien?{' '}
-        {whatsapp && (
-          <>
-            <a href={whatsapp} target="_blank" rel="noreferrer" className={estilos.enlace}>
-              <Icono nombre="whatsapp" /> WhatsApp de {local.nombreCorto}
-            </a>{' '}
-            o{' '}
-          </>
-        )}
-        <a href={MARCA.instagramUrl} target="_blank" rel="noreferrer" className={estilos.enlace}>
-          <Icono nombre="instagram" /> {MARCA.instagram}
-        </a>
-      </p>
-    </div>
+    <RequiereSesion soloClientes sinSesion={<SinSesion />}>
+      <FormularioReserva idInicial={idInicial} />
+    </RequiereSesion>
   );
 }
 

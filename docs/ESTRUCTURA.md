@@ -6,7 +6,7 @@
 |---|---|---|
 | `/` | Inicio | Los 8 bloques de la home |
 | `/carta` | Carta | La carta completa del local activo en HTML (índice, secciones, vinos por cepa y bodega) + toggle. Acepta `?local=<id>` |
-| `/reservas` | Reservas | Una columna: salón (fotos), día y hora, tus datos. Sin sesión: los salones y "Ingresar con Google". Con más de 6 personas el botón pasa a "Reservar por WhatsApp" con el mensaje armado. El admin no la usa: lo lleva al panel. Acepta `?local=<id>` |
+| `/reservas` | Reservas | "Reservar en:" con la foto de cada salón y, debajo, el formulario en una card (nombre, teléfono, fecha, hora, personas, comentarios hasta 100). Sin sesión: los salones y "Ingresar con Google". Con más de 6 personas el botón pasa a "Reservar por WhatsApp" con el mensaje armado. El admin no la usa: lo lleva al panel. Acepta `?local=<id>` |
 | `/ingresar` | Cuenta | Un solo botón, "Continuar con Google" (la primera vez crea la cuenta). Acepta `?volver=<ruta>` |
 | `/mis-reservas` | Cuenta | Próximas y anteriores; cancelar hasta 1 h antes, después WhatsApp. El admin no la usa: lo lleva al panel |
 | `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado; confirmar, rechazar, cancelar, mover; notas internas; días bloqueados; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |

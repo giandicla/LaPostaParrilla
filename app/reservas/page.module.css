@@ -1,30 +1,14 @@
-/* Una sola columna que se lee de arriba abajo, directo sobre el fondo:
-   sin tarjeta ni panel lateral. Los grupos se separan con su título. */
+/* Arriba, el salón elegido por foto; abajo, el resto del formulario en la card
+   de siempre (formulario.module.css, compartida con /ingresar y /admin). */
 .pagina {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-12);
-  max-width: 46rem;
+  gap: var(--sp-8);
+  max-width: 52rem;
   margin: 0 auto;
 }
 
-.formulario {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-12);
-}
-
-/* Sobre el crema, los campos en blanco para que se distingan */
-.formulario input:not([type='checkbox']):not([type='radio']),
-.formulario select,
-.formulario textarea {
-  background-color: var(--blanco);
-}
-
-/* Las piezas del formulario (campo, control, etc.) están en
-   src/styles/formulario.module.css, compartidas con /ingresar y /admin. */
-
-/* ---------- Grupos ---------- */
+/* ---------- Reservar en: ---------- */
 .grupo {
   display: flex;
   flex-direction: column;
@@ -40,26 +24,12 @@
   font-family: var(--font-titulo);
   font-size: var(--fs-h3);
   color: var(--bordo-900);
+  /* Sin sesión es un h2, que el sitio pone en mayúsculas: acá va igual que
+     la leyenda del formulario */
+  text-transform: none;
+  letter-spacing: normal;
 }
 
-.fila2,
-.fila3 {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--sp-4);
-}
-
-@media (min-width: 600px) {
-  .fila2 {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .fila3 {
-    grid-template-columns: 1.3fr 1fr 0.8fr;
-  }
-}
-
-/* ---------- Salones: la foto es la opción ---------- */
 .salones {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -81,7 +51,8 @@
   aspect-ratio: 4 / 3;
   object-fit: cover;
   margin-bottom: var(--sp-2);
-  border-radius: var(--radio-sm);
+  border-radius: var(--radio-md);
+  box-shadow: var(--sombra-sm);
   outline: 3px solid transparent;
   outline-offset: 3px;
   transition: outline-color var(--transicion), opacity var(--transicion);
@@ -115,18 +86,16 @@
   color: var(--gris-600);
 }
 
-/* ---------- Cierre: condiciones y botón ---------- */
+/* ---------- Cierre de la card: condiciones y botón ---------- */
 .cierre {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--sp-6);
-  padding-top: var(--sp-8);
-  border-top: 1px solid var(--gris-300);
+  gap: var(--sp-4);
 }
 
 .aviso {
-  max-width: 60ch;
+  font-size: var(--fs-small);
   color: var(--gris-600);
 }
 
@@ -134,15 +103,17 @@
   align-self: flex-start;
 }
 
-/* ---------- Pedido enviado ---------- */
-.tituloListo {
-  font-size: var(--fs-h2);
+.enlace {
   color: var(--bordo-900);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 
-.detalleListo {
-  font-family: var(--font-titulo);
-  font-size: 1.15rem;
+/* ---------- Pedido enviado ---------- */
+.tituloListo {
+  font-size: var(--fs-h3);
+  color: var(--bordo-900);
 }
 
 .acciones {
@@ -154,7 +125,7 @@
 
 /* ---------- Sin sesión ---------- */
 .textoIngreso {
-  max-width: 52ch;
+  color: var(--gris-600);
 }
 
 /* Botón con el formato que pide Google: fondo blanco, borde gris y su "G" */
@@ -171,11 +142,12 @@
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: border-color var(--transicion);
+  transition: border-color var(--transicion), box-shadow var(--transicion);
 }
 
 .google:hover:not(:disabled) {
   border-color: var(--carbon);
+  box-shadow: var(--sombra-sm);
 }
 
 .google:disabled {
@@ -186,19 +158,4 @@
 .logoGoogle {
   width: 1.3em;
   height: 1.3em;
-}
-
-/* ---------- Contacto ---------- */
-.contacto {
-  color: var(--gris-600);
-}
-
-.enlace {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-1);
-  color: var(--bordo-900);
-  font-weight: 600;
-  text-decoration: underline;
-  text-underline-offset: 3px;
 }

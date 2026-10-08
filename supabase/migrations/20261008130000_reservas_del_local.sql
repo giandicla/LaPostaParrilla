@@ -42,7 +42,10 @@ create policy "reservas: crear a nombre propio y pendiente" on public.reservas
   );
 
 -- =====================================================================
--- Validación de contacto: suma el mail
+-- Validación de contacto: suma el mail. Además, a pedido del usuario, el
+-- nombre ya no tiene mínimo de 2 letras (alcanza con que no esté vacío; el
+-- check reservas_nombre_check ya lo exige) y los comentarios pasan de 500
+-- caracteres a 100.
 -- =====================================================================
 create or replace function public.validar_contacto()
 returns trigger
@@ -50,8 +53,8 @@ language plpgsql
 set search_path = ''
 as $$
 begin
-  if char_length(trim(new.nombre)) not between 2 and 80 then
-    raise exception 'El nombre tiene que tener entre 2 y 80 caracteres.';
+  if char_length(trim(new.nombre)) > 80 then
+    raise exception 'El nombre puede tener hasta 80 caracteres.';
   end if;
 
   if new.telefono !~ '^[0-9+()[:space:]-]+$'
@@ -59,8 +62,8 @@ begin
     raise exception 'Ese teléfono no parece válido: tiene que tener entre 8 y 15 dígitos.';
   end if;
 
-  if char_length(coalesce(new.comentarios, '')) > 500 then
-    raise exception 'Los comentarios pueden tener hasta 500 caracteres.';
+  if char_length(coalesce(new.comentarios, '')) > 100 then
+    raise exception 'Los comentarios pueden tener hasta 100 caracteres.';
   end if;
 
   -- Algo@algo.algo, sin espacios: lo mismo que valida el formulario del panel

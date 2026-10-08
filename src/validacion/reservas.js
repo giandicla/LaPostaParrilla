@@ -4,13 +4,14 @@
 // controlar lo mismo (checks y trigger), porque el navegador se puede saltear.
 
 export const LIMITES = {
-  nombre: { min: 2, max: 80 },
+  // Alcanza con que no esté vacío (pedido del usuario, sesión 04)
+  nombre: { max: 80 },
   telefonoDigitos: { min: 8, max: 15 },
   // max: lo que se reserva desde la web; más que eso, por WhatsApp.
   // maxLocal: lo que carga el admin desde el panel (tope contra errores de tipeo).
   personas: { min: 1, max: 6, maxLocal: 40 },
   mail: 254,
-  comentarios: 500,
+  comentarios: 100,
   motivo: 120,
 };
 
@@ -25,9 +26,8 @@ const limpio = (valor) => String(valor ?? '').trim();
 
 export function validarNombre(valor) {
   const nombre = limpio(valor);
-  const { min, max } = LIMITES.nombre;
+  const { max } = LIMITES.nombre;
   if (!nombre) return 'Escribí a nombre de quién va la reserva.';
-  if (nombre.length < min) return `El nombre tiene que tener al menos ${min} letras.`;
   if (nombre.length > max) return `El nombre puede tener hasta ${max} caracteres.`;
   if (!NOMBRE.test(nombre)) return 'Usá solo letras y espacios en el nombre.';
   return '';

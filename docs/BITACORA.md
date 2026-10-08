@@ -27,6 +27,12 @@ Rama `feat/reservas-admin`. Spec: `docs/superpowers/specs/2026-10-08-reservas-ad
   salones + "Ingresar con Google".
 - Funciones puras nuevas con tests: `validarMail`, `esGrupo`,
   `mensajeReservaWhatsapp`, plazo de 1 hora (`npm test`: 18).
+- Después de la revisión del usuario: "Reservar en:" con las fotos arriba y el resto
+  en la card de antes; sin la línea "¿Preferís hablar con alguien?"; el aviso de
+  grupo dice "Para más de 6 personas deberá realizar la reserva por WhatsApp". El
+  nombre ya no pide 2 letras (alcanza con no vacío, sin números ni símbolos) y los
+  comentarios bajan de 500 a 100 caracteres, en el formulario y en la base (test 03
+  actualizado).
 
 ---
 

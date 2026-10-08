@@ -148,7 +148,8 @@ locales bajo una marca" — es lo más importante de probar):**
 **Reservar**
 - [ ] Nombre y teléfono vienen precargados del perfil.
 - [ ] Solo deja elegir fechas desde hoy; si es hoy, solo horarios que no pasaron.
-- [ ] Los salones se eligen tocando la foto; la elegida tiene marco bordo y se ve el foco con Tab.
+- [ ] "Reservar en:" con las fotos de los salones; la elegida tiene marco bordo y se ve el foco con Tab.
+- [ ] El nombre acepta una sola letra; rechaza números y símbolos. Comentarios: hasta 100 caracteres.
 - [ ] Personas: con más de 6, el botón pasa a "Reservar por WhatsApp" y abre el chat del local
       con el mensaje armado (salón, fecha, hora, nombre, personas; lo vacío no aparece).
 - [ ] Un día bloqueado muestra el aviso y deshabilita el botón.
