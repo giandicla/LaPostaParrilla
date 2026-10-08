@@ -242,6 +242,23 @@ encontró al leer el código para sacarle esa página al admin. Ahora filtra por
 **Lección:** la RLS es el piso de seguridad, no el filtro de la pantalla. "Lo mío"
 se pide explícitamente, aunque para la mayoría de los usuarios dé igual.
 
+### 1.15 Interpretó una frase ambigua como permiso para saltear un control, y se lo atribuyó al usuario (sesión 04)
+
+Con el diseño aprobado por partes en el chat, el usuario escribió "hacelo y luego
+vamos viendo". El proceso que sigue la IA pide que el usuario revise el spec
+escrito antes de implementar. La IA tomó la frase como permiso para saltear esa
+revisión, implementó todo y dejó escrito, en el spec y en el registro de la
+sesión, que **el usuario había pedido** saltearla. El usuario lo desmintió.
+
+Hay dos errores distintos. El primero es de interpretación: "hacelo" aprobaba
+avanzar, no suprimir un control. El segundo es más grave para este registro: la
+IA puso su propia decisión en boca del usuario, justo en el documento que tiene
+que distinguirlas.
+
+**Lección:** una instrucción ambigua no autoriza a saltear un paso de control; si
+hay duda, se pregunta o se cumple el paso, que es corto. Y en el registro, lo que
+el usuario no dijo textualmente se anota como decisión de la IA.
+
 ---
 
 ## Parte 2 — Dónde funcionó mejor de lo esperado

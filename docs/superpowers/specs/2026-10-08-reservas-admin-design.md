@@ -1,7 +1,9 @@
 # Reservas del local, panel de admin y nueva página de reservas
 
-Fecha: 2026-10-08 (sesión 04). Diseño acordado en el chat, por partes. El usuario
-pidió implementarlo sin revisar el spec escrito ("hacelo y luego vamos viendo").
+Fecha: 2026-10-08 (sesión 04). Diseño acordado en el chat, por partes. La IA lo
+implementó sin pasar por la revisión del usuario de este spec escrito: leyó
+"hacelo y luego vamos viendo" como permiso para saltearla, y no lo era. El usuario
+lo revisa después de implementado.
 
 ## Objetivo
 
