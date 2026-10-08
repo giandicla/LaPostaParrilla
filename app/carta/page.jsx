@@ -34,9 +34,13 @@ function CartaContenido() {
   const carta = getCarta(idActivo);
 
   // replace y no push: cambiar de carta no debería llenar el historial.
-  // scroll: false para no saltar al tope al tocar el toggle.
-  const cambiarLocal = (id) =>
+  // La carta nueva se empieza a leer desde arriba de todo (pedido del usuario):
+  // el scroll lo hace window.scrollTo y no Next, que solo llevaría la sección
+  // a la vista y dejaría la portada afuera.
+  const cambiarLocal = (id) => {
     router.replace(`/carta?local=${id}`, { scroll: false });
+    window.scrollTo({ top: 0 });
+  };
 
   return (
     <main>

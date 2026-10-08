@@ -65,10 +65,14 @@ componentes que iteran. Sumar un tercer local es agregar un objeto.
 Lo pidió el profesor. El proyecto arrancó en Vite y se migró en la tarea 6M; el
 detalle está en la sección 2.bis del spec.
 
-Next incluye backend, pero **este proyecto no usa nada de eso**: no hay `app/api/`,
-no hay Server Actions, no hay base de datos. Se usa como generador del front, que es
-compatible con el "solo el React del front" que pidió la cátedra. Las cinco rutas
-compilan como estáticas, y eso conviene verificarlo en cada build.
+Next incluye backend, pero **hasta ahora el proyecto no lo usa**: no hay
+`app/api/` ni Server Actions. La base es Supabase y el front le habla desde el
+navegador, con la RLS como seguridad (ver `docs/BACKEND.md`). Las once rutas
+compilan como estáticas, y eso conviene verificarlo en cada build. Con la API del
+catálogo y los pagos (E4, E6) entra código de servidor.
+
+*(Actualizado en la sesión 04: antes decía "no hay base de datos", que dejó de ser
+cierto en la sesión 02.)*
 
 ### Por qué CSS Modules y no Tailwind
 
@@ -81,10 +85,16 @@ En `/carta?local=parrilla` el estado vive en la query string, no en `useState`.
 Así el link se puede compartir apuntando a una carta concreta, el botón "atrás"
 funciona, y las cards del Inicio pueden linkear directo a la carta correcta.
 
-### Por qué el formulario de reservas no guarda nada
+### Por qué las reservas del local no tienen cuenta
 
-La etapa actual es maqueta visual. El CRUD tiene su propio spec y su propia etapa.
-Mezclarlos habría hecho que ninguna de las dos quedara bien.
+Las reservas de la web son de un cliente con cuenta de Google. Las que toma el
+local (teléfono, WhatsApp, en la puerta) las carga el admin desde el panel, a nombre
+de alguien que no tiene cuenta. Por eso una reserva tiene `origen` (`web` o
+`local`): las del local no tienen `usuario_id`, entran confirmadas y pueden ser de
+hasta 40 personas. Ver `docs/superpowers/specs/2026-10-08-reservas-admin-design.md`.
+
+*(Hasta la sesión 02, esta sección explicaba por qué el formulario era una maqueta
+que no guardaba nada.)*
 
 ## Las etapas
 

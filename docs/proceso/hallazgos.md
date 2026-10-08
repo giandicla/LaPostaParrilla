@@ -457,6 +457,28 @@ reiniciando. Corregir el código a ciegas habría metido cambios innecesarios.
 
 ---
 
+### 3.8 Un pedido general produce un cambio general (sesión 04, error del usuario)
+
+El usuario abrió la sesión con "hacé que no se vea tan IA en general en cuanto a
+diseño". No dijo qué parte le molestaba ni qué quería conservar. La IA lo tomó al
+pie de la letra: diagnosticó todo el sitio y lo rediseñó entero (40 archivos). Al
+verlo, el usuario prefirió el diseño anterior: lo único que quería cambiar era la
+página de reservas. **El usuario lo considera un error propio y pidió registrarlo
+así.**
+
+Hay dos errores en el mismo episodio. El del usuario: un pedido sin alcance. El de
+la IA (1.12): no preguntar qué parte molestaba antes de rehacer todo, y no mostrar
+una muestra antes de construir. El que se corrigió primero fue el pedido. En la
+parte de reservas, el usuario fue pidiendo cambios concretos ("que diga Reservar
+en:", "en una card como antes", "100 caracteres"), y cada ronda le gustó más que la
+anterior.
+
+**Lección:** con una IA, el alcance de lo que se pide es el alcance de lo que se
+cambia. "Que se vea menos IA" sin decir dónde ni qué conservar invita a tocar todo.
+Conviene nombrar la página o la parte y decir qué gusta, no solo qué molesta.
+
+---
+
 ## Para la presentación
 
 Si hay que elegir tres cosas para contar:
@@ -476,6 +498,11 @@ Si hay que elegir tres cosas para contar:
    que había hecho un compañero, el usuario entró con una cuenta cualquiera sin
    registrarla. Lección: una limitación se prueba antes de recomendar cómo
    esquivarla. (Parte 1.9)
+
+5. **Un pedido de diseño demasiado general terminó en un rediseño descartado.**
+   "Que se vea menos IA" llevó a rehacer el sitio entero cuando solo molestaba una
+   página. El usuario lo cuenta como error propio; la IA también tuvo su parte por
+   no preguntar el alcance. (Partes 3.8 y 1.12)
 
 Y como contrapeso honesto: el mismo método que dejó pasar el bug del menú durante
 catorce revisiones lo encontró en la decimoquinta, cuando se le pidió a un revisor que

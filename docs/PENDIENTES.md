@@ -141,6 +141,8 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [x] Credenciales de Google OAuth (cuenta de la facultad)
 - [ ] 👤 Cuenta de Brevo, remitente verificado y API key (solo para los mails de reservas: el ingreso es con Google y no manda mails)
 - [x] Primer admin en producción: gdiclaudio@itba.edu.ar
+- [ ] Si las previews (que usan la base de producción) empiezan a ensuciar datos
+      reales: proyecto de Supabase aparte para pruebas.
 - [ ] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail,
       personas). Hoy solo se mueve de fecha y hora.
 - [ ] El link de "Imprimir" del panel abre otra página: probar la impresión real
