@@ -39,7 +39,7 @@ P = 'Fotos La Posta I Parrilla'
 R = 'Fotos La Posta II Restaurante'
 FOTOS = [
     # Comunes
-    (P, 'Corderos inicio.jpeg', 'comunes/hero-fuego.webp', 1638),
+    (P, 'cordero en asador.jpg', 'comunes/hero-fuego.webp', 1638),
     (P, 'Salon calido.jpg', 'comunes/salon-calido.webp', 1200),
     (R, 'Entrada de noche iluminada.jpg', 'comunes/entrada-noche.webp', 1200),
     (P, 'Sirviendo vino.jpg', 'comunes/sirviendo-vino.webp', 1200),

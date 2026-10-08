@@ -4,15 +4,6 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
-## 2026-10-08 — Nueva foto del inicio
-
-- El hero de la home pasa a ser `Corderos inicio.jpeg` (tres corderos a la cruz
-  frente al fuego), pedido del usuario. Se copió a `Branding y fotos/Fotos La Posta I
-  Parrilla/` y `scripts/procesar-assets.py` la toma para `comunes/hero-fuego.webp`.
-  El original mide 1280 px de ancho, menos que los 1638 del resto de los heros.
-
----
-
 ## 2026-10-06 — En producción, y solo con Google
 
 - Proyecto Supabase `la-posta` (São Paulo) creado por CLI; migraciones, función de
