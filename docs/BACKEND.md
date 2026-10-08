@@ -80,14 +80,18 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
    select vault.create_secret('<el mismo NOTIFICACIONES_SECRETO>', 'notificaciones_secreto');
    ```
 6. Auth → URL Configuration: *Site URL* = el dominio de Vercel; *Redirect URLs* =
-   `https://<dominio>/**` y `http://localhost:3000/**`.
+   `https://<dominio>/**`, `http://localhost:3000/**`, `http://127.0.0.1:3000/**` y las
+   previews de Vercel: `https://la-posta-parrilla-*-gdiclaudio-3350s-projects.vercel.app/**`.
 7. 👤 **Google**: en Google Cloud Console crear un *OAuth client ID* (Web), con
    *Authorized redirect URI* = `https://<ref>.supabase.co/auth/v1/callback`.
    Pegar Client ID y Secret en Supabase → Auth → Providers → Google.
 8. 👤 **Brevo**: crear cuenta gratis, verificar el remitente `lapostavla@gmail.com`
    (Senders), crear una API key (SMTP & API → API Keys) y cargarla en el paso 4.
 9. **Vercel** → Settings → Environment Variables: `NEXT_PUBLIC_SUPABASE_URL` y
-   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` del proyecto (Settings → API Keys).
+   `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` del proyecto (Settings → API Keys), para
+   *Production* **y *Preview***. Sin *Preview*, las previews de los PR dicen "Todavía
+   no disponible". Ojo: **las previews usan esta misma base**, la de producción
+   (decisión del usuario, 2026-10-08): lo que se reserve en una preview es real.
 10. 👤 Nombrar al primer admin: registrarse en el sitio y, en el SQL Editor,
     `update public.perfiles set rol = 'admin' where id = (select id from auth.users where email = '<mail>');`
 

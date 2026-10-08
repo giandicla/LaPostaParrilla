@@ -35,7 +35,8 @@ restaurante.
 Next.js 16 con App Router + React 19 + CSS Modules. JavaScript, no TypeScript
 (salvo la Edge Function, que es Deno + TypeScript). Sin librerías de UI.
 Supabase para auth, base y tiempo real. Deploy automático a Vercel en cada push a `main`
-y preview de Vercel en cada PR.
+y preview de Vercel en cada PR. **Las previews usan la base de producción** (no hay
+base de pruebas): lo que se haga en una preview queda en los datos reales.
 
 - Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
 - **Server Components por defecto.** `'use client'` va en `Navbar`,

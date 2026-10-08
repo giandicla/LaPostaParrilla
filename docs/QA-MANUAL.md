@@ -106,22 +106,25 @@ locales bajo una marca" — es lo más importante de probar):**
 
 **Qué tiene que verse:**
 - [ ] Un hero con el nombre del salón activo.
-- [ ] Un selector de dos botones ("La Parrilla" / "La Posta II").
+- [ ] Un selector de dos botones ("La Posta Parrilla" / "La Posta II Restaurante"); en el
+      celular, dos botones parejos que no se cortan.
 - [ ] Un índice de secciones que lleva a cada una sin que la navbar tape el título.
 - [ ] Cada plato con nombre, precio, y abajo la traducción en inglés/portugués en
       cursiva chica (y la descripción en castellano cuando la carta la tiene).
 - [ ] En las pizzas de La Posta II, dos columnas de precio: Chica y Grande.
-- [ ] En la parrilla, "Vinos" con subsecciones por cepa y, dentro, por bodega con
-      su región.
+- [ ] En **las dos cartas**, "Vinos" con subsecciones por cepa y, dentro, por bodega
+      con su región, y al final "Copas y descorche". Es la misma carta de vinos en
+      los dos locales (`src/data/vinos.json`).
 - [ ] Al final: el cubierto, la aclaración de temporada y "Descargar la carta en PDF".
 - [ ] Comparar algunos precios contra el PDF (la transcripción se verificó por
       script: los 188 precios de la parrilla y los 100 de La Posta II coinciden).
 
 **El toggle de carta (comportamiento clave a probar):**
-- [ ] Al entrar a `/carta` sin nada en la URL, se abre la carta de **la
+- [ ] Al entrar a `/carta` sin nada en la URL, se abre la carta de **La Posta
       Parrilla** por defecto.
-- [ ] Al tocar "La Posta II", la carta cambia y la URL pasa a
-      `/carta?local=restaurante`, sin recargar la página.
+- [ ] Al tocar "La Posta II Restaurante", la carta cambia, la URL pasa a
+      `/carta?local=restaurante` sin recargar la página, y **la página vuelve arriba
+      de todo** (probarlo después de bajar hasta los vinos).
 - [ ] Escribir directamente `/carta?local=restaurante` abre directo en la carta
       de La Posta II, con ese botón ya marcado.
 - [ ] Escribir un valor sin sentido, por ejemplo `/carta?local=asado123`: la

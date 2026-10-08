@@ -4,6 +4,21 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-08 — Previews de Vercel conectadas a la base
+
+Decisión del usuario: las previews de cada PR usan la **base de producción** (no
+hay base de pruebas aparte).
+
+- Vercel: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`
+  habilitadas también para *Preview* (lo hizo el usuario).
+- Supabase → Auth → Redirect URLs: se suma
+  `https://la-posta-parrilla-*-gdiclaudio-3350s-projects.vercel.app/**`, para que el
+  login con Google vuelva a la preview.
+- Verificado en la preview del PR #7: `/reservas` muestra "Ingresar con Google" y
+  la carta de La Posta II, los vinos.
+
+---
+
 ## 2026-10-08 — Vinos en las dos cartas; la carta nueva arranca arriba
 
 Rama `feat/carta-vinos`.
