@@ -38,6 +38,11 @@ routes ni base de datos, aunque técnicamente se pueda.
 
 Más adelante el profesor va a enseñar **pagos**; recién ahí se agregan.
 
+**Actualización (2026-10-08):** la consigna avanza clase a clase y el punto 4 era
+la restricción de *esa* etapa. La grilla de corrección oficial pide CI/CD, API
+interna, CRUD en Supabase, checkout con webhook y demo pública (ver
+`docs/RUBRICA.md`). Ese día se dio en clase **webhooks y Mercado Pago**.
+
 Repositorio: `https://github.com/giandicla/LaPostaParrilla`
 
 ## Las decisiones y por qué
@@ -88,4 +93,4 @@ Mezclarlos habría hecho que ninguna de las dos quedara bien.
 | 1 | Boceto visual: 4 páginas maquetadas, dos locales, deploy | Hecha |
 | 2 | Backend con Supabase: ingreso con Google, reservas reales, panel de admin, mails (partes 1 y 2 del spec del backend) | **En producción** desde el 2026-10-06. Falta Brevo para que salgan los mails de reservas |
 | 2.3 | Admin de la carta y de los horarios (parte 3) | No empezada |
-| 3 | Pagos (después de que el profesor lo enseñe) | No empezada |
+| 3 | Pagos con Mercado Pago: seña de la reserva, gift cards, pedido para llevar (decisión del usuario, 2026-10-08) | No empezada; la clase fue el 2026-10-08 |

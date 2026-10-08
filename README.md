@@ -42,12 +42,22 @@ la pone la RLS de la base. Detalle en `docs/BACKEND.md`.
 | `docs/CONTEXTO.md` | El restaurante, la consigna, las decisiones y por qué |
 | `docs/ESTRUCTURA.md` | Qué contiene cada página y componente |
 | `docs/BITACORA.md` | Log de cambios |
+| `docs/RUBRICA.md` | La rúbrica de corrección y qué cumple el proyecto hoy |
 | `docs/PENDIENTES.md` | Lo que falta |
 | `docs/QA-MANUAL.md` | Checklist para verificar el sitio en un navegador |
 | `docs/proceso/` | Registro del trabajo con IA, para la presentación de la materia |
 
 ## Estado
 
-**Etapa 1 — boceto visual.** Las cuatro páginas están maquetadas.
-El formulario de reservas es maqueta: todavía no guarda ni envía nada.
-El CRUD es la etapa 2 y los pagos la 3.
+En producción: sitio completo con las dos cartas, ingreso con Google, reservas
+reales, "Mis reservas" y panel de admin con tiempo real.
+
+Próximo: pagos con Mercado Pago (seña de la reserva, gift cards y pedido para
+llevar), API del catálogo y carta editable desde el admin. El mapa completo
+contra la rúbrica de corrección está en `docs/RUBRICA.md`.
+
+## Cómo se trabaja
+
+Cada cambio va en su rama y entra por **pull request**: la plantilla trae el
+checklist, el CI (`.github/workflows/ci.yml`) corre lint, build, tests de la base
+y de la Edge Function, y Vercel publica una preview del PR.
