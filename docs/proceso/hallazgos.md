@@ -181,6 +181,21 @@ solo con Google (`sesion-02-2026-10-01.md`, sección 9).
 
 ---
 
+### 1.11 Una regla escrita por la IA quedó vieja y nadie la marcó como provisoria (sesión 03)
+
+`CLAUDE.md` decía, como regla dura, "no se escriben API routes", y `CONTEXTO.md` "no
+hay base de datos". Venían de la consigna de la etapa 1 ("solo hacé el React del
+front"). La rúbrica oficial pide API interna y webhook de pagos. Si no se cruzaba la
+rúbrica con los docs, la IA de una sesión futura habría seguido la regla vieja y
+rechazado justo lo que se evalúa. El README tenía el mismo problema: decía "el
+formulario es maqueta" con las reservas en producción hacía dos días.
+
+**Lección:** una restricción que depende de la etapa tiene que escribirse con su
+fecha y su motivo ("hasta que se dé X en clase"), no como regla permanente. Los
+archivos de contexto para la IA son código: se desactualizan y hay que revisarlos.
+
+---
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -267,6 +282,18 @@ fallar antes de implementar. Un test que nunca falló no prueba nada: podría pa
 siempre. Se rompieron dos reglas a propósito (índice único y política de notas) y
 fallaron justo los tests que debían. Es una forma barata de recuperar la garantía
 que da el "rojo primero" cuando no se hizo.
+
+---
+
+### 2.8 Corrigió su propio diseño aprobado antes de que hiciera daño (sesión 03)
+
+El diseño de la validación, aprobado por el usuario, decía "un `check` de formato de
+teléfono en la base". Al escribir la migración, la IA vio que un `check` se evalúa
+en cada update: una reserva vieja de producción con teléfono corto ya no se podría
+confirmar. Lo cambió por un trigger que solo corre al insertar o al cambiar el
+teléfono, lo avisó, y escribió un test que lo demuestra
+(`supabase/tests/database/03_validacion_contacto.test.sql`). La aprobación del
+usuario no se usó como excusa para seguir con algo que estaba mal.
 
 ---
 
