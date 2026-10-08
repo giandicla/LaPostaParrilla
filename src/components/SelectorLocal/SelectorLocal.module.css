@@ -1,31 +1,29 @@
+/* Pestañas rectas sobre una línea, como los separadores de una carpeta.
+   Queda pegada bajo la navbar al bajar por la carta. */
 .selector {
   position: sticky;
   top: var(--alto-navbar);
   z-index: 50;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--sp-2);
-  width: fit-content;
-  margin: 0 auto var(--sp-12);
-  padding: var(--sp-2);
-  background-color: var(--blanco);
-  border: 1px solid var(--gris-300);
-  border-radius: 999px;
-  box-shadow: var(--sombra-md);
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-12);
+  background-color: var(--papel);
+  border-bottom: var(--linea);
 }
 
 .opcion {
-  padding: var(--sp-3) var(--sp-4);
+  margin-bottom: -1px;
+  padding: var(--sp-3) 0;
   background: none;
   border: none;
-  border-radius: 999px;
-  font-weight: 600;
-  font-size: var(--fs-small);
+  border-bottom: 2px solid transparent;
+  font-family: var(--font-titulo);
+  font-size: var(--fs-h3);
   color: var(--gris-600);
   cursor: pointer;
   white-space: nowrap;
-  transition: background-color var(--transicion), color var(--transicion);
+  transition: color var(--transicion), border-color var(--transicion);
 }
 
 .opcion:hover {
@@ -33,17 +31,12 @@
 }
 
 .activa {
-  background-color: var(--bordo-900);
-  color: var(--crema);
+  color: var(--bordo-900);
+  border-bottom-color: var(--bordo-900);
 }
 
-.activa:hover {
-  color: var(--crema);
-}
-
-@media (min-width: 421px) {
-  .opcion {
-    padding: var(--sp-3) var(--sp-6);
-    font-size: var(--fs-body);
+@media (min-width: 768px) {
+  .selector {
+    gap: var(--sp-8);
   }
 }

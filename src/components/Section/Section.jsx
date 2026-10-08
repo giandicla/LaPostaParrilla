@@ -2,7 +2,7 @@ import estilos from './Section.module.css';
 
 export default function Section({
   id,
-  fondo = 'crema',
+  fondo = 'papel',
   titulo,
   bajada,
   ancho = 'normal',

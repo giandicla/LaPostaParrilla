@@ -46,7 +46,7 @@ export default function Footer() {
       </div>
 
       <p className={estilos.credito}>
-        © {anio} {MARCA.nombre} · {MARCA.ciudad}
+        © {anio} {MARCA.nombre}, {MARCA.ciudad}
       </p>
     </footer>
   );

@@ -56,7 +56,9 @@ function CartaContenido() {
         />
 
         {carta ? (
-          <>
+          /* En desktop el índice queda en una columna al costado, fijo
+             mientras se lee; en mobile va arriba de la carta. */
+          <div className={estilos.cuerpo}>
             <nav className={estilos.indice} aria-label="Secciones de la carta">
               {armarIndice(carta.secciones).map((entrada) => (
                 <a
@@ -92,7 +94,7 @@ function CartaContenido() {
                 </a>
               )}
             </footer>
-          </>
+          </div>
         ) : (
           /* Sin carta cargada: se dice, no se muestra una carta vacía */
           <p className={estilos.sinCarta}>

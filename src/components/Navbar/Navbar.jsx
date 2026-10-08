@@ -16,19 +16,10 @@ const ENLACES = [
 ];
 
 export default function Navbar() {
-  const [scrolleada, setScrolleada] = useState(false);
   const [menuAbierto, setMenuAbierto] = useState(false);
   const pathname = usePathname();
   const botonHamburguesaRef = useRef(null);
   const { sesion, esAdmin } = useSesion();
-
-  // La navbar arranca translúcida sobre el hero y se vuelve sólida al bajar
-  useEffect(() => {
-    const alScrollear = () => setScrolleada(window.scrollY > 80);
-    alScrollear();
-    window.addEventListener('scroll', alScrollear, { passive: true });
-    return () => window.removeEventListener('scroll', alScrollear);
-  }, []);
 
   // Cerrar el menú mobile al navegar. Ajuste de estado durante el render
   // (en vez de un efecto) porque no sincroniza con nada externo.
@@ -62,14 +53,12 @@ export default function Navbar() {
     return () => document.removeEventListener('keydown', alPresionarTecla);
   }, [menuAbierto]);
 
-  // Fuera del inicio la navbar es siempre sólida: no hay hero debajo
-  const solida = scrolleada || menuAbierto || pathname !== '/';
-
   const esActivo = (ruta) =>
     ruta === '/' ? pathname === '/' : pathname === ruta || pathname.startsWith(`${ruta}/`);
 
+  // Siempre bordo: sigue en el bloque bordo de la portada de abajo
   return (
-    <header className={`${estilos.navbar} ${solida ? estilos.solida : ''}`}>
+    <header className={estilos.navbar}>
       <nav className={estilos.contenedor} aria-label="Navegación principal">
         <Link href="/" className={estilos.marca}>
           {/* El logo ya contiene el nombre: el alt lo lee en voz alta */}

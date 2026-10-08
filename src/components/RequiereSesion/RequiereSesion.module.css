@@ -2,10 +2,8 @@
   max-width: 34rem;
   margin: 0 auto;
   padding: var(--sp-8) var(--sp-6);
-  background-color: var(--blanco);
-  border-top: 4px solid var(--bordo-900);
-  border-radius: var(--radio-lg);
-  box-shadow: var(--sombra-sm);
+  border: var(--linea);
+  border-radius: var(--radio-sm);
   text-align: center;
 }
 

@@ -54,8 +54,6 @@
 
 .tabla th {
   font-size: 0.72rem;
-  letter-spacing: var(--tracking-etiqueta);
-  text-transform: uppercase;
   color: var(--gris-600);
 }
 

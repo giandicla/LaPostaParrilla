@@ -11,6 +11,7 @@
   flex-direction: column;
   gap: var(--sp-4);
   align-items: flex-start;
+  max-width: 60ch;
 }
 
 .textoBienvenida h2 {
@@ -21,15 +22,14 @@
 .fotosBienvenida {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--sp-3);
+  gap: var(--sp-2);
 }
 
 .fotoBienvenida {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: var(--radio-md);
-  box-shadow: var(--sombra-sm);
+  background-color: var(--arena-100);
 }
 
 /* La segunda foto es la vertical: ocupa la columna derecha entera */
@@ -52,73 +52,90 @@
 }
 
 /* ---------- Valores (textos del manual de marca) ---------- */
+/* Como la hoja del manual: el logo arriba y los tres textos en lista,
+   alineados a la izquierda. En desktop, el logo a un lado y la lista al otro. */
 .valores {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--sp-8);
-  max-width: 1000px;
-  margin: 0 auto;
+  align-items: start;
 }
 
-.valor {
+.logoValores {
+  width: 180px;
+  height: auto;
+}
+
+.listaValores {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
-  padding-top: var(--sp-4);
-  border-top: 1px solid var(--linea-clara);
+  gap: var(--sp-6);
+  max-width: 62ch;
 }
 
 .tituloValor {
+  font-family: var(--font-titulo);
   font-size: var(--fs-h3);
   color: var(--blanco);
 }
 
-.valor p {
+.valor dd {
+  margin: var(--sp-1) 0 0;
   color: var(--texto-claro-suave);
 }
 
 @media (min-width: 768px) {
   .valores {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
     gap: var(--sp-12);
+  }
+
+  .logoValores {
+    width: 220px;
   }
 }
 
-/* ---------- Nuestros dos salones ---------- */
+/* ---------- Los dos salones ---------- */
+/* Sin cards: dos columnas separadas por una línea fina, como dos páginas
+   de la misma carta. */
 .grillaLocales {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--sp-8);
+  gap: var(--sp-12);
 }
 
 @media (min-width: 900px) {
   .grillaLocales {
-    /* auto-fit + minmax en vez de repeat(2, ...): con los dos locales de hoy
-       arma las mismas dos columnas de siempre; un tercer local sumaría una
-       tercera en la misma fila si entra, o pasaría a la fila de abajo. */
+    /* auto-fit + minmax en vez de repeat(2, ...): un tercer local sumaría
+       una tercera columna si entra, o pasaría a la fila de abajo. */
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--sp-16);
   }
 }
 
-/* ---------- Algunos de nuestros platos ---------- */
-/* Fotos en retrato: dos columnas ya en mobile, cuatro en desktop. Con dos
-   locales de cuatro platos cada uno, cada fila de desktop es un salón. */
+/* ---------- Platos de la casa ---------- */
+.gruposPlatos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-12);
+}
+
+.tituloGrupo {
+  margin-bottom: var(--sp-4);
+  padding-bottom: var(--sp-2);
+  border-bottom: 1px solid var(--bordo-900);
+  color: var(--bordo-900);
+}
+
+/* Fotos en retrato: dos columnas en mobile, cuatro en desktop */
 .grillaPlatos {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--sp-3);
+  gap: var(--sp-6) var(--sp-3);
 }
 
 .accionesPlatos {
-  display: flex;
-  justify-content: center;
   margin-top: var(--sp-12);
-}
-
-@media (min-width: 768px) {
-  .grillaPlatos {
-    gap: var(--sp-4);
-  }
 }
 
 @media (min-width: 1100px) {
@@ -128,16 +145,16 @@
   }
 }
 
-/* ---------- Visitanos ---------- */
+/* ---------- Horarios y dirección ---------- */
 .grillaInfo {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--sp-8);
-  align-items: stretch;
+  gap: var(--sp-12);
 }
 
 @media (min-width: 900px) {
   .grillaInfo {
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: var(--sp-16);
   }
 }

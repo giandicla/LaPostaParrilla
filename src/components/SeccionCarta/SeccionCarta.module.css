@@ -6,7 +6,6 @@
 
 .encabezado {
   margin-bottom: var(--sp-6);
-  text-align: center;
 }
 
 .titulo {
@@ -29,10 +28,8 @@
   justify-content: flex-end;
   gap: var(--sp-4);
   margin-bottom: var(--sp-2);
-  font-size: 0.72rem;
-  font-weight: 600;
-  letter-spacing: var(--tracking-etiqueta);
-  text-transform: uppercase;
+  font-size: var(--fs-small);
+  font-style: italic;
   color: var(--oliva-700);
 }
 
@@ -53,6 +50,7 @@
   gap: var(--sp-2);
 }
 
+/* En mayúsculas, como en la carta impresa */
 .nombre {
   font-size: 0.92rem;
   font-weight: 600;

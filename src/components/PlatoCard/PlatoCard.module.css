@@ -1,77 +1,33 @@
-/* La foto es la card: formato retrato (las fotos son 4:5) y el texto
-   encima, sobre un degradé que garantiza la lectura. */
-.card {
-  position: relative;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
-  border-radius: var(--radio-md);
-  background-color: var(--carbon);
-  color: var(--crema);
-  box-shadow: var(--sombra-md);
+.plato {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
 }
 
+/* Las fotos de platos son 4:5 */
 .imagen {
-  position: absolute;
-  inset: 0;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  transition: transform 600ms ease;
-}
-
-.card:hover .imagen {
-  transform: scale(1.05);
-}
-
-.card::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--velo-plato);
-  pointer-events: none;
-}
-
-.etiqueta {
-  position: absolute;
-  z-index: 1;
-  top: var(--sp-3);
-  right: var(--sp-3);
-  background-color: var(--chip-oscuro);
-  color: var(--crema);
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: var(--tracking-etiqueta);
-  text-transform: uppercase;
-  padding: var(--sp-1) var(--sp-3);
-  border-radius: var(--radio-sm);
+  /* Mientras carga, un bloque de color en vez de un hueco */
+  background-color: var(--arena);
 }
 
 .texto {
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  bottom: 0;
   display: flex;
   flex-direction: column;
   gap: var(--sp-1);
-  padding: var(--sp-4);
 }
 
 .nombre {
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
-  color: var(--blanco);
+  font-family: var(--font-titulo);
+  font-size: clamp(1rem, 1.6vw, 1.15rem);
+  line-height: var(--lh-titulo);
+  color: var(--bordo-900);
 }
 
 .descripcion {
-  font-size: 0.82rem;
+  font-size: var(--fs-small);
   line-height: 1.45;
-  color: var(--texto-claro-suave);
-}
-
-/* En mobile la grilla es de dos columnas angostas: la descripción no entra */
-@media (max-width: 559px) {
-  .descripcion {
-    display: none;
-  }
+  color: var(--gris-600);
 }

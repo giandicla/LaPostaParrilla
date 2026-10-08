@@ -3,14 +3,13 @@
 
 export const TEXTOS = {
   bienvenida: {
-    titulo: 'Dos salones, una misma mesa',
+    titulo: 'Dos salones, pared de por medio',
     parrafos: [
-      'La Posta es un lugar de madera y fuego en el corazón de Villa La Angostura. ' +
-        'Lo llevamos en familia desde hace años, y creció hasta ser dos salones con ' +
-        'personalidad propia.',
-      'En la parrilla mandan las brasas, el cordero al asador y las mesas largas. ' +
-        'En La Posta II, las pizzas, las pastas caseras y el fogón a leña. ' +
-        'Dos maneras de pasar la misma noche.',
+      'La Posta es un lugar de madera y fuego sobre la avenida Arrayanes, en ' +
+        'Villa La Angostura. Lo llevamos en familia desde 2020, y hoy son dos ' +
+        'salones uno al lado del otro.',
+      'En la parrilla están las brasas, el cordero al asador y las mesas largas. ' +
+        'En La Posta II, las pizzas, las pastas caseras y el fogón a leña.',
     ],
   },
   // Textuales del manual de marca (Branding.LaPosta.pdf, hoja 2)

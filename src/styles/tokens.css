@@ -10,7 +10,11 @@
   --oliva: #757036;      /* destacado: solo como fondo (blanco encima ~5.1:1) */
   --oliva-700: #5E5A2A;  /* oliva oscurecido para texto sobre claro (~6.3:1) */
 
-  /* ---------- Superficie ---------- */
+  /* ---------- Superficie ----------
+     El manual pide bordo + blanco: el fondo del sitio es papel blanco, como
+     la carta impresa. La crema queda solo como texto claro sobre bordo,
+     oliva o foto (un blanco puro ahí encandila). */
+  --papel: #FFFFFF;
   --crema: #F6F2EC;
   --blanco: #FFFFFF;
 
@@ -32,15 +36,8 @@
   --gris-600: #5A524C;
   --gris-300: #D8D0C6;
 
-  /* ---------- Velos y transparencias ---------- */
-  --velo-hero: linear-gradient(
-    180deg,
-    rgba(96, 0, 3, 0.62) 0%,
-    rgba(28, 21, 18, 0.55) 45%,
-    rgba(28, 21, 18, 0.82) 100%
-  );
-  --velo-plato: linear-gradient(180deg, rgba(28, 21, 18, 0) 45%, rgba(28, 21, 18, 0.88) 100%);
-  --sombra-texto: 0 2px 24px rgba(28, 21, 18, 0.5);
+  /* ---------- Transparencias ----------
+     Sin velos sobre las fotos: el texto va al lado de la foto, no encima. */
   --linea-clara: rgba(246, 242, 236, 0.22);
   --texto-claro-suave: rgba(246, 242, 236, 0.85);
   --chip-oscuro: rgba(28, 21, 18, 0.72);
@@ -63,8 +60,9 @@
 
   --lh-titulo: 1.2;
   --lh-cuerpo: 1.65;
+  /* Mayúsculas espaciadas solo en títulos (manual de marca). Botones,
+     etiquetas y subtítulos van en minúsculas: se leen mejor. */
   --tracking-titulo: 0.08em;
-  --tracking-etiqueta: 0.14em;
 
   /* ---------- Espaciado (escala de 4px) ---------- */
   --sp-1: 0.25rem;
@@ -78,15 +76,11 @@
   --sp-24: 6rem;
 
   /* ---------- Forma ----------
-     El manual es de líneas finas y esquinas rectas: radios chicos. */
+     El manual es de líneas finas, bloques de color planos y esquinas
+     rectas. Las fotos van sin redondeo; los controles, apenas. Sin sombras:
+     lo que hay que separar se separa con una línea de 1px o con color. */
   --radio-sm: 2px;
-  --radio-md: 4px;
-  --radio-lg: 6px;
-
-  /* Sombras cálidas, nunca negro puro */
-  --sombra-sm: 0 2px 8px rgba(28, 21, 18, 0.08);
-  --sombra-md: 0 4px 16px rgba(28, 21, 18, 0.10);
-  --sombra-lg: 0 12px 32px rgba(28, 21, 18, 0.18);
+  --linea: 1px solid var(--gris-300);
 
   /* ---------- Layout ---------- */
   --ancho-max: 1180px;

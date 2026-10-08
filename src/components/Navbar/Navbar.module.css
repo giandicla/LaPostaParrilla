@@ -5,13 +5,7 @@
   right: 0;
   z-index: 100;
   height: var(--alto-navbar);
-  background: transparent;
-  transition: background-color var(--transicion), box-shadow var(--transicion);
-}
-
-.solida {
   background-color: var(--bordo-900);
-  box-shadow: var(--sombra-md);
 }
 
 .contenedor {
@@ -67,9 +61,7 @@
   cursor: pointer;
   color: var(--crema);
   font-family: var(--font-titulo);
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-titulo);
+  font-size: 1.6rem;
   padding: var(--sp-2) var(--sp-3);
   border-bottom: 2px solid transparent;
   transition: border-color var(--transicion), color var(--transicion);
@@ -88,17 +80,14 @@
   background-color: var(--blanco);
   color: var(--bordo-900);
   font-weight: 600;
-  font-size: 0.82rem;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-etiqueta);
-  padding: var(--sp-3) var(--sp-6);
-  border-radius: var(--radio-md);
-  transition: background-color var(--transicion), transform var(--transicion);
+  font-size: 1rem;
+  padding: var(--sp-2) var(--sp-6);
+  border-radius: var(--radio-sm);
+  transition: background-color var(--transicion);
 }
 
 .botonReservar:hover {
   background-color: var(--arena);
-  transform: translateY(-1px);
 }
 
 .hamburguesa {
@@ -148,8 +137,10 @@
     inset: auto;
   }
 
+  /* En la barra horizontal, los links son texto de interfaz: Gill Sans */
   .enlace {
-    font-size: 0.85rem;
+    font-family: var(--font-cuerpo);
+    font-size: 1rem;
   }
 
   .enlaces {

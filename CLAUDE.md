@@ -53,6 +53,10 @@ y preview de Vercel en cada PR.
 - Colores **solo** desde las custom properties de `src/styles/tokens.css`.
   La paleta sale del manual de marca: bordo `#600003`, arena `#CBC1B1`,
   oliva `#757036`. Tipografías: Baskerville (títulos, en mayúsculas) y Gill Sans.
+- **Lenguaje visual "la carta y el cartel"** (sesión 04): fondo papel blanco, color
+  en bloques planos, líneas de 1px. **Sin** sombras, tarjetas, zoom o saltito al
+  pasar el mouse, fondo crema, mayúsculas espaciadas fuera de los títulos, ni
+  puntos medios ("A · B") en textos. Ver `docs/proceso/sesion-04-2026-10-08.md`.
 - **Los platos con foto no llevan precio.** Los precios viven solo en la carta
   (`src/data/cartas.json`). Lo pidió el usuario.
 - Un componente = una carpeta: `Nombre/Nombre.jsx` + `Nombre.module.css`.

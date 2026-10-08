@@ -4,6 +4,29 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-08 — Diseño propio: "la carta y el cartel"
+
+Rama `feat/diseno-propio`. Pase para que el sitio no se vea hecho por IA, con el
+plugin de diseño. El detalle y el porqué están en `docs/proceso/sesion-04-2026-10-08.md`.
+
+- Fondo blanco (`--papel`) en lugar de crema, como pide el manual. Se van las
+  sombras (`--sombra-*`), los radios de 4 y 6px, los velos de foto y
+  `--tracking-etiqueta`. Nuevo `--linea` (1px gris).
+- `Hero`: bloque bordo con el texto + foto sin velo al costado (abajo en mobile).
+  La foto del Inicio se descubre una vez al cargar.
+- `Navbar`: siempre bordo; se fue el estado de scroll. Links en minúsculas.
+- `Section`: título y bajada a la izquierda, sin el fogón ni la rayita.
+- `LocalCard`, `PlatoCard`, `InfoLocal`: sin tarjeta, sombra ni zoom. Los platos
+  van agrupados por salón, con epígrafe; `PlatoCard` pierde `etiquetaLocal`.
+  Horarios con línea punteada.
+- `SelectorLocal`: pestañas subrayadas. Carta: índice fijo al costado en desktop.
+- `Boton` y etiquetas en minúsculas, sin saltito al pasar el mouse.
+- Textos sin puntos medios; `MARCA.rubro` nuevo para la bajada del logo.
+- Fotos con un color de fondo mientras cargan.
+- Formularios, Mis reservas, Ingresar y Admin: línea de 1px en vez de sombra.
+
+---
+
 ## 2026-10-08 — El teléfono no acepta letras
 
 Pedido del usuario: que en el teléfono ni se puedan escribir letras. `limpiarTelefono`

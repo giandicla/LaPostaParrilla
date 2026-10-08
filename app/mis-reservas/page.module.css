@@ -26,10 +26,8 @@
   align-items: flex-start;
   gap: var(--sp-2);
   padding: var(--sp-6);
-  background-color: var(--blanco);
-  border-left: 4px solid var(--bordo-900);
-  border-radius: var(--radio-md);
-  box-shadow: var(--sombra-sm);
+  border: var(--linea);
+  border-radius: var(--radio-sm);
 }
 
 .cabecera {

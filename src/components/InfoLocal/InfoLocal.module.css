@@ -1,22 +1,14 @@
+/* Sin card: una columna con una línea arriba, como una sección de la carta */
 .info {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-4);
-  background-color: var(--blanco);
-  border-radius: var(--radio-lg);
-  padding: var(--sp-6);
-  box-shadow: var(--sombra-sm);
-  border-top: 4px solid var(--bordo-900);
+  gap: var(--sp-6);
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--bordo-900);
 }
 
 .nombre {
   color: var(--bordo-900);
-}
-
-.tagline {
-  color: var(--oliva-700);
-  font-style: italic;
-  font-size: var(--fs-small);
 }
 
 .bloque {
@@ -27,11 +19,9 @@
 
 .subtitulo {
   font-family: var(--font-cuerpo);
-  font-size: var(--fs-small);
+  font-size: var(--fs-body);
   font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: var(--tracking-etiqueta);
-  color: var(--gris-600);
+  color: var(--carbon);
 }
 
 .horarios {
@@ -42,50 +32,52 @@
 
 .horario {
   display: flex;
-  justify-content: space-between;
-  gap: var(--sp-4);
-  font-size: var(--fs-small);
-  padding-bottom: var(--sp-2);
-  border-bottom: 1px dashed var(--gris-300);
+  align-items: baseline;
+  gap: var(--sp-2);
 }
 
+/* Día ····· horario: la misma línea punteada que la carta. El dt se estira
+   y la dibuja después del texto (un span suelto no puede ir dentro de un dl). */
 .horario dt {
-  font-weight: 600;
+  display: flex;
+  flex: 1;
+  align-items: baseline;
+  gap: var(--sp-2);
+}
+
+.horario dt::after {
+  content: '';
+  flex: 1;
+  min-width: var(--sp-4);
+  border-bottom: 1px dotted var(--gris-600);
+  transform: translateY(-4px);
 }
 
 .horario dd {
   margin: 0;
-  color: var(--gris-600);
-  text-align: right;
+  font-family: var(--font-titulo);
+  color: var(--bordo-900);
+  white-space: nowrap;
 }
 
 .direccion {
   font-style: normal;
-  font-size: var(--fs-small);
   color: var(--gris-600);
-}
-
-.marcoMapa {
-  border-radius: var(--radio-md);
-  overflow: hidden;
-  border: 1px solid var(--gris-300);
 }
 
 .mapa {
   display: block;
   width: 100%;
-  height: 220px;
-  border: 0;
+  height: 240px;
+  border: var(--linea);
 }
 
 .contacto {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: var(--sp-4);
+  gap: var(--sp-4) var(--sp-6);
   margin-top: auto;
-  padding-top: var(--sp-4);
-  border-top: 1px solid var(--gris-300);
 }
 
 .botonWhatsapp {
@@ -95,9 +87,8 @@
   background-color: var(--bordo-900);
   color: var(--crema);
   font-weight: 600;
-  font-size: var(--fs-small);
-  padding: var(--sp-3) var(--sp-4);
-  border-radius: var(--radio-md);
+  padding: var(--sp-3) var(--sp-6);
+  border-radius: var(--radio-sm);
   transition: background-color var(--transicion);
 }
 
@@ -108,10 +99,9 @@
 .telefono {
   font-weight: 600;
   color: var(--bordo-900);
-}
-
-.telefono:hover {
   text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
 }
 
 .sinTelefono {

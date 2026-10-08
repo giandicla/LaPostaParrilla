@@ -2,8 +2,10 @@
 
 export const MARCA = {
   nombre: 'La Posta',
-  nombreCompleto: 'La Posta · Parrilla & Restaurante',
-  bajada: 'Parrilla & Restaurante · Villa La Angostura',
+  nombreCompleto: 'La Posta, parrilla y restaurante',
+  // Va bajo el logo, como "Parrilla patagónica" en la tapa del manual
+  rubro: 'Parrilla y restaurante',
+  bajada: 'Parrilla y restaurante en Villa La Angostura',
   ciudad: 'Villa La Angostura, Neuquén',
   // El Instagram es uno solo y cubre los dos locales
   instagram: '@lapostavla',

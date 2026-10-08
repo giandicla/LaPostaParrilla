@@ -25,10 +25,8 @@
   padding: var(--sp-2) var(--sp-4);
   background-color: var(--gris-300);
   border: none;
-  border-radius: var(--radio-md);
+  border-radius: var(--radio-sm);
   font-weight: 600;
-  letter-spacing: var(--tracking-etiqueta);
-  text-transform: uppercase;
   font-size: 0.8rem;
   cursor: pointer;
 }
@@ -45,8 +43,8 @@
   align-items: end;
   padding: var(--sp-4);
   background-color: var(--blanco);
-  border-radius: var(--radio-lg);
-  box-shadow: var(--sombra-sm);
+  border-radius: var(--radio-sm);
+  border: var(--linea);
 }
 
 .atajos {
@@ -68,9 +66,10 @@
   gap: var(--sp-3);
   padding: var(--sp-4);
   background-color: var(--blanco);
+  border: var(--linea);
+  /* El color del borde izquierdo dice el estado de la reserva */
   border-left: 4px solid var(--gris-300);
-  border-radius: var(--radio-md);
-  box-shadow: var(--sombra-sm);
+  border-radius: var(--radio-sm);
 }
 
 .pendiente {
@@ -171,7 +170,7 @@
   background-color: var(--bordo-900);
   color: var(--blanco);
   border: none;
-  border-radius: var(--radio-md);
+  border-radius: var(--radio-sm);
   font-weight: 600;
   font-size: var(--fs-small);
   cursor: pointer;
@@ -235,7 +234,7 @@
   gap: var(--sp-2);
   padding: var(--sp-2) var(--sp-3);
   background-color: var(--blanco);
-  border-radius: var(--radio-md);
+  border-radius: var(--radio-sm);
   font-size: var(--fs-small);
 }
 

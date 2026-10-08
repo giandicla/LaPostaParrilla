@@ -7,7 +7,6 @@ export default function InfoLocal({ local }) {
   return (
     <article className={estilos.info}>
       <h3 className={estilos.nombre}>{local.nombre}</h3>
-      <p className={estilos.tagline}>{local.tagline}</p>
 
       <div className={estilos.bloque}>
         <h4 className={estilos.subtitulo}>Horarios</h4>
@@ -24,15 +23,13 @@ export default function InfoLocal({ local }) {
       <div className={estilos.bloque}>
         <h4 className={estilos.subtitulo}>Dónde estamos</h4>
         <address className={estilos.direccion}>{local.direccion}</address>
-        <div className={estilos.marcoMapa}>
-          <iframe
-            src={local.mapaEmbedUrl}
-            title={`Mapa de ${local.nombre}`}
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className={estilos.mapa}
-          />
-        </div>
+        <iframe
+          src={local.mapaEmbedUrl}
+          title={`Mapa de ${local.nombre}`}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          className={estilos.mapa}
+        />
       </div>
 
       <div className={estilos.contacto}>

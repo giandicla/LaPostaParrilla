@@ -1,7 +1,7 @@
 .grilla {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--sp-3);
+  gap: var(--sp-2);
   margin: 0;
   padding: 0;
   list-style: none;
@@ -9,8 +9,8 @@
 
 .item {
   overflow: hidden;
-  border-radius: var(--radio-md);
-  box-shadow: var(--sombra-sm);
+  /* Mientras carga la foto, un bloque de color en vez de un hueco */
+  background-color: var(--arena);
 }
 
 /* La segunda imagen es la vertical: ocupa las dos filas de la derecha */
@@ -28,14 +28,9 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 400ms ease;
 }
 
 .item:nth-child(1) .imagen,
 .item:nth-child(3) .imagen {
   aspect-ratio: 4 / 3;
-}
-
-.item:hover .imagen {
-  transform: scale(1.05);
 }

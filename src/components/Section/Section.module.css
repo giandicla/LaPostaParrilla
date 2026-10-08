@@ -2,8 +2,10 @@
   padding: var(--sp-16) var(--sp-4);
 }
 
-.crema {
-  background-color: var(--crema);
+/* Fondos: papel blanco casi siempre. El color va en bloques planos, como
+   en el manual, y se usa poco: si todo es bloque, nada se destaca. */
+.papel {
+  background-color: var(--papel);
   color: var(--carbon);
 }
 
@@ -34,63 +36,26 @@
   max-width: 68ch;
 }
 
+/* Título alineado a la izquierda, como los encabezados de la carta impresa */
 .encabezado {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  margin-bottom: var(--sp-12);
-  text-align: center;
-}
-
-/* El fogón del logo como ornamento sobre el título. Es una máscara, así
-   que toma el color de cada fondo sin necesitar un archivo por color. */
-.encabezado::before {
-  content: '';
-  width: 34px;
-  height: 34px;
-  margin-bottom: var(--sp-3);
-  background-color: var(--bordo-900);
-  -webkit-mask: url('/logo/fogon.svg') center / contain no-repeat;
-  mask: url('/logo/fogon.svg') center / contain no-repeat;
+  gap: var(--sp-3);
+  max-width: 60ch;
+  margin-bottom: var(--sp-8);
 }
 
 .titulo {
-  position: relative;
-  padding-bottom: var(--sp-4);
   color: var(--bordo-900);
 }
 
-/* Línea fina bajo el título, como la del logo */
-.titulo::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 72px;
-  height: 1px;
-  background-color: currentColor;
-  opacity: 0.6;
-}
-
 .bajada {
-  margin-top: var(--sp-4);
   color: var(--gris-600);
-  max-width: 60ch;
 }
 
-/* Sobre fondos oscuros, título, ornamento y bajada se aclaran */
 .bordo .titulo,
 .oliva .titulo {
   color: var(--blanco);
-}
-
-.bordo .encabezado::before {
-  background-color: var(--arena);
-}
-
-.oliva .encabezado::before {
-  background-color: var(--blanco);
 }
 
 .bordo .bajada,
@@ -101,5 +66,9 @@
 @media (min-width: 768px) {
   .seccion {
     padding: var(--sp-24) var(--sp-8);
+  }
+
+  .encabezado {
+    margin-bottom: var(--sp-12);
   }
 }

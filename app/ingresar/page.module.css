@@ -5,10 +5,8 @@
   max-width: 26rem;
   margin: 0 auto;
   padding: var(--sp-8) var(--sp-6);
-  background-color: var(--blanco);
-  border-top: 4px solid var(--bordo-900);
-  border-radius: var(--radio-lg);
-  box-shadow: var(--sombra-sm);
+  border: var(--linea);
+  border-radius: var(--radio-sm);
   text-align: center;
 }
 
@@ -30,17 +28,16 @@
   padding: var(--sp-3) var(--sp-6);
   background-color: var(--blanco);
   color: var(--carbon);
-  border: 1px solid var(--gris-300);
-  border-radius: var(--radio-md);
+  border: 1px solid var(--gris-600);
+  border-radius: var(--radio-sm);
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
-  transition: border-color var(--transicion), box-shadow var(--transicion);
+  transition: border-color var(--transicion);
 }
 
 .google:hover:not(:disabled) {
   border-color: var(--carbon);
-  box-shadow: var(--sombra-sm);
 }
 
 .google:disabled {

@@ -23,9 +23,9 @@ const cabin = Cabin({
 });
 
 export const metadata = {
-  title: 'La Posta · Parrilla & Restaurante · Villa La Angostura',
+  title: 'La Posta, parrilla y restaurante en Villa La Angostura',
   description:
-    'La Posta — Parrilla y Restaurante en Villa La Angostura. Dos salones, cocina patagónica y reservas online.',
+    'Parrilla patagónica y restaurante en Villa La Angostura. Dos salones uno al lado del otro, la carta completa y reservas online.',
 };
 
 export const viewport = {

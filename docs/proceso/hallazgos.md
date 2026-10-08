@@ -297,6 +297,37 @@ usuario no se usó como excusa para seguir con algo que estaba mal.
 
 ---
 
+### 2.9 Un diagnóstico de diseño con un criterio explícito encontró lo que faltaba (sesión 04)
+
+La sesión 03 diagnosticó "por qué se ve hecho por IA" a ojo, mirando el sitio. La
+sesión 04 lo repitió con el plugin de diseño (`frontend-design`), que trae una lista
+concreta de señales de diseño generado, y **sin leer el diagnóstico anterior**.
+
+| Señal | Sesión 03 (a ojo) | Sesión 04 (con el plugin) |
+|---|---|---|
+| Misma plantilla en todas las secciones | Sí | Sí |
+| Tarjetas con sombra y chip | Sí | Sí |
+| Hero genérico con velo | Sí | Sí |
+| Botones en mayúsculas espaciadas | Sí | Sí |
+| Tríada de valores en tres columnas | Sí | No |
+| **Fondo crema** `#F6F2EC`, casi igual al `#F4F1EA` que el plugin marca como la señal número 1 | **No** | Sí |
+| Puntos medios como separador ("A · B · C") | No | Sí |
+| Zoom o saltito en cada tarjeta y botón | No | Sí |
+| Selector en forma de píldora con sombra | No | Sí |
+| Fotos que cargan como huecos | Sí | No |
+| Falta de gente y reseñas | Sí | No |
+
+El crema lo agregó la propia IA en la sesión 02, **en el mismo commit que aplicó el
+manual de marca** (`fa1efdf`), aunque el manual pide "bordo + blanco". Mirando el
+sitio a ojo, la IA no reconoció como señal algo que ella misma había elegido por
+defecto. Con una lista explícita, sí.
+
+**Lección:** para revisar el trabajo de una IA no alcanza con pedirle que lo mire de
+nuevo: hay que darle un criterio externo (una lista, una rúbrica, el manual de marca).
+Y aun así, los dos diagnósticos juntos cubren más que cualquiera de los dos solo.
+
+---
+
 ## Parte 3 — Lo que se aprendió sobre el método
 
 ### 3.1 Separar quien escribe de quien revisa cambia el resultado

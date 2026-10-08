@@ -70,7 +70,7 @@ function IngresarContenido() {
 export default function Ingresar() {
   return (
     <main>
-      <Hero compacto imagen="/img/comunes/entrada-noche.webp" alt="" titulo="Tu cuenta" bajada="Reservas · La Posta" />
+      <Hero compacto imagen="/img/comunes/entrada-noche.webp" alt="" titulo="Tu cuenta" bajada="Para reservar mesa y ver tus reservas" />
       <Section>
         {/* useSearchParams exige Suspense para que la ruta siga siendo estática */}
         <Suspense fallback={null}>

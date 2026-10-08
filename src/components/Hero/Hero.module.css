@@ -1,90 +1,127 @@
+/* La navbar es bordo y fija: el panel continúa ese bordo hacia abajo, así
+   que navbar y portada se leen como un solo bloque de color. */
 .hero {
-  position: relative;
-  min-height: 100svh;
   display: grid;
-  place-items: center;
-  padding: calc(var(--alto-navbar) + var(--sp-8)) var(--sp-4) var(--sp-16);
-  overflow: hidden;
-  text-align: center;
-  color: var(--crema);
+  grid-template-columns: 1fr;
+  padding-top: var(--alto-navbar);
   background-color: var(--bordo-900);
+  color: var(--crema);
 }
 
-.compacto {
-  min-height: 46svh;
-}
-
-.fondo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-/* Velo bordo→carbón: garantiza contraste del texto sobre cualquier foto */
-.velo {
-  position: absolute;
-  inset: 0;
-  background: var(--velo-hero);
-}
-
-.contenido {
-  position: relative;
+.panel {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
   gap: var(--sp-4);
-  max-width: min(100%, 48rem);
+  padding: var(--sp-12) var(--sp-4);
 }
 
-/* Marco fino alrededor del logo, tomado de la portada del manual */
+.foto {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  object-position: center 40%;
+  background-color: var(--bordo-700);
+}
+
+/* ---------- Portada del inicio: logo en su marco ---------- */
 .marco {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--sp-6);
-  padding: clamp(var(--sp-8), 6vw, var(--sp-16)) clamp(var(--sp-6), 7vw, var(--sp-16));
-  border: 1px solid var(--texto-claro-suave);
+  gap: var(--sp-4);
+  padding: var(--sp-8) var(--sp-6) var(--sp-6);
+  border: 1px solid var(--linea-clara);
 }
 
 .logo {
-  width: clamp(220px, 46vw, 420px);
+  width: clamp(200px, 60vw, 340px);
   height: auto;
-  filter: drop-shadow(var(--sombra-texto));
 }
 
+/* Bajo el logo, separada por una línea, como "Parrilla patagónica" en la
+   tapa del manual. Es parte del logotipo: por eso va en Baskerville y
+   mayúsculas. */
 .bajadaMarco {
   align-self: stretch;
-  text-wrap: balance;
-  padding-top: var(--sp-4);
+  padding-top: var(--sp-3);
   border-top: 1px solid var(--texto-claro-suave);
-  font-size: clamp(0.8rem, 1.8vw, 1rem);
-  letter-spacing: var(--tracking-etiqueta);
+  font-family: var(--font-titulo);
+  font-size: clamp(0.8rem, 2.4vw, 0.95rem);
+  letter-spacing: var(--tracking-titulo);
   text-transform: uppercase;
+  text-align: center;
 }
 
+/* ---------- Portada de las páginas internas ---------- */
 .titulo {
-  font-size: var(--fs-hero);
-  text-shadow: var(--sombra-texto);
-}
-
-.tituloCompacto {
   font-size: var(--fs-h1);
-  text-shadow: var(--sombra-texto);
+  color: var(--blanco);
 }
 
 .bajada {
-  font-size: clamp(0.85rem, 1.8vw, 1rem);
-  opacity: 0.92;
-  letter-spacing: var(--tracking-etiqueta);
-  text-transform: uppercase;
+  color: var(--texto-claro-suave);
+}
+
+.compacto .panel {
+  padding-top: var(--sp-8);
+  padding-bottom: var(--sp-8);
+}
+
+.compacto .foto {
+  aspect-ratio: 5 / 2;
 }
 
 .acciones {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  align-items: center;
   gap: var(--sp-4);
-  margin-top: var(--sp-8);
+  margin-top: var(--sp-4);
+}
+
+/* El único movimiento que no pide nadie: la foto del inicio se descubre
+   una vez, de izquierda a derecha, al cargar. */
+.hero:not(.compacto) .foto {
+  animation: descubrir 900ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+@keyframes descubrir {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@media (min-width: 900px) {
+  /* La fila no crece con la foto (que es más alta que la portada): la foto
+     se recorta a lo que mida el panel */
+  .hero {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+    grid-template-rows: minmax(0, 1fr);
+    height: min(100svh, 860px);
+    min-height: 560px;
+  }
+
+  /* El texto arranca en el mismo borde izquierdo que el contenido de abajo */
+  .panel {
+    padding: var(--sp-16) var(--sp-12) var(--sp-16)
+      max(var(--sp-8), calc((100vw - var(--ancho-max)) / 2));
+  }
+
+  .foto,
+  .compacto .foto {
+    height: 100%;
+    min-height: 0;
+    aspect-ratio: auto;
+  }
+
+  .compacto {
+    min-height: 0;
+    height: calc(var(--alto-navbar) + 320px);
+  }
+
+  .compacto .panel {
+    padding-top: var(--sp-8);
+    padding-bottom: var(--sp-8);
+  }
 }

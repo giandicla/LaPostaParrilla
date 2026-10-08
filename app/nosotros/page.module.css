@@ -28,13 +28,13 @@
 }
 
 .nombreLocal {
+  font-size: var(--fs-h2);
   color: var(--bordo-900);
 }
 
 .taglineLocal {
   color: var(--oliva-700);
   font-style: italic;
-  font-weight: 500;
 }
 
 .grillaInfo {
@@ -48,12 +48,10 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  justify-content: center;
-  gap: var(--sp-4);
+  gap: var(--sp-4) var(--sp-6);
   margin-top: var(--sp-12);
   padding-top: var(--sp-8);
-  border-top: 1px solid var(--gris-300);
-  text-align: center;
+  border-top: var(--linea);
   color: var(--gris-600);
 }
 
@@ -88,5 +86,6 @@
 
   .grillaInfo {
     grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: var(--sp-16);
   }
 }

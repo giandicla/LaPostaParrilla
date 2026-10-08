@@ -208,10 +208,10 @@ direcciones y apretá `Tab`.
 - [ ] En cada elemento enfocado aparece un **anillo de foco naranja con un
       halo oscuro alrededor**, bien visible. Probalo sobre todo en fondos
       **claros** — los campos del formulario de `/reservas`, los links del
-      índice de categorías en `/carta`, cualquier link sobre `--crema` — que es
+      índice de categorías en `/carta`, cualquier link sobre el fondo blanco (`--papel`) — que es
       donde antes casi no se veía. Confirmá también que se sigue viendo igual
-      de bien sobre fondo bordo (vino), como los botones de la navbar y los de
-      la sección "Nuestros dos salones".
+      de bien sobre fondo bordo (vino), como los botones de la navbar y los del
+      hero del Inicio.
 - [ ] Angosta la ventana (o usá el Device Toolbar en 360px) hasta que aparezca
       el botón de hamburguesa de la navbar. Con `Tab`, llegá hasta ese botón y
       apretá `Enter`: el panel de menú se abre.
