@@ -1,0 +1,9 @@
+/* Mensaje de error debajo del control. La raya a la izquierda y el peso lo
+   distinguen sin depender solo del color. */
+.error {
+  padding-left: var(--sp-2);
+  border-left: 3px solid var(--bordo-900);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--bordo-900);
+}

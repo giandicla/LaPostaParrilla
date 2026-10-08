@@ -52,6 +52,12 @@
   border-color: var(--bordo-900);
 }
 
+/* Campo con error: borde bordo más grueso (el mensaje lo explica, ver Campo) */
+.control[aria-invalid='true'] {
+  border-color: var(--bordo-900);
+  box-shadow: inset 0 0 0 1px var(--bordo-900);
+}
+
 textarea.control {
   resize: vertical;
   min-height: 96px;

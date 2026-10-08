@@ -43,6 +43,7 @@
 | `SelectorLocal` | `locales`, `localActivoId`, `onChange` | Toggle. Controlado |
 | `SesionProvider` | `children` | Contexto de sesión: `useSesion()` → `sesion`, `perfil`, `cargando`, `esAdmin`, `recargarPerfil()` |
 | `RequiereSesion` | `admin?`, `mensaje?`, `children` | Muestra `children` solo con sesión (y rol admin si se pide); si no, explica y ofrece ingresar. Comodidad, no seguridad |
+| `Campo` | `id`, `etiqueta`, `opcional?`, `ayuda?`, `error?`, `children(props)` | Etiqueta + control + error + ayuda. `children` es una función que recibe `id`, `aria-invalid` y `aria-describedby` para conectar el control con sus mensajes |
 | `EstadoReserva` | `estado` | Etiqueta de pendiente / confirmada / rechazada / cancelada |
 | `Icono` | `nombre` (`google` / `instagram` / `whatsapp`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
@@ -67,6 +68,17 @@ La única capa que habla con Supabase. Detalle en `docs/BACKEND.md`.
 | `auth.js` | Ingresar con Google, salir, escuchar la sesión, leer y actualizar el perfil |
 | `reservas.js` | Franjas, días bloqueados, crear / listar / cancelar reservas, utilidades de fecha en hora argentina |
 | `admin.js` | Listar y filtrar reservas, cambiar estado, mover, notas, bloqueos, suscripción en tiempo real |
+
+## Validación (`src/validacion/`)
+
+Funciones puras, sin React, con sus tests al lado (`npm test`).
+
+| Archivo | Qué exporta |
+|---|---|
+| `reservas.js` | `LIMITES`, `validarNombre`, `validarTelefono`, `validarFecha`, `validarHora`, `validarPersonas`, `validarComentarios`, `validarMotivo`, `validarReserva(datos, contexto)` → `{ campo: mensaje }`, `hayErrores` |
+
+Cada función devuelve el mensaje de error o `''`. La base repite las mismas reglas
+(trigger `validar_contacto`), porque la validación del navegador se puede saltear.
 
 ## Datos
 

@@ -18,14 +18,20 @@ import {
   listarReservas,
   moverReserva,
 } from '../../src/servicios/admin.js';
+import { LIMITES, validarFecha, validarHora, validarMotivo } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
+
+// Conecta un control de los formularios chicos del panel con su mensaje de error
+const atributosDeError = (error, campo, idMensaje) =>
+  error?.campo === campo ? { 'aria-invalid': true, 'aria-describedby': idMensaje } : {};
 
 // ---------------------------------------------------------------------
 // Una reserva en el panel: datos, acciones según el estado, mover, nota
 // ---------------------------------------------------------------------
 function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const [moviendo, setMoviendo] = useState(false);
+  const [errorMover, setErrorMover] = useState(null); // { campo, mensaje }
   // Borrador de la nota mientras se escribe; null = se muestra la guardada.
   // Así una recarga (por tiempo real) no pisa lo que se está escribiendo.
   const [borradorNota, setBorradorNota] = useState(null);
@@ -46,6 +52,15 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const alMover = (evento) => {
     evento.preventDefault();
     const datos = Object.fromEntries(new FormData(evento.currentTarget));
+    const invalido =
+      [['fecha', validarFecha(datos.fecha, { hoy: hoyEnArgentina() })], ['hora', validarHora(datos.hora, { franjas })]]
+        .find(([, mensaje]) => mensaje);
+    if (invalido) {
+      setErrorMover({ campo: invalido[0], mensaje: invalido[1] });
+      evento.currentTarget.elements[invalido[0]].focus();
+      return;
+    }
+    setErrorMover(null);
     ejecutar(async () => {
       await moverReserva(reserva.id, { fecha: datos.fecha, hora: datos.hora });
       setMoviendo(false);
@@ -96,13 +111,41 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
         </div>
 
         {moviendo && (
-          <form className={estilos.mover} onSubmit={alMover}>
-            <input name="fecha" type="date" required defaultValue={reserva.fecha} min={hoyEnArgentina()} className={formulario.control} aria-label="Nueva fecha" />
-            <select name="hora" required defaultValue={reserva.hora.slice(0, 5)} className={formulario.control} aria-label="Nueva hora">
+          <form className={estilos.mover} onSubmit={alMover} noValidate>
+            <input
+              name="fecha"
+              type="date"
+              required
+              defaultValue={reserva.fecha}
+              min={hoyEnArgentina()}
+              className={formulario.control}
+              aria-label="Nueva fecha"
+              {...atributosDeError(errorMover, 'fecha', `mover-error-${reserva.id}`)}
+            />
+            <select
+              name="hora"
+              required
+              defaultValue={reserva.hora.slice(0, 5)}
+              className={formulario.control}
+              aria-label="Nueva hora"
+              {...atributosDeError(errorMover, 'hora', `mover-error-${reserva.id}`)}
+            >
               {franjas.map((h) => <option key={h} value={h}>{h}</option>)}
             </select>
             <button type="submit" className={estilos.botonChico}>Guardar</button>
-            <button type="button" className={estilos.botonTexto} onClick={() => setMoviendo(false)}>Cancelar</button>
+            <button
+              type="button"
+              className={estilos.botonTexto}
+              onClick={() => {
+                setMoviendo(false);
+                setErrorMover(null);
+              }}
+            >
+              Cancelar
+            </button>
+            {errorMover && (
+              <p id={`mover-error-${reserva.id}`} className={estilos.errorForm} role="alert">{errorMover.mensaje}</p>
+            )}
           </form>
         )}
       </div>
@@ -145,6 +188,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
 function DiasBloqueados({ alError }) {
   const [bloqueos, setBloqueos] = useState([]);
   const [version, setVersion] = useState(0);
+  const [errorBloqueo, setErrorBloqueo] = useState(null); // { campo, mensaje }
   const hoy = hoyEnArgentina();
   const cargar = () => setVersion((v) => v + 1);
 
@@ -162,6 +206,17 @@ function DiasBloqueados({ alError }) {
     evento.preventDefault();
     const form = evento.currentTarget;
     const datos = Object.fromEntries(new FormData(form));
+    const repetido = bloqueos.some((b) => b.fecha === datos.fecha && (b.local_id ?? '') === datos.local);
+    const invalido = [
+      ['fecha', validarFecha(datos.fecha, { hoy }) || (repetido ? 'Ese día ya está bloqueado.' : '')],
+      ['motivo', validarMotivo(datos.motivo)],
+    ].find(([, mensaje]) => mensaje);
+    if (invalido) {
+      setErrorBloqueo({ campo: invalido[0], mensaje: invalido[1] });
+      form.elements[invalido[0]].focus();
+      return;
+    }
+    setErrorBloqueo(null);
     try {
       await bloquearDia({ fecha: datos.fecha, idLocal: datos.local, motivo: datos.motivo });
       form.reset();
@@ -179,14 +234,32 @@ function DiasBloqueados({ alError }) {
       <p className={formulario.ayuda}>
         Un día bloqueado no se puede reservar desde la web. Las reservas que ya existían no se tocan.
       </p>
-      <form className={estilos.formBloqueo} onSubmit={alBloquear}>
-        <input name="fecha" type="date" required min={hoy} className={formulario.control} aria-label="Fecha" />
+      <form className={estilos.formBloqueo} onSubmit={alBloquear} noValidate>
+        <input
+          name="fecha"
+          type="date"
+          required
+          min={hoy}
+          className={formulario.control}
+          aria-label="Fecha"
+          {...atributosDeError(errorBloqueo, 'fecha', 'bloqueo-error')}
+        />
         <select name="local" className={formulario.control} aria-label="Local" defaultValue="">
           <option value="">Los dos locales</option>
           {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombreCorto}</option>)}
         </select>
-        <input name="motivo" placeholder="Motivo (opcional)" className={formulario.control} aria-label="Motivo" />
+        <input
+          name="motivo"
+          placeholder="Motivo (opcional)"
+          maxLength={LIMITES.motivo}
+          className={formulario.control}
+          aria-label="Motivo"
+          {...atributosDeError(errorBloqueo, 'motivo', 'bloqueo-error')}
+        />
         <button type="submit" className={estilos.confirmar}>Bloquear</button>
+        {errorBloqueo && (
+          <p id="bloqueo-error" className={estilos.errorForm} role="alert">{errorBloqueo.mensaje}</p>
+        )}
       </form>
       {bloqueos.length > 0 ? (
         <ul className={estilos.listaBloqueos}>
