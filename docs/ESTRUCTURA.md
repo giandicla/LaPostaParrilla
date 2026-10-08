@@ -75,7 +75,7 @@ Funciones puras, sin React, con sus tests al lado (`npm test`).
 
 | Archivo | Qué exporta |
 |---|---|
-| `reservas.js` | `LIMITES`, `validarNombre`, `validarTelefono`, `validarFecha`, `validarHora`, `validarPersonas`, `validarComentarios`, `validarMotivo`, `validarReserva(datos, contexto)` → `{ campo: mensaje }`, `hayErrores` |
+| `reservas.js` | `LIMITES`, `validarNombre`, `validarTelefono`, `limpiarTelefono` (filtra mientras se escribe), `validarFecha`, `validarHora`, `validarPersonas`, `validarComentarios`, `validarMotivo`, `validarReserva(datos, contexto)` → `{ campo: mensaje }`, `hayErrores` |
 
 Cada función devuelve el mensaje de error o `''`. La base repite las mismas reglas
 (trigger `validar_contacto`), porque la validación del navegador se puede saltear.

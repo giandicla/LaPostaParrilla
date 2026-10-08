@@ -21,7 +21,7 @@ import {
   obtenerDiasBloqueados,
   obtenerFranjas,
 } from '../../src/servicios/reservas.js';
-import { LIMITES, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
+import { LIMITES, limpiarTelefono, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
@@ -231,7 +231,8 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
                 autoComplete="tel"
                 placeholder="+54 9 2944 00-0000"
                 value={valores.telefono}
-                onChange={alEscribir('telefono')}
+                inputMode="tel"
+                onChange={(e) => cambiar('telefono', limpiarTelefono(e.target.value))}
                 onBlur={alSalir('telefono')}
                 className={formulario.control}
               />
