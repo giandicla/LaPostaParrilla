@@ -7,6 +7,7 @@ import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
 import Icono from '../../src/components/Icono/Icono.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
+import Campo from '../../src/components/Campo/Campo.jsx';
 import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
 import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO, enlaceWhatsapp } from '../../src/data/locales.js';
 import { TEXTOS } from '../../src/data/textos.js';
@@ -20,16 +21,30 @@ import {
   obtenerDiasBloqueados,
   obtenerFranjas,
 } from '../../src/servicios/reservas.js';
+import { LIMITES, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
-const MAXIMO_PERSONAS = 6;
+const MAXIMO_PERSONAS = LIMITES.personas.max;
+
+// Orden de los campos en pantalla: al enviar con errores, el foco va al primero
+const CAMPOS = ['nombre', 'telefono', 'fecha', 'hora', 'personas', 'comentarios'];
 
 function FormularioReserva({ idInicial, alCambiarLocal }) {
   const { sesion, perfil, recargarPerfil } = useSesion();
   const [idLocal, setIdLocal] = useState(idInicial);
-  const [fecha, setFecha] = useState('');
-  const [hora, setHora] = useState('');
+  const [valores, setValores] = useState({
+    nombre: perfil?.nombre ?? '',
+    telefono: perfil?.telefono ?? '',
+    fecha: '',
+    hora: '',
+    personas: '2',
+    comentarios: '',
+  });
+  // Un campo muestra su error recién después de que la persona pasó por él,
+  // o cuando intenta enviar: no se la reta antes de que escriba.
+  const [tocados, setTocados] = useState({});
+  const [intentoEnviar, setIntentoEnviar] = useState(false);
   const [franjas, setFranjas] = useState([]);
   const [bloqueos, setBloqueos] = useState([]);
   const [enviando, setEnviando] = useState(false);
@@ -38,6 +53,7 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
 
   const local = getLocal(idLocal);
   const hoy = hoyEnArgentina();
+  const { fecha, hora } = valores;
 
   useEffect(() => {
     let vigente = true;
@@ -68,29 +84,54 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
 
   const bloqueo = bloqueos.find((b) => b.fecha === fecha && (!b.local_id || b.local_id === idLocal));
 
+  // Los errores no se guardan: se calculan de los valores en cada render
+  const errores = validarReserva(valores, {
+    hoy,
+    franjas: franjasDisponibles,
+    bloqueo,
+    nombreLocal: local.nombre,
+  });
+  const errorVisible = (campo) => (tocados[campo] || intentoEnviar ? errores[campo] : undefined);
+  const cantidadErrores = CAMPOS.filter(errorVisible).length;
+
+  const cambiar = (campo, valor, { tocar = false } = {}) => {
+    setValores((anteriores) => ({ ...anteriores, [campo]: valor }));
+    if (tocar) setTocados((anteriores) => ({ ...anteriores, [campo]: true }));
+  };
+  const alSalir = (campo) => () => setTocados((anteriores) => ({ ...anteriores, [campo]: true }));
+  const alEscribir = (campo) => (evento) => cambiar(campo, evento.target.value);
+
   const cambiarLocal = (id) => {
     setIdLocal(id);
-    setHora(''); // las franjas dependen del local: la hora elegida deja de valer
+    cambiar('hora', ''); // las franjas dependen del local: la hora elegida deja de valer
     alCambiarLocal(id);
   };
 
   const alEnviar = async (evento) => {
     evento.preventDefault();
-    const datos = Object.fromEntries(new FormData(evento.currentTarget));
-    setEnviando(true);
+    setIntentoEnviar(true);
     setError('');
+    if (hayErrores(errores)) {
+      const primero = CAMPOS.find((campo) => errores[campo]);
+      document.getElementById(primero)?.focus();
+      return;
+    }
+
+    const guardarTelefono = new FormData(evento.currentTarget).get('guardarTelefono');
+    const telefono = valores.telefono.trim();
+    setEnviando(true);
     try {
       const reserva = await crearReserva(sesion.user.id, {
         local_id: idLocal,
         fecha,
         hora,
-        personas: Number(datos.personas),
-        nombre: datos.nombre.trim(),
-        telefono: datos.telefono.trim(),
-        comentarios: datos.comentarios.trim() || null,
+        personas: Number(valores.personas),
+        nombre: valores.nombre.trim(),
+        telefono,
+        comentarios: valores.comentarios.trim() || null,
       });
-      if (datos.guardarTelefono && datos.telefono.trim() !== perfil?.telefono) {
-        await actualizarPerfil(sesion.user.id, { nombre: perfil?.nombre ?? datos.nombre, telefono: datos.telefono.trim() });
+      if (guardarTelefono && telefono !== perfil?.telefono) {
+        await actualizarPerfil(sesion.user.id, { nombre: perfil?.nombre ?? valores.nombre.trim(), telefono });
         recargarPerfil();
       }
       setCreada(reserva);
@@ -99,6 +140,13 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
     } finally {
       setEnviando(false);
     }
+  };
+
+  const otraReserva = () => {
+    setCreada(null);
+    setValores((anteriores) => ({ ...anteriores, fecha: '', hora: '', comentarios: '' }));
+    setTocados({});
+    setIntentoEnviar(false);
   };
 
   if (creada) {
@@ -115,7 +163,7 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
         </p>
         <div className={estilos.accionesListo}>
           <Boton to="/mis-reservas">Ver mis reservas</Boton>
-          <Boton variante="texto" onClick={() => setCreada(null)}>Hacer otra reserva</Boton>
+          <Boton variante="texto" onClick={otraReserva}>Hacer otra reserva</Boton>
         </div>
       </div>
     );
@@ -124,7 +172,15 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
   const whatsappGrupo = enlaceWhatsapp(local, `Hola! Quería reservar para más de ${MAXIMO_PERSONAS} personas en ${local.nombre}.`);
 
   return (
-    <form className={formulario.formulario} onSubmit={alEnviar}>
+    <form className={formulario.formulario} onSubmit={alEnviar} noValidate>
+      {intentoEnviar && cantidadErrores > 0 && (
+        <p className={formulario.error} role="alert">
+          {cantidadErrores === 1
+            ? 'Revisá el campo marcado antes de enviar.'
+            : `Revisá los ${cantidadErrores} campos marcados antes de enviar.`}
+        </p>
+      )}
+
       <fieldset className={estilos.grupoLocal}>
         <legend className={formulario.etiqueta}>¿En qué salón?</legend>
         <div className={estilos.opcionesLocal}>
@@ -149,22 +205,38 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
       </fieldset>
 
       <div className={formulario.fila}>
+        <Campo id="nombre" etiqueta="A nombre de" error={errorVisible('nombre')}>
+          {(props) => (
+            <input
+              {...props}
+              name="nombre"
+              required
+              autoComplete="name"
+              maxLength={LIMITES.nombre.max}
+              value={valores.nombre}
+              onChange={alEscribir('nombre')}
+              onBlur={alSalir('nombre')}
+              className={formulario.control}
+            />
+          )}
+        </Campo>
         <div className={formulario.campo}>
-          <label className={formulario.etiqueta} htmlFor="nombre">A nombre de</label>
-          <input id="nombre" name="nombre" required autoComplete="name" defaultValue={perfil?.nombre ?? ''} className={formulario.control} />
-        </div>
-        <div className={formulario.campo}>
-          <label className={formulario.etiqueta} htmlFor="telefono">Teléfono</label>
-          <input
-            id="telefono"
-            name="telefono"
-            type="tel"
-            required
-            autoComplete="tel"
-            placeholder="+54 9 2944 00-0000"
-            defaultValue={perfil?.telefono ?? ''}
-            className={formulario.control}
-          />
+          <Campo id="telefono" etiqueta="Teléfono" error={errorVisible('telefono')}>
+            {(props) => (
+              <input
+                {...props}
+                name="telefono"
+                type="tel"
+                required
+                autoComplete="tel"
+                placeholder="+54 9 2944 00-0000"
+                value={valores.telefono}
+                onChange={alEscribir('telefono')}
+                onBlur={alSalir('telefono')}
+                className={formulario.control}
+              />
+            )}
+          </Campo>
           <label className={formulario.casilla}>
             <input type="checkbox" name="guardarTelefono" defaultChecked /> Guardarlo para la próxima
           </label>
@@ -172,79 +244,105 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
       </div>
 
       <div className={formulario.fila}>
-        <div className={formulario.campo}>
-          <label className={formulario.etiqueta} htmlFor="fecha">Fecha</label>
-          <input
-            id="fecha"
-            name="fecha"
-            type="date"
-            required
-            min={hoy}
-            value={fecha}
-            onChange={(e) => {
-              setFecha(e.target.value);
-              setHora('');
-            }}
+        {/* Un día bloqueado se avisa apenas se elige, sin esperar a salir del campo */}
+        <Campo id="fecha" etiqueta="Fecha" error={errorVisible('fecha') ?? (bloqueo ? errores.fecha : undefined)}>
+          {(props) => (
+            <input
+              {...props}
+              name="fecha"
+              type="date"
+              required
+              min={hoy}
+              value={fecha}
+              onChange={(e) => {
+                cambiar('fecha', e.target.value, { tocar: true });
+                cambiar('hora', '');
+              }}
+              onBlur={alSalir('fecha')}
+              className={formulario.control}
+            />
+          )}
+        </Campo>
+        <Campo id="hora" etiqueta="Hora" error={errorVisible('hora')}>
+          {(props) => (
+            <select
+              {...props}
+              name="hora"
+              required
+              value={hora}
+              onChange={(e) => cambiar('hora', e.target.value, { tocar: true })}
+              onBlur={alSalir('hora')}
+              className={formulario.control}
+            >
+              <option value="" disabled>
+                {franjasDisponibles.length ? 'Elegí un horario' : 'No quedan horarios ese día'}
+              </option>
+              {franjasDisponibles.map((franja) => (
+                <option key={franja} value={franja}>{franja}</option>
+              ))}
+            </select>
+          )}
+        </Campo>
+      </div>
+
+      <Campo
+        id="personas"
+        etiqueta="Personas"
+        error={errorVisible('personas')}
+        ayuda={
+          <>
+            ¿Son más de {MAXIMO_PERSONAS}?{' '}
+            {whatsappGrupo ? (
+              <a href={whatsappGrupo} target="_blank" rel="noreferrer" className={estilos.enlace}>
+                <Icono nombre="whatsapp" /> Escribinos por WhatsApp
+              </a>
+            ) : (
+              'Escribinos por Instagram'
+            )}{' '}
+            y lo coordinamos.
+          </>
+        }
+      >
+        {(props) => (
+          <select
+            {...props}
+            name="personas"
+            value={valores.personas}
+            onChange={alEscribir('personas')}
             className={formulario.control}
-          />
-        </div>
-        <div className={formulario.campo}>
-          <label className={formulario.etiqueta} htmlFor="hora">Hora</label>
-          <select id="hora" name="hora" required value={hora} onChange={(e) => setHora(e.target.value)} className={formulario.control}>
-            <option value="" disabled>
-              {franjasDisponibles.length ? 'Elegí un horario' : 'No quedan horarios ese día'}
-            </option>
-            {franjasDisponibles.map((franja) => (
-              <option key={franja} value={franja}>{franja}</option>
+          >
+            {Array.from({ length: MAXIMO_PERSONAS }, (_, i) => i + 1).map((n) => (
+              <option key={n} value={n}>{n}</option>
             ))}
           </select>
-        </div>
-      </div>
+        )}
+      </Campo>
 
-      {bloqueo && (
-        <p className={formulario.error} role="alert">
-          Ese día no tomamos reservas en {local.nombre}
-          {bloqueo.motivo ? ` (${bloqueo.motivo})` : ''}. Elegí otra fecha.
-        </p>
-      )}
-
-      <div className={formulario.campo}>
-        <label className={formulario.etiqueta} htmlFor="personas">Personas</label>
-        <select id="personas" name="personas" defaultValue="2" className={formulario.control}>
-          {Array.from({ length: MAXIMO_PERSONAS }, (_, i) => i + 1).map((n) => (
-            <option key={n} value={n}>{n}</option>
-          ))}
-        </select>
-        <span className={formulario.ayuda}>
-          ¿Son más de {MAXIMO_PERSONAS}?{' '}
-          {whatsappGrupo ? (
-            <a href={whatsappGrupo} target="_blank" rel="noreferrer" className={estilos.enlace}>
-              <Icono nombre="whatsapp" /> Escribinos por WhatsApp
-            </a>
-          ) : (
-            'Escribinos por Instagram'
-          )}{' '}
-          y lo coordinamos.
-        </span>
-      </div>
-
-      <div className={formulario.campo}>
-        <label className={formulario.etiqueta} htmlFor="comentarios">
-          Comentarios <span className={formulario.opcional}>(opcional)</span>
-        </label>
-        <textarea
-          id="comentarios"
-          name="comentarios"
-          rows="3"
-          maxLength={500}
-          placeholder="Alergias, cumpleaños, si preferís una mesa cerca del fuego…"
-          className={formulario.control}
-        />
-      </div>
+      <Campo
+        id="comentarios"
+        etiqueta="Comentarios"
+        opcional
+        error={errorVisible('comentarios')}
+        ayuda={`${valores.comentarios.length}/${LIMITES.comentarios} caracteres`}
+      >
+        {(props) => (
+          <textarea
+            {...props}
+            name="comentarios"
+            rows="3"
+            maxLength={LIMITES.comentarios}
+            placeholder="Alergias, cumpleaños, si preferís una mesa cerca del fuego…"
+            value={valores.comentarios}
+            onChange={alEscribir('comentarios')}
+            onBlur={alSalir('comentarios')}
+            className={formulario.control}
+          />
+        )}
+      </Campo>
 
       {error && <p className={formulario.error} role="alert">{error}</p>}
 
-      <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando || Boolean(bloqueo)}>
+      <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
         {enviando ? 'Enviando…' : 'Pedir reserva'}
       </Boton>
     </form>

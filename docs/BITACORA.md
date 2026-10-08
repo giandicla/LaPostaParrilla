@@ -4,6 +4,30 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-08 — Validación de formularios (E3)
+
+Rama `feat/validacion-formularios`.
+
+- `src/validacion/reservas.js`: reglas de nombre, teléfono, fecha, hora, personas,
+  comentarios y motivo, como funciones puras. 9 tests con `node --test` (`npm test`,
+  también en el CI). `package.json` pasa a `"type": "module"`.
+- Componente `Campo`: conecta cada control con su error y su ayuda
+  (`aria-invalid`, `aria-describedby`).
+- `/reservas`: `noValidate` y mensajes propios. Cada campo avisa al salir de él y se
+  revalida mientras se corrige; al enviar, resumen con `role="alert"` y foco al
+  primer error. Contador de caracteres en comentarios. El día bloqueado pasó a ser
+  el error del campo fecha.
+- Admin: los formularios de mover reserva y bloquear día validan antes de mandar
+  (incluido "ese día ya está bloqueado").
+- Base: migración `20261008120000_validacion_contacto.sql`. Trigger
+  `validar_contacto` (nombre 2–80, teléfono 8–15 dígitos, comentarios ≤ 500) que solo
+  corre al insertar o al cambiar esos campos, para no trabar reservas viejas; check
+  `not valid` de 120 caracteres en el motivo de un bloqueo. 10 tests pgTAP nuevos.
+  Los datos de prueba de los tests viejos usaban teléfonos como `'111'`: se
+  cambiaron por uno válido.
+
+---
+
 ## 2026-10-08 — La rúbrica, CI y flujo con PRs
 
 - `docs/RUBRICA.md`: la grilla oficial de corrección contra el estado del proyecto,

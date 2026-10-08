@@ -35,7 +35,7 @@ Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis)
 |---|---|---|---|---|---|
 | E1 | Repo + pipeline + preview | 10% | 🟡 (Bueno) | Repo en GitHub, deploy automático a Vercel desde `main`. **CI** en `.github/workflows/ci.yml`: lint + build, tests pgTAP de la base, tests Deno de la Edge Function. Plantilla de PR con checklist | Confirmar que la preview de Vercel aparece en el primer PR y que el CI pasa. Hasta la sesión 03 todo se pusheó directo a `main` (cero PRs) |
 | E2 | Landing + vistas responsivas | 15% | 🟡 (Bueno) | 8 páginas maquetadas, semánticas, mobile first, marca real, foco visible, `prefers-reduced-motion` | Hallazgos de accesibilidad abiertos en `PENDIENTES.md`: el panel mobile no mueve ni atrapa el foco; breakpoints sueltos (600/421px). Correr Lighthouse / axe y dejar los números registrados |
-| E3 | Formularios dinámicos con fetch + validación | 15% | 🟡 (Bueno) | `/reservas`: franjas y días bloqueados pedidos a la base, horarios filtrados en vivo, errores de la base traducidos, pantalla de éxito. Admin: filtros, notas, mover | Validación del cliente es solo HTML nativo (`required`, `min`): sin mensajes por campo, sin `aria-invalid` / `aria-describedby`. Falta validación propia del teléfono, nombre, etc. |
+| E3 | Formularios dinámicos con fetch + validación | 15% | ✅ (a confirmar en la preview) | `/reservas`: franjas y días bloqueados pedidos a la base, horarios filtrados en vivo, errores de la base traducidos, pantalla de éxito. **Validación propia** (`src/validacion/reservas.js`, 9 tests): mensaje por campo al salir de él, revalida mientras se corrige, resumen y foco al primer error al enviar, `aria-invalid` + `aria-describedby`, contador de caracteres. Admin: mover y bloquear días validados igual. **La base repite las reglas** (trigger `validar_contacto`, 10 tests pgTAP) | Probarlo a mano con sesión en la preview |
 | E4 | Catálogo navegable + API básica | 20% | 🟡 (Regular) | `/carta`: dos cartas completas en HTML, índice por sección, toggle de local en la URL | **No hay API interna**: la carta es un JSON importado. **No hay checklist en PRs** (no hay PRs ni plantilla). Faltaría además lógica de catálogo (búsqueda, filtros, agotado) |
 | E5 | CRUD en Supabase + admin | 20% | ✅ / 🟡 | Tablas con RLS y migraciones, 33 tests pgTAP; reservas: crear, listar, cancelar, confirmar/rechazar/mover; notas; días bloqueados; tiempo real; panel admin | Para que el CRUD sea "completo" y no solo de reservas: carta en tablas editable desde el admin (etapa 2.3 ya planificada) |
 | E6 | Checkout + webhook | 20% | ❌ | Nada | Integrar **Mercado Pago** (checkout + webhook que actualice la base) con pruebas. Definir qué se cobra |
@@ -72,7 +72,7 @@ Tomadas por el usuario el 2026-10-08 (sesión 03):
 1. ~~E1 — CI en GitHub Actions + plantilla de PR con checklist~~ (sesión 03); desde acá, todo por PR.
 2. Documentación — README y CONTEXTO al día.
 3. E4 — API de la carta + lógica del catálogo.
-4. E3 — validación propia y accesible en los formularios.
+4. ~~E3 — validación propia y accesible en los formularios~~ (sesión 03, PR #2).
 5. E6 — Mercado Pago: checkout + webhook + pruebas, en este orden: seña de la
    reserva, gift cards, pedido para llevar.
 6. E5 — carta editable desde el admin.

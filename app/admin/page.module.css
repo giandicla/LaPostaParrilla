@@ -255,3 +255,14 @@
     align-items: flex-end;
   }
 }
+
+/* Error de los formularios chicos (mover, bloquear): ocupa su propia línea */
+.errorForm {
+  flex-basis: 100%;
+  grid-column: 1 / -1;
+  padding-left: var(--sp-2);
+  border-left: 3px solid var(--bordo-900);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--bordo-900);
+}

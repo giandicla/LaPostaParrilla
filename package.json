@@ -2,11 +2,13 @@
   "name": "la-posta-parrilla",
   "private": true,
   "version": "0.0.0",
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
+    "test": "node --test \"src/**/*.test.js\"",
     "db:test": "supabase test db",
     "db:reset": "supabase db reset"
   },

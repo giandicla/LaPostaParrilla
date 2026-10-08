@@ -33,18 +33,18 @@ $$, '42501', null, 'un cliente no puede bloquear días');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
-  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 20, '20:30', 2, 'Ana', '1')
+  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 20, '20:30', 2, 'Ana', '2944111111')
 $$, 'P0001', 'Ese día no tomamos reservas en ese local.', 'no se puede reservar un día bloqueado');
 
 select lives_ok($$
   insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, nombre, telefono)
   values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111',
-          'restaurante', current_date + 20, '20:30', 2, 'Ana', '1')
+          'restaurante', current_date + 20, '20:30', 2, 'Ana', '2944111111')
 $$, 'el bloqueo de un local no afecta al otro');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
-  values ('11111111-1111-1111-1111-111111111111', 'restaurante', current_date + 21, '20:30', 2, 'Ana', '1')
+  values ('11111111-1111-1111-1111-111111111111', 'restaurante', current_date + 21, '20:30', 2, 'Ana', '2944111111')
 $$, 'P0001', 'Ese día no tomamos reservas en ese local.', 'un bloqueo sin local cierra los dos');
 
 -- ---------- Admin: nota interna ----------

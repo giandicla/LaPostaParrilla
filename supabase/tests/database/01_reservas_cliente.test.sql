@@ -24,7 +24,7 @@ insert into public.franjas_reserva (local_id, hora) select 'restaurante', hora f
   on conflict do nothing;
 insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, nombre, telefono)
   select 'cccccccc-cccc-cccc-cccc-cccccccccccc', '11111111-1111-1111-1111-111111111111',
-         'restaurante', fecha, hora, 2, 'Ana', '111' from pronto;
+         'restaurante', fecha, hora, 2, 'Ana', '2944111111' from pronto;
 
 -- ---------- Actuar como Ana ----------
 set local role authenticated;
@@ -33,7 +33,7 @@ set local request.jwt.claims to '{"sub":"11111111-1111-1111-1111-111111111111","
 select lives_ok($$
   insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, nombre, telefono)
   values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', '11111111-1111-1111-1111-111111111111',
-          'parrilla', current_date + 10, '20:30', 4, 'Ana', '111')
+          'parrilla', current_date + 10, '20:30', 4, 'Ana', '2944111111')
 $$, 'un cliente reserva a su nombre');
 
 select is(
@@ -42,39 +42,39 @@ select is(
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
-  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 10, '21:00', 2, 'Ana', '111')
+  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 10, '21:00', 2, 'Ana', '2944111111')
 $$, '23505', null, 'una sola reserva activa por usuario, local y día');
 
 select lives_ok($$
   insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, nombre, telefono)
   values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '11111111-1111-1111-1111-111111111111',
-          'restaurante', current_date + 10, '13:00', 2, 'Ana', '111')
+          'restaurante', current_date + 10, '13:00', 2, 'Ana', '2944111111')
 $$, 'el mismo día puede reservar en el otro local');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
-  values ('22222222-2222-2222-2222-222222222222', 'parrilla', current_date + 11, '20:30', 2, 'Ana', '111')
+  values ('22222222-2222-2222-2222-222222222222', 'parrilla', current_date + 11, '20:30', 2, 'Ana', '2944111111')
 $$, '42501', null, 'no puede reservar a nombre de otro usuario');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono, estado)
-  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 12, '20:30', 2, 'Ana', '111', 'confirmada')
+  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 12, '20:30', 2, 'Ana', '2944111111', 'confirmada')
 $$, '42501', null, 'no puede crear una reserva ya confirmada');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
-  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 13, '20:30', 7, 'Ana', '111')
+  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 13, '20:30', 7, 'Ana', '2944111111')
 $$, '23514', null, 'no se puede reservar para más de 6 personas');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
-  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 14, '17:00', 2, 'Ana', '111')
+  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 14, '17:00', 2, 'Ana', '2944111111')
 $$, 'P0001', 'La hora elegida no es un horario de reserva de ese local.',
   'la hora tiene que ser una franja del local');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
-  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date - 1, '20:30', 2, 'Ana', '111')
+  values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date - 1, '20:30', 2, 'Ana', '2944111111')
 $$, 'P0001', 'No se puede reservar para una fecha u hora que ya pasó.',
   'no se puede reservar en el pasado');
 

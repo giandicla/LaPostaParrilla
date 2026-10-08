@@ -68,6 +68,7 @@ y preview de Vercel en cada PR.
 ```bash
 npm run dev           # servidor de desarrollo
 npm run build         # build de producción a .next/
+npm test              # tests de las funciones puras (node --test, src/**/*.test.js)
 npm run db:test       # tests pgTAP de la base (requiere `npx supabase start`)
 npm run db:reset      # base local desde cero: migraciones + usuarios de prueba
 python scripts/procesar-assets.py "../Branding y fotos"
