@@ -85,7 +85,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
           <EstadoReserva estado={reserva.estado} />
         </p>
         <p className={estilos.secundario}>
-          {local?.nombreCorto ?? reserva.local_id} ·{' '}
+          {local?.nombre ?? reserva.local_id} ·{' '}
           <a href={`tel:${reserva.telefono.replace(/[^\d+]/g, '')}`}>{reserva.telefono}</a>
           {reserva.estado === 'cancelada' && reserva.cancelada_por && ` · canceló el ${reserva.cancelada_por}`}
           {delLocal && ' · Cargada en el local'}
@@ -258,7 +258,7 @@ function DiasBloqueados({ alError }) {
         />
         <select name="local" className={formulario.control} aria-label="Local" defaultValue="">
           <option value="">Los dos locales</option>
-          {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombreCorto}</option>)}
+          {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
         </select>
         <input
           name="motivo"
@@ -278,7 +278,7 @@ function DiasBloqueados({ alError }) {
           {bloqueos.map((b) => (
             <li key={b.id}>
               <span>
-                <strong>{formatearFecha(b.fecha)}</strong> · {b.local_id ? getLocal(b.local_id)?.nombreCorto : 'los dos locales'}
+                <strong>{formatearFecha(b.fecha)}</strong> · {b.local_id ? getLocal(b.local_id)?.nombre : 'los dos locales'}
                 {b.motivo && ` · ${b.motivo}`}
               </span>
               <button type="button" className={estilos.botonTexto} onClick={async () => {
@@ -411,7 +411,7 @@ function Panel() {
           <span className={formulario.etiqueta}>Local</span>
           <select value={filtros.idLocal} onChange={(e) => filtrar({ idLocal: e.target.value })} className={formulario.control}>
             <option value="">Los dos</option>
-            {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombreCorto}</option>)}
+            {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
           </select>
         </label>
         <label className={formulario.campo}>

@@ -129,7 +129,7 @@ export default function NuevaReservaLocal({ idLocalInicial, alGuardar, alCerrar 
             }}
             className={formulario.control}
           >
-            {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombreCorto}</option>)}
+            {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
           </select>
         </div>
 

@@ -94,7 +94,7 @@ Cada función devuelve el mensaje de error o `''`. La base repite las mismas reg
 Forma de un local:
 
 ```js
-{ id, nombre, nombreCorto, tagline, descripcion, direccion, mapaEmbedUrl,
+{ id, nombre, tagline, descripcion, direccion, mapaEmbedUrl,
   telefono, whatsapp, cartaPdf, horarios: [{dia, franja}],
   franjasReserva: [string], imagenes: { card, hero, galeria: [{src, alt}] } }
 ```

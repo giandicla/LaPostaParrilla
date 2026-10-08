@@ -16,7 +16,7 @@ export default function SelectorLocal({ locales, localActivoId, onChange }) {
             className={`${estilos.opcion} ${activo ? estilos.activa : ''}`}
             onClick={() => onChange(local.id)}
           >
-            {local.nombreCorto}
+            {local.nombre}
           </button>
         );
       })}

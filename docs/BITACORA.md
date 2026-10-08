@@ -38,6 +38,9 @@ Rama `feat/reservas-admin`. Spec: `docs/superpowers/specs/2026-10-08-reservas-ad
   de la home no cambian). Aviso sin los 15 minutos: "…hasta que sea confirmada por
   el restaurante. Podés gestionarla desde la sección "Mis reservas" hasta 1 hora
   antes." Personas pasa a campo numérico con flechitas (tope 40, el validador avisa).
+- Nombres completos en todo el sitio, a pedido del usuario: "La Posta Parrilla" y
+  "La Posta II Restaurante" (se eliminó `nombreCorto` de `locales.js`). En el
+  celular, el selector de la carta pasa a dos columnas para que entren.
 
 ---
 

@@ -14,7 +14,7 @@ export default function LocalCard({ local }) {
           loading="lazy"
           className={estilos.imagen}
         />
-        <span className={estilos.etiqueta}>{local.nombreCorto}</span>
+        <span className={estilos.etiqueta}>{local.nombre}</span>
       </div>
 
       <div className={estilos.cuerpo}>

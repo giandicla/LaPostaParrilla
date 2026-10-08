@@ -60,6 +60,6 @@ export const getPlatosDestacados = () =>
     (PLATOS[local.id] ?? []).map((plato) => ({
       ...plato,
       idLocal: local.id,
-      nombreLocal: local.nombreCorto,
+      nombreLocal: local.nombre,
     }))
   );

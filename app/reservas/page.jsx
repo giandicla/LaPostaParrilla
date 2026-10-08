@@ -48,7 +48,7 @@ function Salones({ idLocal, onChange }) {
         const contenido = (
           <>
             <img src={opcion.imagenes.reserva ?? opcion.imagenes.card} alt="" className={estilos.fotoSalon} loading="lazy" />
-            <span className={estilos.nombreSalon}>{opcion.nombreCorto}</span>
+            <span className={estilos.nombreSalon}>{opcion.nombre}</span>
             <span className={estilos.taglineSalon}>{opcion.tagline}</span>
           </>
         );
