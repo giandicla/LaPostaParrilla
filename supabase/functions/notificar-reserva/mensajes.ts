@@ -3,7 +3,8 @@
 
 export type Reserva = {
   id: string;
-  usuario_id: string;
+  // null en las reservas que carga el admin desde el panel (origen 'local')
+  usuario_id: string | null;
   local_id: string;
   fecha: string; // AAAA-MM-DD
   hora: string; // HH:MM:SS
@@ -13,6 +14,9 @@ export type Reserva = {
   comentarios: string | null;
   estado: 'pendiente' | 'confirmada' | 'rechazada' | 'cancelada';
   cancelada_por: 'cliente' | 'admin' | null;
+  origen: 'web' | 'local';
+  // Solo en las del local: el mail que cargó el admin, si el cliente lo dio
+  mail: string | null;
 };
 
 export type Aviso = {
@@ -57,25 +61,45 @@ function detalle(r: Reserva): string {
     ${r.comentarios ? `<p><em>${escapar(r.comentarios)}</em></p>` : ''}`;
 }
 
-function plantilla(titulo: string, cuerpo: string, sitio: string): string {
+// Una reserva del local no tiene cuenta detrás: en vez del link a "Mis
+// reservas", se la manda a WhatsApp para cualquier cambio.
+function plantilla(titulo: string, cuerpo: string, sitio: string, delLocal = false): string {
+  const pie = delLocal
+    ? '<p>Para cualquier cambio, escribinos por WhatsApp.</p>'
+    : `<p><a href="${sitio}/mis-reservas" style="color:#600003">Ver mis reservas</a></p>`;
   return `<div style="font-family:Georgia,serif;max-width:520px;margin:auto;color:#1C1512">
     <div style="background:#600003;color:#fff;padding:16px 24px;font-size:20px;letter-spacing:2px">LA POSTA</div>
     <div style="padding:24px;background:#F6F2EC">
       <h2 style="color:#600003;font-weight:normal">${titulo}</h2>
       ${cuerpo}
-      <p><a href="${sitio}/mis-reservas" style="color:#600003">Ver mis reservas</a></p>
+      ${pie}
     </div></div>`;
 }
 
 export function armarMensajes(aviso: Aviso, sitio: string): Mensaje[] {
+  const { reserva: r } = aviso;
+  if (r.origen !== 'local') return mensajesWeb(aviso, sitio);
+
+  // Reserva cargada por el admin: él ya sabe lo que hizo, así que los avisos
+  // son solo para el cliente, y solo si dejó un mail.
+  if (!r.mail) return [];
+  if (aviso.tipo === 'INSERT') {
+    return [{ para: 'cliente', asunto: 'Tu reserva en La Posta está confirmada',
+      html: plantilla('¡Te esperamos!', detalle(r), sitio, true) }];
+  }
+  return mensajesWeb(aviso, sitio, true).filter((m) => m.para === 'cliente');
+}
+
+function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
   const { tipo, reserva: r, anterior: a } = aviso;
+  const pagina = (titulo: string, cuerpo: string) => plantilla(titulo, cuerpo, sitio, delLocal);
 
   if (tipo === 'INSERT') {
     return [{
       para: 'admin',
       asunto: `Nueva reserva pendiente — ${formatearCuando(r.fecha, r.hora)}`,
-      html: plantilla('Entró una reserva nueva', `${detalle(r)}
-        <p>Confirmala o rechazala desde el <a href="${sitio}/admin">panel</a>.</p>`, sitio),
+      html: pagina('Entró una reserva nueva', `${detalle(r)}
+        <p>Confirmala o rechazala desde el <a href="${sitio}/admin">panel</a>.</p>`),
     }];
   }
 
@@ -84,28 +108,28 @@ export function armarMensajes(aviso: Aviso, sitio: string): Mensaje[] {
   if (r.estado !== a.estado) {
     if (r.estado === 'confirmada') {
       return [{ para: 'cliente', asunto: 'Tu reserva en La Posta está confirmada',
-        html: plantilla('¡Te esperamos!', detalle(r), sitio) }];
+        html: pagina('¡Te esperamos!', detalle(r)) }];
     }
     if (r.estado === 'rechazada') {
       return [{ para: 'cliente', asunto: 'No pudimos confirmar tu reserva',
-        html: plantilla('No pudimos confirmar tu reserva',
-          `${detalle(r)}<p>Escribinos por WhatsApp y buscamos otro horario.</p>`, sitio) }];
+        html: pagina('No pudimos confirmar tu reserva',
+          `${detalle(r)}<p>Escribinos por WhatsApp y buscamos otro horario.</p>`) }];
     }
     if (r.estado === 'cancelada') {
       return r.cancelada_por === 'cliente'
         ? [{ para: 'admin', asunto: `Un cliente canceló — ${formatearCuando(r.fecha, r.hora)}`,
-            html: plantilla('Se canceló una reserva', detalle(r), sitio) }]
+            html: pagina('Se canceló una reserva', detalle(r)) }]
         : [{ para: 'cliente', asunto: 'Tu reserva en La Posta fue cancelada',
-            html: plantilla('Cancelamos tu reserva',
-              `${detalle(r)}<p>Si tenés dudas, escribinos por WhatsApp.</p>`, sitio) }];
+            html: pagina('Cancelamos tu reserva',
+              `${detalle(r)}<p>Si tenés dudas, escribinos por WhatsApp.</p>`) }];
     }
     return [];
   }
 
   if (r.fecha !== a.fecha || r.hora !== a.hora) {
     return [{ para: 'cliente', asunto: 'Cambiamos el horario de tu reserva',
-      html: plantilla('Tu reserva tiene un nuevo horario',
-        `${detalle(r)}<p>Antes era el ${formatearCuando(a.fecha, a.hora)}.</p>`, sitio) }];
+      html: pagina('Tu reserva tiene un nuevo horario',
+        `${detalle(r)}<p>Antes era el ${formatearCuando(a.fecha, a.hora)}.</p>`) }];
   }
 
   return [];

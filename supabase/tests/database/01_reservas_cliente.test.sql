@@ -15,10 +15,10 @@ select is(
   (select nombre from public.perfiles where id = '11111111-1111-1111-1111-111111111111'),
   'Ana', 'al registrarse se crea el perfil con el nombre de la cuenta');
 
--- Una franja dentro de una hora, para probar el límite de 2 horas
+-- Una franja dentro de media hora, para probar el límite de 1 hora
 create temp table pronto as
-  select (ahora + interval '1 hour')::date as fecha,
-         date_trunc('minute', (ahora + interval '1 hour'))::time as hora
+  select (ahora + interval '30 minutes')::date as fecha,
+         date_trunc('minute', (ahora + interval '30 minutes'))::time as hora
   from (select now() at time zone 'America/Argentina/Buenos_Aires' as ahora) a;
 insert into public.franjas_reserva (local_id, hora) select 'restaurante', hora from pronto
   on conflict do nothing;
@@ -94,7 +94,7 @@ $$, 'un cliente puede guardar su teléfono');
 
 select lives_ok($$
   select public.cancelar_reserva('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa')
-$$, 'un cliente cancela su reserva con más de 2 horas de anticipación');
+$$, 'un cliente cancela su reserva con más de 1 hora de anticipación');
 
 select is(
   (select estado::text || '/' || cancelada_por from public.reservas
@@ -103,8 +103,8 @@ select is(
 
 select throws_ok($$
   select public.cancelar_reserva('cccccccc-cccc-cccc-cccc-cccccccccccc')
-$$, 'P0001', 'Faltan menos de 2 horas para tu reserva: para cancelarla escribinos por WhatsApp.',
-  'no puede cancelar desde la web con menos de 2 horas');
+$$, 'P0001', 'Falta menos de 1 hora para tu reserva: para cancelarla escribinos por WhatsApp.',
+  'no puede cancelar desde la web con menos de 1 hora');
 
 -- ---------- Actuar como Beto ----------
 set local request.jwt.claims to '{"sub":"22222222-2222-2222-2222-222222222222","role":"authenticated"}';
@@ -129,7 +129,7 @@ $$, 'el admin confirma una reserva');
 
 select lives_ok($$
   select public.cancelar_reserva('cccccccc-cccc-cccc-cccc-cccccccccccc')
-$$, 'el admin puede cancelar aunque falten menos de 2 horas');
+$$, 'el admin puede cancelar aunque falte menos de 1 hora');
 
 -- ---------- Visitante sin sesión ----------
 set local role anon;

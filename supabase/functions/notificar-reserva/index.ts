@@ -44,9 +44,10 @@ Deno.serve(async (pedido) => {
   const mensajes = armarMensajes(aviso, env('SITIO_URL'));
   if (mensajes.length === 0) return Response.json({ enviados: 0 });
 
-  // El mail del cliente no está en la reserva: se lee de Auth con la service role
-  let mailCliente = '';
-  if (mensajes.some((m) => m.para === 'cliente')) {
+  // Las reservas del local traen el mail que cargó el admin. Las de la web no:
+  // el de su cuenta se lee de Auth con la service role.
+  let mailCliente = aviso.reserva.mail ?? '';
+  if (!mailCliente && aviso.reserva.usuario_id && mensajes.some((m) => m.para === 'cliente')) {
     const admin = createClient(env('SUPABASE_URL'), env('SUPABASE_SERVICE_ROLE_KEY'));
     const { data, error } = await admin.auth.admin.getUserById(aviso.reserva.usuario_id);
     if (error) console.error('No se pudo leer el usuario', error.message);

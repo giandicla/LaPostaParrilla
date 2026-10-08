@@ -6,7 +6,10 @@
 export const LIMITES = {
   nombre: { min: 2, max: 80 },
   telefonoDigitos: { min: 8, max: 15 },
-  personas: { min: 1, max: 6 },
+  // max: lo que se reserva desde la web; más que eso, por WhatsApp.
+  // maxLocal: lo que carga el admin desde el panel (tope contra errores de tipeo).
+  personas: { min: 1, max: 6, maxLocal: 40 },
+  mail: 254,
   comentarios: 500,
   motivo: 120,
 };
@@ -15,6 +18,8 @@ export const LIMITES = {
 const NOMBRE = /^\p{L}[\p{L} '.-]*$/u;
 const TELEFONO = /^[0-9+()\s-]+$/;
 const FECHA = /^\d{4}-\d{2}-\d{2}$/;
+// Algo@algo.algo, sin espacios. La validación de verdad es que el mail llegue.
+const MAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const limpio = (valor) => String(valor ?? '').trim();
 
@@ -64,11 +69,24 @@ export function validarHora(hora, { franjas = [] } = {}) {
   return '';
 }
 
-export function validarPersonas(valor) {
+export function validarPersonas(valor, { max = LIMITES.personas.max } = {}) {
   const personas = Number(valor);
-  const { min, max } = LIMITES.personas;
+  const { min } = LIMITES.personas;
   if (!Number.isInteger(personas) || personas < min || personas > max) {
     return `Las reservas son de ${min} a ${max} personas.`;
+  }
+  return '';
+}
+
+// Más personas de las que se reservan desde la web: va por WhatsApp
+export const esGrupo = (valor) => Number(valor) > LIMITES.personas.max;
+
+// Opcional: vacío está bien
+export function validarMail(valor) {
+  const mail = limpio(valor);
+  if (!mail) return '';
+  if (mail.length > LIMITES.mail || !MAIL.test(mail)) {
+    return 'Ese mail no parece válido. Ejemplo: nombre@gmail.com';
   }
   return '';
 }
@@ -79,7 +97,8 @@ const validarLargo = (maximo) => (valor) =>
 export const validarComentarios = validarLargo(LIMITES.comentarios);
 export const validarMotivo = validarLargo(LIMITES.motivo);
 
-// datos: los valores del formulario. contexto: { hoy, franjas, bloqueo, nombreLocal }.
+// datos: los valores del formulario (mail solo en el del admin).
+// contexto: { hoy, franjas, bloqueo, nombreLocal, maxPersonas }.
 // Devuelve { campo: mensaje } solo con los campos que tienen error.
 export function validarReserva(datos, contexto = {}) {
   const errores = {
@@ -87,8 +106,9 @@ export function validarReserva(datos, contexto = {}) {
     telefono: validarTelefono(datos.telefono),
     fecha: validarFecha(datos.fecha, contexto),
     hora: validarHora(datos.hora, contexto),
-    personas: validarPersonas(datos.personas),
+    personas: validarPersonas(datos.personas, { max: contexto.maxPersonas }),
     comentarios: validarComentarios(datos.comentarios),
+    mail: validarMail(datos.mail),
   };
   return Object.fromEntries(Object.entries(errores).filter(([, mensaje]) => mensaje));
 }

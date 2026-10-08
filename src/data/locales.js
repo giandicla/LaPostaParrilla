@@ -79,6 +79,18 @@ export const getLocal = (id) => LOCALES.find((local) => local.id === id);
 
 export const esIdDeLocal = (id) => LOCALES.some((local) => local.id === id);
 
+// Mensaje para pedir por WhatsApp una reserva de grupo, con lo que ya se
+// completó en el formulario. Lo que está vacío no aparece en la frase.
+// fechaTexto ya viene formateada ("viernes 9 de octubre").
+export function mensajeReservaWhatsapp({ local, fechaTexto, hora, nombre, personas }) {
+  let texto = `Hola! Me gustaría hacer una reserva en ${local.nombre}`;
+  if (fechaTexto) texto += ` para el ${fechaTexto}${hora ? ` a las ${hora}` : ''},`;
+  const detalles = [];
+  if (nombre?.trim()) detalles.push(`a nombre de ${nombre.trim()}`);
+  detalles.push(`para ${personas} personas`);
+  return `${texto} ${detalles.join(', ')}.`;
+}
+
 // Link a WhatsApp con un mensaje ya escrito, o null si el local no tiene número
 export const enlaceWhatsapp = (local, texto) =>
   local?.whatsapp ? `https://wa.me/${local.whatsapp}?text=${encodeURIComponent(texto)}` : null;

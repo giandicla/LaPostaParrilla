@@ -23,7 +23,7 @@ const ERRORES_AUTH = {
 export function mensajeDeError(error) {
   if (!error) return null;
   if (error.code === '23505') return 'Ya tenés una reserva activa ese día en ese local.';
-  if (error.code === '23514') return 'Revisá los datos: algún valor no es válido (máximo 6 personas).';
+  if (error.code === '23514') return 'Revisá los datos: algún valor no es válido.';
   if (error.code === '42501') return 'No tenés permiso para hacer eso.';
   if (error.code === 'P0001') return error.message;
   if (ERRORES_AUTH[error.code]) return ERRORES_AUTH[error.code];
