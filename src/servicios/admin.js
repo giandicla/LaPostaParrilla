@@ -4,7 +4,7 @@
 import { supabase, resultado } from './supabase.js';
 
 const COLUMNAS =
-  'id, usuario_id, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, creada_en, notas_reserva(nota)';
+  'id, usuario_id, origen, mail, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, creada_en, notas_reserva(nota)';
 
 // filtros: { fecha?, idLocal?, estado? }
 export async function listarReservas({ fecha, idLocal, estado } = {}) {
@@ -25,6 +25,18 @@ export async function contarPendientes() {
   if (error) throw error;
   return count ?? 0;
 }
+
+// Una reserva que toma el local (por teléfono, WhatsApp o en la puerta): sin
+// cuenta de cliente y ya confirmada. reserva: { local_id, fecha, hora,
+// personas, nombre, telefono, mail?, comentarios? }
+export const crearReservaLocal = async (reserva) =>
+  resultado(
+    await supabase
+      .from('reservas')
+      .insert({ ...reserva, usuario_id: null, origen: 'local', estado: 'confirmada' })
+      .select('id')
+      .single()
+  );
 
 export const cambiarEstado = async (id, estado) =>
   resultado(await supabase.from('reservas').update({ estado }).eq('id', id));

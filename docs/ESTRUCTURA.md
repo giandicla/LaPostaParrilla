@@ -6,10 +6,10 @@
 |---|---|---|
 | `/` | Inicio | Los 8 bloques de la home |
 | `/carta` | Carta | La carta completa del local activo en HTML (índice, secciones, vinos por cepa y bodega) + toggle. Acepta `?local=<id>` |
-| `/reservas` | Reservas | Sin sesión: invita a ingresar. Con sesión: formulario real (franjas de la base, máx. 6 personas, días bloqueados). Acepta `?local=<id>` |
+| `/reservas` | Reservas | Una columna: salón (fotos), día y hora, tus datos. Sin sesión: los salones y "Ingresar con Google". Con más de 6 personas el botón pasa a "Reservar por WhatsApp" con el mensaje armado. El admin no la usa: lo lleva al panel. Acepta `?local=<id>` |
 | `/ingresar` | Cuenta | Un solo botón, "Continuar con Google" (la primera vez crea la cuenta). Acepta `?volver=<ruta>` |
-| `/mis-reservas` | Cuenta | Próximas y anteriores; cancelar hasta 2 h antes, después WhatsApp |
-| `/admin` | Admin | Reservas por fecha, local y estado; confirmar, rechazar, cancelar, mover; notas internas; días bloqueados; tiempo real |
+| `/mis-reservas` | Cuenta | Próximas y anteriores; cancelar hasta 1 h antes, después WhatsApp. El admin no la usa: lo lleva al panel |
+| `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado; confirmar, rechazar, cancelar, mover; notas internas; días bloqueados; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |
 | `/admin/dia` | Admin | Lista del día para imprimir. Acepta `?fecha=` y `?local=` |
 | `/nosotros` | Nosotros | Historia + un bloque por local + contacto |
 | `*` | — | `app/not-found.jsx` — página 404 con links de vuelta |
@@ -42,7 +42,8 @@
 | `LocalCard` | `local` | Tarjeta grande de un salón, con sus dos CTA |
 | `SelectorLocal` | `locales`, `localActivoId`, `onChange` | Toggle. Controlado |
 | `SesionProvider` | `children` | Contexto de sesión: `useSesion()` → `sesion`, `perfil`, `cargando`, `esAdmin`, `recargarPerfil()` |
-| `RequiereSesion` | `admin?`, `mensaje?`, `children` | Muestra `children` solo con sesión (y rol admin si se pide); si no, explica y ofrece ingresar. Comodidad, no seguridad |
+| `RequiereSesion` | `admin?`, `soloClientes?`, `mensaje?`, `sinSesion?`, `children` | Muestra `children` solo con sesión (y rol admin si se pide); si no, explica y ofrece ingresar, o muestra `sinSesion`. Con `soloClientes`, al admin lo lleva a `/admin` con la misma query. Comodidad, no seguridad |
+| `NuevaReservaLocal` | `idLocalInicial`, `alGuardar(mensaje)`, `alCerrar` | Formulario del panel para cargar una reserva que tomó el local |
 | `Campo` | `id`, `etiqueta`, `opcional?`, `ayuda?`, `error?`, `children(props)` | Etiqueta + control + error + ayuda. `children` es una función que recibe `id`, `aria-invalid` y `aria-describedby` para conectar el control con sus mensajes |
 | `EstadoReserva` | `estado` | Etiqueta de pendiente / confirmada / rechazada / cancelada |
 | `Icono` | `nombre` (`google` / `instagram` / `whatsapp`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |

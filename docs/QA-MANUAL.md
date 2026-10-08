@@ -148,24 +148,31 @@ locales bajo una marca" — es lo más importante de probar):**
 **Reservar**
 - [ ] Nombre y teléfono vienen precargados del perfil.
 - [ ] Solo deja elegir fechas desde hoy; si es hoy, solo horarios que no pasaron.
-- [ ] Personas: de 1 a 6; el link "Escribinos por WhatsApp" abre el chat del local.
+- [ ] Los salones se eligen tocando la foto; la elegida tiene marco bordo y se ve el foco con Tab.
+- [ ] Personas: con más de 6, el botón pasa a "Reservar por WhatsApp" y abre el chat del local
+      con el mensaje armado (salón, fecha, hora, nombre, personas; lo vacío no aparece).
 - [ ] Un día bloqueado muestra el aviso y deshabilita el botón.
 - [ ] Una segunda reserva el mismo día en el mismo local: "Ya tenés una reserva activa…".
-- [ ] Al reservar: "¡Recibimos tu pedido de reserva!", estado pendiente.
+- [ ] Al reservar: "Pedido de reserva enviado", estado pendiente.
+- [ ] Sin sesión: se ven los dos salones y "Ingresar con Google" vuelve a `/reservas`.
 
 **Mis reservas**
 - [ ] Muestra próximas (de la más cercana a la más lejana) y anteriores.
 - [ ] "Cancelar reserva" pide confirmación y la cancela.
-- [ ] Con menos de 2 h, en vez de cancelar aparece el link a WhatsApp.
+- [ ] Con menos de 1 h, en vez de cancelar aparece el link a WhatsApp.
 
 **Logos**
-- [ ] Instagram con su logo en el footer, en `/nosotros` y en el panel de `/reservas`.
+- [ ] Instagram con su logo en el footer, en `/nosotros` y al final de `/reservas`.
 - [ ] WhatsApp con su logo en "Escribir por WhatsApp" (Inicio), "Consultar por WhatsApp"
       y en los avisos de `/reservas` y `/mis-reservas`.
 
 **Panel de admin** (con una cuenta con rol admin)
 - [ ] Un cliente que entra a `/admin` ve "Sección para el equipo de La Posta".
 - [ ] El contador de pendientes filtra al tocarlo.
+- [ ] El navbar del admin muestra "Panel" (no "Reservar" ni "Mis reservas"); `/reservas` y
+      `/mis-reservas` lo llevan al panel, y "Reservar acá" de un salón abre "Nueva reserva" con ese salón.
+- [ ] "Nueva reserva": queda confirmada, marcada "Cargada en el local"; se pueden cargar varias el
+      mismo día; hasta 40 personas; con mail, aparece en la fila y le llega la confirmación.
 - [ ] Confirmar, rechazar, cancelar y mover funcionan y el cliente lo ve en "Mis reservas".
 - [ ] Con el panel abierto, una reserva nueva aparece sola, con el aviso arriba.
 - [ ] La nota interna se guarda y el cliente **no** la ve.

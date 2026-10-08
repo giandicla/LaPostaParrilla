@@ -1,179 +1,204 @@
-.columnas {
-  display: grid;
-  grid-template-columns: 1fr;
+/* Una sola columna que se lee de arriba abajo, directo sobre el fondo:
+   sin tarjeta ni panel lateral. Los grupos se separan con su título. */
+.pagina {
+  display: flex;
+  flex-direction: column;
   gap: var(--sp-12);
-  align-items: start;
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-12);
+}
+
+/* Sobre el crema, los campos en blanco para que se distingan */
+.formulario input:not([type='checkbox']):not([type='radio']),
+.formulario select,
+.formulario textarea {
+  background-color: var(--blanco);
 }
 
 /* Las piezas del formulario (campo, control, etc.) están en
    src/styles/formulario.module.css, compartidas con /ingresar y /admin. */
 
-/* ---------- Selector de local ---------- */
-.grupoLocal {
-  border: none;
-  padding: 0;
-  margin: 0;
+/* ---------- Grupos ---------- */
+.grupo {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-3);
+  gap: var(--sp-4);
+  margin: 0;
+  padding: 0;
+  border: none;
 }
 
-.opcionesLocal {
+.leyenda {
+  margin-bottom: var(--sp-4);
+  padding: 0;
+  font-family: var(--font-titulo);
+  font-size: var(--fs-h3);
+  color: var(--bordo-900);
+}
+
+.fila2,
+.fila3 {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--sp-3);
+  gap: var(--sp-4);
 }
 
-.tarjetaLocal {
+@media (min-width: 600px) {
+  .fila2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .fila3 {
+    grid-template-columns: 1.3fr 1fr 0.8fr;
+  }
+}
+
+/* ---------- Salones: la foto es la opción ---------- */
+.salones {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-4);
+}
+
+.salon {
   display: flex;
   flex-direction: column;
   gap: var(--sp-1);
-  padding: var(--sp-4);
-  background-color: var(--crema);
-  border: 2px solid var(--gris-300);
-  border-radius: var(--radio-md);
+}
+
+.salonElegible {
   cursor: pointer;
-  transition: border-color var(--transicion), background-color var(--transicion);
 }
 
-.tarjetaLocal:hover {
-  border-color: var(--oliva-700);
-}
-
-.tarjetaLocalActiva {
-  border-color: var(--bordo-900);
-  background-color: var(--arena-100);
-}
-
-/* El radio real sigue existiendo para teclado y lectores de pantalla */
-.radioOculto {
-  position: absolute;
-  opacity: 0;
-  width: 1px;
-  height: 1px;
-}
-
-.tarjetaLocal:has(.radioOculto:focus-visible) {
-  outline: 3px solid var(--brasa);
+.fotoSalon {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  margin-bottom: var(--sp-2);
+  border-radius: var(--radio-sm);
+  outline: 3px solid transparent;
   outline-offset: 3px;
+  transition: outline-color var(--transicion), opacity var(--transicion);
 }
 
-.nombreLocal {
+.salonElegible:not(.salonActivo) .fotoSalon {
+  opacity: 0.75;
+}
+
+.salonElegible:hover .fotoSalon {
+  opacity: 1;
+}
+
+.salonActivo .fotoSalon {
+  outline-color: var(--bordo-900);
+}
+
+/* El radio está oculto pero sigue siendo el control: el foco se ve en la foto */
+.salon:has(input:focus-visible) .fotoSalon {
+  outline-color: var(--brasa);
+}
+
+.nombreSalon {
   font-weight: 600;
   color: var(--bordo-900);
 }
 
-.taglineLocal {
+.taglineSalon {
   font-size: var(--fs-small);
-  color: var(--gris-600);
   font-style: italic;
+  color: var(--gris-600);
+}
+
+/* ---------- Cierre: condiciones y botón ---------- */
+.cierre {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-6);
+  padding-top: var(--sp-8);
+  border-top: 1px solid var(--gris-300);
+}
+
+.aviso {
+  max-width: 60ch;
+  color: var(--gris-600);
 }
 
 .botonEnviar {
   align-self: flex-start;
 }
 
+/* ---------- Pedido enviado ---------- */
 .tituloListo {
-  font-size: var(--fs-h3);
+  font-size: var(--fs-h2);
   color: var(--bordo-900);
 }
 
-.accionesListo {
+.detalleListo {
+  font-family: var(--font-titulo);
+  font-size: 1.15rem;
+}
+
+.acciones {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: var(--sp-6);
 }
 
+/* ---------- Sin sesión ---------- */
+.textoIngreso {
+  max-width: 52ch;
+}
+
+/* Botón con el formato que pide Google: fondo blanco, borde gris y su "G" */
+.google {
+  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-6);
+  background-color: var(--blanco);
+  color: var(--carbon);
+  border: 1px solid var(--gris-300);
+  border-radius: var(--radio-md);
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color var(--transicion);
+}
+
+.google:hover:not(:disabled) {
+  border-color: var(--carbon);
+}
+
+.google:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.logoGoogle {
+  width: 1.3em;
+  height: 1.3em;
+}
+
+/* ---------- Contacto ---------- */
+.contacto {
+  color: var(--gris-600);
+}
+
 .enlace {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
   color: var(--bordo-900);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 3px;
-}
-
-/* ---------- Panel lateral ---------- */
-.panel {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-6);
-  background-color: var(--arena-100);
-  padding: var(--sp-6);
-  border-radius: var(--radio-lg);
-  border-top: 4px solid var(--bordo-900);
-}
-
-.tituloPanel {
-  font-size: var(--fs-h3);
-  color: var(--bordo-900);
-}
-
-.condiciones {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-}
-
-.condicion {
-  position: relative;
-  padding-left: var(--sp-6);
-  font-size: var(--fs-small);
-  color: var(--carbon);
-}
-
-.condicion::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 8px;
-  height: 8px;
-  background-color: var(--oliva);
-  border-radius: 50%;
-}
-
-.contactoPanel {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--sp-3);
-  padding-top: var(--sp-4);
-  border-top: 1px solid var(--gris-300);
-}
-
-.subtituloPanel {
-  font-size: 1.05rem;
-  color: var(--bordo-900);
-}
-
-.sinContacto {
-  font-size: var(--fs-small);
-  color: var(--gris-600);
-  font-style: italic;
-}
-
-.instagram {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--bordo-900);
-}
-
-.instagram:hover {
-  text-decoration: underline;
-}
-
-@media (min-width: 600px) {
-  .opcionesLocal {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-}
-
-@media (min-width: 1100px) {
-  .columnas {
-    grid-template-columns: 1.6fr 1fr;
-    gap: var(--sp-12);
-  }
 }

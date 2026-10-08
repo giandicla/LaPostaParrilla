@@ -4,6 +4,32 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-08 — Reservas del local y nueva página de reservas
+
+Rama `feat/reservas-admin`. Spec: `docs/superpowers/specs/2026-10-08-reservas-admin-design.md`.
+(Antes, el rediseño general del sitio se hizo y se descartó: PR #5 cerrado sin mergear.)
+
+- Migración `20261008130000_reservas_del_local`: `reservas.origen` (`web`/`local`),
+  `usuario_id` opcional (solo en las del local), `mail` opcional (solo en las del
+  local), personas 1–6 web y 1–40 local, cancelar desde la web hasta **1 hora**
+  antes. `cancelar_reserva()` compara con `is distinct from` (con `<>`, una reserva
+  sin cuenta la podía cancelar cualquiera). Test pgTAP 04 (19 asserts); el 01 pasa a 1 hora.
+- Mails: las del local solo le avisan al cliente, y solo si tiene mail; sin link a
+  "Mis reservas". 4 tests Deno nuevos.
+- Panel: **Nueva reserva** (`NuevaReservaLocal`), queda confirmada; la lista marca
+  "Cargada en el local" y muestra el mail.
+- El admin no tiene "Mis reservas" ni "Reservar": el botón del navbar es **Panel**, y
+  `/reservas` y `/mis-reservas` lo llevan al panel (`RequiereSesion soloClientes`).
+  `obtenerMisReservas()` filtra por usuario (al admin le traía todas).
+- `/reservas` en una columna: salón con fotos, día y hora, tus datos; condiciones en
+  un párrafo junto al botón; sin panel lateral. Con más de 6 personas, "Reservar
+  por WhatsApp" con el mensaje armado (`mensajeReservaWhatsapp`). Sin sesión:
+  salones + "Ingresar con Google".
+- Funciones puras nuevas con tests: `validarMail`, `esGrupo`,
+  `mensajeReservaWhatsapp`, plazo de 1 hora (`npm test`: 18).
+
+---
+
 ## 2026-10-08 — El teléfono no acepta letras
 
 Pedido del usuario: que en el teléfono ni se puedan escribir letras. `limpiarTelefono`

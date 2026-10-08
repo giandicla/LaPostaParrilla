@@ -30,11 +30,14 @@ export const crearReserva = async (idUsuario, reserva) =>
       .single()
   );
 
-export const obtenerMisReservas = async () =>
+// Filtra por usuario aunque la RLS ya lo haga para un cliente: a un admin la
+// RLS le deja ver todas, y "mis reservas" son solo las suyas.
+export const obtenerMisReservas = async (idUsuario) =>
   resultado(
     await supabase
       .from('reservas')
       .select(COLUMNAS)
+      .eq('usuario_id', idUsuario)
       .order('fecha', { ascending: false })
       .order('hora')
   );

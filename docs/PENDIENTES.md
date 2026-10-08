@@ -107,6 +107,11 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
 Pedido del usuario (2026-10-08). Diagnóstico de la IA mirando el sitio en producción;
 el pase se hace en una sesión con el plugin de UI/UX cargado.
 
+**Actualización (sesión 04):** el pase general se hizo y **el usuario lo descartó**:
+prefiere el diseño actual (PR #5 cerrado, rama `feat/diseno-propio`). Lo que sí se
+rehízo fue `/reservas`, que era lo único que no lo convencía. Los puntos de abajo
+quedan como referencia; no se trabajan sin que el usuario lo pida.
+
 - [ ] **Todas las secciones usan la misma plantilla**: ornamento centrado + título en
       mayúsculas centrado + rayita + bajada centrada + grilla pareja de tarjetas. El
       ritmo es idéntico de arriba a abajo. Variar: bloques asimétricos, foto a sangre
@@ -136,6 +141,8 @@ el pase se hace en una sesión con el plugin de UI/UX cargado.
 - [x] Credenciales de Google OAuth (cuenta de la facultad)
 - [ ] 👤 Cuenta de Brevo, remitente verificado y API key (solo para los mails de reservas: el ingreso es con Google y no manda mails)
 - [x] Primer admin en producción: gdiclaudio@itba.edu.ar
+- [ ] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail,
+      personas). Hoy solo se mueve de fecha y hora.
 - [ ] El link de "Imprimir" del panel abre otra página: probar la impresión real
       en la computadora del local
 

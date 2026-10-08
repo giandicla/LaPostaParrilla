@@ -89,18 +89,14 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
-          {/* Cuenta: solo si el backend está configurado */}
+          {/* Cuenta: solo si el backend está configurado. El admin no tiene
+              "Mis reservas": todo lo gestiona desde el panel. */}
           {backendDisponible && sesion && (
             <>
-              <li>
-                <Link href="/mis-reservas" className={`${estilos.enlace} ${esActivo('/mis-reservas') ? estilos.enlaceActivo : ''}`}>
-                  Mis reservas
-                </Link>
-              </li>
-              {esAdmin && (
+              {!esAdmin && (
                 <li>
-                  <Link href="/admin" className={`${estilos.enlace} ${esActivo('/admin') ? estilos.enlaceActivo : ''}`}>
-                    Admin
+                  <Link href="/mis-reservas" className={`${estilos.enlace} ${esActivo('/mis-reservas') ? estilos.enlaceActivo : ''}`}>
+                    Mis reservas
                   </Link>
                 </li>
               )}
@@ -118,13 +114,15 @@ export default function Navbar() {
               </Link>
             </li>
           )}
+          {/* El botón destacado: reservar para el cliente, el panel para el admin */}
           <li className={estilos.itemReservar}>
             <Link
-              href="/reservas"
+              href={esAdmin ? '/admin' : '/reservas'}
               className={estilos.botonReservar}
+              aria-current={esAdmin && esActivo('/admin') ? 'page' : undefined}
               onClick={() => setMenuAbierto(false)}
             >
-              Reservar
+              {esAdmin ? 'Panel' : 'Reservar'}
             </Link>
           </li>
         </ul>

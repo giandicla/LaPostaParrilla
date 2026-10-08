@@ -7,6 +7,7 @@ import Boton from '../../src/components/Boton/Boton.jsx';
 import Icono from '../../src/components/Icono/Icono.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
+import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
 import { getLocal, enlaceWhatsapp } from '../../src/data/locales.js';
 import {
   cancelarReserva,
@@ -41,7 +42,7 @@ function TarjetaReserva({ reserva, alCancelar }) {
       )}
       {esActiva(reserva) && !sePuedeCancelar(reserva) && faltaParaReserva(reserva) > 0 && (
         <p className={estilos.aviso}>
-          Faltan menos de 2 horas: para cancelar,{' '}
+          Falta menos de 1 hora: para cancelar,{' '}
           {whatsapp ? <a href={whatsapp} target="_blank" rel="noreferrer"><Icono nombre="whatsapp" /> escribinos por WhatsApp</a> : 'escribinos'}.
         </p>
       )}
@@ -50,6 +51,7 @@ function TarjetaReserva({ reserva, alCancelar }) {
 }
 
 function ListaReservas() {
+  const { sesion } = useSesion();
   const [reservas, setReservas] = useState(null);
   const [error, setError] = useState('');
   const [aviso, setAviso] = useState('');
@@ -58,13 +60,13 @@ function ListaReservas() {
 
   useEffect(() => {
     let vigente = true;
-    obtenerMisReservas()
+    obtenerMisReservas(sesion.user.id)
       .then((lista) => vigente && setReservas(lista))
       .catch((e) => vigente && setError(e.message));
     return () => {
       vigente = false;
     };
-  }, [version]);
+  }, [sesion.user.id, version]);
 
   const alCancelar = async (reserva) => {
     if (!window.confirm('¿Seguro que querés cancelar esta reserva?')) return;
@@ -120,7 +122,7 @@ export default function MisReservas() {
       <Hero compacto imagen="/img/comunes/salon-calido.webp" alt="" titulo="Mis reservas" bajada="La Posta" />
       <Section>
         <Suspense fallback={null}>
-          <RequiereSesion>
+          <RequiereSesion soloClientes>
             <ListaReservas />
           </RequiereSesion>
         </Suspense>

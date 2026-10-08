@@ -1,6 +1,7 @@
 'use client';
 
-import { usePathname, useSearchParams } from 'next/navigation';
+import { useEffect } from 'react';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Boton from '../Boton/Boton.jsx';
 import { useSesion } from '../SesionProvider/SesionProvider.jsx';
 import { backendDisponible } from '../../servicios/supabase.js';
@@ -9,12 +10,25 @@ import estilos from './RequiereSesion.module.css';
 // Muestra `children` solo si hay sesión (y, con `admin`, si además es admin).
 // Si no, explica por qué y ofrece el camino: ingresar o volver.
 //
+// soloClientes: páginas del cliente (reservar, mis reservas). El admin
+// gestiona todo desde el panel, así que se lo lleva ahí, con la misma query
+// (?local=… deja elegido el salón en "Nueva reserva").
+// sinSesion: reemplaza el aviso de "Ingresá para continuar" en una página
+// que quiere mostrar otra cosa.
+//
 // Es comodidad, no seguridad: aunque alguien se saltee este componente, la
 // RLS de la base no le devuelve datos que no le corresponden.
-export default function RequiereSesion({ admin = false, mensaje, children }) {
+export default function RequiereSesion({ admin = false, soloClientes = false, mensaje, sinSesion, children }) {
   const { sesion, cargando, esAdmin } = useSesion();
   const ruta = usePathname();
   const parametros = useSearchParams();
+  const router = useRouter();
+  const query = parametros.toString();
+  const alPanel = soloClientes && !cargando && esAdmin;
+
+  useEffect(() => {
+    if (alPanel) router.replace(query ? `/admin?${query}` : '/admin');
+  }, [alPanel, query, router]);
 
   if (!backendDisponible) {
     return (
@@ -29,7 +43,7 @@ export default function RequiereSesion({ admin = false, mensaje, children }) {
   }
 
   if (!sesion) {
-    const query = parametros.toString();
+    if (sinSesion) return sinSesion;
     const volver = encodeURIComponent(query ? `${ruta}?${query}` : ruta);
     return (
       <Aviso titulo="Ingresá para continuar">
@@ -39,6 +53,10 @@ export default function RequiereSesion({ admin = false, mensaje, children }) {
         </Boton>
       </Aviso>
     );
+  }
+
+  if (alPanel) {
+    return <p className={estilos.cargando} role="status">Te llevamos al panel…</p>;
   }
 
   if (admin && !esAdmin) {

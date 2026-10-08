@@ -25,7 +25,7 @@ restaurante.
   o contraseña sin hablarlo, porque el servidor de mails de fábrica de Supabase no
   le entrega a clientes.
 - **Toda llamada a Supabase pasa por `src/servicios/`.** Ningún componente
-  importa `@supabase/supabase-js`. Las reglas de negocio (6 personas, 2 horas,
+  importa `@supabase/supabase-js`. Las reglas de negocio (6 personas, 1 hora para cancelar,
   franjas, una reserva por día) viven en la base, no en los componentes.
 - El esquema se cambia **solo con migraciones** (`supabase/migrations/`) y cada
   regla nueva lleva su test pgTAP (`npm run db:test`).
