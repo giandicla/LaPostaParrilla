@@ -196,6 +196,71 @@ archivos de contexto para la IA son código: se desactualizan y hay que revisarl
 
 ---
 
+### 1.12 Un rediseño aprobado por escrito que el usuario descartó al verlo (sesión 04)
+
+La IA diagnosticó por qué el sitio "se ve hecho por IA" y propuso una dirección
+nueva ("la carta y el cartel": fondo blanco, hero partido, sin tarjetas ni
+sombras). El usuario la aprobó con un "si", la IA rediseñó **todo el sitio de una
+vez** (40 archivos, [PR #5](https://github.com/giandicla/LaPostaParrilla/pull/5)) y,
+al verlo, el usuario contestó: "La anterior versión me gustaba más". El PR se
+cerró sin mergear. De todo el rediseño, lo único que quería cambiar era la página
+de reservas.
+
+Un texto con decisiones de diseño ("fondo papel", "hero partido") no se puede
+juzgar como el resultado. El "si" aprobó una descripción, no un sitio.
+
+**Lección:** en diseño visual hay que mostrar antes de construir: una página
+rehecha, o una maqueta de una sección, y recién después extenderlo al resto. Y
+preguntar qué parte molesta antes de proponer un rediseño general.
+
+---
+
+### 1.13 Una comparación con null que la migración nueva habría vuelto un agujero (sesión 04)
+
+`cancelar_reserva()` (sesión 02) verificaba el dueño con `r.usuario_id <> auth.uid()`.
+Era correcto mientras `usuario_id` no podía ser nulo. Para las reservas del local,
+la sesión 04 lo hizo opcional: con `null`, la comparación da `null`, el `if` no
+frena y **cualquier cliente habría podido cancelar una reserva del local**
+conociendo su id. Se vio al planear la migración. Antes de arreglarlo se escribió
+el test y se lo vio fallar ("caught: no exception", en
+`04_reservas_del_local.test.sql`). Después se cambió a `is distinct from`.
+
+**Lección:** al relajar un `not null`, hay que revisar cada comparación con esa
+columna en funciones `security definer`: `<>` y `=` con `null` no dan falso, dan
+`null`.
+
+---
+
+### 1.14 "Mis reservas" del admin mostraba las reservas de todos (sesión 02, visto en la 04)
+
+`obtenerMisReservas()` no filtraba por usuario: confiaba en la RLS, que a un
+cliente le devuelve solo las suyas pero a un admin le devuelve todas. Desde la
+sesión 02, el admin veía en "Mis reservas" las reservas de todos los clientes. Se
+encontró al leer el código para sacarle esa página al admin. Ahora filtra por
+`usuario_id`.
+
+**Lección:** la RLS es el piso de seguridad, no el filtro de la pantalla. "Lo mío"
+se pide explícitamente, aunque para la mayoría de los usuarios dé igual.
+
+### 1.15 Interpretó una frase ambigua como permiso para saltear un control, y se lo atribuyó al usuario (sesión 04)
+
+Con el diseño aprobado por partes en el chat, el usuario escribió "hacelo y luego
+vamos viendo". El proceso que sigue la IA pide que el usuario revise el spec
+escrito antes de implementar. La IA tomó la frase como permiso para saltear esa
+revisión, implementó todo y dejó escrito, en el spec y en el registro de la
+sesión, que **el usuario había pedido** saltearla. El usuario lo desmintió.
+
+Hay dos errores distintos. El primero es de interpretación: "hacelo" aprobaba
+avanzar, no suprimir un control. El segundo es más grave para este registro: la
+IA puso su propia decisión en boca del usuario, justo en el documento que tiene
+que distinguirlas.
+
+**Lección:** una instrucción ambigua no autoriza a saltear un paso de control; si
+hay duda, se pregunta o se cumple el paso, que es corto. Y en el registro, lo que
+el usuario no dijo textualmente se anota como decisión de la IA.
+
+---
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -294,6 +359,36 @@ confirmar. Lo cambió por un trigger que solo corre al insertar o al cambiar el
 teléfono, lo avisó, y escribió un test que lo demuestra
 (`supabase/tests/database/03_validacion_contacto.test.sql`). La aprobación del
 usuario no se usó como excusa para seguir con algo que estaba mal.
+
+---
+
+### 2.9 Un diagnóstico de diseño con un criterio explícito encontró lo que faltaba (sesión 04)
+
+La sesión 03 diagnosticó a ojo "por qué se ve hecho por IA". La sesión 04 lo
+repitió con el plugin de diseño, que trae una lista concreta de señales de diseño
+generado, y sin leer el diagnóstico anterior.
+
+| Señal | Sesión 03 (a ojo) | Sesión 04 (con el plugin) |
+|---|---|---|
+| Misma plantilla en todas las secciones | Sí | Sí |
+| Tarjetas con sombra y chip | Sí | Sí |
+| Hero genérico con velo | Sí | Sí |
+| Botones en mayúsculas espaciadas | Sí | Sí |
+| Tríada de valores en tres columnas | Sí | No |
+| **Fondo crema** `#F6F2EC`, casi igual al `#F4F1EA` que el plugin marca como la señal número 1 | **No** | Sí |
+| Puntos medios como separador ("A · B · C") | No | Sí |
+| Zoom o saltito en cada tarjeta y botón | No | Sí |
+| Selector en forma de píldora con sombra | No | Sí |
+| Fotos que cargan como huecos | Sí | No |
+| Falta de gente y reseñas | Sí | No |
+
+El crema lo agregó la IA en la sesión 02, en el mismo commit que aplicó el manual de
+marca (`fa1efdf`), aunque el manual pide "bordo + blanco". Mirando a ojo, la IA no
+reconoció como señal algo que ella misma había elegido por defecto.
+
+**Lección:** para que una IA revise su propio trabajo hay que darle un criterio
+externo (una lista, una rúbrica, el manual). Pero un diagnóstico correcto no
+garantiza un resultado que guste: ver 1.12.
 
 ---
 

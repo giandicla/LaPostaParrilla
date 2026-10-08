@@ -1,11 +1,13 @@
 'use client';
 
 import { Suspense, useCallback, useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
-import { LOCALES, getLocal } from '../../src/data/locales.js';
+import NuevaReservaLocal from '../../src/components/NuevaReservaLocal/NuevaReservaLocal.jsx';
+import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/data/locales.js';
 import { ESTADOS, formatearFecha, hoyEnArgentina, obtenerFranjas } from '../../src/servicios/reservas.js';
 import {
   bloquearDia,
@@ -38,6 +40,9 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const nota = borradorNota ?? reserva.nota;
   const local = getLocal(reserva.local_id);
   const activa = ['pendiente', 'confirmada'].includes(reserva.estado);
+  const delLocal = reserva.origen === 'local';
+  // Una reserva del local sin mail no recibe avisos: no se le promete uno
+  const avisoMail = delLocal && !reserva.mail ? '' : ' Le avisamos al cliente por mail.';
 
   const ejecutar = async (accion, confirmar) => {
     if (confirmar && !window.confirm(confirmar)) return;
@@ -80,9 +85,16 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
           <EstadoReserva estado={reserva.estado} />
         </p>
         <p className={estilos.secundario}>
-          {local?.nombreCorto ?? reserva.local_id} ·{' '}
+          {local?.nombre ?? reserva.local_id} ·{' '}
           <a href={`tel:${reserva.telefono.replace(/[^\d+]/g, '')}`}>{reserva.telefono}</a>
           {reserva.estado === 'cancelada' && reserva.cancelada_por && ` · canceló el ${reserva.cancelada_por}`}
+          {delLocal && ' · Cargada en el local'}
+          {reserva.mail && (
+            <>
+              {' · '}
+              <a href={`mailto:${reserva.mail}`}>{reserva.mail}</a>
+            </>
+          )}
         </p>
         {reserva.comentarios && <p className={estilos.comentario}>“{reserva.comentarios}”</p>}
 
@@ -159,7 +171,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
             <button
               type="button"
               className={estilos.botonTexto}
-              onClick={() => ejecutar(() => cambiarEstado(reserva.id, 'rechazada'), '¿Rechazar esta reserva? Le avisamos al cliente por mail.')}
+              onClick={() => ejecutar(() => cambiarEstado(reserva.id, 'rechazada'), `¿Rechazar esta reserva?${avisoMail}`)}
             >
               Rechazar
             </button>
@@ -172,7 +184,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
           <button
             type="button"
             className={estilos.botonTexto}
-            onClick={() => ejecutar(() => cambiarEstado(reserva.id, 'cancelada'), '¿Cancelar esta reserva? Le avisamos al cliente por mail.')}
+            onClick={() => ejecutar(() => cambiarEstado(reserva.id, 'cancelada'), `¿Cancelar esta reserva?${avisoMail}`)}
           >
             Cancelar
           </button>
@@ -246,7 +258,7 @@ function DiasBloqueados({ alError }) {
         />
         <select name="local" className={formulario.control} aria-label="Local" defaultValue="">
           <option value="">Los dos locales</option>
-          {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombreCorto}</option>)}
+          {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
         </select>
         <input
           name="motivo"
@@ -266,7 +278,7 @@ function DiasBloqueados({ alError }) {
           {bloqueos.map((b) => (
             <li key={b.id}>
               <span>
-                <strong>{formatearFecha(b.fecha)}</strong> · {b.local_id ? getLocal(b.local_id)?.nombreCorto : 'los dos locales'}
+                <strong>{formatearFecha(b.fecha)}</strong> · {b.local_id ? getLocal(b.local_id)?.nombre : 'los dos locales'}
                 {b.motivo && ` · ${b.motivo}`}
               </span>
               <button type="button" className={estilos.botonTexto} onClick={async () => {
@@ -293,6 +305,11 @@ function DiasBloqueados({ alError }) {
 // Panel
 // ---------------------------------------------------------------------
 function Panel() {
+  // ?local=… llega cuando el admin toca "Reservar" en una página del sitio:
+  // abre "Nueva reserva" con ese salón elegido
+  const parametros = useSearchParams();
+  const localPedido = parametros.get('local');
+  const [nueva, setNueva] = useState(esIdDeLocal(localPedido) ? localPedido : null);
   const [filtros, setFiltros] = useState({ fecha: hoyEnArgentina(), idLocal: '', estado: '' });
   const [reservas, setReservas] = useState(null);
   const [pendientes, setPendientes] = useState(0);
@@ -330,7 +347,8 @@ function Panel() {
   useEffect(
     () =>
       escucharReservas((cambio) => {
-        if (cambio.eventType === 'INSERT') {
+        // Las del local las cargó el propio panel: no hace falta avisarlas
+        if (cambio.eventType === 'INSERT' && cambio.new.origen !== 'local') {
           setNovedad(`Entró una reserva nueva de ${cambio.new.nombre}.`);
         }
         cargar();
@@ -345,14 +363,31 @@ function Panel() {
     <div className={estilos.panel}>
       <header className={estilos.cabecera}>
         <h1 className={estilos.titulo}>Reservas</h1>
-        <button
-          type="button"
-          className={`${estilos.contador} ${pendientes ? estilos.contadorActivo : ''}`}
-          onClick={() => filtrar({ fecha: '', estado: 'pendiente' })}
-        >
-          {pendientes} {pendientes === 1 ? 'pendiente' : 'pendientes'}
-        </button>
+        <div className={estilos.accionesCabecera}>
+          {!nueva && (
+            <Boton onClick={() => setNueva(filtros.idLocal || ID_LOCAL_POR_DEFECTO)}>Nueva reserva</Boton>
+          )}
+          <button
+            type="button"
+            className={`${estilos.contador} ${pendientes ? estilos.contadorActivo : ''}`}
+            onClick={() => filtrar({ fecha: '', estado: 'pendiente' })}
+          >
+            {pendientes} {pendientes === 1 ? 'pendiente' : 'pendientes'}
+          </button>
+        </div>
       </header>
+
+      {nueva && (
+        <NuevaReservaLocal
+          idLocalInicial={nueva}
+          alGuardar={(mensaje) => {
+            setNueva(null);
+            setNovedad(mensaje);
+            cargar();
+          }}
+          alCerrar={() => setNueva(null)}
+        />
+      )}
 
       {novedad && (
         <p className={formulario.exito} role="status">
@@ -376,7 +411,7 @@ function Panel() {
           <span className={formulario.etiqueta}>Local</span>
           <select value={filtros.idLocal} onChange={(e) => filtrar({ idLocal: e.target.value })} className={formulario.control}>
             <option value="">Los dos</option>
-            {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombreCorto}</option>)}
+            {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
           </select>
         </label>
         <label className={formulario.campo}>

@@ -4,6 +4,46 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-08 — Reservas del local y nueva página de reservas
+
+Rama `feat/reservas-admin`. Spec: `docs/superpowers/specs/2026-10-08-reservas-admin-design.md`.
+(Antes, el rediseño general del sitio se hizo y se descartó: PR #5 cerrado sin mergear.)
+
+- Migración `20261008130000_reservas_del_local`: `reservas.origen` (`web`/`local`),
+  `usuario_id` opcional (solo en las del local), `mail` opcional (solo en las del
+  local), personas 1–6 web y 1–40 local, cancelar desde la web hasta **1 hora**
+  antes. `cancelar_reserva()` compara con `is distinct from` (con `<>`, una reserva
+  sin cuenta la podía cancelar cualquiera). Test pgTAP 04 (19 asserts); el 01 pasa a 1 hora.
+- Mails: las del local solo le avisan al cliente, y solo si tiene mail; sin link a
+  "Mis reservas". 4 tests Deno nuevos.
+- Panel: **Nueva reserva** (`NuevaReservaLocal`), queda confirmada; la lista marca
+  "Cargada en el local" y muestra el mail.
+- El admin no tiene "Mis reservas" ni "Reservar": el botón del navbar es **Panel**, y
+  `/reservas` y `/mis-reservas` lo llevan al panel (`RequiereSesion soloClientes`).
+  `obtenerMisReservas()` filtra por usuario (al admin le traía todas).
+- `/reservas` en una columna: salón con fotos, día y hora, tus datos; condiciones en
+  un párrafo junto al botón; sin panel lateral. Con más de 6 personas, "Reservar
+  por WhatsApp" con el mensaje armado (`mensajeReservaWhatsapp`). Sin sesión:
+  salones + "Ingresar con Google".
+- Funciones puras nuevas con tests: `validarMail`, `esGrupo`,
+  `mensajeReservaWhatsapp`, plazo de 1 hora (`npm test`: 18).
+- Después de la revisión del usuario: "Reservar en:" con las fotos arriba y el resto
+  en la card de antes; sin la línea "¿Preferís hablar con alguien?"; el aviso de
+  grupo dice "Para más de 6 personas deberá realizar la reserva por WhatsApp". El
+  nombre ya no pide 2 letras (alcanza con no vacío, sin números ni símbolos) y los
+  comentarios bajan de 500 a 100 caracteres, en el formulario y en la base (test 03
+  actualizado).
+- Segunda ronda: fotos nuevas para elegir salón en `/reservas` (`imagenes.reserva`,
+  en prueba: "Cordero vino salon de fondo" y "plano mesa con fondo rustico"; las
+  de la home no cambian). Aviso sin los 15 minutos: "…hasta que sea confirmada por
+  el restaurante. Podés gestionarla desde la sección "Mis reservas" hasta 1 hora
+  antes." Personas pasa a campo numérico con flechitas (tope 40, el validador avisa).
+- Nombres completos en todo el sitio, a pedido del usuario: "La Posta Parrilla" y
+  "La Posta II Restaurante" (se eliminó `nombreCorto` de `locales.js`). En el
+  celular, el selector de la carta pasa a dos columnas para que entren.
+
+---
+
 ## 2026-10-08 — El teléfono no acepta letras
 
 Pedido del usuario: que en el teléfono ni se puedan escribir letras. `limpiarTelefono`

@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { usePathname, useSearchParams } from 'next/navigation';
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
@@ -9,10 +9,17 @@ import Icono from '../../src/components/Icono/Icono.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import Campo from '../../src/components/Campo/Campo.jsx';
 import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
-import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO, enlaceWhatsapp } from '../../src/data/locales.js';
+import {
+  LOCALES,
+  getLocal,
+  esIdDeLocal,
+  ID_LOCAL_POR_DEFECTO,
+  enlaceWhatsapp,
+  mensajeReservaWhatsapp,
+} from '../../src/data/locales.js';
 import { TEXTOS } from '../../src/data/textos.js';
 import { MARCA } from '../../src/data/marca.js';
-import { actualizarPerfil } from '../../src/servicios/auth.js';
+import { actualizarPerfil, ingresarConGoogle } from '../../src/servicios/auth.js';
 import {
   crearReserva,
   faltaParaReserva,
@@ -21,16 +28,91 @@ import {
   obtenerDiasBloqueados,
   obtenerFranjas,
 } from '../../src/servicios/reservas.js';
-import { LIMITES, limpiarTelefono, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
+import { LIMITES, esGrupo, limpiarTelefono, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
-const MAXIMO_PERSONAS = LIMITES.personas.max;
+// Desde la web se reserva hasta LIMITES.personas.max. Se puede elegir más (hasta
+// el tope del local): en ese caso la reserva se pide por WhatsApp.
+const MAXIMO_ELEGIBLE = LIMITES.personas.maxLocal;
 
 // Orden de los campos en pantalla: al enviar con errores, el foco va al primero
 const CAMPOS = ['nombre', 'telefono', 'fecha', 'hora', 'personas', 'comentarios'];
 
-function FormularioReserva({ idInicial, alCambiarLocal }) {
+// Los salones con su foto. Con onChange son opciones para elegir; sin él,
+// solo se muestran (página sin sesión).
+function Salones({ idLocal, onChange }) {
+  return (
+    <div className={estilos.salones}>
+      {LOCALES.map((opcion) => {
+        const contenido = (
+          <>
+            <img src={opcion.imagenes.reserva ?? opcion.imagenes.card} alt="" className={estilos.fotoSalon} loading="lazy" />
+            <span className={estilos.nombreSalon}>{opcion.nombre}</span>
+            <span className={estilos.taglineSalon}>{opcion.tagline}</span>
+          </>
+        );
+        if (!onChange) return <div key={opcion.id} className={estilos.salon}>{contenido}</div>;
+        return (
+          <label
+            key={opcion.id}
+            className={`${estilos.salon} ${estilos.salonElegible} ${opcion.id === idLocal ? estilos.salonActivo : ''}`}
+          >
+            <input
+              type="radio"
+              name="local"
+              value={opcion.id}
+              checked={opcion.id === idLocal}
+              onChange={() => onChange(opcion.id)}
+              className="visualmente-oculto"
+            />
+            {contenido}
+          </label>
+        );
+      })}
+    </div>
+  );
+}
+
+function SinSesion() {
+  const ruta = usePathname();
+  const parametros = useSearchParams();
+  const [yendo, setYendo] = useState(false);
+  const [error, setError] = useState('');
+  const query = parametros.toString();
+
+  const conGoogle = async () => {
+    setError('');
+    setYendo(true);
+    try {
+      await ingresarConGoogle(query ? `${ruta}?${query}` : ruta);
+    } catch (e) {
+      setError(e.message);
+      setYendo(false);
+    }
+  };
+
+  return (
+    <div className={estilos.pagina}>
+      <div className={estilos.grupo}>
+        <h2 className={estilos.leyenda}>Reservar en:</h2>
+        <Salones />
+      </div>
+      <div className={formulario.formulario}>
+        <p className={estilos.textoIngreso}>
+          Para pedir una mesa, ingresá con tu cuenta de Google: así ves y cancelás tus reservas desde acá.
+        </p>
+        <button type="button" className={estilos.google} onClick={conGoogle} disabled={yendo}>
+          <Icono nombre="google" className={estilos.logoGoogle} />
+          {yendo ? 'Abriendo Google…' : 'Ingresar con Google'}
+        </button>
+        {error && <p className={formulario.error} role="alert">{error}</p>}
+      </div>
+    </div>
+  );
+}
+
+function FormularioReserva({ idInicial }) {
   const { sesion, perfil, recargarPerfil } = useSesion();
   const [idLocal, setIdLocal] = useState(idInicial);
   const [valores, setValores] = useState({
@@ -54,6 +136,7 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
   const local = getLocal(idLocal);
   const hoy = hoyEnArgentina();
   const { fecha, hora } = valores;
+  const grupo = esGrupo(valores.personas);
 
   useEffect(() => {
     let vigente = true;
@@ -84,12 +167,14 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
 
   const bloqueo = bloqueos.find((b) => b.fecha === fecha && (!b.local_id || b.local_id === idLocal));
 
-  // Los errores no se guardan: se calculan de los valores en cada render
+  // Los errores no se guardan: se calculan de los valores en cada render.
+  // Se acepta hasta el tope del local: lo que pase de 6 no se manda, se pide por WhatsApp.
   const errores = validarReserva(valores, {
     hoy,
     franjas: franjasDisponibles,
     bloqueo,
     nombreLocal: local.nombre,
+    maxPersonas: MAXIMO_ELEGIBLE,
   });
   const errorVisible = (campo) => (tocados[campo] || intentoEnviar ? errores[campo] : undefined);
   const cantidadErrores = CAMPOS.filter(errorVisible).length;
@@ -104,11 +189,25 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
   const cambiarLocal = (id) => {
     setIdLocal(id);
     cambiar('hora', ''); // las franjas dependen del local: la hora elegida deja de valer
-    alCambiarLocal(id);
   };
+
+  // Grupo: WhatsApp con lo que ya se completó
+  const whatsappGrupo = grupo
+    ? enlaceWhatsapp(
+        local,
+        mensajeReservaWhatsapp({
+          local,
+          fechaTexto: fecha && !errores.fecha ? formatearFecha(fecha).replace(',', '') : '',
+          hora,
+          nombre: valores.nombre,
+          personas: valores.personas,
+        })
+      )
+    : null;
 
   const alEnviar = async (evento) => {
     evento.preventDefault();
+    if (grupo) return; // se pide por WhatsApp: el botón es un link
     setIntentoEnviar(true);
     setError('');
     if (hayErrores(errores)) {
@@ -152,16 +251,16 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
   if (creada) {
     return (
       <div className={formulario.formulario}>
-        <h2 className={estilos.tituloListo}>¡Recibimos tu pedido de reserva!</h2>
+        <h2 className={estilos.tituloListo}>Pedido de reserva enviado</h2>
         <p>
-          <strong>{getLocal(creada.local_id).nombre}</strong> — {formatearFecha(creada.fecha)},{' '}
-          {creada.hora.slice(0, 5)} · {creada.personas} {creada.personas === 1 ? 'persona' : 'personas'}
+          <strong>{getLocal(creada.local_id).nombre}</strong>, {formatearFecha(creada.fecha)} a las{' '}
+          {creada.hora.slice(0, 5)}, {creada.personas} {creada.personas === 1 ? 'persona' : 'personas'}, a nombre
+          de {creada.nombre}.
         </p>
         <p className={formulario.exito}>
-          Queda <strong>pendiente</strong> hasta que la confirmemos. Te avisamos por mail y la ves en
-          &quot;Mis reservas&quot;.
+          Te confirmamos por mail; mientras tanto figura como <strong>pendiente</strong> en &quot;Mis reservas&quot;.
         </p>
-        <div className={estilos.accionesListo}>
+        <div className={estilos.acciones}>
           <Boton to="/mis-reservas">Ver mis reservas</Boton>
           <Boton variante="texto" onClick={otraReserva}>Hacer otra reserva</Boton>
         </div>
@@ -169,183 +268,178 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
     );
   }
 
-  const whatsappGrupo = enlaceWhatsapp(local, `Hola! Quería reservar para más de ${MAXIMO_PERSONAS} personas en ${local.nombre}.`);
-
   return (
-    <form className={formulario.formulario} onSubmit={alEnviar} noValidate>
-      {intentoEnviar && cantidadErrores > 0 && (
-        <p className={formulario.error} role="alert">
-          {cantidadErrores === 1
-            ? 'Revisá el campo marcado antes de enviar.'
-            : `Revisá los ${cantidadErrores} campos marcados antes de enviar.`}
-        </p>
-      )}
-
-      <fieldset className={estilos.grupoLocal}>
-        <legend className={formulario.etiqueta}>¿En qué salón?</legend>
-        <div className={estilos.opcionesLocal}>
-          {LOCALES.map((opcion) => (
-            <label
-              key={opcion.id}
-              className={`${estilos.tarjetaLocal} ${opcion.id === idLocal ? estilos.tarjetaLocalActiva : ''}`}
-            >
-              <input
-                type="radio"
-                name="local"
-                value={opcion.id}
-                checked={opcion.id === idLocal}
-                onChange={() => cambiarLocal(opcion.id)}
-                className={estilos.radioOculto}
-              />
-              <span className={estilos.nombreLocal}>{opcion.nombreCorto}</span>
-              <span className={estilos.taglineLocal}>{opcion.tagline}</span>
-            </label>
-          ))}
-        </div>
+    <form className={estilos.pagina} onSubmit={alEnviar} noValidate>
+      <fieldset className={estilos.grupo}>
+        <legend className={estilos.leyenda}>Reservar en:</legend>
+        <Salones idLocal={idLocal} onChange={cambiarLocal} />
       </fieldset>
 
-      <div className={formulario.fila}>
-        <Campo id="nombre" etiqueta="A nombre de" error={errorVisible('nombre')}>
-          {(props) => (
-            <input
-              {...props}
-              name="nombre"
-              required
-              autoComplete="name"
-              maxLength={LIMITES.nombre.max}
-              value={valores.nombre}
-              onChange={alEscribir('nombre')}
-              onBlur={alSalir('nombre')}
-              className={formulario.control}
-            />
-          )}
-        </Campo>
-        <div className={formulario.campo}>
-          <Campo id="telefono" etiqueta="Teléfono" error={errorVisible('telefono')}>
+      {/* El resto, en la card de siempre */}
+      <div className={formulario.formulario}>
+        {intentoEnviar && cantidadErrores > 0 && (
+          <p className={formulario.error} role="alert">
+            {cantidadErrores === 1
+              ? 'Revisá el campo marcado antes de enviar.'
+              : `Revisá los ${cantidadErrores} campos marcados antes de enviar.`}
+          </p>
+        )}
+
+        <div className={formulario.fila}>
+          <Campo id="nombre" etiqueta="A nombre de" error={errorVisible('nombre')}>
             {(props) => (
               <input
                 {...props}
-                name="telefono"
-                type="tel"
+                name="nombre"
                 required
-                autoComplete="tel"
-                placeholder="+54 9 2944 00-0000"
-                value={valores.telefono}
-                inputMode="tel"
-                onChange={(e) => cambiar('telefono', limpiarTelefono(e.target.value))}
-                onBlur={alSalir('telefono')}
+                autoComplete="name"
+                maxLength={LIMITES.nombre.max}
+                value={valores.nombre}
+                onChange={alEscribir('nombre')}
+                onBlur={alSalir('nombre')}
                 className={formulario.control}
               />
             )}
           </Campo>
-          <label className={formulario.casilla}>
-            <input type="checkbox" name="guardarTelefono" defaultChecked /> Guardarlo para la próxima
-          </label>
+          <div className={formulario.campo}>
+            <Campo id="telefono" etiqueta="Teléfono" error={errorVisible('telefono')}>
+              {(props) => (
+                <input
+                  {...props}
+                  name="telefono"
+                  type="tel"
+                  required
+                  autoComplete="tel"
+                  placeholder="+54 9 2944 00-0000"
+                  value={valores.telefono}
+                  inputMode="tel"
+                  onChange={(e) => cambiar('telefono', limpiarTelefono(e.target.value))}
+                  onBlur={alSalir('telefono')}
+                  className={formulario.control}
+                />
+              )}
+            </Campo>
+            <label className={formulario.casilla}>
+              <input type="checkbox" name="guardarTelefono" defaultChecked /> Guardarlo para la próxima
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div className={formulario.fila}>
-        {/* Un día bloqueado se avisa apenas se elige, sin esperar a salir del campo */}
-        <Campo id="fecha" etiqueta="Fecha" error={errorVisible('fecha') ?? (bloqueo ? errores.fecha : undefined)}>
+        <div className={formulario.fila}>
+          {/* Un día bloqueado se avisa apenas se elige, sin esperar a salir del campo */}
+          <Campo id="fecha" etiqueta="Fecha" error={errorVisible('fecha') ?? (bloqueo ? errores.fecha : undefined)}>
+            {(props) => (
+              <input
+                {...props}
+                name="fecha"
+                type="date"
+                required
+                min={hoy}
+                value={fecha}
+                onChange={(e) => {
+                  cambiar('fecha', e.target.value, { tocar: true });
+                  cambiar('hora', '');
+                }}
+                onBlur={alSalir('fecha')}
+                className={formulario.control}
+              />
+            )}
+          </Campo>
+          <Campo id="hora" etiqueta="Hora" error={errorVisible('hora')}>
+            {(props) => (
+              <select
+                {...props}
+                name="hora"
+                required
+                value={hora}
+                onChange={(e) => cambiar('hora', e.target.value, { tocar: true })}
+                onBlur={alSalir('hora')}
+                className={formulario.control}
+              >
+                <option value="" disabled>
+                  {franjasDisponibles.length ? 'Elegí un horario' : 'No quedan horarios ese día'}
+                </option>
+                {franjasDisponibles.map((franja) => (
+                  <option key={franja} value={franja}>{franja}</option>
+                ))}
+              </select>
+            )}
+          </Campo>
+        </div>
+
+        <Campo
+          id="personas"
+          etiqueta="Personas"
+          error={errorVisible('personas')}
+          ayuda={grupo ? `Para más de ${LIMITES.personas.max} personas deberá realizar la reserva por WhatsApp.` : undefined}
+        >
+          {/* Se escribe o se sube y baja con las flechitas; el tope lo controla el validador */}
           {(props) => (
             <input
               {...props}
-              name="fecha"
-              type="date"
-              required
-              min={hoy}
-              value={fecha}
-              onChange={(e) => {
-                cambiar('fecha', e.target.value, { tocar: true });
-                cambiar('hora', '');
-              }}
-              onBlur={alSalir('fecha')}
+              name="personas"
+              type="number"
+              min="1"
+              max={MAXIMO_ELEGIBLE}
+              step="1"
+              inputMode="numeric"
+              value={valores.personas}
+              onChange={alEscribir('personas')}
+              onBlur={alSalir('personas')}
+              className={`${formulario.control} ${estilos.cantidad}`}
+            />
+          )}
+        </Campo>
+
+        <Campo
+          id="comentarios"
+          etiqueta="Comentarios"
+          opcional
+          error={errorVisible('comentarios')}
+          ayuda={`${valores.comentarios.length}/${LIMITES.comentarios} caracteres`}
+        >
+          {(props) => (
+            <textarea
+              {...props}
+              name="comentarios"
+              rows="3"
+              maxLength={LIMITES.comentarios}
+              placeholder="Alergias, celíacos, silla para bebé, cumpleaños…"
+              value={valores.comentarios}
+              onChange={alEscribir('comentarios')}
+              onBlur={alSalir('comentarios')}
               className={formulario.control}
             />
           )}
         </Campo>
-        <Campo id="hora" etiqueta="Hora" error={errorVisible('hora')}>
-          {(props) => (
-            <select
-              {...props}
-              name="hora"
-              required
-              value={hora}
-              onChange={(e) => cambiar('hora', e.target.value, { tocar: true })}
-              onBlur={alSalir('hora')}
-              className={formulario.control}
-            >
-              <option value="" disabled>
-                {franjasDisponibles.length ? 'Elegí un horario' : 'No quedan horarios ese día'}
-              </option>
-              {franjasDisponibles.map((franja) => (
-                <option key={franja} value={franja}>{franja}</option>
-              ))}
-            </select>
-          )}
-        </Campo>
-      </div>
 
-      <Campo
-        id="personas"
-        etiqueta="Personas"
-        error={errorVisible('personas')}
-        ayuda={
-          <>
-            ¿Son más de {MAXIMO_PERSONAS}?{' '}
-            {whatsappGrupo ? (
-              <a href={whatsappGrupo} target="_blank" rel="noreferrer" className={estilos.enlace}>
-                <Icono nombre="whatsapp" /> Escribinos por WhatsApp
-              </a>
+        {error && <p className={formulario.error} role="alert">{error}</p>}
+
+        <div className={estilos.cierre}>
+          {grupo ? (
+            whatsappGrupo ? (
+              <Boton href={whatsappGrupo} tamano="lg" className={estilos.botonEnviar}>
+                <Icono nombre="whatsapp" />
+                Reservar por WhatsApp
+              </Boton>
             ) : (
-              'Escribinos por Instagram'
-            )}{' '}
-            y lo coordinamos.
-          </>
-        }
-      >
-        {(props) => (
-          <select
-            {...props}
-            name="personas"
-            value={valores.personas}
-            onChange={alEscribir('personas')}
-            className={formulario.control}
-          >
-            {Array.from({ length: MAXIMO_PERSONAS }, (_, i) => i + 1).map((n) => (
-              <option key={n} value={n}>{n}</option>
-            ))}
-          </select>
-        )}
-      </Campo>
-
-      <Campo
-        id="comentarios"
-        etiqueta="Comentarios"
-        opcional
-        error={errorVisible('comentarios')}
-        ayuda={`${valores.comentarios.length}/${LIMITES.comentarios} caracteres`}
-      >
-        {(props) => (
-          <textarea
-            {...props}
-            name="comentarios"
-            rows="3"
-            maxLength={LIMITES.comentarios}
-            placeholder="Alergias, cumpleaños, si preferís una mesa cerca del fuego…"
-            value={valores.comentarios}
-            onChange={alEscribir('comentarios')}
-            onBlur={alSalir('comentarios')}
-            className={formulario.control}
-          />
-        )}
-      </Campo>
-
-      {error && <p className={formulario.error} role="alert">{error}</p>}
-
-      <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
-        {enviando ? 'Enviando…' : 'Pedir reserva'}
-      </Boton>
+              <p>
+                Para más de {LIMITES.personas.max} personas escribinos por Instagram:{' '}
+                <a href={MARCA.instagramUrl} target="_blank" rel="noreferrer" className={estilos.enlace}>
+                  {MARCA.instagram}
+                </a>
+              </p>
+            )
+          ) : (
+            <>
+              <p className={estilos.aviso}>{TEXTOS.avisoReserva}</p>
+              <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
+                {enviando ? 'Enviando…' : 'Pedir reserva'}
+              </Boton>
+            </>
+          )}
+        </div>
+      </div>
     </form>
   );
 }
@@ -353,39 +447,12 @@ function FormularioReserva({ idInicial, alCambiarLocal }) {
 function ReservasContenido() {
   const parametros = useSearchParams();
   const idPedido = parametros.get('local');
-  const [idLocal, setIdLocal] = useState(esIdDeLocal(idPedido) ? idPedido : ID_LOCAL_POR_DEFECTO);
-  const local = getLocal(idLocal);
-  const whatsapp = enlaceWhatsapp(local, `Hola! Quería consultar por una reserva en ${local.nombre}.`);
-
+  const idInicial = esIdDeLocal(idPedido) ? idPedido : ID_LOCAL_POR_DEFECTO;
+  // El admin no reserva desde acá: RequiereSesion lo lleva al panel
   return (
-    <div className={estilos.columnas}>
-      <RequiereSesion mensaje="Para reservar necesitás una cuenta: así podés ver y cancelar tus reservas cuando quieras.">
-        <FormularioReserva idInicial={idLocal} alCambiarLocal={setIdLocal} />
-      </RequiereSesion>
-
-      <aside className={estilos.panel}>
-        <h2 className={estilos.tituloPanel}>Antes de reservar</h2>
-        <ul className={estilos.condiciones}>
-          {TEXTOS.condicionesReserva.map((condicion) => (
-            <li key={condicion} className={estilos.condicion}>{condicion}</li>
-          ))}
-        </ul>
-
-        <div className={estilos.contactoPanel}>
-          <h3 className={estilos.subtituloPanel}>{local.nombre}</h3>
-          {whatsapp && (
-            <Boton href={whatsapp}>
-              <Icono nombre="whatsapp" />
-              Consultar por WhatsApp
-            </Boton>
-          )}
-          <a href={MARCA.instagramUrl} className={estilos.instagram} target="_blank" rel="noreferrer">
-            <Icono nombre="instagram" />
-            {MARCA.instagram}
-          </a>
-        </div>
-      </aside>
-    </div>
+    <RequiereSesion soloClientes sinSesion={<SinSesion />}>
+      <FormularioReserva idInicial={idInicial} />
+    </RequiereSesion>
   );
 }
 

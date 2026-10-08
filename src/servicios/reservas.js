@@ -1,5 +1,5 @@
 // Reservas del cliente: crear, listar las propias, cancelar.
-// Las reglas (franjas, 6 personas, 2 horas, una por día) las hace cumplir
+// Las reglas (franjas, 6 personas, 1 hora para cancelar, una por día) las hace cumplir
 // la base; acá solo se piden los datos y se traducen los errores.
 
 import { supabase, resultado } from './supabase.js';
@@ -30,11 +30,14 @@ export const crearReserva = async (idUsuario, reserva) =>
       .single()
   );
 
-export const obtenerMisReservas = async () =>
+// Filtra por usuario aunque la RLS ya lo haga para un cliente: a un admin la
+// RLS le deja ver todas, y "mis reservas" son solo las suyas.
+export const obtenerMisReservas = async (idUsuario) =>
   resultado(
     await supabase
       .from('reservas')
       .select(COLUMNAS)
+      .eq('usuario_id', idUsuario)
       .order('fecha', { ascending: false })
       .order('hora')
   );
@@ -54,13 +57,13 @@ export const hoyEnArgentina = () =>
 export const faltaParaReserva = ({ fecha, hora }) =>
   new Date(`${fecha}T${hora.slice(0, 5)}:00-03:00`).getTime() - Date.now();
 
-export const DOS_HORAS = 2 * 60 * 60 * 1000;
+export const UNA_HORA = 60 * 60 * 1000;
 
 export const esActiva = (reserva) => ['pendiente', 'confirmada'].includes(reserva.estado);
 
 // Misma regla que cancelar_reserva() en la base; acá solo decide qué botón mostrar
 export const sePuedeCancelar = (reserva) =>
-  esActiva(reserva) && faltaParaReserva(reserva) >= DOS_HORAS;
+  esActiva(reserva) && faltaParaReserva(reserva) >= UNA_HORA;
 
 export const formatearFecha = (fecha) =>
   new Intl.DateTimeFormat('es-AR', {

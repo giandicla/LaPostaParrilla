@@ -9,16 +9,18 @@ import {
   validarFecha,
   validarHora,
   validarPersonas,
+  esGrupo,
+  validarMail,
   validarComentarios,
   validarMotivo,
   validarReserva,
   hayErrores,
 } from './reservas.js';
 
-test('nombre: obligatorio, mínimo 2 letras, máximo 80', () => {
+test('nombre: obligatorio y hasta 80; una sola letra alcanza', () => {
   assert.ok(validarNombre(''));
   assert.ok(validarNombre('   '));
-  assert.ok(validarNombre('A'));
+  assert.equal(validarNombre('A'), '');
   assert.ok(validarNombre('a'.repeat(LIMITES.nombre.max + 1)));
   assert.equal(validarNombre('Ana'), '');
   assert.equal(validarNombre('  Ana  '), '');
@@ -83,10 +85,40 @@ test('personas: entero entre 1 y 6', () => {
   assert.equal(validarPersonas('6'), '');
 });
 
+test('personas: con el máximo del local (admin), acepta hasta 40', () => {
+  const max = LIMITES.personas.maxLocal;
+  assert.equal(max, 40);
+  assert.equal(validarPersonas(12, { max }), '');
+  assert.equal(validarPersonas(40, { max }), '');
+  assert.ok(validarPersonas(41, { max }));
+  assert.ok(validarPersonas(0, { max }));
+});
+
+test('esGrupo: más de 6 personas se reserva por WhatsApp', () => {
+  assert.equal(esGrupo(6), false);
+  assert.equal(esGrupo('2'), false);
+  assert.equal(esGrupo(7), true);
+  assert.equal(esGrupo('12'), true);
+});
+
+test('mail: opcional; si está, con formato de mail y hasta 254 caracteres', () => {
+  assert.equal(validarMail(''), '');
+  assert.equal(validarMail(undefined), '');
+  assert.equal(validarMail('ana@test.com'), '');
+  assert.equal(validarMail('  ana.perez@mail.com.ar '), '');
+  for (const invalido of ['ana', 'ana@', '@test.com', 'ana test@test.com', 'ana@test']) {
+    assert.ok(validarMail(invalido), invalido);
+  }
+  assert.ok(validarMail(`${'a'.repeat(250)}@x.com`));
+});
+
 test('comentarios y motivo: opcionales, con máximo', () => {
   assert.equal(validarComentarios(''), '');
   assert.equal(validarComentarios(undefined), '');
   assert.ok(validarComentarios('x'.repeat(LIMITES.comentarios + 1)));
+  assert.equal(LIMITES.comentarios, 100);
+  assert.equal(validarComentarios('x'.repeat(100)), '');
+  assert.ok(validarComentarios('x'.repeat(101)));
   assert.equal(validarMotivo(''), '');
   assert.ok(validarMotivo('x'.repeat(LIMITES.motivo + 1)));
 });
@@ -107,4 +139,21 @@ test('validarReserva devuelve solo los campos con error', () => {
   const errores = validarReserva({ ...valida, nombre: '', telefono: '12' }, contexto);
   assert.deepEqual(Object.keys(errores), ['nombre', 'telefono']);
   assert.equal(hayErrores(errores), true);
+});
+
+test('validarReserva: maxPersonas y mail del contexto del admin', () => {
+  const contexto = { hoy: '2026-10-08', franjas: ['20:00'], maxPersonas: 40 };
+  const valida = {
+    nombre: 'Ana',
+    telefono: '+54 9 2944 96-6199',
+    fecha: '2026-10-09',
+    hora: '20:00',
+    personas: '12',
+    comentarios: '',
+    mail: '',
+  };
+  assert.deepEqual(validarReserva(valida, contexto), {});
+  assert.deepEqual(Object.keys(validarReserva({ ...valida, mail: 'ana@' }, contexto)), ['mail']);
+  // Sin maxPersonas, vale el máximo de la web
+  assert.deepEqual(Object.keys(validarReserva(valida, { ...contexto, maxPersonas: undefined })), ['personas']);
 });

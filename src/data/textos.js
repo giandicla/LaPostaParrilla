@@ -8,8 +8,8 @@ export const TEXTOS = {
       'La Posta es un lugar de madera y fuego en el corazón de Villa La Angostura. ' +
         'Lo llevamos en familia desde hace años, y creció hasta ser dos salones con ' +
         'personalidad propia.',
-      'En la parrilla mandan las brasas, el cordero al asador y las mesas largas. ' +
-        'En La Posta II, las pizzas, las pastas caseras y el fogón a leña. ' +
+      'En La Posta Parrilla mandan las brasas, el cordero al asador y las mesas largas. ' +
+        'En La Posta II Restaurante, las pizzas, las pastas caseras y el fogón a leña. ' +
         'Dos maneras de pasar la misma noche.',
     ],
   },
@@ -40,14 +40,12 @@ export const TEXTOS = {
       'Empezamos con un solo salón y la idea simple de cocinar como cocinábamos en casa: ' +
         'producto de la zona, cocciones largas y nada apurado.',
       'Con los años abrimos el segundo local, pared de por medio con el primero, para darle ' +
-        'lugar propio a la cocina de olla sin sacarle espacio a la parrilla.',
+        'lugar propio a la cocina de olla sin sacarle espacio a La Posta Parrilla.',
       'Seguimos siendo los mismos: una familia, dos salones y la misma manera de recibir.',
     ],
   },
-  condicionesReserva: [
-    'Tu reserva queda pendiente hasta que la confirmemos. Te avisamos por mail y la ves en "Mis reservas".',
-    'Reservas de hasta 6 personas. Para grupos más grandes, escribinos por WhatsApp.',
-    'Podés cancelar desde la web hasta 2 horas antes. Después, avisanos por WhatsApp.',
-    'Guardamos la mesa durante 15 minutos pasada la hora reservada.',
-  ],
+  // Va junto al botón de /reservas. Redacción del usuario (2026-10-08).
+  avisoReserva:
+    'La reserva queda pendiente hasta que sea confirmada por el restaurante. ' +
+    'Podés gestionarla desde la sección "Mis reservas" hasta 1 hora antes.',
 };
