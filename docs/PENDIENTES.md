@@ -102,6 +102,28 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
 - [x] `aSlug` en `app/carta/page.jsx` podía devolver cadena vacía. Ya no aplica:
       la carta escrita a mano (y `aSlug` con ella) se eliminó en la sesión 02.
 
+## Diseño: que no parezca hecho por IA
+
+Pedido del usuario (2026-10-08). Diagnóstico de la IA mirando el sitio en producción;
+el pase se hace en una sesión con el plugin de UI/UX cargado.
+
+- [ ] **Todas las secciones usan la misma plantilla**: ornamento centrado + título en
+      mayúsculas centrado + rayita + bajada centrada + grilla pareja de tarjetas. El
+      ritmo es idéntico de arriba a abajo. Variar: bloques asimétricos, foto a sangre
+      con texto al costado, títulos alineados a la izquierda.
+- [ ] **Tarjetas por todos lados** con sombra, borde redondeado y etiqueta tipo chip
+      ("LA PARRILLA") en la esquina: es el patrón de cualquier template.
+- [ ] **El hero** (logo dentro de un marco fino + dos botones centrados sobre una foto
+      con velo) es la portada de restaurante más genérica posible.
+- [ ] **Tríadas**: "Lo que nos mueve" en tres columnas iguales, tres valores. Los
+      textos del manual son reales, pero la maqueta los hace sonar a relleno.
+- [ ] **Botones** todos en mayúsculas con letterspacing, en todas las secciones.
+- [ ] **Fotos que cargan tarde**: los platos de La Posta II y la card del restaurante
+      se ven como rectángulos vacíos mientras cargan. Falta un color de fondo o un
+      blur de la foto como placeholder.
+- [ ] **Falta textura humana**: no hay gente, familia, reseñas, Instagram, ni detalles
+      de la carta impresa (papel, tipografía de menú). Todo es foto de producto.
+
 ## Etapas futuras
 
 ### Etapa 2 — Backend con Supabase (partes 1 y 2)
