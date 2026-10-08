@@ -47,7 +47,7 @@ function Salones({ idLocal, onChange }) {
       {LOCALES.map((opcion) => {
         const contenido = (
           <>
-            <img src={opcion.imagenes.card} alt="" className={estilos.fotoSalon} loading="lazy" />
+            <img src={opcion.imagenes.reserva ?? opcion.imagenes.card} alt="" className={estilos.fotoSalon} loading="lazy" />
             <span className={estilos.nombreSalon}>{opcion.nombreCorto}</span>
             <span className={estilos.taglineSalon}>{opcion.tagline}</span>
           </>
@@ -373,18 +373,21 @@ function FormularioReserva({ idInicial }) {
           error={errorVisible('personas')}
           ayuda={grupo ? `Para más de ${LIMITES.personas.max} personas deberá realizar la reserva por WhatsApp.` : undefined}
         >
+          {/* Se escribe o se sube y baja con las flechitas; el tope lo controla el validador */}
           {(props) => (
-            <select
+            <input
               {...props}
               name="personas"
+              type="number"
+              min="1"
+              max={MAXIMO_ELEGIBLE}
+              step="1"
+              inputMode="numeric"
               value={valores.personas}
               onChange={alEscribir('personas')}
-              className={formulario.control}
-            >
-              {Array.from({ length: MAXIMO_ELEGIBLE }, (_, i) => i + 1).map((n) => (
-                <option key={n} value={n}>{n}</option>
-              ))}
-            </select>
+              onBlur={alSalir('personas')}
+              className={`${formulario.control} ${estilos.cantidad}`}
+            />
           )}
         </Campo>
 

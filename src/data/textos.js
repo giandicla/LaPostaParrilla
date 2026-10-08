@@ -46,6 +46,6 @@ export const TEXTOS = {
   },
   // Va junto al botón de /reservas. Redacción del usuario (2026-10-08).
   avisoReserva:
-    'La reserva queda pendiente hasta que la confirmemos desde el local. Podés gestionarla ' +
-    'desde "Mis reservas" hasta 1 hora antes. Guardamos la mesa hasta 15 minutos pasada la hora.',
+    'La reserva queda pendiente hasta que sea confirmada por el restaurante. ' +
+    'Podés gestionarla desde la sección "Mis reservas" hasta 1 hora antes.',
 };

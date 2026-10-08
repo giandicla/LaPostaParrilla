@@ -38,6 +38,8 @@ export const LOCALES = [
     imagenes: {
       card: '/img/parrilla/card.webp',
       hero: '/img/parrilla/hero.webp',
+      // La foto para elegir salón en /reservas (en prueba, pedido del usuario)
+      reserva: '/img/parrilla/reserva.webp',
       galeria: [
         { src: '/img/parrilla/cartel.webp', alt: 'Cartel de La Posta Parrilla Patagónica bajo las ramas de un árbol en flor' },
         { src: '/img/parrilla/cordero-patagonico.webp', alt: 'Costillar de cordero patagónico servido junto a una copa de vino tinto' },
@@ -64,6 +66,7 @@ export const LOCALES = [
     imagenes: {
       card: '/img/restaurante/card.webp',
       hero: '/img/restaurante/hero.webp',
+      reserva: '/img/restaurante/reserva.webp',
       galeria: [
         { src: '/img/restaurante/salon.webp', alt: 'Salón de La Posta II con sillas de madera y ventanales' },
         { src: '/img/restaurante/fogon.webp', alt: 'Fogón a leña encendido en una chimenea de piedra' },

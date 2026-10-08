@@ -99,6 +99,11 @@
   color: var(--gris-600);
 }
 
+/* Personas: un número corto, no hace falta todo el ancho */
+.cantidad {
+  max-width: 8rem;
+}
+
 .botonEnviar {
   align-self: flex-start;
 }

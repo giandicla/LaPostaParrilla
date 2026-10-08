@@ -49,6 +49,7 @@ FOTOS = [
     (P, 'Cartel techo.jpg', 'parrilla/cartel.webp', 1200),
     (P, 'Cordero patagonico.jpg', 'parrilla/cordero-patagonico.webp', 1200),
     (P, 'Abriendo vino.jpg', 'parrilla/abriendo-vino.webp', 1200),
+    (P, 'Cordero vino salon de fondo.jpg', 'parrilla/reserva.webp', 1200),  # /reservas
     (P, 'Cordero patagonico 2.jpg', 'parrilla/plato-cordero.webp', 1000),
     (P, 'Bife de chorizo 2.jpg', 'parrilla/plato-bife.webp', 1000),
     (P, 'Sorrentinos.jpg', 'parrilla/plato-sorrentinos.webp', 1000),
@@ -59,6 +60,7 @@ FOTOS = [
     (R, 'Salon.jpg', 'restaurante/salon.webp', 1200),
     (R, 'Fogon chimenea.jpg', 'restaurante/fogon.webp', 1200),
     (R, 'Muebles con vinos.jpg', 'restaurante/vinos.webp', 1200),
+    (R, 'plano mesa con fondo rustico.jpg', 'restaurante/reserva.webp', 1200),  # /reservas
     (R, 'Pizza rucula tomates secos.jpg', 'restaurante/plato-pizza.webp', 1000),
     (R, 'Albondigas y vino.jpg', 'restaurante/plato-albondigas.webp', 1000),
     (R, 'Trucha con salsa.jpg', 'restaurante/plato-trucha.webp', 1000),

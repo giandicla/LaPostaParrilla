@@ -33,6 +33,11 @@ Rama `feat/reservas-admin`. Spec: `docs/superpowers/specs/2026-10-08-reservas-ad
   nombre ya no pide 2 letras (alcanza con no vacío, sin números ni símbolos) y los
   comentarios bajan de 500 a 100 caracteres, en el formulario y en la base (test 03
   actualizado).
+- Segunda ronda: fotos nuevas para elegir salón en `/reservas` (`imagenes.reserva`,
+  en prueba: "Cordero vino salon de fondo" y "plano mesa con fondo rustico"; las
+  de la home no cambian). Aviso sin los 15 minutos: "…hasta que sea confirmada por
+  el restaurante. Podés gestionarla desde la sección "Mis reservas" hasta 1 hora
+  antes." Personas pasa a campo numérico con flechitas (tope 40, el validador avisa).
 
 ---
 
