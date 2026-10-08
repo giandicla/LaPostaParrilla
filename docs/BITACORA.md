@@ -4,6 +4,19 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-08 — La rúbrica, CI y flujo con PRs
+
+- `docs/RUBRICA.md`: la grilla oficial de corrección contra el estado del proyecto,
+  entregable por entregable. Hay que sacar Excelente en los 5 criterios transversales.
+- CI en GitHub Actions (`.github/workflows/ci.yml`): lint + build, tests pgTAP de la
+  base y tests Deno de la Edge Function, en cada PR y en cada push a `main`.
+- Plantilla de PR con checklist (`.github/pull_request_template.md`). Desde acá,
+  todo cambio entra por PR (hasta hoy no se había abierto ninguno).
+- Decisión del usuario: Mercado Pago para seña de reserva, gift cards y take away.
+- `README.md` y `CONTEXTO.md` al día (el README todavía decía "etapa 1, maqueta").
+
+---
+
 ## 2026-10-06 — En producción, y solo con Google
 
 - Proyecto Supabase `la-posta` (São Paulo) creado por CLI; migraciones, función de

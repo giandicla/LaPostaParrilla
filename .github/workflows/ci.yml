@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  front:
+    name: Lint y build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      # Sin variables de Supabase el sitio igual compila (ver src/servicios/supabase.js)
+      - run: npm run build
+
+  base:
+    name: Tests de la base (pgTAP)
+    runs-on: ubuntu-latest
+    env:
+      # config.toml las lee para el proveedor de Google; en CI no se usan
+      SUPABASE_AUTH_EXTERNAL_GOOGLE_CLIENT_ID: ci
+      SUPABASE_AUTH_EXTERNAL_GOOGLE_SECRET: ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: supabase/setup-cli@v1
+        with:
+          version: latest
+      - run: supabase db start
+      - run: supabase test db
+
+  funciones:
+    name: Tests de la Edge Function
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - run: deno test supabase/functions/notificar-reserva/mensajes.test.ts

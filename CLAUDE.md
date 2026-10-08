@@ -11,10 +11,15 @@ restaurante.
 - Los locales son **datos, no rutas**. Viven en `src/data/locales.js` como el array
   `LOCALES`. Los componentes iteran sobre él o reciben un local por props.
   **Nunca escribir `'parrilla'` ni `'restaurante'` a mano en un componente.**
-- El profesor pidió **solo el front en React**. El backend es **Supabase** (BaaS,
-  decisión del usuario): **no** se escriben API routes, Server Actions ni
-  middleware. El front habla con Supabase desde el navegador y la seguridad la
-  pone la **RLS** en la base. Ver `docs/BACKEND.md`.
+- **El alcance avanza clase a clase.** Al principio el profesor pidió **solo el
+  front en React**; el backend es **Supabase** (BaaS, decisión del usuario), el
+  front le habla desde el navegador y la seguridad la pone la **RLS**. Ver
+  `docs/BACKEND.md`. El 2026-10-08 la cátedra dio **webhooks y Mercado Pago**: a
+  partir de ahí entra código de servidor para la API del catálogo y los pagos.
+  Fuera de eso, no agregar API routes, Server Actions ni middleware sin hablarlo.
+- **Todo cambio va por rama + PR** (lo pide la rúbrica, E1). CI en
+  `.github/workflows/ci.yml`; la plantilla del PR trae el checklist. No mergear
+  sin el OK del usuario.
 - **Se ingresa solo con Google.** El registro con email está apagado en Supabase
   (`[auth.email] enable_signup = false`): no volver a agregar formularios de email
   o contraseña sin hablarlo, porque el servidor de mails de fábrica de Supabase no
@@ -29,7 +34,8 @@ restaurante.
 
 Next.js 16 con App Router + React 19 + CSS Modules. JavaScript, no TypeScript
 (salvo la Edge Function, que es Deno + TypeScript). Sin librerías de UI.
-Supabase para auth, base y tiempo real. Deploy automático a Vercel en cada push a `main`.
+Supabase para auth, base y tiempo real. Deploy automático a Vercel en cada push a `main`
+y preview de Vercel en cada PR.
 
 - Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
 - **Server Components por defecto.** `'use client'` va en `Navbar`,
@@ -100,6 +106,9 @@ Ver `docs/proceso/README.md` para el formato.
 - `docs/CONTEXTO.md` — el restaurante, la consigna, las decisiones y por qué
 - `docs/ESTRUCTURA.md` — qué contiene cada página y componente
 - `docs/BITACORA.md` — log de cambios, lo más nuevo arriba
+- `docs/RUBRICA.md` — la grilla de corrección y qué cumple el proyecto hoy. **Hay
+  que sacar Excelente en los 5 criterios transversales.** Actualizarlo cuando un
+  ítem cambie de estado
 - `docs/PENDIENTES.md` — lo que falta: datos, fotos, etapas futuras
 - `docs/QA-MANUAL.md` — checklist de verificación visual, para correr en un navegador
 - `docs/BACKEND.md` — Supabase: cómo correrlo en local y cómo ponerlo en producción
