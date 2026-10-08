@@ -28,6 +28,10 @@ export function validarNombre(valor) {
   return '';
 }
 
+// Se aplica mientras se escribe o se pega: lo que no puede ir en un teléfono
+// ni siquiera entra al campo.
+export const limpiarTelefono = (valor) => String(valor ?? '').replace(/[^0-9+() -]/g, '');
+
 export function validarTelefono(valor) {
   const telefono = limpio(valor);
   const { min, max } = LIMITES.telefonoDigitos;

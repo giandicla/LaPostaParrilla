@@ -4,6 +4,15 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-08 — El teléfono no acepta letras
+
+Pedido del usuario: que en el teléfono ni se puedan escribir letras. `limpiarTelefono`
+filtra mientras se escribe o se pega: solo entran dígitos, espacios y `+ - ( )`
+(test nuevo; 10 en total). `inputMode="tel"` abre el teclado numérico en el celular.
+La migración de la validación (`20261008120000`) ya está aplicada en producción.
+
+---
+
 ## 2026-10-08 — Validación de formularios (E3)
 
 Rama `feat/validacion-formularios`.

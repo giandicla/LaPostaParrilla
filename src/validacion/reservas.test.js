@@ -5,6 +5,7 @@ import {
   LIMITES,
   validarNombre,
   validarTelefono,
+  limpiarTelefono,
   validarFecha,
   validarHora,
   validarPersonas,
@@ -41,6 +42,14 @@ test('teléfono: obligatorio, solo dígitos y + - ( ) espacios, entre 8 y 15 dí
   assert.equal(validarTelefono('+54 9 2944 96-6199'), '');
   assert.equal(validarTelefono('(02944) 49-4000'), '');
   assert.equal(validarTelefono('29441234'), '');
+});
+
+test('limpiarTelefono: descarta letras y símbolos, deja dígitos, espacios y + - ( )', () => {
+  assert.equal(limpiarTelefono('abc'), '');
+  assert.equal(limpiarTelefono('+54 9 2944 96-6199'), '+54 9 2944 96-6199');
+  assert.equal(limpiarTelefono('(02944) 49-4000'), '(02944) 49-4000');
+  assert.equal(limpiarTelefono('tel: 2944.111.111 llamame'), ' 2944111111 ');
+  assert.equal(limpiarTelefono('2944ñ1é1#1'), '2944111');
 });
 
 test('fecha: obligatoria, desde hoy, no bloqueada', () => {
