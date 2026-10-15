@@ -1,7 +1,8 @@
 # Seña de la reserva con Mercado Pago
 
 Fecha: 2026-10-15 (sesión 05). Diseño acordado en el chat, por partes, con el
-usuario aprobando cada una. Es el primero de los tres cobros decididos en la
+usuario aprobando cada una. Ajustes al escribir el plan (misma fecha, antes de
+implementar): ver "Correcciones del plan" al final. Es el primero de los tres cobros decididos en la
 sesión 03 (seña, gift cards, pedido para llevar); los otros dos llevan su propio
 spec. Cubre el entregable E6 de la rúbrica: checkout + webhook que actualiza la
 base, con pruebas.
@@ -243,3 +244,20 @@ Ninguna lleva prefijo `NEXT_PUBLIC_`.
 
 Gift cards y pedido para llevar (specs propios), reintegros parciales,
 credenciales de producción, cupo máximo por turno (el bloqueo es manual).
+
+## Correcciones del plan (2026-10-15)
+
+Al escribir el plan de implementación aparecieron tres cosas en este spec que no
+cerraban. Se dejan anotadas en lugar de reescribir las secciones de arriba:
+
+1. **Motivo de cancelación: hasta 120 caracteres**, no 200: es el mismo límite
+   que ya usa el motivo de los días bloqueados (`LIMITES.motivo`), y así hay
+   una sola regla.
+2. **El índice único de `pagos` es solo sobre `aprobado`.** Como estaba escrito
+   ("un pago aprobado, a reintegrar o reintegrado por reserva") contradecía la
+   regla de acreditar: si alguien paga dos preferencias de la misma reserva, la
+   segunda tiene que poder quedar `reintegro_pendiente` mientras la primera
+   está `aprobada`.
+3. **Son tres migraciones, no una:** los valores nuevos del enum van en un
+   archivo propio (Postgres no deja usarlos en la misma transacción en que se
+   agregan) y el bloqueo por turno en otro.
