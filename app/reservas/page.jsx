@@ -34,6 +34,7 @@ import {
   obtenerSena,
   turnoDe,
 } from '../../src/servicios/reservas.js';
+import SelloMercadoPago from '../../src/components/SelloMercadoPago/SelloMercadoPago.jsx';
 import { LIMITES, esGrupo, limpiarTelefono, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
@@ -296,6 +297,7 @@ function FormularioReserva({ idInicial }) {
         <p>
           Guardamos tu lugar durante {MINUTOS_PARA_PAGAR} minutos. Si no se paga la seña, la reserva se libera.
         </p>
+        <SelloMercadoPago />
         <div className={estilos.acciones}>
           <Boton onClick={pagar} disabled={enviando}>{enviando ? 'Abriendo Mercado Pago…' : 'Pagar seña'}</Boton>
           <Boton to="/mis-reservas" variante="texto">Ver mis reservas</Boton>
@@ -480,6 +482,7 @@ function FormularioReserva({ idInicial }) {
               <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
                 {enviando ? 'Enviando…' : `Reservar y pagar seña${sena ? ` (${formatearMonto(sena)})` : ''}`}
               </Boton>
+              <SelloMercadoPago />
             </>
           )}
         </div>
