@@ -44,8 +44,8 @@ export const TEXTOS = {
       'Seguimos siendo los mismos: una familia, dos salones y la misma manera de recibir.',
     ],
   },
-  // Va junto al botón de /reservas. Redacción del usuario (2026-10-08).
+  // Va junto al botón de /reservas. Redacción del usuario (2026-10-08); la primera oración se ajustó al flujo con seña (2026-10-18).
   avisoReserva:
-    'La reserva queda pendiente hasta que sea confirmada por el restaurante. ' +
+    'La reserva queda confirmada cuando se acredita la seña. ' +
     'Podés gestionarla desde la sección "Mis reservas" hasta 1 hora antes.',
 };
