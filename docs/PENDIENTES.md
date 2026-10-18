@@ -153,4 +153,58 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] Editar franjas de reserva y horarios de atención desde el panel
 
 ### Etapa 3 — Pagos
-- [ ] Esperar a que el profesor lo enseñe
+- [x] **Seña de la reserva con Mercado Pago** (2026-10-18): Checkout Pro, webhook
+      firmado, conciliación, vencimiento a los 15 minutos, bloqueo por turno. Spec:
+      `docs/superpowers/specs/2026-10-15-sena-reservas-mercadopago-design.md`;
+      detalle en `docs/BACKEND.md`; probada en la preview (PR #8).
+- [ ] Gift cards (spec propio)
+- [ ] Pedido para llevar (spec propio)
+
+**Pendientes que dejó la seña**
+
+- [ ] **Reintegro en modo de prueba.** Mercado Pago responde 401 "Unauthorized use of
+      live credentials" al reembolsar con las credenciales del vendedor de prueba
+      (`hallazgos.md` 1.18). Salidas: una aplicación con credenciales de prueba propias
+      (`APP_USR` en "Credenciales de prueba"; la real solo tiene `TEST-`), o devolver
+      los pagos a mano desde el panel del vendedor de prueba. Reservas cuyo
+      pago quedó en `reintegro_pendiente`: `7410e296` (cancelada por el cliente) y
+      `c55bdcf1` (cancelada por el admin). Hasta resolverlo, el reintegro automático no está probado
+      contra Mercado Pago.
+- [ ] **Falta el test del ranking de `estadoSena`** (que `[reintegrado, aprobado]` dé
+      `'aprobado'`): el informe del arreglo decía que estaba y no estaba
+      (`hallazgos.md` 1.20). Además, `src/servicios/reservas.test.js` importa
+      `estadoDelPago` sin usarlo.
+- [ ] **Volver a prender la Vercel Authentication en las previews** (se apagó para
+      que el webhook de Mercado Pago llegara) cuando termine de probarse.
+- [ ] **Next.js / `npm audit`:** 8 vulnerabilidades altas, anteriores a la seña
+      (`next`, la cadena de `eslint-config-next`, `sharp`, `source-map-js`). Subir
+      Next.
+- [ ] Limpiar las reservas y pagos de prueba que quedaron en la base de producción
+      (las previews la comparten) y anotarlo en `BITACORA.md`.
+
+**Menores diferidos de las revisiones** (no bloquean; una línea cada uno):
+
+- [ ] `cancelar_reserva` lee sin `for update`: un webhook o el cron concurrentes podrían
+      pisar los chequeos (el dinero lo cubre `marcar_reintegro`).
+- [ ] Un `p_motivo` de más de 120 caracteres da el error crudo `23514` en vez de un
+      mensaje en castellano (el front ya limita a 120).
+- [ ] `acreditar_pago` no compara el monto cobrado con el de la preferencia (en
+      Checkout Pro lo fija el servidor); sumar un chequeo en `avisos.js`.
+- [ ] `pagos.reserva_id` es `on delete cascade`: borrar un usuario borra sus registros
+      de plata; evaluar `restrict`.
+- [ ] Los reintegros de cobros duplicados que fallan solo se loguean (`console.warn`), no
+      aparecen en el panel; un pago que quedó en `reintegro_pendiente` tras un
+      reintegro exitoso con marcado fallido no se cura solo (sí con "Reintentar").
+- [ ] Mail de cancelación: la línea de reintegro sale para cualquier cancelación web del
+      admin, también de filas viejas `pendiente` que nunca pagaron; condicionarla a
+      `confirmada`.
+- [ ] `/reservas/pago` deja de consultar cuando la reserva pasa a `vencida`: un pago
+      tardío cuyo aviso llega después no se ve hasta recargar.
+- [ ] Tests faltantes: rutas y adaptadores (`base.js`, `supabase.js`) sin tests;
+      pruebas pgTAP de bloqueo global por turno, borde de las 17:00 y cancelaciones
+      del admin sin motivo.
+- [ ] El texto "1 hora" de la ayuda de `/reservas` está escrito a mano; el control de
+      puedePagar usa el reloj del navegador (el servidor igual lo valida).
+- [ ] `esUrlPublica` no reconoce `[::1]` ni IPs de la red local.
+- [ ] El plan (`docs/superpowers/plans/…`) todavía nombra `pagoAReintegrar`; el código
+      usa `pagosAReintegrar`.

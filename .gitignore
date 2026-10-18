@@ -11,3 +11,6 @@ build/
 Thumbs.db
 *.log
 next-env.d.ts
+
+# Mercado Pago: checkpoint local del asistente del plugin
+.mp-integrate-progress.md

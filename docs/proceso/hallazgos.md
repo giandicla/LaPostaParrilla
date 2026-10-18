@@ -261,6 +261,129 @@ el usuario no dijo textualmente se anota como decisión de la IA.
 
 ---
 
+### 1.16 La clase hablaba de un "Sandbox" que Mercado Pago ya no tiene (sesión 05)
+
+La diapositiva de la clase 11 describe probar los pagos en un entorno "Sandbox",
+con su propia URL (`sandbox_init_point`). Al empezar la integración, la IA buscó
+ese entorno en la documentación vigente de Mercado Pago y no existe más: hoy se
+prueba **sobre la API real, con cuentas de prueba** (un vendedor y un comprador
+de prueba, con tarjetas de prueba). La preferencia devuelve un solo link,
+`init_point`, y el spec lo dejó escrito así ("siempre `init_point`, nunca
+`sandbox_init_point`"). La IA lo registró como riesgo 3 del spec antes de
+construir; no lo tomó de la diapositiva.
+
+**Lección:** el material de una clase puede estar atrasado respecto de la API.
+Antes de implementar lo que dice la diapositiva se contrasta con la
+documentación actual.
+
+### 1.17 La creación automática del vendedor de prueba falló y las credenciales no eran las que parecían (sesión 05)
+
+El plugin de Mercado Pago que usa la IA tiene herramientas para crear la
+aplicación y los usuarios de prueba. El 2026-10-15 la creación automática del
+vendedor de prueba devolvió `MP_API_DOWN`, y `get_credentials` devolvió
+credenciales `TEST-` de la **aplicación real** (la de la cuenta del usuario), no
+de un vendedor de prueba.
+
+Salida que se encontró: el usuario inició sesión **como el vendedor de prueba**,
+creó una aplicación desde esa cuenta y se usaron sus credenciales `APP_USR`
+("producción" de esa cuenta de prueba). Verificado con la API: `/users/me`
+devolvió el usuario `3765216571` con la etiqueta `test_user`. Es una cuenta de
+prueba aunque la credencial diga "producción": no mueve plata real.
+
+Esa misma causa está detrás de 1.18: la aplicación real quedó solo con
+credenciales `TEST-` y sin las "Credenciales de prueba" `APP_USR` que pide el
+reintegro.
+
+**Lección:** el prefijo de una credencial (`TEST-`, `APP_USR-`) no dice a qué
+cuenta pertenece. Hay que preguntarle a la API de quién es (`/users/me`) antes de
+usarla.
+
+### 1.18 Los reintegros automáticos no se pudieron probar: Mercado Pago los bloquea con estas credenciales (sesión 05)
+
+En la prueba de punta a punta (2026-10-18), el cliente canceló la reserva
+`7410e296`, que tenía el pago aprobado `184877192398`. La cancelación se hizo y
+el pago quedó en `reintegro_pendiente`; Mercado Pago seguía mostrando 0
+reintegrado. Se repitió el pedido directo a la API:
+`POST /v1/payments/184877192398/refunds` con las credenciales del vendedor de
+prueba, respuesta **401 "Unauthorized use of live credentials"** (código 7).
+
+La documentación de Mercado Pago dice que las pruebas de reembolso se hacen con
+las credenciales de prueba de la aplicación (`APP_USR` en "Credenciales de
+prueba"). Ese panel no existe para nuestra aplicación real, por lo explicado en
+1.17.
+
+**La app se comportó como se diseñó:** la cancelación quedó hecha, el pago en
+`reintegro_pendiente`, el panel de admin lista el pago en "Reintegros
+pendientes" con el botón "Reintentar". Lo mismo con la cancelación del admin
+(`c55bdcf1`, motivo "No hay lugar"). Es decir, el camino de falla está probado de
+verdad; el camino feliz del reintegro, solo con tests que simulan Mercado Pago.
+
+**Lección:** no se puede afirmar que "el reintegro funciona" porque el código y
+sus tests simulados pasan. Lo que sí se puede afirmar, con evidencia, es qué
+hace el sistema cuando Mercado Pago lo rechaza. Queda como pendiente.
+
+### 1.19 La IA dijo que las credenciales de prueba "cobran a tu cuenta real" (sesión 05)
+
+Al explicar qué eran las credenciales `TEST-` que devolvió `get_credentials`
+(1.17), la IA le dijo al usuario que "cobran a tu cuenta real". Quería decir que
+el **cobrador** de esa aplicación es la cuenta real, no que se cobre plata
+verdadera. Dicho así era impreciso, y el usuario se preocupó por posibles cargos
+reales (él había pedido, como primera condición, usar solo cuentas de prueba y
+plata ficticia). La IA lo corrigió en el mensaje siguiente.
+
+**Lección:** con plata en juego, una frase corta e imprecisa tiene costo. Una
+condición que el usuario puso al principio ("solo cuentas de prueba") se
+confirma con la verificación (`/users/me`), no con una frase ambigua.
+
+### 1.20 Un subagente informó un test que no existía (sesión 05)
+
+El informe de la última ronda de arreglos decía que se había agregado el test del
+ranking de `estadoSena` (que `[reintegrado, aprobado]` dé `'aprobado'`). La
+re-revisión miró el diff y encontró que `src/servicios/reservas.test.js` no tenía
+ese test: el único cambio era un import de `estadoDelPago` que nadie usa. El
+código del ranking estaba bien; el test, no. Por el proceso (una sola ronda de
+arreglos) no se hizo otra, y quedó como pendiente anotado.
+
+Es el mismo patrón de 1.1: lo que el agente cuenta de su trabajo no es evidencia.
+Lo fue el diff.
+
+**Lección:** la revisión mira el diff, no el informe de quien lo escribió.
+
+### 1.21 Tropiezos del despliegue (sesión 05)
+
+Todos aparecieron recién al desplegar, ninguno en los tests:
+
+- **La protección de Vercel bloqueaba el webhook.** Las previews piden login
+  (Vercel Authentication); Mercado Pago recibía un 302 al SSO y nunca llegaba al
+  sitio. El usuario la desactivó para previews. El spec ya lo traía como riesgo 2;
+  igual hubo que sacarla a mano.
+- **Variables cargadas después del último build.** El primer intento de pago
+  respondió 500 "Algo salió mal" y la reserva `7493381b` quedó `esperando_pago`
+  sin pago. El log de Vercel decía "Faltan NEXT_PUBLIC_SUPABASE_URL o
+  SUPABASE_SECRET_KEY": las variables se habían agregado después de armar esa
+  preview. Se rearmó con un commit vacío (`0ac7b88`). Antes, el usuario había
+  redeployado *Production* en vez de la preview.
+- **El clasificador del modo automático frenó `supabase db push`** a producción
+  una vez. Corrió cuando el usuario volvió a pedirlo de forma explícita.
+
+### 1.22 Texto inventado en la ayuda de `/reservas` y una frase del usuario que quedó vieja (sesión 05)
+
+La ayuda de `/reservas` decía "se descuenta de la cuenta". Venía del plan que
+escribió la IA: nadie lo había dicho. Es el mismo error de 1.4 y 3.3 (un dato que
+falta se omite, no se inventa). La revisión final lo marcó y se quitó en la última
+tanda de arreglos.
+
+Aparte, `avisoReserva` es una frase que redactó el usuario (2026-10-08) y decía
+que la reserva queda "pendiente hasta que sea confirmada por el restaurante". Eso
+contradice su decisión posterior (la reserva pagada queda confirmada, sin
+aceptación del admin). La IA cambió solo la primera oración y dejó la segunda
+textual; el cambio se le informó al usuario (2026-10-18).
+
+**Lección:** un texto del usuario no se reescribe en silencio cuando una decisión
+nueva lo contradice: se ajusta lo mínimo y se avisa.
+
+---
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -392,6 +515,33 @@ garantiza un resultado que guste: ver 1.12.
 
 ---
 
+### 2.10 Las revisiones frenaron defectos del plan antes de llegar a producción (sesión 05)
+
+La seña se hizo con subagentes (un implementador y un revisor distinto por tarea).
+Lo que las revisiones encontraron y que el plan, escrito por la IA, traía mal:
+
+- **Tarea 9:** `.maybeSingle()` para buscar el pago a reintegrar. Con un cobro
+  doble y un primer reintegro fallido, una reserva puede tener varios pagos
+  `reintegro_pendiente`: la cancelación respondía 500 y el reintegro quedaba
+  trabado para siempre. Se cambió a `pagosAReintegrar`, que devuelve una lista.
+- **Tarea 11:** `/reservas/pago` mostraba el error de una consulta fallida y
+  nunca lo borraba, así que ocultaba una confirmación posterior.
+- **Revisión final, una crítica:** correr `supabase db push` antes de mergear
+  habría roto el sitio en producción, porque las previews y producción comparten
+  la misma base: el front viejo seguiría insertando reservas en `esperando_pago`
+  por defecto, el cron vencería reservas reales y la cancelación del admin viejo
+  chocaría con el trigger del motivo. Por eso la tarea 14 se reescribió como
+  **una sola ventana de despliegue** (función, base, variables y merge seguidos).
+- **Revisión final, importantes:** `creada_en` lo podía elegir el cliente (corría
+  el plazo de 15 minutos); un pago doble sobre una misma preferencia no se
+  reintegraba; los medios en efectivo (cupón) no sirven con una reserva que se
+  guarda 15 minutos (`binary_mode` y se excluyen `ticket` y `atm`).
+
+Contrasta con 1.1: otra vez el plan tenía defectos y otra vez los encontró un
+revisor con el código delante.
+
+---
+
 ## Parte 3 — Lo que se aprendió sobre el método
 
 ### 3.1 Separar quien escribe de quien revisa cambia el resultado
@@ -476,6 +626,23 @@ anterior.
 **Lección:** con una IA, el alcance de lo que se pide es el alcance de lo que se
 cambia. "Que se vea menos IA" sin decir dónde ni qué conservar invita a tocar todo.
 Conviene nombrar la página o la parte y decir qué gusta, no solo qué molesta.
+
+---
+
+### 3.9 Sin logo oficial descargable, se usa el componente oficial (sesión 05)
+
+El usuario pidió mostrar el logo de Mercado Pago. No hay un logo oficial para
+descargar y los términos para desarrolladores exigen respetar un "Manual de Marca"
+que no está publicado. En vez de copiar un logo de internet, la IA usó el Brand
+Brick de `@mercadopago/sdk-react` (`src/components/SelloMercadoPago/`): Mercado
+Pago dibuja su propio logo y los medios de pago. Se pidió la Public Key como
+`NEXT_PUBLIC_MP_PUBLIC_KEY`; cuando Vercel avisó del prefijo `NEXT_PUBLIC_`, la IA
+le explicó al usuario que esa clave es pública por diseño (no es el Access Token)
+y el usuario la cargó así.
+
+**Lección:** cuando falta el insumo oficial, usar la pieza que el proveedor sí
+publica evita decidir por él qué es correcto. Y una advertencia de la herramienta
+(Vercel) se explica, no se silencia.
 
 ---
 

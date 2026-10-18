@@ -10,7 +10,8 @@
 }
 
 /* El estado no depende solo del color: el texto siempre dice cuál es */
-.pendiente {
+.pendiente,
+.esperando_pago {
   background-color: var(--arena);
   color: var(--carbon);
 }
@@ -21,7 +22,8 @@
 }
 
 .rechazada,
-.cancelada {
+.cancelada,
+.vencida {
   background-color: var(--gris-300);
   color: var(--gris-600);
   text-decoration: line-through;

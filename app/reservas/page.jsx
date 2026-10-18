@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useEffect, useMemo, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
@@ -20,14 +20,21 @@ import {
 import { TEXTOS } from '../../src/data/textos.js';
 import { MARCA } from '../../src/data/marca.js';
 import { actualizarPerfil, ingresarConGoogle } from '../../src/servicios/auth.js';
+import { iniciarPago } from '../../src/servicios/pagos.js';
 import {
+  MINUTOS_PARA_PAGAR,
+  TURNOS,
   crearReserva,
   faltaParaReserva,
   formatearFecha,
+  formatearMonto,
   hoyEnArgentina,
   obtenerDiasBloqueados,
   obtenerFranjas,
+  obtenerSena,
+  turnoDe,
 } from '../../src/servicios/reservas.js';
+import SelloMercadoPago from '../../src/components/SelloMercadoPago/SelloMercadoPago.jsx';
 import { LIMITES, esGrupo, limpiarTelefono, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
@@ -132,11 +139,20 @@ function FormularioReserva({ idInicial }) {
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState('');
   const [creada, setCreada] = useState(null);
+  const [sena, setSena] = useState(null);
 
   const local = getLocal(idLocal);
   const hoy = hoyEnArgentina();
   const { fecha, hora } = valores;
   const grupo = esGrupo(valores.personas);
+
+  // Al volver con "atrás" desde Mercado Pago, el navegador restaura la página
+  // tal cual estaba (bfcache): sin esto quedaría trabada en "Enviando…"
+  useEffect(() => {
+    const alVolver = (evento) => evento.persisted && setEnviando(false);
+    window.addEventListener('pageshow', alVolver);
+    return () => window.removeEventListener('pageshow', alVolver);
+  }, []);
 
   useEffect(() => {
     let vigente = true;
@@ -159,13 +175,24 @@ function FormularioReserva({ idInicial }) {
     };
   }, [hoy, fecha]);
 
-  // Si es hoy, solo los horarios que todavía no pasaron
-  const franjasDisponibles = useMemo(
-    () => franjas.filter((h) => !fecha || faltaParaReserva({ fecha, hora: h }) > 0),
-    [franjas, fecha]
-  );
+  useEffect(() => {
+    let vigente = true;
+    obtenerSena(idLocal).then((monto) => vigente && setSena(monto)).catch(() => vigente && setSena(null));
+    return () => {
+      vigente = false;
+    };
+  }, [idLocal]);
 
-  const bloqueo = bloqueos.find((b) => b.fecha === fecha && (!b.local_id || b.local_id === idLocal));
+  const delDia = bloqueos.filter((b) => b.fecha === fecha && (!b.local_id || b.local_id === idLocal));
+  // Un bloqueo sin turno cierra el día; con turno, solo esos horarios
+  const bloqueo = delDia.find((b) => !b.turno);
+  const turnosCompletos = delDia.filter((b) => b.turno).map((b) => b.turno);
+
+  // Si es hoy, solo los horarios que todavía no pasaron; y nunca los de un turno completo
+  // (sin useMemo: el React Compiler ya lo memoiza)
+  const franjasDisponibles = franjas.filter(
+    (h) => (!fecha || faltaParaReserva({ fecha, hora: h }) > 0) && !turnosCompletos.includes(turnoDe(h))
+  );
 
   // Los errores no se guardan: se calculan de los valores en cada render.
   // Se acepta hasta el tope del local: lo que pase de 6 no se manda, se pide por WhatsApp.
@@ -234,35 +261,46 @@ function FormularioReserva({ idInicial }) {
         recargarPerfil();
       }
       setCreada(reserva);
+      try {
+        window.location.assign(await iniciarPago(reserva.id));
+        return; // sigue "Enviando…" mientras el navegador va a Mercado Pago
+      } catch (e) {
+        setError(e.message);
+      }
     } catch (e) {
       setError(e.message);
-    } finally {
-      setEnviando(false);
     }
+    setEnviando(false);
   };
 
-  const otraReserva = () => {
-    setCreada(null);
-    setValores((anteriores) => ({ ...anteriores, fecha: '', hora: '', comentarios: '' }));
-    setTocados({});
-    setIntentoEnviar(false);
+  const pagar = async () => {
+    setError('');
+    setEnviando(true);
+    try {
+      window.location.assign(await iniciarPago(creada.id));
+    } catch (e) {
+      setError(e.message);
+      setEnviando(false);
+    }
   };
 
   if (creada) {
     return (
       <div className={formulario.formulario}>
-        <h2 className={estilos.tituloListo}>Pedido de reserva enviado</h2>
+        <h2 className={estilos.tituloListo}>Falta pagar la seña</h2>
         <p>
           <strong>{getLocal(creada.local_id).nombre}</strong>, {formatearFecha(creada.fecha)} a las{' '}
           {creada.hora.slice(0, 5)}, {creada.personas} {creada.personas === 1 ? 'persona' : 'personas'}, a nombre
           de {creada.nombre}.
         </p>
-        <p className={formulario.exito}>
-          Te confirmamos por mail; mientras tanto figura como <strong>pendiente</strong> en &quot;Mis reservas&quot;.
+        {error && <p className={formulario.error} role="alert">{error}</p>}
+        <p>
+          Guardamos tu lugar durante {MINUTOS_PARA_PAGAR} minutos. Si no se paga la seña, la reserva se libera.
         </p>
+        <SelloMercadoPago />
         <div className={estilos.acciones}>
-          <Boton to="/mis-reservas">Ver mis reservas</Boton>
-          <Boton variante="texto" onClick={otraReserva}>Hacer otra reserva</Boton>
+          <Boton onClick={pagar} disabled={enviando}>{enviando ? 'Abriendo Mercado Pago…' : 'Pagar seña'}</Boton>
+          <Boton to="/mis-reservas" variante="texto">Ver mis reservas</Boton>
         </div>
       </div>
     );
@@ -366,6 +404,11 @@ function FormularioReserva({ idInicial }) {
             )}
           </Campo>
         </div>
+        {turnosCompletos.length > 0 && (
+          <p className={formulario.ayuda}>
+            Ese día ya está completo el turno {turnosCompletos.map((t) => TURNOS[t].toLowerCase()).join(' y el de la ')}.
+          </p>
+        )}
 
         <Campo
           id="personas"
@@ -433,9 +476,13 @@ function FormularioReserva({ idInicial }) {
           ) : (
             <>
               <p className={estilos.aviso}>{TEXTOS.avisoReserva}</p>
+              <p className={formulario.ayuda}>
+                La seña se paga con Mercado Pago. Si cancelás con más de 1 hora de anticipación, te la devolvemos.
+              </p>
               <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
-                {enviando ? 'Enviando…' : 'Pedir reserva'}
+                {enviando ? 'Enviando…' : `Reservar y pagar seña${sena ? ` (${formatearMonto(sena)})` : ''}`}
               </Boton>
+              <SelloMercadoPago />
             </>
           )}
         </div>

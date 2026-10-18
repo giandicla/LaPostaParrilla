@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useCallback, useEffect, useState } from 'react';
+import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
@@ -8,18 +8,27 @@ import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.j
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
 import NuevaReservaLocal from '../../src/components/NuevaReservaLocal/NuevaReservaLocal.jsx';
 import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/data/locales.js';
-import { ESTADOS, formatearFecha, hoyEnArgentina, obtenerFranjas } from '../../src/servicios/reservas.js';
+import {
+  ESTADOS,
+  ETIQUETAS_SENA,
+  TURNOS,
+  estadoSena,
+  formatearFecha,
+  formatearMonto,
+  hoyEnArgentina,
+  obtenerFranjas,
+} from '../../src/servicios/reservas.js';
 import {
   bloquearDia,
-  cambiarEstado,
-  contarPendientes,
   desbloquearDia,
   escucharReservas,
   guardarNota,
   listarBloqueos,
+  listarReintegrosPendientes,
   listarReservas,
   moverReserva,
 } from '../../src/servicios/admin.js';
+import { cancelarReserva, reintentarReintegro } from '../../src/servicios/pagos.js';
 import { LIMITES, validarFecha, validarHora, validarMotivo } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
@@ -39,19 +48,38 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const [borradorNota, setBorradorNota] = useState(null);
   const nota = borradorNota ?? reserva.nota;
   const local = getLocal(reserva.local_id);
-  const activa = ['pendiente', 'confirmada'].includes(reserva.estado);
+  const activa = ['esperando_pago', 'pendiente', 'confirmada'].includes(reserva.estado);
   const delLocal = reserva.origen === 'local';
   // Una reserva del local sin mail no recibe avisos: no se le promete uno
   const avisoMail = delLocal && !reserva.mail ? '' : ' Le avisamos al cliente por mail.';
 
-  const ejecutar = async (accion, confirmar) => {
-    if (confirmar && !window.confirm(confirmar)) return;
+  const ejecutar = async (accion) => {
     try {
       await accion();
       alCambiar();
     } catch (e) {
       alError(e.message);
     }
+  };
+
+  const alCancelar = () => {
+    const motivo = window.prompt(
+      `Motivo de la cancelación${avisoMail ? ' (le llega al cliente por mail)' : ''}:` +
+        // Para que no se le devuelva la plata a mano a un cliente que ya no va a venir
+        (estadoSena(reserva) === 'aprobado' ? ' Se le devuelve la seña automáticamente.' : ''),
+      'No hay lugar'
+    );
+    if (motivo === null) return;
+    if (!motivo.trim()) {
+      alError('Escribí el motivo de la cancelación.');
+      return;
+    }
+    ejecutar(async () => {
+      const { reintegro } = await cancelarReserva(reserva.id, motivo.trim());
+      if (reintegro === 'pendiente') {
+        alError('La reserva quedó cancelada, pero no se pudo devolver la seña: reintentalo en "Reintegros pendientes".');
+      }
+    });
   };
 
   const alMover = (evento) => {
@@ -88,6 +116,8 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
           {local?.nombre ?? reserva.local_id} ·{' '}
           <a href={`tel:${reserva.telefono.replace(/[^\d+]/g, '')}`}>{reserva.telefono}</a>
           {reserva.estado === 'cancelada' && reserva.cancelada_por && ` · canceló el ${reserva.cancelada_por}`}
+          {reserva.estado === 'cancelada' && reserva.motivo_cancelacion && ` · "${reserva.motivo_cancelacion}"`}
+          {estadoSena(reserva) && ` · ${ETIQUETAS_SENA[estadoSena(reserva)]}`}
           {delLocal && ' · Cargada en el local'}
           {reserva.mail && (
             <>
@@ -163,31 +193,11 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
       </div>
 
       <div className={estilos.acciones}>
-        {reserva.estado === 'pendiente' && (
-          <>
-            <button type="button" className={estilos.confirmar} onClick={() => ejecutar(() => cambiarEstado(reserva.id, 'confirmada'))}>
-              Confirmar
-            </button>
-            <button
-              type="button"
-              className={estilos.botonTexto}
-              onClick={() => ejecutar(() => cambiarEstado(reserva.id, 'rechazada'), `¿Rechazar esta reserva?${avisoMail}`)}
-            >
-              Rechazar
-            </button>
-          </>
-        )}
-        {activa && !moviendo && (
+        {['pendiente', 'confirmada'].includes(reserva.estado) && !moviendo && (
           <button type="button" className={estilos.botonTexto} onClick={() => setMoviendo(true)}>Mover</button>
         )}
-        {reserva.estado === 'confirmada' && (
-          <button
-            type="button"
-            className={estilos.botonTexto}
-            onClick={() => ejecutar(() => cambiarEstado(reserva.id, 'cancelada'), `¿Cancelar esta reserva?${avisoMail}`)}
-          >
-            Cancelar
-          </button>
+        {activa && (
+          <button type="button" className={estilos.botonTexto} onClick={alCancelar}>Cancelar</button>
         )}
       </div>
     </li>
@@ -218,9 +228,9 @@ function DiasBloqueados({ alError }) {
     evento.preventDefault();
     const form = evento.currentTarget;
     const datos = Object.fromEntries(new FormData(form));
-    const repetido = bloqueos.some((b) => b.fecha === datos.fecha && (b.local_id ?? '') === datos.local);
+    const repetido = bloqueos.some((b) => b.fecha === datos.fecha && (b.local_id ?? '') === datos.local && (b.turno ?? '') === datos.turno);
     const invalido = [
-      ['fecha', validarFecha(datos.fecha, { hoy }) || (repetido ? 'Ese día ya está bloqueado.' : '')],
+      ['fecha', validarFecha(datos.fecha, { hoy }) || (repetido ? 'Ese día y turno ya está bloqueado.' : '')],
       ['motivo', validarMotivo(datos.motivo)],
     ].find(([, mensaje]) => mensaje);
     if (invalido) {
@@ -230,13 +240,13 @@ function DiasBloqueados({ alError }) {
     }
     setErrorBloqueo(null);
     try {
-      await bloquearDia({ fecha: datos.fecha, idLocal: datos.local, motivo: datos.motivo });
+      await bloquearDia({ fecha: datos.fecha, idLocal: datos.local, turno: datos.turno, motivo: datos.motivo });
       form.reset();
       cargar();
     } catch (e) {
       // mensajeDeError traduce cualquier violación de unicidad como la de
       // reservas; acá la única posible es el mismo día bloqueado dos veces
-      alError(e.message.includes('reserva activa') ? 'Ese día ya está bloqueado.' : e.message);
+      alError(e.message.includes('reserva activa') ? 'Ese día y turno ya está bloqueado.' : e.message);
     }
   };
 
@@ -244,7 +254,7 @@ function DiasBloqueados({ alError }) {
     <section className={estilos.bloque} aria-labelledby="titulo-bloqueos">
       <h2 id="titulo-bloqueos" className={estilos.tituloBloque}>Días bloqueados</h2>
       <p className={formulario.ayuda}>
-        Un día bloqueado no se puede reservar desde la web. Las reservas que ya existían no se tocan.
+        Un día o un turno bloqueado no se puede reservar desde la web. Las reservas que ya existían no se tocan.
       </p>
       <form className={estilos.formBloqueo} onSubmit={alBloquear} noValidate>
         <input
@@ -259,6 +269,10 @@ function DiasBloqueados({ alError }) {
         <select name="local" className={formulario.control} aria-label="Local" defaultValue="">
           <option value="">Los dos locales</option>
           {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
+        </select>
+        <select name="turno" className={formulario.control} aria-label="Turno" defaultValue="">
+          <option value="">Todo el día</option>
+          {Object.entries(TURNOS).map(([valor, texto]) => <option key={valor} value={valor}>{texto}</option>)}
         </select>
         <input
           name="motivo"
@@ -279,6 +293,7 @@ function DiasBloqueados({ alError }) {
             <li key={b.id}>
               <span>
                 <strong>{formatearFecha(b.fecha)}</strong> · {b.local_id ? getLocal(b.local_id)?.nombre : 'los dos locales'}
+                {b.turno ? ` · ${TURNOS[b.turno].toLowerCase()}` : ' · todo el día'}
                 {b.motivo && ` · ${b.motivo}`}
               </span>
               <button type="button" className={estilos.botonTexto} onClick={async () => {
@@ -302,6 +317,52 @@ function DiasBloqueados({ alError }) {
 }
 
 // ---------------------------------------------------------------------
+// Reintegros pendientes: señas de reservas canceladas cuyo reembolso falló
+// ---------------------------------------------------------------------
+function ReintegrosPendientes({ version, alCambiar, alError }) {
+  const [pendientes, setPendientes] = useState([]);
+
+  useEffect(() => {
+    let vigente = true;
+    listarReintegrosPendientes()
+      .then((lista) => vigente && setPendientes(lista))
+      .catch((e) => vigente && alError(e.message));
+    return () => {
+      vigente = false;
+    };
+  }, [version, alError]);
+
+  if (!pendientes.length) return null;
+
+  return (
+    <section className={estilos.bloque} aria-labelledby="titulo-reintegros">
+      <h2 id="titulo-reintegros" className={estilos.tituloBloque}>Reintegros pendientes</h2>
+      <ul className={estilos.listaBloqueos}>
+        {pendientes.map((p) => (
+          <li key={p.id}>
+            <span>
+              <strong>{p.reservas.nombre}</strong> · {formatearFecha(p.reservas.fecha)} {p.reservas.hora.slice(0, 5)} ·{' '}
+              {formatearMonto(Number(p.monto))}
+            </span>
+            <button type="button" className={estilos.botonTexto} onClick={async () => {
+              try {
+                const { reintegro } = await reintentarReintegro(p.reserva_id);
+                if (reintegro !== 'hecho') alError('Todavía no se pudo devolver la seña. Probá de nuevo en un rato.');
+                alCambiar();
+              } catch (e) {
+                alError(e.message);
+              }
+            }}>
+              Reintentar
+            </button>
+          </li>
+        ))}
+      </ul>
+    </section>
+  );
+}
+
+// ---------------------------------------------------------------------
 // Panel
 // ---------------------------------------------------------------------
 function Panel() {
@@ -312,7 +373,6 @@ function Panel() {
   const [nueva, setNueva] = useState(esIdDeLocal(localPedido) ? localPedido : null);
   const [filtros, setFiltros] = useState({ fecha: hoyEnArgentina(), idLocal: '', estado: '' });
   const [reservas, setReservas] = useState(null);
-  const [pendientes, setPendientes] = useState(0);
   const [franjas, setFranjas] = useState({});
   const [error, setError] = useState('');
   const [novedad, setNovedad] = useState('');
@@ -324,12 +384,8 @@ function Panel() {
     // Si los filtros cambian antes de que llegue la respuesta, esa respuesta
     // ya no sirve: sin esta marca, una consulta vieja y lenta pisaba la nueva.
     let vigente = true;
-    Promise.all([listarReservas(filtros), contarPendientes()])
-      .then(([lista, cantidad]) => {
-        if (!vigente) return;
-        setReservas(lista);
-        setPendientes(cantidad);
-      })
+    listarReservas(filtros)
+      .then((lista) => vigente && setReservas(lista))
       .catch((e) => vigente && setError(e.message));
     return () => {
       vigente = false;
@@ -343,13 +399,19 @@ function Panel() {
       .catch((e) => setError(e.message));
   }, []);
 
+  // Estado de cada reserva en pantalla, para saber cuándo una se acaba de pagar
+  const estadosEnPantalla = useRef({});
+  useEffect(() => {
+    estadosEnPantalla.current = Object.fromEntries((reservas ?? []).map((r) => [r.id, r.estado]));
+  }, [reservas]);
+
   // Tiempo real: cualquier cambio en reservas recarga la lista
   useEffect(
     () =>
       escucharReservas((cambio) => {
-        // Las del local las cargó el propio panel: no hace falta avisarlas
-        if (cambio.eventType === 'INSERT' && cambio.new.origen !== 'local') {
-          setNovedad(`Entró una reserva nueva de ${cambio.new.nombre}.`);
+        const { id, estado, nombre } = cambio.new ?? {};
+        if (cambio.eventType === 'UPDATE' && estado === 'confirmada' && estadosEnPantalla.current[id] === 'esperando_pago') {
+          setNovedad(`Entró una reserva nueva de ${nombre}, con la seña paga.`);
         }
         cargar();
       }),
@@ -367,13 +429,6 @@ function Panel() {
           {!nueva && (
             <Boton onClick={() => setNueva(filtros.idLocal || ID_LOCAL_POR_DEFECTO)}>Nueva reserva</Boton>
           )}
-          <button
-            type="button"
-            className={`${estilos.contador} ${pendientes ? estilos.contadorActivo : ''}`}
-            onClick={() => filtrar({ fecha: '', estado: 'pendiente' })}
-          >
-            {pendientes} {pendientes === 1 ? 'pendiente' : 'pendientes'}
-          </button>
         </div>
       </header>
 
@@ -401,6 +456,8 @@ function Panel() {
           <button type="button" className={estilos.botonTexto} onClick={() => setError('')}>Cerrar</button>
         </p>
       )}
+
+      <ReintegrosPendientes version={version} alCambiar={cargar} alError={alError} />
 
       <div className={estilos.filtros}>
         <label className={formulario.campo}>

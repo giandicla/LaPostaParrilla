@@ -9,18 +9,22 @@ import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.j
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
 import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
 import { getLocal, enlaceWhatsapp } from '../../src/data/locales.js';
+import { cancelarReserva, iniciarPago } from '../../src/servicios/pagos.js';
 import {
-  cancelarReserva,
+  ETIQUETAS_SENA,
   esActiva,
+  estadoSena,
   faltaParaReserva,
   formatearFecha,
   obtenerMisReservas,
+  puedePagar,
   sePuedeCancelar,
+  venceElPago,
 } from '../../src/servicios/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
-function TarjetaReserva({ reserva, alCancelar }) {
+function TarjetaReserva({ reserva, alCancelar, alPagar }) {
   const local = getLocal(reserva.local_id);
   const cuando = `${formatearFecha(reserva.fecha)}, ${reserva.hora.slice(0, 5)}`;
   const whatsapp = enlaceWhatsapp(local, `Hola! Quería cancelar mi reserva del ${cuando} a nombre de ${reserva.nombre}.`);
@@ -36,6 +40,19 @@ function TarjetaReserva({ reserva, alCancelar }) {
         {reserva.personas} {reserva.personas === 1 ? 'persona' : 'personas'} · a nombre de {reserva.nombre}
       </p>
       {reserva.comentarios && <p className={estilos.comentario}>“{reserva.comentarios}”</p>}
+      {puedePagar(reserva) && (
+        <>
+          <p className={estilos.aviso}>
+            Falta pagar la seña: guardamos tu lugar hasta las{' '}
+            {new Intl.DateTimeFormat('es-AR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Argentina/Buenos_Aires' }).format(venceElPago(reserva))}.
+          </p>
+          <Boton onClick={() => alPagar(reserva)}>Pagar seña</Boton>
+        </>
+      )}
+      {estadoSena(reserva) && <p className={estilos.detalle}>{ETIQUETAS_SENA[estadoSena(reserva)]}</p>}
+      {reserva.estado === 'cancelada' && reserva.motivo_cancelacion && (
+        <p className={estilos.detalle}>Motivo: {reserva.motivo_cancelacion}</p>
+      )}
 
       {sePuedeCancelar(reserva) && (
         <Boton variante="texto" onClick={() => alCancelar(reserva)}>Cancelar reserva</Boton>
@@ -73,9 +90,22 @@ function ListaReservas() {
     setError('');
     setAviso('');
     try {
-      await cancelarReserva(reserva.id);
-      setAviso('Listo, cancelamos tu reserva.');
+      const { reintegro } = await cancelarReserva(reserva.id);
+      setAviso({
+        hecho: 'Listo, cancelamos tu reserva y te devolvimos la seña.',
+        pendiente: 'Listo, cancelamos tu reserva. La devolución de la seña está en proceso.',
+        no_corresponde: 'Listo, cancelamos tu reserva.',
+      }[reintegro]);
       setVersion((v) => v + 1);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const alPagar = async (reserva) => {
+    setError('');
+    try {
+      window.location.assign(await iniciarPago(reserva.id));
     } catch (e) {
       setError(e.message);
     }
@@ -97,7 +127,7 @@ function ListaReservas() {
       <h2 className={estilos.subtitulo}>Próximas</h2>
       {proximas.length ? (
         <ul className={estilos.lista}>
-          {proximas.map((r) => <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} />)}
+          {proximas.map((r) => <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} alPagar={alPagar} />)}
         </ul>
       ) : (
         <p className={estilos.vacio}>No tenés reservas próximas.</p>
@@ -108,7 +138,7 @@ function ListaReservas() {
         <>
           <h2 className={estilos.subtitulo}>Anteriores y canceladas</h2>
           <ul className={`${estilos.lista} ${estilos.listaAnteriores}`}>
-            {anteriores.map((r) => <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} />)}
+            {anteriores.map((r) => <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} alPagar={alPagar} />)}
           </ul>
         </>
       )}

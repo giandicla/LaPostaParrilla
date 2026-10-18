@@ -12,8 +12,10 @@ export type Reserva = {
   nombre: string;
   telefono: string;
   comentarios: string | null;
-  estado: 'pendiente' | 'confirmada' | 'rechazada' | 'cancelada';
+  estado: 'esperando_pago' | 'pendiente' | 'confirmada' | 'rechazada' | 'cancelada' | 'vencida';
   cancelada_por: 'cliente' | 'admin' | null;
+  // Lo escribe el admin al cancelar; le llega al cliente
+  motivo_cancelacion: string | null;
   origen: 'web' | 'local';
   // Solo en las del local: el mail que cargó el admin, si el cliente lo dio
   mail: string | null;
@@ -94,21 +96,23 @@ function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
   const { tipo, reserva: r, anterior: a } = aviso;
   const pagina = (titulo: string, cuerpo: string) => plantilla(titulo, cuerpo, sitio, delLocal);
 
-  if (tipo === 'INSERT') {
-    return [{
-      para: 'admin',
-      asunto: `Nueva reserva pendiente — ${formatearCuando(r.fecha, r.hora)}`,
-      html: pagina('Entró una reserva nueva', `${detalle(r)}
-        <p>Confirmala o rechazala desde el <a href="${sitio}/admin">panel</a>.</p>`),
-    }];
-  }
-
-  if (!a) return [];
+  // Una reserva de la web nace esperando el pago: nadie se entera hasta que se paga
+  if (tipo === 'INSERT' || !a) return [];
 
   if (r.estado !== a.estado) {
+    // Vencida o abandonada antes de pagar: no hubo reserva de verdad
+    if (r.estado === 'vencida' || (a.estado === 'esperando_pago' && r.estado === 'cancelada')) return [];
+
     if (r.estado === 'confirmada') {
-      return [{ para: 'cliente', asunto: 'Tu reserva en La Posta está confirmada',
-        html: pagina('¡Te esperamos!', detalle(r)) }];
+      const cliente: Mensaje = { para: 'cliente', asunto: 'Tu reserva en La Posta está confirmada',
+        html: pagina('¡Te esperamos!', detalle(r)) };
+      if (a.estado !== 'esperando_pago') return [cliente];
+      return [cliente, {
+        para: 'admin',
+        asunto: `Nueva reserva — ${formatearCuando(r.fecha, r.hora)}`,
+        html: pagina('Entró una reserva nueva, con la seña paga', `${detalle(r)}
+          <p>La ves en el <a href="${sitio}/admin">panel</a>.</p>`),
+      }];
     }
     if (r.estado === 'rechazada') {
       return [{ para: 'cliente', asunto: 'No pudimos confirmar tu reserva',
@@ -116,12 +120,16 @@ function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
           `${detalle(r)}<p>Escribinos por WhatsApp y buscamos otro horario.</p>`) }];
     }
     if (r.estado === 'cancelada') {
-      return r.cancelada_por === 'cliente'
-        ? [{ para: 'admin', asunto: `Un cliente canceló — ${formatearCuando(r.fecha, r.hora)}`,
-            html: pagina('Se canceló una reserva', detalle(r)) }]
-        : [{ para: 'cliente', asunto: 'Tu reserva en La Posta fue cancelada',
-            html: pagina('Cancelamos tu reserva',
-              `${detalle(r)}<p>Si tenés dudas, escribinos por WhatsApp.</p>`) }];
+      if (r.cancelada_por === 'cliente') {
+        return [{ para: 'admin', asunto: `Un cliente canceló — ${formatearCuando(r.fecha, r.hora)}`,
+          html: pagina('Se canceló una reserva', detalle(r)) }];
+      }
+      const motivo = r.motivo_cancelacion ? `<p>Motivo: ${escapar(r.motivo_cancelacion)}</p>` : '';
+      const reintegro = r.origen === 'web'
+        ? '<p>Te reintegramos la seña completa en el mismo medio de pago.</p>' : '';
+      return [{ para: 'cliente', asunto: 'Tu reserva en La Posta fue cancelada',
+        html: pagina('Cancelamos tu reserva',
+          `${detalle(r)}${motivo}${reintegro}<p>Si tenés dudas, escribinos por WhatsApp.</p>`) }];
     }
     return [];
   }

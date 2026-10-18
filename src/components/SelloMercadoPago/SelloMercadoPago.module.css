@@ -1,0 +1,6 @@
+/* El Brand Brick se dibuja en un iframe propio de Mercado Pago: acá solo se
+   le da lugar y se lo separa del botón. */
+.sello {
+  margin-top: var(--sp-3);
+  min-height: 2.5rem;
+}

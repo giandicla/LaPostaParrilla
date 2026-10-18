@@ -25,6 +25,7 @@ insert into public.franjas_reserva (local_id, hora) select 'restaurante', hora f
 insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, nombre, telefono)
   select 'cccccccc-cccc-cccc-cccc-cccccccccccc', '11111111-1111-1111-1111-111111111111',
          'restaurante', fecha, hora, 2, 'Ana', '2944111111' from pronto;
+update public.reservas set estado = 'confirmada' where id = 'cccccccc-cccc-cccc-cccc-cccccccccccc';
 
 -- ---------- Actuar como Ana ----------
 set local role authenticated;
@@ -38,7 +39,7 @@ $$, 'un cliente reserva a su nombre');
 
 select is(
   (select estado::text from public.reservas where id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
-  'pendiente', 'la reserva nueva queda pendiente');
+  'esperando_pago', 'la reserva nueva queda esperando el pago');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
@@ -82,7 +83,7 @@ $$, 'P0001', 'No se puede reservar para una fecha u hora que ya pasó.',
 update public.reservas set estado = 'confirmada' where id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa';
 select is(
   (select estado::text from public.reservas where id = 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa'),
-  'pendiente', 'un cliente no puede confirmar su reserva');
+  'esperando_pago', 'un cliente no puede confirmar su reserva');
 
 select throws_ok($$
   update public.perfiles set rol = 'admin' where id = '11111111-1111-1111-1111-111111111111'
@@ -128,7 +129,7 @@ select lives_ok($$
 $$, 'el admin confirma una reserva');
 
 select lives_ok($$
-  select public.cancelar_reserva('cccccccc-cccc-cccc-cccc-cccccccccccc')
+  select public.cancelar_reserva('cccccccc-cccc-cccc-cccc-cccccccccccc', 'No hay lugar')
 $$, 'el admin puede cancelar aunque falte menos de 1 hora');
 
 -- ---------- Visitante sin sesión ----------

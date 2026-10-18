@@ -1,0 +1,6 @@
+.titulo {
+  margin-top: 0;
+  font-family: var(--font-titulo);
+  font-size: var(--fs-h3);
+  color: var(--bordo-900);
+}
