@@ -1,11 +1,11 @@
-// Reservas del cliente: crear, listar las propias, cancelar.
+// Reservas del cliente: crear, listar las propias, seña y turnos (cancelar está en pagos.js).
 // Las reglas (franjas, 6 personas, 1 hora para cancelar, una por día) las hace cumplir
 // la base; acá solo se piden los datos y se traducen los errores.
 
 import { supabase, resultado } from './supabase.js';
 
 const COLUMNAS =
-  'id, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, creada_en';
+  'id, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, motivo_cancelacion, creada_en, pagos(estado)';
 
 // Horarios reservables de un local, como 'HH:MM'
 export async function obtenerFranjas(idLocal) {
@@ -15,10 +15,11 @@ export async function obtenerFranjas(idLocal) {
   return filas.map((fila) => fila.hora.slice(0, 5));
 }
 
-// Días bloqueados desde una fecha: [{ fecha, local_id (null = los dos), motivo }]
+// Días bloqueados desde una fecha:
+// [{ fecha, local_id (null = los dos), turno (null = todo el día), motivo }]
 export const obtenerDiasBloqueados = async (desde) =>
   resultado(
-    await supabase.from('dias_bloqueados').select('fecha, local_id, motivo').gte('fecha', desde)
+    await supabase.from('dias_bloqueados').select('fecha, local_id, turno, motivo').gte('fecha', desde)
   );
 
 export const crearReserva = async (idUsuario, reserva) =>
@@ -42,9 +43,6 @@ export const obtenerMisReservas = async (idUsuario) =>
       .order('hora')
   );
 
-export const cancelarReserva = async (id) =>
-  resultado(await supabase.rpc('cancelar_reserva', { p_id: id }));
-
 // ---------- Fechas y horas, siempre en hora de Argentina ----------
 
 const ZONA = 'America/Argentina/Buenos_Aires';
@@ -59,11 +57,60 @@ export const faltaParaReserva = ({ fecha, hora }) =>
 
 export const UNA_HORA = 60 * 60 * 1000;
 
-export const esActiva = (reserva) => ['pendiente', 'confirmada'].includes(reserva.estado);
+export const esActiva = (reserva) => ['esperando_pago', 'pendiente', 'confirmada'].includes(reserva.estado);
 
-// Misma regla que cancelar_reserva() en la base; acá solo decide qué botón mostrar
+// Misma regla que cancelar_reserva() en la base: sin pagar, siempre; pagada,
+// hasta 1 hora antes. Acá solo decide qué botón mostrar.
 export const sePuedeCancelar = (reserva) =>
-  esActiva(reserva) && faltaParaReserva(reserva) >= UNA_HORA;
+  esActiva(reserva) && (reserva.estado === 'esperando_pago' || faltaParaReserva(reserva) >= UNA_HORA);
+
+// ---------- Seña ----------
+
+// Mismo plazo que vencer_reservas_sin_pagar() y la preferencia de Mercado Pago
+export const MINUTOS_PARA_PAGAR = 15;
+
+export const venceElPago = (reserva) =>
+  new Date(new Date(reserva.creada_en).getTime() + MINUTOS_PARA_PAGAR * 60 * 1000);
+
+export const puedePagar = (reserva, ahora = Date.now()) =>
+  reserva.estado === 'esperando_pago' && venceElPago(reserva).getTime() > ahora;
+
+// El pago que cuenta es el cobrado (aprobado, a reintegrar o reintegrado)
+const COBRADOS = ['aprobado', 'reintegro_pendiente', 'reintegrado'];
+export const estadoSena = (reserva) =>
+  (reserva.pagos ?? []).map((pago) => pago.estado).find((estado) => COBRADOS.includes(estado)) ?? null;
+
+export const ETIQUETAS_SENA = {
+  aprobado: 'Seña pagada',
+  reintegro_pendiente: 'Reintegro de la seña en proceso',
+  reintegrado: 'Seña reintegrada',
+};
+
+export const formatearMonto = (monto) =>
+  new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS', maximumFractionDigits: 0 }).format(monto);
+
+export async function obtenerSena(idLocal) {
+  const fila = resultado(await supabase.from('locales').select('sena').eq('id', idLocal).single());
+  return Number(fila.sena);
+}
+
+export const obtenerReserva = async (id) =>
+  resultado(await supabase.from('reservas').select(COLUMNAS).eq('id', id).maybeSingle());
+
+// Avisa cuando cambia una reserva (tiempo real; la RLS deja ver solo las propias)
+export function escucharReserva(id, callback) {
+  const canal = supabase
+    .channel(`reserva-${id}`)
+    .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'reservas', filter: `id=eq.${id}` }, callback)
+    .subscribe();
+  return () => supabase.removeChannel(canal);
+}
+
+// ---------- Turnos (mismo corte que turno_de() en la base) ----------
+
+export const turnoDe = (hora) => (hora.slice(0, 5) < '17:00' ? 'mediodia' : 'noche');
+
+export const TURNOS = { mediodia: 'Mediodía', noche: 'Noche' };
 
 export const formatearFecha = (fecha) =>
   new Intl.DateTimeFormat('es-AR', {
@@ -74,8 +121,10 @@ export const formatearFecha = (fecha) =>
   }).format(new Date(`${fecha}T00:00:00Z`));
 
 export const ESTADOS = {
+  esperando_pago: 'Esperando pago',
   pendiente: 'Pendiente',
   confirmada: 'Confirmada',
   rechazada: 'Rechazada',
   cancelada: 'Cancelada',
+  vencida: 'Vencida',
 };

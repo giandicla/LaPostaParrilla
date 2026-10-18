@@ -4,7 +4,7 @@
 import { supabase, resultado } from './supabase.js';
 
 const COLUMNAS =
-  'id, usuario_id, origen, mail, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, creada_en, notas_reserva(nota)';
+  'id, usuario_id, origen, mail, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, motivo_cancelacion, creada_en, notas_reserva(nota), pagos(estado)';
 
 // filtros: { fecha?, idLocal?, estado? }
 export async function listarReservas({ fecha, idLocal, estado } = {}) {
@@ -15,15 +15,6 @@ export async function listarReservas({ fecha, idLocal, estado } = {}) {
   const filas = resultado(await consulta);
   // notas_reserva llega como objeto o null: la relación es uno a uno
   return filas.map(({ notas_reserva: nota, ...reserva }) => ({ ...reserva, nota: nota?.nota ?? '' }));
-}
-
-export async function contarPendientes() {
-  const { count, error } = await supabase
-    .from('reservas')
-    .select('id', { count: 'exact', head: true })
-    .eq('estado', 'pendiente');
-  if (error) throw error;
-  return count ?? 0;
 }
 
 // Una reserva que toma el local (por teléfono, WhatsApp o en la puerta): sin
@@ -37,9 +28,6 @@ export const crearReservaLocal = async (reserva) =>
       .select('id')
       .single()
   );
-
-export const cambiarEstado = async (id, estado) =>
-  resultado(await supabase.from('reservas').update({ estado }).eq('id', id));
 
 export const moverReserva = async (id, { fecha, hora }) =>
   resultado(await supabase.from('reservas').update({ fecha, hora }).eq('id', id));
@@ -60,16 +48,27 @@ export const listarBloqueos = async (desde) =>
   resultado(
     await supabase
       .from('dias_bloqueados')
-      .select('id, fecha, local_id, motivo')
+      .select('id, fecha, local_id, turno, motivo')
       .gte('fecha', desde)
       .order('fecha')
   );
 
-export const bloquearDia = async ({ fecha, idLocal, motivo }) =>
+// turno: 'mediodia' | 'noche' | '' (todo el día)
+export const bloquearDia = async ({ fecha, idLocal, turno, motivo }) =>
   resultado(
     await supabase
       .from('dias_bloqueados')
-      .insert({ fecha, local_id: idLocal || null, motivo: motivo?.trim() || null })
+      .insert({ fecha, local_id: idLocal || null, turno: turno || null, motivo: motivo?.trim() || null })
+  );
+
+// Señas de reservas canceladas que todavía no se devolvieron (el reembolso falló)
+export const listarReintegrosPendientes = async () =>
+  resultado(
+    await supabase
+      .from('pagos')
+      .select('id, monto, reserva_id, reservas(nombre, fecha, hora, local_id)')
+      .eq('estado', 'reintegro_pendiente')
+      .order('actualizado_en')
   );
 
 export const desbloquearDia = async (id) =>
