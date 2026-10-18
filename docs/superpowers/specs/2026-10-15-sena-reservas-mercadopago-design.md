@@ -261,3 +261,18 @@ cerraban. Se dejan anotadas en lugar de reescribir las secciones de arriba:
 3. **Son tres migraciones, no una:** los valores nuevos del enum van en un
    archivo propio (Postgres no deja usarlos en la misma transacción en que se
    agregan) y el bloqueo por turno en otro.
+4. **Ajustes de la revisión final (2026-10-18)**, en `20261018120000_sena_ajustes.sql`
+   y el servidor:
+   - `creada_en` lo fija la base al insertar (`validar_reserva`): si el cliente
+     pudiera elegirla, correría el plazo de 15 minutos.
+   - `acreditar_pago` devuelve `'duplicado'` cuando llega un segundo pago aprobado
+     (otro id de Mercado Pago) sobre una preferencia ya resuelta, sin tocar la fila.
+     El servidor reintegra ese pago por su propio id; todos los reintegros usan la
+     clave de idempotencia `reintegro-<id del pago de Mercado Pago>`. Un aviso no
+     aprobado nunca dispara un reintegro, y un 404 de Mercado Pago al leer el pago
+     se ignora.
+   - La preferencia lleva `binary_mode` y excluye `ticket` y `atm`: una reserva que
+     se guarda 15 minutos no puede esperar un cupón de pago en efectivo.
+   - `/reservas/pago` muestra todos los estados: confirmada, pago rechazado (con
+     reintentar), cancelada (con motivo y estado de la seña), pago tardío con
+     reintegro, y plazo vencido. Deja de consultar cuando la reserva ya no espera el pago.
