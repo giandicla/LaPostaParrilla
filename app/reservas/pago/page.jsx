@@ -30,13 +30,22 @@ function EstadoDelPago() {
   const [reserva, setReserva] = useState(null);
   const [error, setError] = useState(id ? '' : 'Falta el número de reserva.');
   const [abriendo, setAbriendo] = useState(false);
+  const [errorPago, setErrorPago] = useState('');
 
   useEffect(() => {
     if (!id) return undefined;
     let vigente = true;
     const leer = () =>
       obtenerReserva(id)
-        .then((r) => vigente && (r ? setReserva(r) : setError('No encontramos esa reserva.')))
+        .then((r) => {
+          if (!vigente) return;
+          if (r) {
+            setReserva(r);
+            setError('');
+          } else {
+            setError('No encontramos esa reserva.');
+          }
+        })
         .catch((e) => vigente && setError(e.message));
     leer();
     const dejarDeEscuchar = escucharReserva(id, leer);
@@ -50,16 +59,19 @@ function EstadoDelPago() {
   }, [id]);
 
   const reintentar = async () => {
+    setErrorPago('');
     setAbriendo(true);
     try {
       window.location.assign(await iniciarPago(id));
     } catch (e) {
-      setError(e.message);
+      setErrorPago(e.message);
       setAbriendo(false);
     }
   };
 
-  if (error) return <p className={formulario.error} role="alert">{error}</p>;
+  // El error de lectura solo reemplaza la pantalla si todavía no se cargó la reserva:
+  // una vez cargada, un sondeo que falla no la esconde (el siguiente lo corrige).
+  if (!reserva && error) return <p className={formulario.error} role="alert">{error}</p>;
   if (!reserva) return <p className={formulario.ayuda} role="status">Cargando tu reserva…</p>;
 
   const local = getLocal(reserva.local_id);
@@ -90,6 +102,7 @@ function EstadoDelPago() {
         <p className={formulario.ayuda}>
           Si el pago no se completó, podés intentarlo de nuevo hasta las {hora(venceElPago(reserva))}.
         </p>
+        {errorPago && <p className={formulario.error} role="alert">{errorPago}</p>}
         <Boton onClick={reintentar} disabled={abriendo}>{abriendo ? 'Abriendo Mercado Pago…' : 'Reintentar pago'}</Boton>
       </div>
     );
