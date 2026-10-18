@@ -64,7 +64,9 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
 
   const alCancelar = () => {
     const motivo = window.prompt(
-      `Motivo de la cancelación${avisoMail ? ' (le llega al cliente por mail)' : ''}:`,
+      `Motivo de la cancelación${avisoMail ? ' (le llega al cliente por mail)' : ''}:` +
+        // Para que no se le devuelva la plata a mano a un cliente que ya no va a venir
+        (estadoSena(reserva) === 'aprobado' ? ' Se le devuelve la seña automáticamente.' : ''),
       'No hay lugar'
     );
     if (motivo === null) return;

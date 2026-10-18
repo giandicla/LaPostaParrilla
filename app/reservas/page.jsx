@@ -145,6 +145,14 @@ function FormularioReserva({ idInicial }) {
   const { fecha, hora } = valores;
   const grupo = esGrupo(valores.personas);
 
+  // Al volver con "atrás" desde Mercado Pago, el navegador restaura la página
+  // tal cual estaba (bfcache): sin esto quedaría trabada en "Enviando…"
+  useEffect(() => {
+    const alVolver = (evento) => evento.persisted && setEnviando(false);
+    window.addEventListener('pageshow', alVolver);
+    return () => window.removeEventListener('pageshow', alVolver);
+  }, []);
+
   useEffect(() => {
     let vigente = true;
     obtenerFranjas(idLocal).then((f) => vigente && setFranjas(f)).catch((e) => setError(e.message));
@@ -467,7 +475,7 @@ function FormularioReserva({ idInicial }) {
             <>
               <p className={estilos.aviso}>{TEXTOS.avisoReserva}</p>
               <p className={formulario.ayuda}>
-                La seña se paga con Mercado Pago y se descuenta de la cuenta. Si cancelás con más de 1 hora de anticipación, te la devolvemos.
+                La seña se paga con Mercado Pago. Si cancelás con más de 1 hora de anticipación, te la devolvemos.
               </p>
               <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
                 {enviando ? 'Enviando…' : `Reservar y pagar seña${sena ? ` (${formatearMonto(sena)})` : ''}`}

@@ -75,10 +75,22 @@ export const venceElPago = (reserva) =>
 export const puedePagar = (reserva, ahora = Date.now()) =>
   reserva.estado === 'esperando_pago' && venceElPago(reserva).getTime() > ahora;
 
-// El pago que cuenta es el cobrado (aprobado, a reintegrar o reintegrado)
+// De varios pagos de una reserva cuenta el más avanzado, de mayor a menor.
+// El embed de Supabase no trae orden, así que se rankea acá.
+const ORDEN_DE_PAGOS = ['aprobado', 'reintegro_pendiente', 'reintegrado', 'rechazado', 'iniciado'];
+
+export const estadoDelPago = (reserva) =>
+  (reserva.pagos ?? [])
+    .map((pago) => pago.estado)
+    .filter((estado) => ORDEN_DE_PAGOS.includes(estado))
+    .sort((a, b) => ORDEN_DE_PAGOS.indexOf(a) - ORDEN_DE_PAGOS.indexOf(b))[0] ?? null;
+
+// La seña es el pago cobrado (aprobado, a reintegrar o reintegrado), si hay
 const COBRADOS = ['aprobado', 'reintegro_pendiente', 'reintegrado'];
-export const estadoSena = (reserva) =>
-  (reserva.pagos ?? []).map((pago) => pago.estado).find((estado) => COBRADOS.includes(estado)) ?? null;
+export const estadoSena = (reserva) => {
+  const estado = estadoDelPago(reserva);
+  return COBRADOS.includes(estado) ? estado : null;
+};
 
 export const ETIQUETAS_SENA = {
   aprobado: 'Seña pagada',

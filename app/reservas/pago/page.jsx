@@ -13,7 +13,10 @@ import RequiereSesion from '../../../src/components/RequiereSesion/RequiereSesio
 import { getLocal } from '../../../src/data/locales.js';
 import { iniciarPago } from '../../../src/servicios/pagos.js';
 import {
+  ETIQUETAS_SENA,
   escucharReserva,
+  estadoDelPago,
+  estadoSena,
   formatearFecha,
   obtenerReserva,
   puedePagar,
@@ -32,8 +35,20 @@ function EstadoDelPago() {
   const [abriendo, setAbriendo] = useState(false);
   const [errorPago, setErrorPago] = useState('');
 
+  // Una vez que la reserva deja de esperar el pago (confirmada, vencida,
+  // cancelada) no hay nada más que esperar: se dejan el sondeo y el tiempo real
+  const sigueEsperando = !reserva || reserva.estado === 'esperando_pago';
+
+  // Al volver con "atrás" desde Mercado Pago, el navegador restaura la página
+  // tal cual estaba (bfcache): sin esto quedaría trabada en "Abriendo…"
   useEffect(() => {
-    if (!id) return undefined;
+    const alVolver = (evento) => evento.persisted && setAbriendo(false);
+    window.addEventListener('pageshow', alVolver);
+    return () => window.removeEventListener('pageshow', alVolver);
+  }, []);
+
+  useEffect(() => {
+    if (!id || !sigueEsperando) return undefined;
     let vigente = true;
     const leer = () =>
       obtenerReserva(id)
@@ -56,7 +71,7 @@ function EstadoDelPago() {
       dejarDeEscuchar();
       clearInterval(intervalo);
     };
-  }, [id]);
+  }, [id, sigueEsperando]);
 
   const reintentar = async () => {
     setErrorPago('');
@@ -93,17 +108,52 @@ function EstadoDelPago() {
     );
   }
 
+  const sena = estadoSena(reserva);
+
   if (puedePagar(reserva)) {
+    const rechazado = estadoDelPago(reserva) === 'rechazado';
     return (
       <div className={formulario.formulario} role="status" aria-live="polite">
-        <h2 className={estilos.titulo}>Estamos confirmando tu pago…</h2>
+        <h2 className={estilos.titulo}>{rechazado ? 'No se pudo hacer el pago' : 'Estamos confirmando tu pago…'}</h2>
         {resumen}
-        <p>Si ya pagaste, esta página se actualiza sola en unos segundos.</p>
+        {rechazado ? (
+          <p>Mercado Pago no aprobó el pago. Podés intentarlo de nuevo, con el mismo medio u otro.</p>
+        ) : (
+          <p>Si ya pagaste, esta página se actualiza sola en unos segundos.</p>
+        )}
         <p className={formulario.ayuda}>
-          Si el pago no se completó, podés intentarlo de nuevo hasta las {hora(venceElPago(reserva))}.
+          {rechazado ? 'Tenés' : 'Si el pago no se completó, podés intentarlo de nuevo'} hasta las {hora(venceElPago(reserva))}.
         </p>
         {errorPago && <p className={formulario.error} role="alert">{errorPago}</p>}
         <Boton onClick={reintentar} disabled={abriendo}>{abriendo ? 'Abriendo Mercado Pago…' : 'Reintentar pago'}</Boton>
+      </div>
+    );
+  }
+
+  if (reserva.estado === 'cancelada') {
+    return (
+      <div className={formulario.formulario}>
+        <h2 className={estilos.titulo}>La reserva fue cancelada</h2>
+        {resumen}
+        {reserva.motivo_cancelacion && <p>Motivo: {reserva.motivo_cancelacion}</p>}
+        {sena && <p className={formulario.ayuda}>{ETIQUETAS_SENA[sena]}.</p>}
+        <Boton to="/reservas">Hacer una reserva</Boton>
+      </div>
+    );
+  }
+
+  // El pago llegó después de que venció la reserva: la seña se devuelve sola
+  if (reserva.estado === 'vencida' && (sena === 'reintegro_pendiente' || sena === 'reintegrado')) {
+    return (
+      <div className={formulario.formulario}>
+        <h2 className={estilos.titulo}>Llegó tarde el pago</h2>
+        {resumen}
+        <p>
+          El plazo para pagar ya se había vencido y el lugar se liberó, así que te devolvemos la seña.
+          Si querés, hacé la reserva de nuevo.
+        </p>
+        <p className={formulario.ayuda}>{ETIQUETAS_SENA[sena]}.</p>
+        <Boton to="/reservas">Hacer una reserva</Boton>
       </div>
     );
   }
