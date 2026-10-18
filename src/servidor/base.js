@@ -24,9 +24,10 @@ export function crearBase(cliente = clienteSecreto()) {
       dato(await cliente.from('pagos').select('id').eq('id', id).maybeSingle()),
     acreditarPago: async (idPago, idPagoMp, estadoMp) =>
       dato(await cliente.rpc('acreditar_pago', { p_pago_id: idPago, p_mp_payment_id: idPagoMp, p_estado_mp: estadoMp })),
-    pagoAReintegrar: async (reservaId) =>
+    // Puede haber más de uno (p. ej. un cobro doble): se reintegran todos
+    pagosAReintegrar: async (reservaId) =>
       dato(await cliente.from('pagos').select('id, mp_payment_id')
-        .eq('reserva_id', reservaId).eq('estado', 'reintegro_pendiente').maybeSingle()),
+        .eq('reserva_id', reservaId).eq('estado', 'reintegro_pendiente').order('creado_en')),
     marcarReintegrado: async (idPago) =>
       dato(await cliente.from('pagos').update({ estado: 'reintegrado', actualizado_en: ahora() })
         .eq('id', idPago).eq('estado', 'reintegro_pendiente')),
