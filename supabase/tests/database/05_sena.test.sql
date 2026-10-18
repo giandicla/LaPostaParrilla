@@ -120,11 +120,14 @@ select is((select estado from public.pagos where id = 'c0c0c0c0-c0c0-c0c0-c0c0-c
   'reintegro_pendiente', 'al cancelar, la seña aprobada queda para reintegrar');
 
 -- ---------- Vencimiento ----------
-insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, nombre, telefono, creada_en)
+-- creada_en la fija la base al insertar: se retrocede con un update
+insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, nombre, telefono)
 values ('dddddddd-dddd-dddd-dddd-dddddddddddd', '11111111-1111-1111-1111-111111111111',
-        'parrilla', current_date + 16, '20:30', 2, 'Ana', '2944111111', now() - interval '16 minutes'),
+        'parrilla', current_date + 16, '20:30', 2, 'Ana', '2944111111'),
        ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', '11111111-1111-1111-1111-111111111111',
-        'parrilla', current_date + 17, '20:30', 2, 'Ana', '2944111111', now() - interval '5 minutes');
+        'parrilla', current_date + 17, '20:30', 2, 'Ana', '2944111111');
+update public.reservas set creada_en = now() - interval '16 minutes' where id = 'dddddddd-dddd-dddd-dddd-dddddddddddd';
+update public.reservas set creada_en = now() - interval '5 minutes' where id = 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee';
 select public.vencer_reservas_sin_pagar();
 select is((select estado::text from public.reservas where id = 'dddddddd-dddd-dddd-dddd-dddddddddddd'),
   'vencida', 'a los 15 minutos sin pagar, la reserva vence');
