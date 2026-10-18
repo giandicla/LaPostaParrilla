@@ -382,6 +382,23 @@ textual; el cambio se le informó al usuario (2026-10-18).
 **Lección:** un texto del usuario no se reescribe en silencio cuando una decisión
 nueva lo contradice: se ajusta lo mínimo y se avisa.
 
+### 1.23 Le hizo cargar las variables de Vercel dos veces (sesión 05)
+
+Para probar en la preview, la IA le pidió al usuario que cargara las cuatro
+variables de pago solo en el entorno **Preview**. Al momento del merge tuvo que
+pedirle que las pasara también a **Production**. El usuario se quejó, con razón:
+"¿Para qué me hiciste hacer todo eso solo en preview si ahora lo tengo que hacer de
+vuelta en production?". Vercel permite tildar los dos entornos al crear cada
+variable, y cargarlas en Production antes del merge no tenía riesgo (el código
+viejo no las usa). Solo `APP_URL` necesitaba un valor distinto por entorno.
+
+Relacionado: el usuario también hizo "Redeploy" del deploy de **Production** en
+lugar del de la preview, porque la indicación no decía cuál de la lista era (1.21).
+
+**Lección:** cuando se le pide un paso manual al usuario, pensar el recorrido
+completo hasta producción y pedirlo una sola vez, señalando exactamente qué fila o
+qué opción tocar.
+
 ---
 
 ## Parte 2 — Dónde funcionó mejor de lo esperado

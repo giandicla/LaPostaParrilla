@@ -174,13 +174,17 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       `'aprobado'`): el informe del arreglo decía que estaba y no estaba
       (`hallazgos.md` 1.20). Además, `src/servicios/reservas.test.js` importa
       `estadoDelPago` sin usarlo.
-- [ ] **Volver a prender la Vercel Authentication en las previews** (se apagó para
-      que el webhook de Mercado Pago llegara) cuando termine de probarse.
+- [x] **Volver a prender la Vercel Authentication en las previews** (se apagó para
+      que el webhook de Mercado Pago llegara). La volvió a prender el usuario el
+      2026-10-18, después de pasar el webhook a producción.
 - [ ] **Next.js / `npm audit`:** 8 vulnerabilidades altas, anteriores a la seña
       (`next`, la cadena de `eslint-config-next`, `sharp`, `source-map-js`). Subir
       Next.
-- [ ] Limpiar las reservas y pagos de prueba que quedaron en la base de producción
-      (las previews la comparten) y anotarlo en `BITACORA.md`.
+- [x] Limpiar las reservas y pagos de prueba que quedaron en la base de producción.
+      Hecho el 2026-10-18 a pedido del usuario: se borraron todas las reservas (8),
+      los pagos (5) y el bloqueo (1); quedaron las cuentas, los locales y las franjas.
+      Las 2 señas con reintegro pendiente siguen cobradas en la cuenta del vendedor
+      de prueba (plata de prueba; se pueden devolver a mano desde su panel).
 
 **Menores diferidos de las revisiones** (no bloquean; una línea cada uno):
 

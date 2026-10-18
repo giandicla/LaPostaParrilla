@@ -4,6 +4,28 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-18 — La seña en producción; base limpia
+
+- **Merge del [PR #8](https://github.com/giandicla/LaPostaParrilla/pull/8)**
+  (`ccf06c7`), con los 5 checks en verde (lint/tests/build, pgTAP, Edge Function,
+  Vercel). Autorizado por el usuario después de la prueba de punta a punta.
+- Antes del merge, el usuario pasó las variables a **Production** (`APP_URL` con el
+  dominio de producción) y cambió la URL del webhook en Mercado Pago a
+  `https://lapostaparrilla.vercel.app/api/webhooks/mercadopago`. Tuvo que hacerlo
+  dos veces, porque la IA le había pedido cargarlas solo en Preview sin avisar que
+  se podían tildar los dos entornos juntos.
+- Verificado en producción: `/reservas` y `/reservas/pago` responden 200, el
+  webhook responde 401 sin firma y la ruta de pagos pide sesión.
+- El usuario volvió a prender la Vercel Authentication en las previews.
+- **Base de producción limpia, a pedido del usuario:** se borraron todas las
+  reservas (8), los pagos (5) y el bloqueo de prueba (1), en una transacción que
+  controlaba las cantidades. Quedaron las 2 cuentas, los 2 locales y las 20 franjas.
+- `CLAUDE.md`: sección "Pagos", la excepción de `src/servidor/` a la regla de
+  Supabase, y el bloque que agrega `next dev`, commiteado a pedido del usuario para
+  que no aparezca más como cambio pendiente.
+
+---
+
 ## 2026-10-18 — Seña de la reserva con Mercado Pago
 
 Rama `feat/pagos-sena`, [PR #8](https://github.com/giandicla/LaPostaParrilla/pull/8).
