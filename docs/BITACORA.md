@@ -4,6 +4,67 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-18 — Seña de la reserva con Mercado Pago
+
+Rama `feat/pagos-sena`, [PR #8](https://github.com/giandicla/LaPostaParrilla/pull/8).
+Spec: `docs/superpowers/specs/2026-10-15-sena-reservas-mercadopago-design.md`.
+Primer cobro de los tres decididos (seña, gift cards, pedido para llevar); cubre E6.
+
+**Qué se hizo**
+
+- Las reservas de la web ahora nacen `esperando_pago` y se confirman solas cuando
+  se acredita la **seña de $10.000** (monto fijo por reserva, `locales.sena`), sin
+  aceptación del admin. Sin pago a los 15 minutos pasan a `vencida` (`pg_cron`).
+- Pago con **Checkout Pro**: `POST /api/v1/pagos` crea el pago y la preferencia en
+  el servidor; `POST /api/webhooks/mercadopago` valida la firma, consulta el pago
+  real y concilia con `acreditar_pago()` (idempotente, con pago tardío y cobro
+  doble); `POST /api/v1/reservas/:id/cancelacion` cancela y reintegra.
+- Cancelación del admin **con motivo** ("No hay lugar" por defecto). Se sacan
+  Confirmar y Rechazar del panel. Bloque "Reintegros pendientes" con "Reintentar".
+- **Bloqueo por turno** (mediodía antes de las 17:00, noche desde las 17:00) para
+  cuando el local se llena.
+- `/reservas/pago` (vuelta desde Mercado Pago), `/mis-reservas` con "Pagar seña",
+  y el cartel oficial de Mercado Pago (Brand Brick) bajo el botón.
+- Tests: pgTAP 7 archivos / 97 asserts, `node --test` 64, Deno 13. Lint y build sin errores.
+
+**Despliegue a producción (una sola ventana, 2026-10-18)**
+
+- `supabase functions deploy notificar-reserva`.
+- `supabase db push`: migraciones `20261015110000`, `20261015120000`,
+  `20261015130000` y `20261018120000`. Antes, lectura de la base de producción:
+  3 reservas (2 canceladas, 1 confirmada futura), ninguna `pendiente`. El primer
+  `db push` lo frenó el clasificador del modo automático; corrió cuando el usuario
+  lo volvió a pedir.
+- Variables en Vercel, todas cargadas por el usuario (la IA no carga claves en
+  servicios externos): `MP_ACCESS_TOKEN`, `MP_WEBHOOK_SECRET`,
+  `SUPABASE_SECRET_KEY`, `APP_URL` y, para el cartel, `NEXT_PUBLIC_MP_PUBLIC_KEY`.
+  Primero solo en Preview: la IA no avisó que se podían tildar Preview y
+  Production juntas, y el usuario tuvo que repetir el paso para producción.
+  Webhook configurado por el usuario en el panel del vendedor de prueba. Vercel
+  Authentication apagada en las previews (si no, el webhook recibe un 302).
+- Un commit vacío (`0ac7b88`) rearmó la preview con las variables.
+- **Falta:** el merge a `main`, que el usuario autorizó para después de una prueba de punta a punta exitosa; no estaba hecho al escribir esta entrada. Pendientes en `docs/PENDIENTES.md`.
+
+**Prueba de punta a punta en la preview** (ids = prefijos en la base)
+
+| # | Caso | Resultado |
+|---|---|---|
+| 1 | Pago aprobado (titular `APRO`) | OK. Reserva `7410e296` confirmada, pago `d3799943` aprobado (Mercado Pago `184877192398`), conciliado por webhook en menos de 2 minutos. El primer intento falló con 500 (variables sin cargar): quedó la reserva `7493381b` cancelada sin pago |
+| 2 | Pago rechazado (`OTHE`) y reintento | OK. Pago `b657479c` rechazado, la reserva `c9beaa9e` siguió `esperando_pago`; reintento con `APRO`: pago `68114989` aprobado, confirmada |
+| 3 | Cancelación del cliente de `7410e296` | **Falló el reintegro**: la cancelación se hizo y el pago quedó `reintegro_pendiente` (Mercado Pago responde 401 "Unauthorized use of live credentials" al reembolsar con estas credenciales) |
+| 4 | Cancelación del admin de `c55bdcf1`, motivo "No hay lugar" | OK la cancelación; reintegro pendiente por la misma causa. El bloqueo de turno (2026-10-23, parrilla, noche) frena las reservas en `/reservas` |
+
+**Lo que no está probado:** el reintegro automático contra Mercado Pago. Sí está
+probado lo que hace la app cuando Mercado Pago lo rechaza: cancelación firme, pago
+en `reintegro_pendiente`, "Reintentar" en el panel. Detalle y salidas en
+`docs/BACKEND.md` y `docs/proceso/hallazgos.md` 1.18.
+
+**Documentación:** `RUBRICA.md` (E6), `BACKEND.md` (sección de pagos),
+`ESTRUCTURA.md`, `QA-MANUAL.md` (checklist de la seña), `PENDIENTES.md`, registro
+del proceso (`proceso/sesion-05-2026-10-15.md` y `hallazgos.md` 1.16 a 1.22, 2.10, 3.9).
+
+---
+
 ## 2026-10-08 — Previews de Vercel conectadas a la base
 
 Decisión del usuario: las previews de cada PR usan la **base de producción** (no

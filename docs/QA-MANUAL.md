@@ -186,6 +186,68 @@ locales bajo una marca" — es lo más importante de probar):**
 
 ---
 
+## Seña con Mercado Pago (`/reservas`, `/reservas/pago`, `/mis-reservas`, `/admin`)
+
+> Agregada en la sesión 05 (2026-10-18). **Reemplaza** estas líneas de "Cuentas y
+> reservas", que quedaron de antes de la seña: "Al reservar: ... estado pendiente"
+> (ahora la reserva queda *Esperando pago* hasta pagar) y "Confirmar, rechazar,
+> cancelar y mover" del panel (el admin ya no confirma ni rechaza: una reserva
+> pagada queda confirmada; solo cancela, con motivo, o mueve).
+>
+> Se prueba **en la preview de la rama** (Mercado Pago no llega a `localhost`),
+> con una ventana de **incógnito** y la **cuenta compradora de prueba** de
+> Mercado Pago (ids y credenciales en `docs/BACKEND.md`). Es plata ficticia, pero
+> **la preview usa la base de producción**: las reservas que se creen quedan como
+> filas reales; cancelarlas o anotarlas en la bitácora al terminar. Con la
+> protección de Vercel prendida el webhook no llega: ver `docs/BACKEND.md`.
+>
+> Tarjeta de prueba: la del país (skill `mp-test-cards`), con el **titular**
+> `APRO` (aprueba) u `OTHE` (rechaza).
+
+**Antes del pago**
+- [ ] En `/reservas`, el botón dice "Reservar y pagar seña ($10.000)" (monto leído de la base).
+- [ ] Bajo el botón se ve el cartel oficial de Mercado Pago (Brand Brick) con su logo y los medios de pago; no ofrece efectivo.
+- [ ] Al enviar, la reserva se crea y se abre Mercado Pago ("Abriendo Mercado Pago…").
+- [ ] En el checkout, el monto es $10.000 y el concepto es "Seña reserva <salón> · <fecha> <hora>". No aparecen medios en efectivo (Rapipago, Pago Fácil).
+
+**Pago aprobado (titular `APRO`)**
+- [ ] Al volver, `/reservas/pago` dice "Estamos confirmando tu pago…" y en menos de unos minutos pasa a confirmada, sin recargar.
+- [ ] En "Mis reservas" figura *Confirmada*; en el panel de admin, la reserva con la seña pagada.
+- [ ] Llega el mail de confirmación (solo si `BREVO_API_KEY` está cargada; si no, queda en el log de la función).
+- [ ] No llegó ningún mail cuando la reserva estaba *Esperando pago*.
+
+**Pago rechazado (titular `OTHE`) y reintento**
+- [ ] Mercado Pago rechaza el pago; al volver, `/reservas/pago` muestra "No se pudo hacer el pago" con "Reintentar pago".
+- [ ] La reserva sigue *Esperando pago* (no se pierde el lugar mientras no pasen 15 minutos).
+- [ ] Reintentar con `APRO` aprueba y la reserva queda confirmada.
+
+**Vencimiento (15 minutos)**
+- [ ] Crear una reserva y no pagar: pasados los 15 minutos queda *Vencida* (la corre `pg_cron` cada minuto) y "Mis reservas" ya no ofrece "Pagar seña".
+- [ ] Mientras esperaba, "Mis reservas" mostraba "Pagar seña" y el tiempo que faltaba.
+- [ ] El vencimiento no manda mail.
+
+**Cancelación del cliente (con reintegro)**
+- [ ] Con 1 hora o más de anticipación, "Cancelar reserva" pide confirmación y cancela. Aviso esperado con el reintegro hecho: "Listo, cancelamos tu reserva y te devolvimos la seña."
+- [ ] **Esperado hoy en modo de prueba:** el aviso es "…La devolución de la seña está en proceso.", la reserva queda cancelada y el pago en *reintegro pendiente* (Mercado Pago rechaza el reembolso con 401; ver `docs/proceso/hallazgos.md` 1.18). Con credenciales de prueba propias, el pago pasaría a *reintegrado*.
+- [ ] Con menos de 1 hora, en vez de cancelar aparece el link a WhatsApp.
+
+**Cancelación del admin (con motivo)**
+- [ ] "Cancelar" en el panel pide el motivo, prearmado "No hay lugar", editable, y avisa que se devuelve la seña.
+- [ ] Sin motivo no deja cancelar.
+- [ ] El cliente ve la reserva cancelada con el motivo; el mail de cancelación lo incluye.
+- [ ] Si el reembolso falla, la reserva queda cancelada y el pago aparece en "Reintegros pendientes" con "Reintentar".
+
+**Bloqueo por turno**
+- [ ] En el panel, bloquear un día con turno "Noche" (o "Mediodía"); la lista muestra el turno.
+- [ ] En `/reservas`, ese día y ese turno rechazan reservas nuevas ("Ese turno ya está completo."); el otro turno sigue disponible.
+- [ ] Las reservas ya hechas de ese turno no se tocan. Antes de las 17:00 es mediodía; desde las 17:00, noche.
+
+**Webhook**
+- [ ] Un `POST` a `/api/webhooks/mercadopago` sin firma responde **401** (por ejemplo, `curl -i -X POST "<URL de la preview>/api/webhooks/mercadopago?type=payment&data.id=1"`).
+- [ ] Con la firma de Mercado Pago, un mismo aviso repetido no cambia nada (es idempotente).
+
+---
+
 ## Página Nosotros (`/nosotros`)
 
 **Qué tiene que verse:**

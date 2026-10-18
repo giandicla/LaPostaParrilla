@@ -2,7 +2,9 @@
 
 Reservas, cuentas y panel de admin corren sobre **Supabase** (Postgres + Auth +
 Realtime + Edge Functions). No hay servidor propio: el front habla con Supabase
-desde el navegador y **la seguridad la pone la RLS de la base**. Diseño completo:
+desde el navegador y **la seguridad la pone la RLS de la base**. La única
+excepción son los pagos con Mercado Pago, que pasan por Route Handlers de Next
+(sección "Pagos con Mercado Pago"). Diseño completo:
 `docs/superpowers/specs/2026-10-01-backend-supabase-design.md`.
 
 ## Dónde está cada cosa
@@ -13,7 +15,8 @@ desde el navegador y **la seguridad la pone la RLS de la base**. Diseño complet
 | Tests de la base (pgTAP) | `supabase/tests/database/*.test.sql` |
 | Datos de desarrollo (usuarios de prueba) | `supabase/seed.sql` — solo local |
 | Edge Function de mails | `supabase/functions/notificar-reserva/` |
-| Única puerta del front a Supabase | `src/servicios/` (`supabase.js`, `auth.js`, `reservas.js`, `admin.js`) |
+| Única puerta del front a Supabase | `src/servicios/` (`supabase.js`, `auth.js`, `reservas.js`, `admin.js`; `pagos.js` llama a las rutas de la API) |
+| Rutas de pagos (servidor) | `app/api/v1/pagos`, `app/api/v1/reservas/[id]/cancelacion`, `app/api/webhooks/mercadopago`; lógica en `src/servidor/` |
 | Configuración local | `supabase/config.toml` |
 
 **Regla:** ningún componente importa `@supabase/supabase-js` ni `src/servicios/supabase.js`.
@@ -47,6 +50,7 @@ npm run dev
 
 - Proyecto Supabase **`la-posta`** (ref `dagxitkhqbztgetoultt`, São Paulo), en la
   organización "TP Web La Posta". Migraciones aplicadas; los tests pgTAP pasan contra él.
+- Migraciones de la seña (hasta `20261018120000`) aplicadas el 2026-10-18; función `notificar-reserva` redesplegada ese día.
 - Función `notificar-reserva` desplegada con sus secretos y los de Vault. Falta
   `BREVO_API_KEY`: hasta cargarla, los mails solo quedan en el log de la función.
 - Auth: Site URL `https://lapostaparrilla.vercel.app`. **Solo Google**: el proveedor
@@ -94,6 +98,105 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
    (decisión del usuario, 2026-10-08): lo que se reserve en una preview es real.
 10. 👤 Nombrar al primer admin: registrarse en el sitio y, en el SQL Editor,
     `update public.perfiles set rol = 'admin' where id = (select id from auth.users where email = '<mail>');`
+
+## Pagos con Mercado Pago
+
+La seña de la reserva (**$10.000 por reserva**, guardada en `locales.sena`) se paga
+con **Checkout Pro**. Diseño completo y correcciones:
+`docs/superpowers/specs/2026-10-15-sena-reservas-mercadopago-design.md`. Es la
+excepción a "no hay servidor propio": hay **Route Handlers de Next** (`app/api/`)
+porque el Access Token de Mercado Pago no puede llegar al navegador. La lógica vive
+en `src/servidor/` (nadie del front la importa).
+
+Flujo: el cliente reserva (`esperando_pago`) → `POST /api/v1/pagos` crea el `pago`
+y la preferencia (monto leído de la base) y devuelve el `init_point` → paga en
+Mercado Pago → llega el aviso a `POST /api/webhooks/mercadopago`, que valida la
+firma, consulta `GET /v1/payments/:id` y concilia con `acreditar_pago()`
+(idempotente) → la reserva queda `confirmada` (sin aceptación del admin). Si no
+paga en **15 minutos**, el job de `pg_cron` la pasa a `vencida`.
+
+### Variables de entorno (solo servidor, salvo la última)
+
+Van en `.env.local` (ignorado por git) y en Vercel (*Preview* y *Production*).
+Plantilla en `.env.example`. Nunca se escribe el valor en un documento.
+
+| Variable | De dónde sale |
+|---|---|
+| `MP_ACCESS_TOKEN` | Credencial `APP_USR-…` de la aplicación creada **como el vendedor de prueba** (panel de desarrolladores de Mercado Pago, iniciando sesión como ese usuario) |
+| `MP_WEBHOOK_SECRET` | La clave secreta que da el panel al configurar el webhook (ver abajo) |
+| `SUPABASE_SECRET_KEY` | Supabase → Settings → API Keys → *secret key*. Se saltea la RLS: solo servidor, solo para `pagos` |
+| `APP_URL` | URL pública del sitio **sin barra final** (en local `http://localhost:3000`; en la preview, la URL fija de la rama). Se usa para `notification_url` y `back_urls` |
+| `NEXT_PUBLIC_MP_PUBLIC_KEY` | Public Key `APP_USR-…` del mismo vendedor de prueba. Es **pública por diseño**: la usa el cartel de Mercado Pago (Brand Brick) en el navegador. Si falta, el cartel no aparece y lo demás sigue igual |
+
+### Cuentas de prueba y modo de prueba
+
+No hay entorno Sandbox: se prueba **sobre la API real, con cuentas de prueba** y
+una sola `init_point` (ver `docs/proceso/hallazgos.md` 1.16). La aplicación real
+quedó solo con credenciales `TEST-` porque falló la creación automática del
+vendedor (1.17), así que la app se creó a mano desde el vendedor de prueba.
+
+- Usuarios de prueba (solo ids, las claves las tiene el usuario): **vendedor
+  `3765216571`**, **comprador `3765205613`**.
+- Tarjeta de prueba: la del país (se pueden consultar con el skill
+  `mp-test-cards`). El resultado lo decide el **titular**: `APRO` aprueba, `OTHE`
+  rechaza (error general), para probar el reintento.
+- Para pagar hay que usar una ventana de incógnito con la sesión del comprador de
+  prueba, no la cuenta real.
+
+### Webhook
+
+Se configura en el panel de Mercado Pago **iniciando sesión como el vendedor de
+prueba** (panel de desarrolladores → la aplicación → Webhooks): URL
+`<APP_URL>/api/webhooks/mercadopago`, evento **"Pagos"**. De ahí sale
+`MP_WEBHOOK_SECRET`. La ruta responde 200 si procesó (o no era un pago), 401 si la
+firma no vale y 500 si falla la consulta a Mercado Pago o a la base, para que
+Mercado Pago reintente.
+
+**Las previews necesitan la Vercel Authentication apagada.** Con la protección de
+despliegue prendida, Mercado Pago recibe un 302 al login de Vercel y el aviso
+nunca llega. Se desactivó para previews (2026-10-18) solo mientras se probaba:
+hay que volver a prenderla (`docs/PENDIENTES.md`).
+
+### Base: lo que agrega la seña
+
+Migraciones (aplicadas a producción el **2026-10-18**):
+
+| Migración | Qué hace |
+|---|---|
+| `20261015110000_estados_sena` | Estados `esperando_pago` y `vencida` (archivo propio: Postgres no deja usar un valor de enum en la misma transacción en que se agrega) |
+| `20261015120000_sena_reservas` | `locales.sena`, tabla `pagos` con RLS, `acreditar_pago()`, `cancelar_reserva(id, motivo)`, trigger de reintegro pendiente, `vencer_reservas_sin_pagar()` y el job de `pg_cron` |
+| `20261015130000_bloqueo_por_turno` | `dias_bloqueados.turno` (mediodía / noche / todo el día) y su chequeo en `validar_reserva()` |
+| `20261018120000_sena_ajustes` | `creada_en` fijada por la base al insertar; `acreditar_pago()` devuelve `'duplicado'` ante un segundo cobro de la misma preferencia |
+
+- **`pg_cron`:** el job `vencer-reservas-sin-pagar` corre cada minuto. La extensión
+  se activa en el proyecto remoto con la migración.
+- **Edge Function `notificar-reserva`:** redesplegada el **2026-10-18** con las
+  plantillas nuevas (no se manda mail en `esperando_pago` ni `vencida`; el de
+  cancelación lleva el motivo y avisa del reintegro).
+- Nadie escribe `pagos` desde el navegador: solo el servidor, con la clave secreta.
+
+### Una sola ventana de despliegue
+
+**Las previews comparten la base de producción.** Aplicar las migraciones antes de
+que el front nuevo esté publicado rompe el sitio: el front viejo seguiría creando
+reservas en `esperando_pago` por defecto, el cron las vencería a los 15 minutos y la
+cancelación del admin viejo chocaría con el motivo obligatorio. Orden que se usó el
+2026-10-18, todo seguido: desplegar la función → `supabase db push` → variables en
+Vercel → prueba de punta a punta en la preview → merge. Para próximos cambios que
+toquen la base y el front a la vez, lo mismo.
+
+### Reintegros: limitación en modo de prueba
+
+Al cancelar una reserva con seña aprobada, el servidor pide el reembolso total
+(`POST /v1/payments/:id/refunds`, con la clave de idempotencia
+`reintegro-<id del pago de Mercado Pago>`). **Con estas credenciales, Mercado Pago
+lo rechaza** con 401 "Unauthorized use of live credentials" (`hallazgos.md` 1.18).
+Lo que pasa entonces es lo diseñado: la cancelación queda hecha, el pago en
+`reintegro_pendiente` y el panel de admin lo lista en "Reintegros pendientes" con
+"Reintentar". Salidas: una aplicación con credenciales de prueba propias (`APP_USR`
+en "Credenciales de prueba") o devolver el pago a mano desde el panel del vendedor
+de prueba. Hasta entonces el reintegro automático no está probado contra Mercado
+Pago, solo con tests.
 
 ## Mails
 
