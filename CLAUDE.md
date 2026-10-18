@@ -16,6 +16,7 @@ restaurante.
   front le habla desde el navegador y la seguridad la pone la **RLS**. Ver
   `docs/BACKEND.md`. El 2026-10-08 la cátedra dio **webhooks y Mercado Pago**: a
   partir de ahí entra código de servidor para la API del catálogo y los pagos.
+  Desde el 2026-10-18 están en `main` las tres rutas de la seña (ver "Pagos").
   Fuera de eso, no agregar API routes, Server Actions ni middleware sin hablarlo.
 - **Todo cambio va por rama + PR** (lo pide la rúbrica, E1). CI en
   `.github/workflows/ci.yml`; la plantilla del PR trae el checklist. No mergear
@@ -26,7 +27,11 @@ restaurante.
   le entrega a clientes.
 - **Toda llamada a Supabase pasa por `src/servicios/`.** Ningún componente
   importa `@supabase/supabase-js`. Las reglas de negocio (6 personas, 1 hora para cancelar,
-  franjas, una reserva por día) viven en la base, no en los componentes.
+  franjas, una reserva por día, seña y vencimiento) viven en la base, no en los componentes.
+  **Única excepción: `src/servidor/`**, el código que usan solo las rutas de
+  `app/api/`. Ahí se crean clientes propios, incluido uno con la clave secreta
+  (`SUPABASE_SECRET_KEY`, se saltea la RLS) para la tabla `pagos`. Ningún componente
+  ni página importa nada de `src/servidor/`.
 - El esquema se cambia **solo con migraciones** (`supabase/migrations/`) y cada
   regla nueva lleva su test pgTAP (`npm run db:test`).
 
@@ -40,13 +45,34 @@ base de pruebas): lo que se haga en una preview queda en los datos reales.
 
 - Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
 - **Server Components por defecto.** `'use client'` va en `Navbar`,
-  `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `app/carta`, y en las
-  páginas que usan la sesión: `reservas`, `ingresar`, `mis-reservas`, `admin`,
-  `admin/dia`. Todas siguen prerenderizándose como estáticas.
+  `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `SelloMercadoPago`,
+  `app/carta`, y en las páginas que usan la sesión: `reservas`, `reservas/pago`,
+  `ingresar`, `mis-reservas`, `admin`, `admin/dia`. Todas las páginas
+  siguen prerenderizándose como estáticas; las únicas rutas dinámicas son las de
+  `app/api/`.
 - Navegación con `next/link`. `Boton` tiene dos props de destino, a propósito:
   `to` renderiza un `next/link` para navegación interna (rutas del sitio);
   `href` renderiza un `<a target="_blank" rel="noreferrer">` para links
   externos (WhatsApp). Nunca se usan juntas.
+
+## Pagos (Mercado Pago, solo credenciales de prueba)
+
+Seña obligatoria de $10.000 para reservar desde la web, con Checkout Pro. Detalle,
+variables y despliegue en `docs/BACKEND.md`; diseño en
+`docs/superpowers/specs/2026-10-15-sena-reservas-mercadopago-design.md`.
+
+- `POST /api/v1/pagos`: crea el pago y la preferencia (el monto sale de la base).
+- `POST /api/webhooks/mercadopago`: valida la firma, consulta el pago real y
+  concilia con `acreditar_pago()`.
+- `POST /api/v1/reservas/:id/cancelacion`: cancela con la sesión del que llama y
+  reintegra la seña.
+- **Nunca credenciales de producción de Mercado Pago.** `MP_ACCESS_TOKEN` es del
+  vendedor de prueba y solo vive en el servidor; la única clave con
+  `NEXT_PUBLIC_` es la Public Key (`NEXT_PUBLIC_MP_PUBLIC_KEY`, pública por diseño).
+- **Las previews comparten la base de producción:** un cambio de esquema se aplica
+  (`supabase db push`) en la misma ventana que el merge, no antes.
+- El reintegro automático falla en modo prueba (Mercado Pago responde 401
+  "Unauthorized use of live credentials"): ver `docs/PENDIENTES.md`.
 
 ## Convenciones
 
@@ -118,3 +144,13 @@ Ver `docs/proceso/README.md` para el formato.
 - `docs/proceso/` — registro del trabajo con IA, para la presentación de la materia
 - `docs/superpowers/specs/` — los diseños aprobados
 - `docs/superpowers/plans/` — los planes de implementación
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+# This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->
