@@ -1,6 +1,13 @@
 // Reembolso total de una seña en Mercado Pago. La clave de idempotencia es el
-// id del pago: si se reintenta, Mercado Pago no devuelve dos veces.
+// id del pago de Mercado Pago: si se reintenta, no devuelve dos veces, y un
+// cobro duplicado de la misma preferencia tiene su propia clave.
+export const claveDeReintegro = (idPagoMp) => `reintegro-${idPagoMp}`;
+
+export async function reintegrarEnMp(idPagoMp, { mp }) {
+  await mp.reintegrar(String(idPagoMp), claveDeReintegro(idPagoMp));
+}
+
 export async function reintegrarPago(pago, { base, mp }) {
-  await mp.reintegrar(pago.mp_payment_id, `reintegro-${pago.id}`);
+  await reintegrarEnMp(pago.mp_payment_id, { mp });
   await base.marcarReintegrado(pago.id);
 }

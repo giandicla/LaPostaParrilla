@@ -31,7 +31,7 @@ test('cancela y reintegra la seña', async () => {
   const deps = falsos();
   assert.deepEqual(await cancelarReserva({ reservaId: 'r-1', motivo: 'No hay lugar' }, deps), { reintegro: 'hecho' });
   assert.deepEqual(deps.llamadas, [
-    ['cancelar', 'r-1', 'No hay lugar'], ['reintegrar', '555', 'reintegro-p-1'], ['marcarReintegrado', 'p-1'],
+    ['cancelar', 'r-1', 'No hay lugar'], ['reintegrar', '555', 'reintegro-555'], ['marcarReintegrado', 'p-1'],
   ]);
 });
 
@@ -61,7 +61,7 @@ test('con dos pagos por reintegrar, si falla el primero igual se intenta el segu
   assert.deepEqual(await cancelarReserva({ reservaId: 'r-1' }, deps), { reintegro: 'pendiente' });
   assert.deepEqual(deps.intentos, ['555', '666']);
   assert.deepEqual(deps.llamadas, [
-    ['cancelar', 'r-1', undefined], ['reintegrar', '666', 'reintegro-p-2'], ['marcarReintegrado', 'p-2'],
+    ['cancelar', 'r-1', undefined], ['reintegrar', '666', 'reintegro-666'], ['marcarReintegrado', 'p-2'],
   ]);
 });
 

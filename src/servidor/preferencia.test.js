@@ -23,8 +23,20 @@ test('external_reference es el id del pago', () => {
 test('con URL pública: auto_return, webhook y vuelta a /reservas/pago', () => {
   const p = armarPreferencia({ ...datos, appUrl: 'https://x.vercel.app' });
   assert.equal(p.auto_return, 'approved');
-  assert.equal(p.notification_url, 'https://x.vercel.app/api/webhooks/mercadopago');
+  assert.equal(p.notification_url, 'https://x.vercel.app/api/webhooks/mercadopago?source_news=webhooks');
   assert.equal(p.back_urls.success, 'https://x.vercel.app/reservas/pago?reserva=r-1');
+});
+
+test('una barra final en APP_URL no duplica la barra en las URLs', () => {
+  const p = armarPreferencia({ ...datos, appUrl: 'https://x.vercel.app/' });
+  assert.equal(p.back_urls.success, 'https://x.vercel.app/reservas/pago?reserva=r-1');
+  assert.equal(p.notification_url, 'https://x.vercel.app/api/webhooks/mercadopago?source_news=webhooks');
+});
+
+test('solo medios que acreditan al instante: sin efectivo ni cajero (la reserva dura 15 minutos)', () => {
+  const p = armarPreferencia({ ...datos, appUrl: 'https://x.vercel.app' });
+  assert.equal(p.binary_mode, true);
+  assert.deepEqual(p.payment_methods.excluded_payment_types, [{ id: 'ticket' }, { id: 'atm' }]);
 });
 
 test('en localhost: sin auto_return ni notification_url (Mercado Pago los rechaza)', () => {

@@ -20,8 +20,9 @@ export function esUrlPublica(url) {
 const cuando = (fecha, hora) => `${fecha.slice(8, 10)}/${fecha.slice(5, 7)} ${hora.slice(0, 5)}`;
 
 export function armarPreferencia({ pago, reserva, nombreLocal, appUrl }) {
-  const vuelta = `${appUrl}/reservas/pago?reserva=${reserva.id}`;
-  const publica = esUrlPublica(appUrl);
+  const base = String(appUrl ?? '').replace(/\/+$/, '');
+  const vuelta = `${base}/reservas/pago?reserva=${reserva.id}`;
+  const publica = esUrlPublica(base);
   return {
     items: [{
       id: `sena-${reserva.id}`,
@@ -32,7 +33,11 @@ export function armarPreferencia({ pago, reserva, nombreLocal, appUrl }) {
     }],
     external_reference: pago.id,
     back_urls: { success: vuelta, pending: vuelta, failure: vuelta },
-    ...(publica ? { auto_return: 'approved', notification_url: `${appUrl}/api/webhooks/mercadopago` } : {}),
+    ...(publica ? { auto_return: 'approved', notification_url: `${base}/api/webhooks/mercadopago?source_news=webhooks` } : {}),
+    // La reserva espera 15 minutos: sin efectivo ni cajero (el cupón tarda días)
+    // y sin pagos pendientes, que no confirman en el momento
+    binary_mode: true,
+    payment_methods: { excluded_payment_types: [{ id: 'ticket' }, { id: 'atm' }] },
     expires: true,
     expiration_date_to: venceLaReserva(reserva.creada_en).toISOString(),
     statement_descriptor: 'LA POSTA',
