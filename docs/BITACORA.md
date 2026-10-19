@@ -4,6 +4,25 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-18 — La vuelta de Mercado Pago iba a la preview
+
+Rama `fix/url-produccion`, [PR #10](https://github.com/giandicla/LaPostaParrilla/pull/10) (`d7f7307`).
+
+- **El síntoma (lo reportó el usuario):** al pagar en `lapostaparrilla.vercel.app`,
+  Mercado Pago lo devolvía a una pantalla de Vercel en vez de a La Posta.
+- **La causa:** en Vercel, `APP_URL` de Production tenía la URL de la preview. La
+  vuelta (`back_urls`) y el aviso de pago (`notification_url`) iban a la preview,
+  que pide login de Vercel. El pago se cobraba en Mercado Pago, pero el webhook no
+  llegaba y la reserva quedaba "esperando pago" hasta vencer. Dos pagos de prueba
+  quedaron así (cobrados, sin registrar, vencidos; el usuario decidió dejarlos).
+- **El arreglo:** `src/servidor/sitio.js` (`urlDelSitio`, 4 tests). En producción
+  la URL sale de `VERCEL_PROJECT_PRODUCTION_URL`, que informa Vercel; `APP_URL` queda
+  para previews y local. Ya no depende de que esa variable esté bien cargada.
+- **Verificado en producción** con un pago real de prueba: vuelta y webhook a
+  `https://lapostaparrilla.vercel.app/...`, reserva confirmada en 11 segundos.
+
+---
+
 ## 2026-10-18 — La seña en producción; base limpia
 
 - **Merge del [PR #8](https://github.com/giandicla/LaPostaParrilla/pull/8)**

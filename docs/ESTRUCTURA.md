@@ -93,6 +93,7 @@ variables de entorno en `docs/BACKEND.md`.
 | `pagos.js` | `iniciarPagoDeSena`: valida la reserva, crea el pago y la preferencia |
 | `preferencia.js` | Cuerpo de la preferencia (función pura) y el plazo de 15 minutos |
 | `reintegros.js` | Reembolso total con clave de idempotencia `reintegro-<id de Mercado Pago>` |
+| `sitio.js` | `urlDelSitio`: la URL pública para la vuelta y el webhook. En producción, el dominio que informa Vercel (`VERCEL_PROJECT_PRODUCTION_URL`); en previews y local, `APP_URL` |
 | `respuestas.js` | `ErrorHttp`, `json` y `manejar`: errores JSON uniformes, sin stack trace al cliente |
 | `supabase.js` | Cliente con la clave secreta y cliente con el token de quien llama |
 

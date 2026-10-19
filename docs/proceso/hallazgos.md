@@ -399,6 +399,26 @@ lugar del de la preview, porque la indicación no decía cuál de la lista era (
 completo hasta producción y pedirlo una sola vez, señalando exactamente qué fila o
 qué opción tocar.
 
+### 1.24 Una variable de entorno mal cargada rompió el pago en producción (sesión 05)
+
+Después del merge, `APP_URL` de Production quedó con la URL de la preview. La IA
+le había indicado al usuario crear una variable aparte para Production; terminó
+compartida entre los dos entornos. Ningún test ni la prueba en la preview podían
+verlo: en la preview esa URL era la correcta. En producción, Mercado Pago devolvía
+al cliente a la preview (pantalla de login de Vercel) y el webhook tampoco
+llegaba: dos pagos se cobraron y las reservas vencieron sin confirmarse. Lo
+encontró el usuario probando el sitio real. La IA lo confirmó leyendo la
+preferencia en Mercado Pago (`back_urls` y `notification_url` con la URL de la
+preview) y los pagos aprobados que la base no tenía.
+
+**Arreglo:** que el código no dependa de esa variable en producción. La URL sale
+de `VERCEL_PROJECT_PRODUCTION_URL`, que Vercel informa solo (`src/servidor/sitio.js`,
+PR #10).
+
+**Lección:** un dato que la plataforma ya conoce no se le pide al usuario que lo
+cargue a mano. Y después de un despliegue hay que probar el camino completo en
+producción, no solo en la preview.
+
 ---
 
 ## Parte 2 — Dónde funcionó mejor de lo esperado

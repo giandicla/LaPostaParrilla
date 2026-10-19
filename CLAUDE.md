@@ -71,6 +71,9 @@ variables y despliegue en `docs/BACKEND.md`; diseño en
   `NEXT_PUBLIC_` es la Public Key (`NEXT_PUBLIC_MP_PUBLIC_KEY`, pública por diseño).
 - **Las previews comparten la base de producción:** un cambio de esquema se aplica
   (`supabase db push`) en la misma ventana que el merge, no antes.
+- La vuelta desde Mercado Pago y el webhook usan `urlDelSitio()`
+  (`src/servidor/sitio.js`): en producción el dominio que informa Vercel, en
+  previews y local `APP_URL`. No volver a leer `process.env.APP_URL` directo.
 - El reintegro automático falla en modo prueba (Mercado Pago responde 401
   "Unauthorized use of live credentials"): ver `docs/PENDIENTES.md`.
 
