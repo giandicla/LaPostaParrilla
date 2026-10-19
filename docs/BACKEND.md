@@ -125,7 +125,7 @@ Plantilla en `.env.example`. Nunca se escribe el valor en un documento.
 | `MP_ACCESS_TOKEN` | Credencial `APP_USR-…` de la aplicación creada **como el vendedor de prueba** (panel de desarrolladores de Mercado Pago, iniciando sesión como ese usuario) |
 | `MP_WEBHOOK_SECRET` | La clave secreta que da el panel al configurar el webhook (ver abajo) |
 | `SUPABASE_SECRET_KEY` | Supabase → Settings → API Keys → *secret key*. Se saltea la RLS: solo servidor, solo para `pagos` |
-| `APP_URL` | URL pública del sitio **sin barra final** (en local `http://localhost:3000`; en la preview, la URL fija de la rama). Se usa para `notification_url` y `back_urls` |
+| `APP_URL` | URL pública del sitio **sin barra final**, solo para **previews y local** (en local `http://localhost:3000`; en la preview, la URL fija de la rama). Se usa para `notification_url` y `back_urls`. **En producción no se usa:** la URL sale de `VERCEL_PROJECT_PRODUCTION_URL`, que Vercel informa solo (`src/servidor/sitio.js`, desde el PR #10) |
 | `NEXT_PUBLIC_MP_PUBLIC_KEY` | Public Key `APP_USR-…` del mismo vendedor de prueba. Es **pública por diseño**: la usa el cartel de Mercado Pago (Brand Brick) en el navegador. Si falta, el cartel no aparece y lo demás sigue igual |
 
 ### Cuentas de prueba y modo de prueba
@@ -147,7 +147,8 @@ vendedor (1.17), así que la app se creó a mano desde el vendedor de prueba.
 
 Se configura en el panel de Mercado Pago **iniciando sesión como el vendedor de
 prueba** (panel de desarrolladores → la aplicación → Webhooks): URL
-`<APP_URL>/api/webhooks/mercadopago`, evento **"Pagos"**. De ahí sale
+`https://lapostaparrilla.vercel.app/api/webhooks/mercadopago` (para probar una
+preview, la URL de la rama), evento **"Pagos"**. De ahí sale
 `MP_WEBHOOK_SECRET`. La ruta responde 200 si procesó (o no era un pago), 401 si la
 firma no vale y 500 si falla la consulta a Mercado Pago o a la base, para que
 Mercado Pago reintente.
