@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { armarCarta, borrarItem, cambiarCubierto, crearItem, editarBodega, editarItem, leerCarta } from './carta.js';
+import { armarCarta, borrarItem, cambiarCubierto, crearItem, editarBodega, editarItem, leerCarta, leerVinos } from './carta.js';
 import { ErrorHttp } from './respuestas.js';
 
 const seccion = (id, slug, local_id, orden, extra = {}) => ({
@@ -86,19 +86,24 @@ test('los ítems van por su orden', () => {
 });
 
 // ---------- Casos de uso ----------
-function baseFalsa({ admin = true, existe = true } = {}) {
+function baseFalsa({ admin = true, existe = true, editado = { id: 'i-1' } } = {}) {
   const llamadas = [];
   const anotar = (nombre, resultado) => async (...args) => { llamadas.push([nombre, ...args]); return resultado; };
   return {
     llamadas,
     esAdmin: async () => admin,
     leerFilas: async () => (existe ? { cubierto: 1500, secciones: [], items: [] } : null),
+    leerFilasVinos: async () => ({
+      cubierto: null,
+      secciones: [{ id: 's-v', slug: 'vinos-malbec', local_id: null, orden: 1, titulo: 'Malbec', grupo: 'Vinos' }],
+      items: [],
+    }),
     crearItem: anotar('crearItem', { id: 'nuevo' }),
-    editarItem: anotar('editarItem', existe ? { id: 'i-1' } : null),
+    editarItem: anotar('editarItem', existe ? editado : null),
     borrarItem: anotar('borrarItem', existe),
-    moverItem: anotar('moverItem', existe),
+    ubicarItem: anotar('ubicarItem', existe),
     editarBodega: anotar('editarBodega'),
-    moverBodega: anotar('moverBodega'),
+    ubicarBodega: anotar('ubicarBodega'),
     cambiarCubierto: anotar('cambiarCubierto'),
   };
 }
@@ -111,21 +116,36 @@ test('un no admin no puede editar la carta', async () => {
   await assert.rejects(borrarItem('i-1', { base }), con(403));
   await assert.rejects(editarBodega('s', { bodega: 'Catena', region: 'Mendoza' }, { base }), con(403));
   await assert.rejects(cambiarCubierto('parrilla', 1800, { base }), con(403));
+  await assert.rejects(editarItem('i-1', { posicion: 2 }, { base }), con(403));
   assert.deepEqual(base.llamadas, []);
 });
 
-test('editar con mover sube o baja el ítem', async () => {
+test('editar con posicion ubica el ítem', async () => {
   const base = baseFalsa();
-  await editarItem('i-1', { mover: 'arriba' }, { base });
-  await editarItem('i-1', { mover: 'abajo', precio: 7000 }, { base });
-  assert.deepEqual(base.llamadas, [['moverItem', 'i-1', -1], ['moverItem', 'i-1', 1], ['editarItem', 'i-1', { precio: 7000 }]]);
+  await editarItem('i-1', { posicion: 3 }, { base });
+  assert.deepEqual(base.llamadas, [['ubicarItem', 'i-1', 3]]);
+});
+
+test('la región de un vino se aplica a su bodega', async () => {
+  const base = baseFalsa({ editado: { id: 'i-1', seccion_id: 's', bodega: 'Catena' } });
+  await editarItem('i-1', { bodega: 'Catena', region: 'Mendoza' }, { base });
+  assert.deepEqual(base.llamadas, [
+    ['editarItem', 'i-1', { bodega: 'Catena' }],
+    ['editarBodega', 's', 'Catena', { region: 'Mendoza' }],
+  ]);
+});
+
+test('leer vinos arma la carta compartida', async () => {
+  const carta = await leerVinos({ base: baseFalsa() });
+  assert.deepEqual(carta.secciones.map((s) => s.id), ['vinos-malbec']);
+  assert.equal(carta.secciones[0].compartida, true);
 });
 
 test('borrar o editar un ítem que no existe da 404', async () => {
   const base = baseFalsa({ existe: false });
   await assert.rejects(borrarItem('i-1', { base }), con(404));
   await assert.rejects(editarItem('i-1', { precio: 1 }, { base }), con(404));
-  await assert.rejects(editarItem('i-1', { mover: 'arriba' }, { base }), con(404));
+  await assert.rejects(editarItem('i-1', { posicion: 1 }, { base }), con(404));
 });
 
 test('leer un local inexistente da 404', async () => {
@@ -134,7 +154,7 @@ test('leer un local inexistente da 404', async () => {
 
 test('una bodega se mueve entera o cambia de región', async () => {
   const base = baseFalsa();
-  await editarBodega('s', { bodega: 'Catena', mover: 'abajo' }, { base });
+  await editarBodega('s', { bodega: 'Catena', posicion: 2 }, { base });
   await editarBodega('s', { bodega: 'Catena', region: 'Mendoza' }, { base });
-  assert.deepEqual(base.llamadas, [['moverBodega', 's', 'Catena', 1], ['editarBodega', 's', 'Catena', { region: 'Mendoza' }]]);
+  assert.deepEqual(base.llamadas, [['ubicarBodega', 's', 'Catena', 2], ['editarBodega', 's', 'Catena', { region: 'Mendoza' }]]);
 });

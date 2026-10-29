@@ -1,6 +1,6 @@
-// PATCH /api/v1/carta/secciones/:id/bodegas — { bodega, region?, mover? } → 200 { ok }
+// PATCH /api/v1/carta/secciones/:id/bodegas — { bodega, region?, posicion? } → 200 { ok }
 // Solo el admin. Cambia la región de todos los vinos de la bodega en esa
-// sección, o sube/baja la bodega entera.
+// sección, o ubica la bodega entera en una posición.
 import { ErrorHttp, json, manejar } from '../../../../../../../src/servidor/respuestas.js';
 import { esquemaBodega, esquemaId, leerCuerpo } from '../../../../../../../src/servidor/esquemas.js';
 import { usuarioDelPedido } from '../../../../../../../src/servidor/supabase.js';

@@ -1,5 +1,5 @@
 // GET /api/v1/carta?local=<id> → 200 { cubierto, secciones }
-// Pública: la carta de un local, con sus secciones y las compartidas (vinos).
+// Pública: la carta de un local (sin los vinos, que están en /api/v1/carta/vinos).
 // Se cachea un minuto en Vercel: un cambio del admin tarda eso en verse en la
 // web. El panel pide `&fresca=1` para leer sin caché lo que acaba de guardar.
 import { ErrorHttp, json, manejar } from '../../../../src/servidor/respuestas.js';
