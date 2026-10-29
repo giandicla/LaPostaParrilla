@@ -4,6 +4,21 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-29 — Cómo llegar al editor de la carta
+
+Rama `feat/accesos-carta`.
+
+- **Pestañas "Reservas · Carta"** en el panel (`src/components/PestanasAdmin/`), en
+  `/admin` y `/admin/carta`. Reemplazan el botón "Editar la carta" y "← Volver al
+  panel".
+- **"Editar esta carta"** en `/carta`, solo para el admin → `/admin/carta?vista=<local>`.
+- **Botones invisibles:** `Boton variante="contorno"` es para fondos oscuros; en
+  fondos claros no se veía (el botón al editor, "Imprimir / Guardar PDF", "Guardar
+  región", "Guardar cubierto" y el WhatsApp del error de `/carta`). Variante nueva
+  `secundario`, bordo sobre claro (`hallazgos.md` 1.28).
+
+---
+
 ## 2026-10-29 — La carta pasa a la base, con API, panel e impresión
 
 Rama `feat/carta-editable`. Spec `docs/superpowers/specs/2026-10-29-carta-editable-design.md`,

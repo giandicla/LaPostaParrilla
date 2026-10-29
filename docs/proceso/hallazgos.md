@@ -468,7 +468,33 @@ Lo mismo con la regresión del ancla (`/carta#parrilla-entradas` dejó de saltar
 cargar la carta desde la API) y con la primera impresión de 10 hojas: los encontró
 la verificación en el navegador y el PDF generado, no un test.
 
-## Parte 2 — Dónde funcionó mejor de lo esperado
+### 1.28 Un botón invisible pasó tests, revisión y verificación (sesión 06)
+
+El usuario entró a producción y dijo que "en ninguna parte" aparecía cómo llegar al
+editor de la carta. El botón estaba: "Editar la carta" en `/admin`, publicado en el
+PR #12. Pero la IA le había puesto `variante="contorno"`, que en `Boton` es **borde y
+letra crema, para fondos oscuros**: sobre la página crema del panel era invisible.
+Lo mismo los botones "Imprimir / Guardar PDF", "Guardar región" y "Guardar cubierto"
+de `/admin/carta`, y el de WhatsApp del error de `/carta`.
+
+Por qué nadie lo vio:
+
+- Los tests no miran colores.
+- El revisor final leyó código: `variante="contorno"` parece una elección razonable
+  si no se abre `Boton.module.css`.
+- **La verificación de la IA en el navegador fue por JavaScript** (`find`, textos,
+  `aria-current`), porque las capturas fallaban con la ventana minimizada. El botón
+  existía en el DOM y respondía al clic: para esas herramientas estaba bien.
+
+Se encontró recién al mirar una captura de verdad en la tarea siguiente: el link
+"Editar esta carta" estaba en el DOM pero no en la imagen, y `getComputedStyle` dio
+color `rgb(246, 242, 236)` sobre fondo crema. Arreglo: variante nueva `secundario`
+(borde y letra bordo, para fondos claros) y comentario en `contorno`.
+
+**Lección:** verificar una interfaz es mirarla. Que un elemento exista y responda no
+dice que se vea.
+
+
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
 

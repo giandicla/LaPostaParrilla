@@ -1,0 +1,27 @@
+/* Reservas · Carta: las secciones del panel, arriba de todo */
+.pestanas {
+  display: flex;
+  gap: var(--sp-6);
+  border-bottom: 1px solid var(--gris-300);
+}
+
+.pestana {
+  margin-bottom: -1px;
+  padding: var(--sp-3) var(--sp-1);
+  border-bottom: 3px solid transparent;
+  font-weight: 600;
+  letter-spacing: var(--tracking-etiqueta);
+  text-transform: uppercase;
+  font-size: var(--fs-small);
+  color: var(--gris-600);
+  transition: color var(--transicion), border-color var(--transicion);
+}
+
+.pestana:hover {
+  color: var(--bordo-900);
+}
+
+.pestana[aria-current='page'] {
+  border-bottom-color: var(--bordo-900);
+  color: var(--bordo-900);
+}

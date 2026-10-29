@@ -7,6 +7,7 @@ import Boton from '../../../src/components/Boton/Boton.jsx';
 import Campo from '../../../src/components/Campo/Campo.jsx';
 import RequiereSesion from '../../../src/components/RequiereSesion/RequiereSesion.jsx';
 import EditorItemCarta from '../../../src/components/EditorItemCarta/EditorItemCarta.jsx';
+import PestanasAdmin from '../../../src/components/PestanasAdmin/PestanasAdmin.jsx';
 import formulario from '../../../src/styles/formulario.module.css';
 import { LOCALES, esIdDeLocal, getLocal, ID_LOCAL_POR_DEFECTO } from '../../../src/data/locales.js';
 import { cambiarCubierto, editarBodega, leerCarta } from '../../../src/servicios/carta.js';
@@ -45,15 +46,13 @@ function EditorCarta() {
 
   return (
     <div className={estilos.panel}>
-      <div className={estilos.barra}>
-        <Boton to="/admin" variante="texto">← Volver al panel</Boton>
-      </div>
+      <PestanasAdmin />
 
       <header className={estilos.cabecera}>
         <h1 className={estilos.titulo}>Carta</h1>
         <div className={estilos.imprimir}>
           {LOCALES.map((local) => (
-            <Boton key={local.id} href={`/admin/carta/imprimir?local=${local.id}`} variante="contorno">
+            <Boton key={local.id} href={`/admin/carta/imprimir?local=${local.id}`} variante="secundario">
               Imprimir / Guardar PDF · {local.nombre}
             </Boton>
           ))}
@@ -205,7 +204,7 @@ function Bodega({ seccion, bodega, primera, ultima, alCambiar }) {
             />
           )}
         </Campo>
-        <Boton type="submit" variante="contorno" disabled={ocupado || region === (bodega.region ?? '')}>
+        <Boton type="submit" variante="secundario" disabled={ocupado || region === (bodega.region ?? '')}>
           Guardar región
         </Boton>
       </form>
@@ -265,7 +264,7 @@ function Cubierto({ local, cubierto, alCambiar }) {
           />
         )}
       </Campo>
-      <Boton type="submit" variante="contorno" disabled={ocupado || valor === String(cubierto ?? '')}>
+      <Boton type="submit" variante="secundario" disabled={ocupado || valor === String(cubierto ?? '')}>
         Guardar cubierto
       </Boton>
       {errorApi && <p role="alert" className={estilos.error}>{errorApi}</p>}

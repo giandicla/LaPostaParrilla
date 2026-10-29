@@ -8,6 +8,7 @@ import SelectorLocal from '../../src/components/SelectorLocal/SelectorLocal.jsx'
 import SeccionCarta from '../../src/components/SeccionCarta/SeccionCarta.jsx';
 import HojaCarta from '../../src/components/HojaCarta/HojaCarta.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
+import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
 import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO, enlaceWhatsapp } from '../../src/data/locales.js';
 import { leerCarta } from '../../src/servicios/carta.js';
 import estilos from './page.module.css';
@@ -33,6 +34,7 @@ function CartaContenido() {
   const idPedido = parametros.get('local');
   const idActivo = esIdDeLocal(idPedido) ? idPedido : ID_LOCAL_POR_DEFECTO;
   const local = getLocal(idActivo);
+  const { esAdmin } = useSesion();
 
   // La carta se pide a la API cada vez que cambia el local. Se guarda con el
   // id del local para no mostrar la de otro mientras llega la nueva.
@@ -83,13 +85,22 @@ function CartaContenido() {
           onChange={cambiarLocal}
         />
 
+        {/* Atajo del admin: de la carta que está mirando al editor de ese local */}
+        {esAdmin && (
+          <p className={estilos.editar}>
+            <Boton to={`/admin/carta?vista=${idActivo}`} variante="secundario">
+              Editar esta carta
+            </Boton>
+          </p>
+        )}
+
         {cargando && <p className={estilos.estado}>Cargando la carta…</p>}
 
         {!cargando && pedido.error && (
           <div className={estilos.estado} role="alert">
             <p>No pudimos cargar la carta. Probá de nuevo en un momento.</p>
             {local.whatsapp && (
-              <Boton href={enlaceWhatsapp(local, 'Hola, quería consultar la carta.')} variante="contorno">
+              <Boton href={enlaceWhatsapp(local, 'Hola, quería consultar la carta.')} variante="secundario">
                 Consultanos por WhatsApp
               </Boton>
             )}

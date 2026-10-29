@@ -48,7 +48,7 @@
 | `Footer` | — | Links, redes, las dos direcciones |
 | `Hero` | `titulo`, `bajada`, `imagen`, `alt`, `conLogo`, `compacto`, `acciones` | Portada. Completa en el Inicio, compacta en el resto |
 | `Section` | `id`, `fondo` (`crema`/`arena`/`bordo`/`oliva`), `titulo`, `bajada`, `ancho`, `children` | Ancho máximo, padding vertical, color de fondo. El título lleva el fogón del logo encima |
-| `Boton` | `variante` (`primario`/`claro`/`contorno`/`texto`), `tamano`, `to`, `href`, `onClick`, `children` | Link interno, externo o botón según las props |
+| `Boton` | `variante` (`primario`/`claro`/`contorno`/`secundario`/`texto`; `claro` y `contorno` son para fondos oscuros, `secundario` es el contorno para fondos claros), `tamano`, `to`, `href`, `onClick`, `children` | Link interno, externo o botón según las props |
 | `LocalCard` | `local` | Tarjeta grande de un salón, con sus dos CTA |
 | `SelectorLocal` | `locales`, `localActivoId`, `onChange` | Toggle. Controlado |
 | `SesionProvider` | `children` | Contexto de sesión: `useSesion()` → `sesion`, `perfil`, `cargando`, `esAdmin`, `recargarPerfil()` |
@@ -61,6 +61,7 @@
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
 | `SeccionCarta` | `seccion`, `idAncla` | Una sección de la carta: platos (nombre, descripción, traducción EN/PT, uno o más precios) o vinos agrupados por bodega. La fuente y el filete del título los toma de la hoja que la contiene |
 | `HojaCarta` | `local`, `cubierto`, `columnas` (1 o 2), `children` | La hoja de la carta impresa: marco recto (parrilla) o redondeado (restaurante) según `local.carta.estilo`, logo, `local.carta.bajada` y el cubierto al pie. Dos columnas para imprimir |
+| `PestanasAdmin` | — | Las secciones del panel (Reservas · Carta), con la actual marcada (`aria-current`). Una sección nueva es una pestaña más |
 | `EditorItemCarta` | `seccion`, `item?`, `bodegas?`, `primero`, `ultimo`, `alCambiar`, `alCancelar?` | Un ítem en `/admin/carta`, con su validación; sin `item`, el formulario para agregar (en vinos pide bodega y región) |
 | `GaleriaGrid` | `imagenes[]` | Grilla de 3 fotos, la del medio vertical |
 | `InfoLocal` | `local` | Horarios, mapa y contacto de UN local |
