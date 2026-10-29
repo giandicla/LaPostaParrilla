@@ -23,6 +23,9 @@ async function pedir(ruta, opciones = {}) {
 export const leerCarta = (idLocal, { fresca = false } = {}) =>
   pedir(`/api/v1/carta?local=${encodeURIComponent(idLocal)}${fresca ? '&fresca=1' : ''}`);
 
+// La carta de vinos y copas, compartida por los dos locales
+export const leerVinos = ({ fresca = false } = {}) => pedir(`/api/v1/carta/vinos${fresca ? '?fresca=1' : ''}`);
+
 // ---------- Edición (solo admin) ----------
 // El servidor sabe quién llama por el token de la sesión de Supabase.
 
