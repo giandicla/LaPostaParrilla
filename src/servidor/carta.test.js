@@ -158,3 +158,13 @@ test('una bodega se mueve entera o cambia de región', async () => {
   await editarBodega('s', { bodega: 'Catena', region: 'Mendoza' }, { base });
   assert.deepEqual(base.llamadas, [['ubicarBodega', 's', 'Catena', 2], ['editarBodega', 's', 'Catena', { region: 'Mendoza' }]]);
 });
+
+test('un vino nuevo con región la aplica a toda su bodega', async () => {
+  const base = baseFalsa();
+  base.crearItem = async (datos) => {
+    base.llamadas.push(['crearItem', datos]);
+    return { id: 'nuevo', seccion_id: 's', bodega: 'Catena', region: 'Luján de Cuyo' };
+  };
+  await crearItem({ seccionId: 's', nombre: 'X', precio: 1, bodega: 'Catena', region: 'Luján de Cuyo' }, { base });
+  assert.deepEqual(base.llamadas.at(-1), ['editarBodega', 's', 'Catena', { region: 'Luján de Cuyo' }]);
+});

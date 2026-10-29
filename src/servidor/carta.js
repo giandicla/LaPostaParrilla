@@ -76,9 +76,13 @@ export async function exigirAdmin(base) {
   if (!(await base.esAdmin())) throw new ErrorHttp(403, 'Solo el admin puede editar la carta.');
 }
 
+// Un vino nuevo con región cambia la de toda su bodega (la región es de la
+// bodega; sin región, la base le copia la que ya tiene)
 export async function crearItem(datos, { base }) {
   await exigirAdmin(base);
-  return base.crearItem(datos);
+  const item = await base.crearItem(datos);
+  if (datos.region && item.bodega) await base.editarBodega(item.seccion_id, item.bodega, { region: datos.region });
+  return item;
 }
 
 // `posicion` lo ubica en su grupo (arrastrar); `region`, en un vino, es de su

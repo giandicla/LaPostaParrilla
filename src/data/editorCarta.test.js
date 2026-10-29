@@ -67,3 +67,11 @@ test('al agregar manda todo, con la categoría', () => {
   const datos = datosDeLaCaja(valores({ nombre: 'Provoleta', precios: [], precio: '$ 18.000' }), entradas, null, null);
   assert.deepEqual(datos, { seccionId: 's-n', nombre: 'Provoleta', precio: 18000, traduccion: 'Tomato sauce' });
 });
+
+test('un vino que pasa a una categoría sin bodega (copas) deja la bodega', () => {
+  const malbec = { idSeccion: 's-m', grupo: 'Vinos' };
+  const copas = { idSeccion: 's-c' };
+  const vino = { id: 'v-1', nombre: 'COPA', precio: 9000, bodega: 'Catena', region: 'Mendoza' };
+  const datos = datosDeLaCaja(valores({ nombre: 'COPA', precio: '9000', precios: [], traduccion: '' }), copas, vino, malbec);
+  assert.deepEqual(datos, { seccionId: 's-c', bodega: null, region: null });
+});

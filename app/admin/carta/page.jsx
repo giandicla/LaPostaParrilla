@@ -47,6 +47,8 @@ function EditorCarta() {
   // Lo que está en la caja ({ item, seccion, bodega? }) y el último aviso
   const [edicion, setEdicion] = useState(null);
   const [aviso, setAviso] = useState('');
+  // Cada vez que la caja termina (agregó, guardó o canceló) vuelve a armarse vacía
+  const [vuelta, setVuelta] = useState(0);
   const caja = useRef(null);
 
   const editar = (elegido) => {
@@ -88,13 +90,14 @@ function EditorCarta() {
         <>
           <div ref={caja}>
             <CajaCarta
-              key={`${vista}-${edicion?.item.id ?? 'nuevo'}`}
+              key={`${vista}-${edicion?.item.id ?? 'nuevo'}-${vuelta}`}
               carta={carta}
               esVinos={esVinos}
               edicion={edicion}
               alElegir={editar}
               alTerminar={(mensaje) => {
                 setEdicion(null);
+                setVuelta((n) => n + 1);
                 setAviso(mensaje ?? '');
               }}
               alCambiar={cargar}

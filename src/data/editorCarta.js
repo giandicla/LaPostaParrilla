@@ -50,7 +50,9 @@ export function datosDeLaCaja(valores, seccion, item, seccionDelItem) {
     ...(esVino
       ? { detalle: texto(valores.detalle) }
       : { descripcion: texto(valores.descripcion), traduccion: texto(valores.traduccion) }),
-    ...(esVino ? { bodega: texto(valores.bodega), region: texto(valores.region) } : {}),
+    // Fuera de las cepas no hay bodega: un vino que pasa a "Copas y descorche" la deja
+    bodega: esVino ? texto(valores.bodega) : null,
+    region: esVino ? texto(valores.region) : null,
   };
 
   if (!item) return { seccionId: seccion.idSeccion, ...sinNulos(datos) };
