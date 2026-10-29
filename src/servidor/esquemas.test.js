@@ -50,6 +50,9 @@ test('los cambios de un ítem traen algo; la posición es desde 1', () => {
   assert.ok(valido(esquemaItemCambios, { posicion: 2 }));
   assert.ok(valido(esquemaItemCambios, { seccionId: ID }));
   assert.ok(!valido(esquemaItemCambios, { posicion: 0 }));
+  // pasar de una categoría con tamaños a una sin: un precio y se borran los precios
+  assert.ok(valido(esquemaItemCambios, { seccionId: ID, precio: 9000, precios: null }));
+  assert.ok(valido(esquemaItemCambios, { precios: [21000, 30000], precio: null }));
   assert.ok(!valido(esquemaItemCambios, { mover: 'arriba' }));
   assert.ok(valido(esquemaItemCambios, { descripcion: null }));
   assert.ok(!valido(esquemaItemCambios, {}));

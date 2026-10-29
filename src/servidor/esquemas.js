@@ -51,7 +51,15 @@ export const esquemaItemNuevo = z
 
 // strict: una clave desconocida (por ejemplo el viejo `mover`) es un 400
 export const esquemaItemCambios = z
-  .object({ ...camposItem, nombre: camposItem.nombre.optional(), seccionId: z.uuid().optional(), posicion: posicion.optional() })
+  .object({
+    ...camposItem,
+    nombre: camposItem.nombre.optional(),
+    // null borra el que no corresponde al cambiar entre categorías con y sin tamaños
+    precio: precio.nullable().optional(),
+    precios: z.array(precio).min(2).nullable().optional(),
+    seccionId: z.uuid().optional(),
+    posicion: posicion.optional(),
+  })
   .strict()
   .refine((cambios) => Object.keys(cambios).length > 0);
 
