@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { armarCarta } from './carta.js';
+import { armarCarta, borrarItem, cambiarCubierto, crearItem, editarBodega, editarItem, leerCarta } from './carta.js';
+import { ErrorHttp } from './respuestas.js';
 
 const seccion = (id, slug, local_id, orden, extra = {}) => ({
   id, slug, local_id, orden, titulo: slug, grupo: null, nota: null, tamanos: null, ...extra,
@@ -73,4 +74,58 @@ test('los ítems van por su orden', () => {
     items: [item('s-a', 'Segundo', 2), item('s-a', 'Primero', 1)],
   });
   assert.deepEqual(carta.secciones[0].items.map((i) => i.nombre), ['Primero', 'Segundo']);
+});
+
+// ---------- Casos de uso ----------
+function baseFalsa({ admin = true, existe = true } = {}) {
+  const llamadas = [];
+  const anotar = (nombre, resultado) => async (...args) => { llamadas.push([nombre, ...args]); return resultado; };
+  return {
+    llamadas,
+    esAdmin: async () => admin,
+    leerFilas: async () => (existe ? { cubierto: 1500, secciones: [], items: [] } : null),
+    crearItem: anotar('crearItem', { id: 'nuevo' }),
+    editarItem: anotar('editarItem', existe ? { id: 'i-1' } : null),
+    borrarItem: anotar('borrarItem', existe),
+    moverItem: anotar('moverItem', existe),
+    editarBodega: anotar('editarBodega'),
+    moverBodega: anotar('moverBodega'),
+    cambiarCubierto: anotar('cambiarCubierto'),
+  };
+}
+const con = (status) => (e) => e instanceof ErrorHttp && e.status === status;
+
+test('un no admin no puede editar la carta', async () => {
+  const base = baseFalsa({ admin: false });
+  await assert.rejects(crearItem({ seccionId: 's', nombre: 'X', precio: 1 }, { base }), con(403));
+  await assert.rejects(editarItem('i-1', { precio: 1 }, { base }), con(403));
+  await assert.rejects(borrarItem('i-1', { base }), con(403));
+  await assert.rejects(editarBodega('s', { bodega: 'Catena', region: 'Mendoza' }, { base }), con(403));
+  await assert.rejects(cambiarCubierto('parrilla', 1800, { base }), con(403));
+  assert.deepEqual(base.llamadas, []);
+});
+
+test('editar con mover sube o baja el ítem', async () => {
+  const base = baseFalsa();
+  await editarItem('i-1', { mover: 'arriba' }, { base });
+  await editarItem('i-1', { mover: 'abajo', precio: 7000 }, { base });
+  assert.deepEqual(base.llamadas, [['moverItem', 'i-1', -1], ['moverItem', 'i-1', 1], ['editarItem', 'i-1', { precio: 7000 }]]);
+});
+
+test('borrar o editar un ítem que no existe da 404', async () => {
+  const base = baseFalsa({ existe: false });
+  await assert.rejects(borrarItem('i-1', { base }), con(404));
+  await assert.rejects(editarItem('i-1', { precio: 1 }, { base }), con(404));
+  await assert.rejects(editarItem('i-1', { mover: 'arriba' }, { base }), con(404));
+});
+
+test('leer un local inexistente da 404', async () => {
+  await assert.rejects(leerCarta('otro', { base: baseFalsa({ existe: false }) }), con(404));
+});
+
+test('una bodega se mueve entera o cambia de región', async () => {
+  const base = baseFalsa();
+  await editarBodega('s', { bodega: 'Catena', mover: 'abajo' }, { base });
+  await editarBodega('s', { bodega: 'Catena', region: 'Mendoza' }, { base });
+  assert.deepEqual(base.llamadas, [['moverBodega', 's', 'Catena', 1], ['editarBodega', 's', 'Catena', { region: 'Mendoza' }]]);
 });

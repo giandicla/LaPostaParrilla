@@ -15,6 +15,8 @@
 // `id` es el slug: arma las anclas públicas (#parrilla-entradas). `idSeccion`
 // es la clave de la base, para editar.
 
+import { ErrorHttp } from './respuestas.js';
+
 const sinNulos = (objeto) => Object.fromEntries(Object.entries(objeto).filter(([, valor]) => valor != null));
 const porOrden = (a, b) => a.orden - b.orden;
 
@@ -48,4 +50,55 @@ export function armarCarta({ cubierto, secciones, items }) {
         : { ...base, items: suyos.sort(porOrden).map(aItem) };
     }),
   };
+}
+
+// ---------- Casos de uso (rutas de app/api/v1/carta) ----------
+// `base` es crearBaseCarta() de carta-base.js, o una falsa en los tests.
+
+const SENTIDO = { arriba: -1, abajo: 1 };
+const noEncontrado = () => new ErrorHttp(404, 'No encontramos ese ítem.');
+
+export async function leerCarta(idLocal, { base }) {
+  const filas = await base.leerFilas(idLocal);
+  if (!filas) throw new ErrorHttp(404, 'No encontramos ese local.');
+  return armarCarta(filas);
+}
+
+// Bajo RLS, un update de alguien que no es admin no falla: no toca ninguna
+// fila. Por eso se pregunta antes.
+export async function exigirAdmin(base) {
+  if (!(await base.esAdmin())) throw new ErrorHttp(403, 'Solo el admin puede editar la carta.');
+}
+
+export async function crearItem(datos, { base }) {
+  await exigirAdmin(base);
+  return base.crearItem(datos);
+}
+
+export async function editarItem(id, { mover, ...cambios }, { base }) {
+  await exigirAdmin(base);
+  let item = null;
+  if (mover && !(await base.moverItem(id, SENTIDO[mover]))) throw noEncontrado();
+  if (Object.keys(cambios).length > 0) {
+    item = await base.editarItem(id, cambios);
+    if (!item) throw noEncontrado();
+  }
+  return item ?? { id };
+}
+
+export async function borrarItem(id, { base }) {
+  await exigirAdmin(base);
+  if (!(await base.borrarItem(id))) throw noEncontrado();
+}
+
+export async function editarBodega(idSeccion, { bodega, region, mover }, { base }) {
+  await exigirAdmin(base);
+  if (mover) await base.moverBodega(idSeccion, bodega, SENTIDO[mover]);
+  if (region !== undefined) await base.editarBodega(idSeccion, bodega, { region });
+}
+
+export async function cambiarCubierto(idLocal, cubierto, { base }) {
+  await exigirAdmin(base);
+  await base.cambiarCubierto(idLocal, cubierto);
+  return { cubierto };
 }

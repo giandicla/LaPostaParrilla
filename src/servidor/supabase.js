@@ -16,6 +16,11 @@ export function clienteSecreto() {
   return createClient(url, clave, SIN_SESION);
 }
 
+// Para leer lo que es público (la carta): sin sesión, bajo la RLS de anon.
+export function clientePublico() {
+  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY, SIN_SESION);
+}
+
 export async function usuarioDelPedido(pedido) {
   const token = pedido.headers.get('authorization')?.match(/^Bearer (.+)$/)?.[1];
   if (!token) throw new ErrorHttp(401, 'Ingresá con tu cuenta para continuar.');
@@ -29,6 +34,8 @@ export async function usuarioDelPedido(pedido) {
 
   return {
     id: data.user.id,
+    // Con el token del que llama: la RLS decide qué puede escribir (la carta)
+    cliente,
     async leerReserva(id) {
       const { data: reserva, error: e } = await cliente.from('reservas').select('id, estado').eq('id', id).maybeSingle();
       if (e) throw new Error(e.message);
