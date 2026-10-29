@@ -1,0 +1,152 @@
+/* La hoja de la carta impresa: papel, tinta casi negra y doble marco.
+   Las secciones (SeccionCarta) toman de acá la fuente y el filete de sus
+   títulos, por las variables --seccion-*. */
+.hoja {
+  --tinta: var(--carbon);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--sp-3);
+  background: var(--papel);
+  color: var(--tinta);
+  font-family: var(--fuente-carta-texto), Georgia, serif;
+}
+
+.marco {
+  padding: var(--sp-6) var(--sp-4);
+  border: 2px solid var(--tinta);
+  outline: 1px solid var(--tinta);
+  outline-offset: 5px;
+}
+
+/* ---------- Estilo recto (la parrilla) ---------- */
+.recto {
+  --seccion-fuente: var(--fuente-carta-recto), 'Arial Narrow', sans-serif;
+  --seccion-peso: 600;
+  --seccion-tamano: 1.35rem;
+  --seccion-espaciado: 0.01em;
+  --seccion-filete: 3px solid var(--tinta);
+}
+
+/* ---------- Estilo redondeado (el restaurante) ---------- */
+.redondeado {
+  --seccion-fuente: var(--fuente-carta-redondeado), 'Arial Narrow', sans-serif;
+  --seccion-peso: 400;
+  --seccion-tamano: 1.6rem;
+  --seccion-espaciado: 0.04em;
+  --seccion-filete: 1.5px solid var(--tinta);
+}
+
+.redondeado .marco {
+  border-width: 1.5px;
+  border-radius: 22px;
+  outline-offset: 6px;
+}
+
+.cabecera {
+  margin-bottom: var(--sp-6);
+  text-align: center;
+}
+
+.logo {
+  width: 230px;
+  max-width: 70%;
+  margin: 0 auto;
+}
+
+.bajada {
+  margin-top: var(--sp-2);
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+.redondeado .bajada {
+  display: inline-block;
+  padding: var(--sp-1) var(--sp-4);
+  border-top: 1px solid var(--tinta);
+  border-bottom: 1px solid var(--tinta);
+  letter-spacing: 0.45em;
+}
+
+/* Filete grueso con un rombo en cada punta */
+.ornamento {
+  position: relative;
+  margin: var(--sp-4) 0 var(--sp-1);
+  border-top: 2px solid var(--tinta);
+}
+
+.ornamento::before,
+.ornamento::after {
+  content: '';
+  position: absolute;
+  top: -6px;
+  width: 9px;
+  height: 9px;
+  background: var(--tinta);
+  transform: rotate(45deg);
+}
+
+.ornamento::before {
+  left: -2px;
+}
+
+.ornamento::after {
+  right: -2px;
+}
+
+.cuerpo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+}
+
+/* Dos columnas: la vista de impresión, como la hoja oficio */
+.dosColumnas {
+  max-width: none;
+}
+
+.dosColumnas .cuerpo {
+  display: block;
+  column-count: 2;
+  column-gap: var(--sp-8);
+  column-rule: 1px solid var(--tinta);
+}
+
+.dosColumnas .cuerpo > * {
+  break-inside: avoid;
+  margin-bottom: var(--sp-6);
+}
+
+.pie {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--sp-4);
+  margin-top: var(--sp-8);
+  padding-top: var(--sp-3);
+  border-top: 1px solid var(--tinta);
+}
+
+.nombrePie {
+  display: block;
+  text-transform: uppercase;
+}
+
+.traduccionPie {
+  display: block;
+  font-size: 0.75rem;
+}
+
+.precioPie {
+  white-space: nowrap;
+}
+
+@media (min-width: 768px) {
+  .hoja {
+    padding: var(--sp-4);
+  }
+
+  .marco {
+    padding: var(--sp-8) var(--sp-12);
+  }
+}

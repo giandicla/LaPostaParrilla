@@ -3,7 +3,7 @@ import estilos from './SeccionCarta.module.css';
 
 // Una sección de la carta: platos (con descripción, traducción y uno o más
 // precios) o vinos (agrupados por bodega). La forma de los datos está
-// documentada en src/data/carta.js.
+// documentada en src/servidor/carta.js; la estética la pone HojaCarta.
 export default function SeccionCarta({ seccion, idAncla }) {
   const { titulo, nota, tamanos, items, bodegas, grupo } = seccion;
   // Las secciones de un grupo (las cepas, dentro de "Vinos") cuelgan del
@@ -28,7 +28,7 @@ export default function SeccionCarta({ seccion, idAncla }) {
       {items && (
         <ul className={estilos.lista}>
           {items.map((item) => (
-            <li key={item.nombre}>
+            <li key={item.id ?? item.nombre}>
               <Linea nombre={item.nombre} item={item} tamanos={tamanos} />
               {item.descripcion && <p className={estilos.descripcion}>{item.descripcion}</p>}
               {item.traduccion && (
@@ -50,7 +50,7 @@ export default function SeccionCarta({ seccion, idAncla }) {
             </p>
             <ul className={estilos.lista}>
               {bodega.vinos.map((vino) => (
-                <li key={vino.nombre}>
+                <li key={vino.id ?? vino.nombre}>
                   <Linea nombre={vino.nombre} item={vino} />
                   {vino.detalle && <p className={estilos.descripcion}>{vino.detalle}</p>}
                 </li>
@@ -62,13 +62,12 @@ export default function SeccionCarta({ seccion, idAncla }) {
   );
 }
 
-// Nombre ····· precio. Con tamanos, un precio por tamaño, cada uno con su
+// Nombre y precio. Con tamanos, un precio por tamaño, cada uno con su
 // etiqueta para lectores de pantalla (el encabezado visual es aria-hidden).
 function Linea({ nombre, item, tamanos }) {
   return (
     <div className={estilos.linea}>
       <span className={estilos.nombre}>{nombre}</span>
-      <span className={estilos.puntos} aria-hidden="true" />
       {item.precios ? (
         <span className={estilos.precios}>
           {item.precios.map((precio, i) => (

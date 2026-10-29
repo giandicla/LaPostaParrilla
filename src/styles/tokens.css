@@ -13,6 +13,8 @@
   /* ---------- Superficie ---------- */
   --crema: #F6F2EC;
   --blanco: #FFFFFF;
+  /* La hoja de la carta: el papel de la carta impresa (tinta: --carbon) */
+  --papel: #FBF8F2;
 
   /* ---------- Acentos ----------
      La brasa no está en el manual: queda solo para el anillo de foco,
