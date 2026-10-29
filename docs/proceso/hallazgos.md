@@ -421,6 +421,53 @@ producción, no solo en la preview.
 
 ---
 
+### 1.25 Una lista escrita por la IA quedó como si fuera de la cátedra (sesión 06)
+
+En la sesión 03 la IA pasó la grilla oficial a `docs/RUBRICA.md` y, en la columna
+"qué falta" de E4, escribió: "Faltaría además lógica de catálogo (búsqueda, filtros,
+agotado)". En la sesión 06 la IA usó esa frase como requisito y el revisor del spec
+la tomó como criterio de la cátedra. Cuando se le pidió al usuario el texto de la
+grilla, decía: **"Catálogo + API interna, lógica funcional y checklist en PRs"**.
+Nada de búsqueda, filtros ni agotado.
+
+No llegó a costar trabajo porque el usuario ya había decidido no hacerlos. Pero el
+mecanismo es el peligroso: una interpretación propia, escrita en un archivo con
+autoridad ("la rúbrica"), se lee semanas después como dato. La fila se corrigió en
+una entrada nueva que deja dicho qué era de quién.
+
+**Lección:** en un archivo que resume un documento ajeno, separar el texto citado de
+la interpretación.
+
+### 1.26 Un script de prueba de la IA modificó datos por un selector demasiado amplio (sesión 06)
+
+Para probar el panel `/admin/carta`, la IA escribió JavaScript que buscaba el
+formulario "agregar" con `document.querySelector('section')` y tomaba el último
+formulario. El primer `<section>` de la página es el componente `Section`, que
+envuelve todo: el "último formulario" era el del último ítem de la carta. El script
+renombró **Whisky Johnnie Walker Black Label** a "Plato de prueba" con precio $7.000
+y lo movió. Pasó en la base **local**; se detectó al leer el resultado
+(`despuesDeAgregar` mostraba un whisky) y se reinició con `supabase db reset`.
+
+**Lección:** un script que escribe datos tiene que apuntar a su objetivo de forma
+inequívoca (acá, la sección por su título) y correr contra una base descartable.
+Contra la base de producción, este error habría cambiado la carta real.
+
+### 1.27 Lo que los tests no veían y apareció al usar el panel (sesión 06)
+
+Los tests de la validación y de la API pasaban, y el panel tenía dos defectos que
+solo se ven usándolo:
+
+- **"Guardar" seguía habilitado después de guardar.** El campo decía `16.500` y la
+  base devolvía `16500`: comparar los textos daba "hay cambios". Se pasó a comparar
+  los datos ya convertidos.
+- **Los botones "Guardar" no tenían nombre propio.** Un lector de pantalla
+  escuchaba 90 veces "Guardar". Subir, Bajar y Borrar ya llevaban el nombre del ítem
+  oculto; Guardar no.
+
+Lo mismo con la regresión del ancla (`/carta#parrilla-entradas` dejó de saltar al
+cargar la carta desde la API) y con la primera impresión de 10 hojas: los encontró
+la verificación en el navegador y el PDF generado, no un test.
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -576,6 +623,23 @@ Lo que las revisiones encontraron y que el plan, escrito por la IA, traía mal:
 
 Contrasta con 1.1: otra vez el plan tenía defectos y otra vez los encontró un
 revisor con el código delante.
+
+### 2.11 El revisor del spec encontró un error de diseño antes de escribir código (sesión 06)
+
+Antes de entregar el spec de la carta se le pasó a un revisor sin contexto, con la
+consigna de listar solo lo que lo obligaría a adivinar. Encontró tres cosas:
+
+- **Los slugs repetidos.** El spec hacía del slug (`entradas`) la clave primaria de
+  las secciones, y `entradas`, `postres`, `bebidas-sin-alcohol`, `cervezas` y
+  `tragos-aperitivos-y-whiskys` existen en los dos locales: la carga inicial habría
+  fallado. Se pasó a una clave sustituta y el slug quedó como ancla pública.
+- **Cómo se mueve un vino si se agrupan por bodega.** El spec no lo decía; la IA
+  revisó los datos, encontró que el orden de las bodegas no es alfabético y fijó las
+  reglas (un vino solo dentro de su bodega; la bodega entera dentro de su sección).
+- **Si E4 llegaba a Excelente sin búsqueda ni filtros**, que destapó 1.25.
+
+Contrasta con 1.1 y 2.10: esta vez el revisor actuó **antes** del código, sobre el
+documento, y el arreglo costó dos párrafos del spec en lugar de una migración.
 
 ---
 

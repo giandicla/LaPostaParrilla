@@ -2,9 +2,9 @@
 
 Reservas, cuentas y panel de admin corren sobre **Supabase** (Postgres + Auth +
 Realtime + Edge Functions). No hay servidor propio: el front habla con Supabase
-desde el navegador y **la seguridad la pone la RLS de la base**. La única
-excepción son los pagos con Mercado Pago, que pasan por Route Handlers de Next
-(sección "Pagos con Mercado Pago"). Diseño completo:
+desde el navegador y **la seguridad la pone la RLS de la base**. Las excepciones
+son los pagos con Mercado Pago y la carta, que pasan por Route Handlers de Next
+(secciones "Pagos con Mercado Pago" y "La carta"). Diseño completo:
 `docs/superpowers/specs/2026-10-01-backend-supabase-design.md`.
 
 ## Dónde está cada cosa
@@ -17,6 +17,7 @@ excepción son los pagos con Mercado Pago, que pasan por Route Handlers de Next
 | Edge Function de mails | `supabase/functions/notificar-reserva/` |
 | Única puerta del front a Supabase | `src/servicios/` (`supabase.js`, `auth.js`, `reservas.js`, `admin.js`; `pagos.js` llama a las rutas de la API) |
 | Rutas de pagos (servidor) | `app/api/v1/pagos`, `app/api/v1/reservas/[id]/cancelacion`, `app/api/webhooks/mercadopago`; lógica en `src/servidor/` |
+| Rutas de la carta (servidor) | `app/api/v1/carta/…`; lógica en `src/servidor/carta.js` y `carta-base.js` |
 | Configuración local | `supabase/config.toml` |
 
 **Regla:** ningún componente importa `@supabase/supabase-js` ni `src/servicios/supabase.js`.
@@ -198,6 +199,43 @@ Lo que pasa entonces es lo diseñado: la cancelación queda hecha, el pago en
 en "Credenciales de prueba") o devolver el pago a mano desde el panel del vendedor
 de prueba. Hasta entonces el reintegro automático no está probado contra Mercado
 Pago, solo con tests.
+
+## La carta
+
+Desde la sesión 06 la carta vive en la base. Diseño:
+`docs/superpowers/specs/2026-10-29-carta-editable-design.md`.
+
+- **Tablas:** `carta_secciones` (fijas; `local_id` nulo = compartida por los dos
+  locales: vinos y "Copas y descorche"; `slug` es el ancla pública y se repite entre
+  locales) y `carta_items` (platos, bebidas y vinos; los vinos llevan `bodega` y
+  `region`). Más `locales.cubierto`.
+- **Reglas** (trigger `validar_item_carta`, mensajes en castellano): un precio o un
+  precio por tamaño, nunca los dos; `precios` solo en secciones con `tamanos`, uno
+  por tamaño; los vinos llevan bodega y los platos no; un ítem sin orden va al final.
+- **Orden:** `mover_item_carta` (en vinos, dentro de su bodega), `mover_bodega_carta`
+  (la bodega entera; renumera la sección), `cambiar_region_bodega`. `cambiar_cubierto`
+  es `security definer` porque `locales` no tiene política de update. Todas exigen
+  admin.
+- **RLS:** lectura pública; escritura solo con `es_admin()`. Ojo: un `update` de
+  alguien que no es admin no falla, no toca filas. Por eso la API pregunta
+  `es_admin` antes y responde 403.
+- **API:** `GET /api/v1/carta?local=<id>` (pública, `Cache-Control` de 1 minuto en
+  Vercel; `&fresca=1` sin caché, para el panel) y las escrituras del admin en
+  `items`, `secciones/[id]/bodegas` y `locales/[id]`. Ver `docs/ESTRUCTURA.md`.
+- **Carga inicial:** `supabase/migrations/20261029120100_carta_datos.sql`, generada
+  una vez por `scripts/carta-a-sql.mjs` desde los JSON que había antes (278 ítems).
+- **Tests:** `supabase/tests/database/08_carta.test.sql` (32 asserts).
+- **Despliegue: primero la base, después el merge.** La migración solo agrega
+  (tablas, una columna, funciones): el front viejo de producción sigue leyendo sus
+  JSON y no se entera. Lo que rompe es el orden inverso: mergear sin las tablas deja
+  `/carta` de producción en "No pudimos cargar la carta". Orden:
+  1. Arreglos de SQL **antes** del `db push`: una vez aplicada, la migración no se
+     vuelve a correr; un cambio posterior va en una migración nueva.
+  2. `supabase db push`.
+  3. Probar en la preview del PR (recién ahí tiene tablas). **Lo que se cambie en la
+     carta desde la preview es la carta real** (las previews usan la base de
+     producción): borrar los ítems de prueba y volver los precios antes del merge.
+  4. Merge.
 
 ## Mails
 

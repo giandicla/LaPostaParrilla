@@ -9,7 +9,7 @@ export class ErrorHttp extends Error {
   }
 }
 
-export const json = (cuerpo, status = 200) => Response.json(cuerpo, { status });
+export const json = (cuerpo, status = 200, headers = {}) => Response.json(cuerpo, { status, headers });
 
 // Envuelve un Route Handler: un ErrorHttp se responde tal cual; cualquier otro
 // error es un 500 genérico.

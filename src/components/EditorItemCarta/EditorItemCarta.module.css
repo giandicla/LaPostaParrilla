@@ -1,0 +1,91 @@
+/* Un ítem en el panel de la carta: compacto, porque una sección tiene muchos */
+.editor {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  background: var(--blanco);
+  border: 1px solid var(--gris-300);
+  border-radius: var(--radio-md);
+}
+
+.nuevo {
+  border-style: dashed;
+  border-color: var(--bordo-900);
+}
+
+.principal,
+.secundarios {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-3);
+}
+
+.precios {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2) var(--sp-3);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.precios legend {
+  width: 100%;
+  margin-bottom: var(--sp-2);
+}
+
+.precioTamano {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-1);
+  flex: 1 1 7rem;
+  font-size: var(--fs-small);
+}
+
+.error {
+  width: 100%;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--bordo-900);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-4);
+}
+
+.accion {
+  padding: var(--sp-1);
+  background: none;
+  border: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--bordo-900);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.accion:disabled {
+  color: var(--gris-600);
+  text-decoration: none;
+  cursor: default;
+}
+
+.borrar {
+  margin-left: auto;
+}
+
+@media (min-width: 768px) {
+  .principal {
+    grid-template-columns: 2fr 1fr;
+    align-items: start;
+  }
+
+  .secundarios {
+    grid-template-columns: 1fr 1fr;
+  }
+}

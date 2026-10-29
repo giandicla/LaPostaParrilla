@@ -10,9 +10,9 @@ Qué hace:
   1. Logo: extrae el vector de Logo.ai (es PDF por dentro) y arma variantes SVG
      recortadas y en un solo color (blanco / bordo), más el favicon.
   2. Fotos: convierte la selección de fotos a WebP de ancho acotado.
-  3. Cartas: copia los PDF para descargar desde /carta. (El contenido de la
-     carta que se ve en el sitio está en src/data/cartas.json, no sale de acá.) En las dos cartas se tapa la red y
-     la clave del WiFi: está impresa para la mesa, no para internet.
+
+Las cartas ya no salen de acá (sesión 06): viven en la base, se editan en
+/admin/carta y el PDF para imprimir lo arma /admin/carta/imprimir.
 """
 
 import re
@@ -67,13 +67,6 @@ FOTOS = [
     (R, 'Volcan de chocolate con helado.jpg', 'restaurante/plato-volcan.webp', 1000),
 ]
 
-# (pdf original, id del local, rectángulos a tapar por hoja)
-CARTAS = [
-    ('Menu comida y vinos con precio.pdf', 'parrilla', {0: [(434, 852, 592, 896)]}),
-    ('Diseño Menu La Posta II Oficio .pdf.pdf', 'restaurante', {1: [(322, 815, 563, 862)]}),
-]
-
-
 def svg_logo(svg_base, caja, color, fondo=None):
     x, y, w, h = caja
     svg = svg_base.replace('#be1e2d', color).replace('#404041', color)
@@ -124,28 +117,9 @@ def fotos(origen):
         print(f'{destino:40} {salida.stat().st_size // 1024:>5} KB')
 
 
-def cartas(origen):
-    destino = PUBLIC / 'cartas'
-    destino.mkdir(exist_ok=True)
-    for archivo, id_local, tapar in CARTAS:
-        documento = fitz.open(origen / archivo)
-        for indice, rects in tapar.items():
-            pagina = documento[indice]
-            muestra = pagina.get_pixmap(dpi=72)
-            for x0, y0, x1, y1 in rects:
-                # Se rellena con el color del papel justo al lado del recorte
-                color = tuple(v / 255 for v in muestra.pixel(int(x1) + 2, int((y0 + y1) / 2)))
-                pagina.add_redact_annot(fitz.Rect(x0, y0, x1, y1), fill=color)
-            pagina.apply_redactions(images=fitz.PDF_REDACT_IMAGE_NONE)
-        salida = destino / f'carta-{id_local}.pdf'
-        documento.save(salida, garbage=3, deflate=True)
-        print(f'{salida.name:30} {salida.stat().st_size // 1024} KB')
-
-
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         sys.exit('Uso: python scripts/procesar-assets.py "<carpeta de branding>"')
     origen = Path(sys.argv[1]).resolve()
     logos(origen)
     fotos(origen)
-    cartas(origen)

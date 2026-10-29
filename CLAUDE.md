@@ -16,7 +16,8 @@ restaurante.
   front le habla desde el navegador y la seguridad la pone la **RLS**. Ver
   `docs/BACKEND.md`. El 2026-10-08 la cátedra dio **webhooks y Mercado Pago**: a
   partir de ahí entra código de servidor para la API del catálogo y los pagos.
-  Desde el 2026-10-18 están en `main` las tres rutas de la seña (ver "Pagos").
+  Desde el 2026-10-18 están en `main` las tres rutas de la seña (ver "Pagos"), y
+  desde la sesión 06 las de la carta (`app/api/v1/carta/…`, ver `docs/BACKEND.md`).
   Fuera de eso, no agregar API routes, Server Actions ni middleware sin hablarlo.
 - **Todo cambio va por rama + PR** (lo pide la rúbrica, E1). CI en
   `.github/workflows/ci.yml`; la plantilla del PR trae el checklist. No mergear
@@ -47,7 +48,8 @@ base de pruebas): lo que se haga en una preview queda en los datos reales.
 - **Server Components por defecto.** `'use client'` va en `Navbar`,
   `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `SelloMercadoPago`,
   `app/carta`, y en las páginas que usan la sesión: `reservas`, `reservas/pago`,
-  `ingresar`, `mis-reservas`, `admin`, `admin/dia`. Todas las páginas
+  `ingresar`, `mis-reservas`, `admin`, `admin/dia`, `admin/carta`,
+  `admin/carta/imprimir`. Todas las páginas
   siguen prerenderizándose como estáticas; las únicas rutas dinámicas son las de
   `app/api/`.
 - Navegación con `next/link`. `Boton` tiene dos props de destino, a propósito:
@@ -83,9 +85,10 @@ variables y despliegue en `docs/BACKEND.md`; diseño en
 - Colores **solo** desde las custom properties de `src/styles/tokens.css`.
   La paleta sale del manual de marca: bordo `#600003`, arena `#CBC1B1`,
   oliva `#757036`. Tipografías: Baskerville (títulos, en mayúsculas) y Gill Sans.
-- **Los platos con foto no llevan precio.** Los precios viven solo en la carta
-  (`src/data/cartas.json`, y los vinos, que son los mismos en los dos locales, en
-  `src/data/vinos.json`). Lo pidió el usuario.
+- **Los platos con foto no llevan precio.** Los precios viven solo en la carta, que
+  desde la sesión 06 está en la base (tablas `carta_secciones` y `carta_items`; los
+  vinos son secciones compartidas por los dos locales) y se edita en `/admin/carta`.
+  Lo pidió el usuario.
 - Un componente = una carpeta: `Nombre/Nombre.jsx` + `Nombre.module.css`.
 - CSS **mobile first**. Breakpoints principales: 768px y 1100px (algunas grillas
   puntuales usan otros; ver el hallazgo sobre breakpoints en `docs/PENDIENTES.md`).
@@ -103,13 +106,14 @@ npm test              # tests de las funciones puras (node --test, src/**/*.test
 npm run db:test       # tests pgTAP de la base (requiere `npx supabase start`)
 npm run db:reset      # base local desde cero: migraciones + usuarios de prueba
 python scripts/procesar-assets.py "../Branding y fotos"
-                      # regenera logo, fotos y PDF de las cartas desde la
-                      # carpeta de branding (requiere PyMuPDF y Pillow)
+                      # regenera logo y fotos desde la carpeta de branding
+                      # (requiere PyMuPDF y Pillow)
 ```
 
 La carpeta `Branding y fotos/` (al lado del repo, no adentro) tiene el manual de
-marca, el `Logo.ai`, las cartas en PDF y las fotos originales. Cuando la familia
-cambie la carta, se reemplaza el PDF ahí y se corre el script.
+marca, el `Logo.ai`, las cartas en PDF y las fotos originales. La carta del sitio ya
+no sale de esos PDF: desde la sesión 06 se edita en `/admin/carta`, y el PDF para
+imprimir lo arma `/admin/carta/imprimir`.
 
 ## Registro del proceso — OBLIGATORIO
 

@@ -25,55 +25,34 @@
   border-bottom-color: currentColor;
 }
 
-/* Una sola columna angosta: se lee como una carta, no como una planilla */
-.carta {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-16);
-  max-width: 720px;
-  margin: 0 auto;
-}
-
-/* "Vinos": el grupo que reúne las cepas */
+/* "Vinos": el grupo que reúne las cepas, dentro de la hoja */
 .tituloGrupo {
-  margin-bottom: calc(var(--sp-8) * -1);
-  padding-top: var(--sp-8);
-  border-top: 1px solid var(--gris-300);
+  padding-top: var(--sp-6);
+  border-top: 2px solid currentColor;
+  font-family: var(--seccion-fuente, var(--font-titulo));
+  font-size: calc(var(--seccion-tamano, var(--fs-h2)) * 1.35);
+  font-weight: var(--seccion-peso, 700);
+  letter-spacing: var(--seccion-espaciado, var(--tracking-titulo));
   text-align: center;
-  color: var(--bordo-900);
+  text-transform: uppercase;
 }
 
 .pie {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--sp-2);
   max-width: 720px;
-  margin: var(--sp-16) auto 0;
-  padding-top: var(--sp-6);
-  border-top: 1px solid var(--gris-300);
+  margin: var(--sp-8) auto 0;
   text-align: center;
   font-size: var(--fs-small);
   color: var(--gris-600);
 }
 
-.enlacePdf {
-  margin-top: var(--sp-2);
-  font-weight: 600;
-  letter-spacing: var(--tracking-etiqueta);
-  text-transform: uppercase;
-  color: var(--bordo-900);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-underline-offset: 6px;
-}
-
-.enlacePdf:hover {
-  color: var(--oliva-700);
-}
-
-.sinCarta {
+/* Cargando o error: en lugar de la hoja */
+.estado {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-4);
+  max-width: 720px;
+  margin: var(--sp-8) auto;
   text-align: center;
   color: var(--gris-600);
-  font-style: italic;
 }
