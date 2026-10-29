@@ -20,6 +20,12 @@ function CartaParaImprimir() {
   const [pedido, setPedido] = useState({ carta: null, error: '' });
   const imprimio = useRef(false);
 
+  // La letra chica de la impresión vale solo mientras esta página está abierta
+  useEffect(() => {
+    document.documentElement.classList.add('carta-impresa');
+    return () => document.documentElement.classList.remove('carta-impresa');
+  }, []);
+
   useEffect(() => {
     leerCarta(idLocal, { fresca: true })
       .then((carta) => setPedido({ carta, error: '' }))

@@ -49,6 +49,7 @@ set search_path = ''
 as $$
 declare
   seccion public.carta_secciones;
+  ultimo_de_bodega int;
 begin
   select * into seccion from public.carta_secciones where id = new.seccion_id;
 
@@ -77,6 +78,22 @@ begin
   end if;
   if seccion.grupo is distinct from 'Vinos' and new.bodega is not null then
     raise exception 'Solo los vinos llevan bodega.';
+  end if;
+
+  -- Un vino de una bodega que ya está en la sección va al final de SU bodega (no
+  -- de la sección: la bodega se ubica por su primer vino) y toma su región.
+  if tg_op = 'INSERT' and new.orden is null and new.bodega is not null then
+    select max(orden) into ultimo_de_bodega
+    from public.carta_items where seccion_id = new.seccion_id and bodega = new.bodega;
+    if ultimo_de_bodega is not null then
+      update public.carta_items set orden = orden + 1
+      where seccion_id = new.seccion_id and orden > ultimo_de_bodega;
+      new.orden := ultimo_de_bodega + 1;
+      if new.region is null then
+        select region into new.region from public.carta_items
+        where seccion_id = new.seccion_id and bodega = new.bodega and region is not null limit 1;
+      end if;
+    end if;
   end if;
 
   if new.orden is null then

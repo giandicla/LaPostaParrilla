@@ -184,7 +184,13 @@ export default function EditorItemCarta({ seccion, item, bodegas = [], primero, 
                     <option key={nombre} value={nombre} />
                   ))}
                 </datalist>
-                <Campo id={`${prefijo}-region`} etiqueta="Región" opcional error={errores.region}>
+                <Campo
+                  id={`${prefijo}-region`}
+                  etiqueta="Región"
+                  opcional
+                  ayuda="Si la bodega ya está en la sección, toma su región."
+                  error={errores.region}
+                >
                   {(props) => control('region', props, { maxLength: LIMITES_CARTA.bodega })}
                 </Campo>
               </>

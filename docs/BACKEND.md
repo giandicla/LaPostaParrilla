@@ -225,10 +225,17 @@ Desde la sesión 06 la carta vive en la base. Diseño:
 - **Carga inicial:** `supabase/migrations/20261029120100_carta_datos.sql`, generada
   una vez por `scripts/carta-a-sql.mjs` desde los JSON que había antes (278 ítems).
 - **Tests:** `supabase/tests/database/08_carta.test.sql` (32 asserts).
-- **Despliegue:** como la seña, en una sola ventana. Las previews comparten la base
-  de producción y el front nuevo lee la carta de la API: `supabase db push` y merge
-  seguidos, para no dejar el sitio de producción sin carta (front nuevo sin tablas)
-  ni tablas sin uso.
+- **Despliegue: primero la base, después el merge.** La migración solo agrega
+  (tablas, una columna, funciones): el front viejo de producción sigue leyendo sus
+  JSON y no se entera. Lo que rompe es el orden inverso: mergear sin las tablas deja
+  `/carta` de producción en "No pudimos cargar la carta". Orden:
+  1. Arreglos de SQL **antes** del `db push`: una vez aplicada, la migración no se
+     vuelve a correr; un cambio posterior va en una migración nueva.
+  2. `supabase db push`.
+  3. Probar en la preview del PR (recién ahí tiene tablas). **Lo que se cambie en la
+     carta desde la preview es la carta real** (las previews usan la base de
+     producción): borrar los ítems de prueba y volver los precios antes del merge.
+  4. Merge.
 
 ## Mails
 

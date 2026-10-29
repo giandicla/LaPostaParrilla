@@ -2,7 +2,7 @@
 -- bodegas, y el orden (mover ítems y bodegas).
 -- Corre con: npx supabase test db
 begin;
-select plan(32);
+select plan(36);
 
 insert into auth.users (id, email, raw_user_meta_data) values
   ('11111111-1111-1111-1111-111111111111', 'ana@test.com', '{"full_name":"Ana"}'),
@@ -140,6 +140,29 @@ select ok(
   coalesce((select bool_and(region is distinct from 'Mendoza') from public.carta_items, ids
     where seccion_id <> ids.malbec and bodega = 'Catena Zapata'), true),
   'pero no en otras secciones');
+
+-- Un vino nuevo de una bodega que ya está va al final de SU bodega, con su región
+create temp table lugar as select array_position(string_to_array(pg_temp.bodegas_de(malbec), '|'), 'Aleanna') as antes from ids;
+insert into public.carta_items (seccion_id, nombre, precio, bodega) select malbec, 'Vino nuevo', 30000, 'Aleanna' from ids;
+select is(
+  (select region from public.carta_items where nombre = 'Vino nuevo'),
+  (select region from public.carta_items, ids where seccion_id = ids.malbec and bodega = 'Aleanna' and nombre <> 'Vino nuevo' limit 1),
+  'el vino nuevo hereda la región de su bodega');
+select is(
+  (select count(*)::int from (
+    select bodega, max(orden) - min(orden) + 1 as largo, count(*) as cant
+    from public.carta_items, ids where seccion_id = ids.malbec group by bodega
+  ) b where largo <> cant),
+  0, 'el vino nuevo queda junto a los de su bodega');
+select is(
+  (select nombre from public.carta_items, ids where seccion_id = ids.malbec and bodega = 'Aleanna' order by orden desc limit 1),
+  'Vino nuevo', 'y va último dentro de su bodega');
+-- Si después se borra el vino viejo, la bodega no se mueve de lugar
+delete from public.carta_items using ids where seccion_id = ids.malbec and bodega = 'Aleanna' and nombre <> 'Vino nuevo';
+select is(
+  (select array_position(string_to_array(pg_temp.bodegas_de(malbec), '|'), 'Aleanna') from ids),
+  (select antes from lugar),
+  'borrar el vino viejo no cambia el lugar de la bodega');
 
 select lives_ok($$ select public.cambiar_cubierto('parrilla', 1800) $$, 'el admin cambia el cubierto');
 reset role;

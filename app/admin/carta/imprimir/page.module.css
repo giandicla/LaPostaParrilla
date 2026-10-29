@@ -1,10 +1,13 @@
-/* La hoja oficio de las cartas impresas (612 × 936 pt) */
-@page {
+/* La hoja oficio de las cartas impresas (612 × 936 pt). Página con nombre: solo
+   la usa .main de esta vista, así no cambia la hoja de otras impresiones del panel
+   (los estilos de una ruta quedan cargados al navegar sin recargar). */
+@page carta {
   size: 8.5in 13in;
   margin: 0.4in;
 }
 
 .main {
+  page: carta;
   max-width: 8.5in;
   margin: 0 auto;
   padding: calc(var(--alto-navbar) + var(--sp-6)) var(--sp-4) var(--sp-12);
@@ -41,9 +44,10 @@
     display: none;
   }
 
-  /* El tamaño de letra de la carta impresa: los tamaños de la hoja están en
-     rem, así que se achica la base. Solo carga con esta página. */
-  :global(html) {
+  /* El tamaño de letra de la carta impresa: los tamaños de la hoja están en rem,
+     así que se achica la base. La clase la pone la página solo mientras está
+     abierta (ver page.jsx). */
+  :global(html.carta-impresa) {
     font-size: 11px;
   }
 }
