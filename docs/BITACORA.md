@@ -4,6 +4,40 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-29 — Editor de la carta v2, vinos aparte, sin PDF
+
+Rama `feat/accesos-carta` (PR #13). Spec `docs/superpowers/specs/2026-10-29-editor-carta-v2-design.md`,
+plan `docs/superpowers/plans/2026-10-29-editor-carta-v2.md`.
+
+- **Base:** `20261029130000_carta_v2.sql` — `ubicar_item_carta`, `ubicar_bodega_carta`,
+  cambio de categoría o bodega al final del destino, renumeración sin huecos.
+  pgTAP `09_carta_v2.test.sql` (17).
+- **API:** `GET /api/v1/carta/vinos`; la carta de un local ya no trae los vinos;
+  `posicion` en lugar de `mover`; `seccionId` y `region` al editar.
+- **`/carta`:** Parrilla · Vinos · Restaurante, con "De los dos locales"; links viejos
+  a los vinos redirigen.
+- **Panel:** `CajaCarta` (una caja, buscador, categoría desplegable) y `ListaCarta`
+  (arrastre con puntero y teclado). Se borró `EditorItemCarta`.
+- **Sin PDF:** se borró `/admin/carta/imprimir` y el CSS de impresión de la hoja.
+- Tests: `node --test` 96, pgTAP 150 en 9 archivos.
+
+---
+
+## 2026-10-29 — Cómo llegar al editor de la carta
+
+Rama `feat/accesos-carta`.
+
+- **Pestañas "Reservas · Carta"** en el panel (`src/components/PestanasAdmin/`), en
+  `/admin` y `/admin/carta`. Reemplazan el botón "Editar la carta" y "← Volver al
+  panel".
+- **"Editar esta carta"** en `/carta`, solo para el admin → `/admin/carta?vista=<local>`.
+- **Botones invisibles:** `Boton variante="contorno"` es para fondos oscuros; en
+  fondos claros no se veía (el botón al editor, "Imprimir / Guardar PDF", "Guardar
+  región", "Guardar cubierto" y el WhatsApp del error de `/carta`). Variante nueva
+  `secundario`, bordo sobre claro (`hallazgos.md` 1.28).
+
+---
+
 ## 2026-10-29 — La carta pasa a la base, con API, panel e impresión
 
 Rama `feat/carta-editable`. Spec `docs/superpowers/specs/2026-10-29-carta-editable-design.md`,

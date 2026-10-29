@@ -64,3 +64,12 @@
     font-size: var(--fs-body);
   }
 }
+
+/* "De los dos locales", debajo de Vinos */
+.nota {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  opacity: 0.85;
+}

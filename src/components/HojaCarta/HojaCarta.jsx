@@ -4,13 +4,11 @@ import estilos from './HojaCarta.module.css';
 
 // La hoja de la carta, como la carta impresa del local: marco, logo, nombre del
 // local y el cubierto al pie. El estilo (recto o redondeado) y la bajada salen
-// de `local.carta` (src/data/locales.js). Las secciones van como hijos: una
-// columna en la web, dos en la vista de impresión.
-export default function HojaCarta({ local, cubierto, columnas = 1, children }) {
+// de `local.carta` (src/data/locales.js; la vista de vinos, CARTA_VINOS en
+// src/data/carta.js). Las secciones van como hijos, una abajo de la otra.
+export default function HojaCarta({ local, cubierto, children }) {
   const { estilo, bajada } = local.carta;
-  const clases = [estilos.hoja, estilos[estilo], fuentesCarta, columnas === 2 ? estilos.dosColumnas : '']
-    .filter(Boolean)
-    .join(' ');
+  const clases = [estilos.hoja, estilos[estilo], fuentesCarta].join(' ');
 
   return (
     <article className={clases}>

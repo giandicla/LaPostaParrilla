@@ -1,3 +1,10 @@
+/* "Editar esta carta": solo lo ve el admin */
+.editar {
+  display: flex;
+  justify-content: center;
+  margin: calc(var(--sp-8) * -1) 0 var(--sp-8);
+}
+
 .indice {
   display: flex;
   flex-wrap: wrap;

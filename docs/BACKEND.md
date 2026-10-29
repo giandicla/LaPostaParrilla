@@ -212,16 +212,20 @@ Desde la sesión 06 la carta vive en la base. Diseño:
 - **Reglas** (trigger `validar_item_carta`, mensajes en castellano): un precio o un
   precio por tamaño, nunca los dos; `precios` solo en secciones con `tamanos`, uno
   por tamaño; los vinos llevan bodega y los platos no; un ítem sin orden va al final.
-- **Orden:** `mover_item_carta` (en vinos, dentro de su bodega), `mover_bodega_carta`
-  (la bodega entera; renumera la sección), `cambiar_region_bodega`. `cambiar_cubierto`
-  es `security definer` porque `locales` no tiene política de update. Todas exigen
-  admin.
+- **Orden** (migración `20261029130000_carta_v2.sql`, editor v2): `ubicar_item_carta`
+  (una posición dentro de su categoría; en vinos, de su bodega) y `ubicar_bodega_carta`,
+  con la sección bloqueada mientras se renumera. Cambiar `seccion_id` o `bodega` deja el
+  ítem al final del destino y renumera las dos secciones. Las `mover_*` de la primera
+  versión quedan (las usó producción hasta el merge). `cambiar_region_bodega`;
+  `cambiar_cubierto` es `security definer` porque `locales` no tiene política de
+  update. Todas exigen admin.
 - **RLS:** lectura pública; escritura solo con `es_admin()`. Ojo: un `update` de
   alguien que no es admin no falla, no toca filas. Por eso la API pregunta
   `es_admin` antes y responde 403.
-- **API:** `GET /api/v1/carta?local=<id>` (pública, `Cache-Control` de 1 minuto en
-  Vercel; `&fresca=1` sin caché, para el panel) y las escrituras del admin en
-  `items`, `secciones/[id]/bodegas` y `locales/[id]`. Ver `docs/ESTRUCTURA.md`.
+- **API:** `GET /api/v1/carta?local=<id>` (la carta del local, sin vinos) y
+  `GET /api/v1/carta/vinos` (públicas, `Cache-Control` de 1 minuto en Vercel;
+  `fresca=1` sin caché, para el panel) y las escrituras del admin en `items`,
+  `secciones/[id]/bodegas` y `locales/[id]`. Ver `docs/ESTRUCTURA.md`.
 - **Carga inicial:** `supabase/migrations/20261029120100_carta_datos.sql`, generada
   una vez por `scripts/carta-a-sql.mjs` desde los JSON que había antes (278 ítems).
 - **Tests:** `supabase/tests/database/08_carta.test.sql` (32 asserts).

@@ -1,0 +1,176 @@
+/* La carta en el panel: filas compactas */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-8);
+}
+
+.seccion {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.tituloSeccion {
+  padding-bottom: var(--sp-1);
+  border-bottom: 2px solid var(--carbon);
+  font-size: 1rem;
+  letter-spacing: var(--tracking-etiqueta);
+  text-transform: uppercase;
+  color: var(--carbon);
+}
+
+.tituloSeccion span {
+  font-family: var(--font-cuerpo);
+  font-size: var(--fs-small);
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: 0;
+  color: var(--gris-600);
+}
+
+.filas {
+  display: flex;
+  flex-direction: column;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-1);
+  background: var(--blanco);
+  border-bottom: 1px solid var(--arena-100);
+}
+
+.editando {
+  background: var(--arena-100);
+  box-shadow: inset 3px 0 0 var(--bordo-900);
+}
+
+.arrastrando {
+  opacity: 0.5;
+}
+
+/* Dónde va a caer: arriba si se sube, abajo si se baja */
+.destinoArriba {
+  box-shadow: inset 0 3px 0 var(--bordo-900);
+}
+
+.destinoAbajo {
+  box-shadow: inset 0 -3px 0 var(--bordo-900);
+}
+
+/* El asa: grande para el dedo; sin scroll de la página mientras se arrastra */
+.asa {
+  flex: none;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  background: none;
+  border: none;
+  border-radius: var(--radio-md);
+  font-size: 1.2rem;
+  color: var(--gris-600);
+  cursor: grab;
+  touch-action: none;
+}
+
+.asa:active {
+  cursor: grabbing;
+}
+
+.asa:hover,
+.asa:focus-visible {
+  background: var(--arena-100);
+  color: var(--bordo-900);
+}
+
+.nombre {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.nombre small {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: none;
+  color: var(--gris-600);
+}
+
+.precio {
+  font-size: var(--fs-small);
+  white-space: nowrap;
+}
+
+.accion {
+  padding: var(--sp-1);
+  background: none;
+  border: none;
+  font-size: var(--fs-small);
+  font-weight: 600;
+  color: var(--bordo-900);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  cursor: pointer;
+}
+
+.accion:disabled {
+  color: var(--gris-600);
+  cursor: default;
+}
+
+.eliminar {
+  color: var(--bordo-700);
+}
+
+/* ---------- Vinos: una bodega ---------- */
+.bodega {
+  padding: var(--sp-2);
+  background: var(--arena-100);
+  border-radius: var(--radio-md);
+}
+
+.bodega + .bodega {
+  margin-top: var(--sp-2);
+}
+
+.cabeceraBodega {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0 var(--sp-3);
+  padding-bottom: var(--sp-1);
+}
+
+.nombreBodega {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--oliva-700);
+}
+
+.region {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--gris-600);
+}
+
+/* En el celular, el precio y las acciones bajan debajo del nombre */
+@media (max-width: 767px) {
+  .fila {
+    flex-wrap: wrap;
+  }
+
+  .nombre {
+    flex-basis: calc(100% - 3rem);
+  }
+
+  .precio {
+    margin-left: 3rem;
+    margin-right: auto;
+  }
+}

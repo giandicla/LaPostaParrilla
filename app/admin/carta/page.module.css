@@ -10,45 +10,14 @@
   margin: 0 auto;
 }
 
-.cabecera {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--sp-4);
+/* El selector de carta es pegajoso en /carta; acá va en el flujo, sin margen extra */
+.panel > [role='tablist'] {
+  position: static;
+  margin: 0;
 }
 
 .titulo {
   color: var(--bordo-900);
-}
-
-.imprimir {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-}
-
-/* Parrilla · Restaurante · Vinos */
-.vistas {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-}
-
-.vista {
-  padding: var(--sp-2) var(--sp-4);
-  background: var(--blanco);
-  border: 1px solid var(--gris-300);
-  border-radius: 999px;
-  font-weight: 600;
-  color: var(--carbon);
-  cursor: pointer;
-}
-
-.vista[aria-pressed='true'] {
-  background: var(--bordo-900);
-  border-color: var(--bordo-900);
-  color: var(--blanco);
 }
 
 .error {
@@ -56,96 +25,23 @@
   color: var(--bordo-900);
 }
 
-.seccion {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-  padding-top: var(--sp-6);
-  border-top: 1px solid var(--gris-300);
+.aviso:empty {
+  display: none;
 }
 
-.tituloSeccion {
-  font-size: var(--fs-h3);
-  color: var(--bordo-900);
-}
-
-.tamanos {
-  font-family: var(--font-cuerpo);
-  font-size: var(--fs-small);
-  font-weight: 400;
-  color: var(--gris-600);
-}
-
-.items {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-}
-
-.agregar {
-  align-self: flex-start;
-  padding: var(--sp-2) 0;
-  background: none;
-  border: none;
+.aviso {
   font-weight: 600;
-  color: var(--bordo-900);
-  cursor: pointer;
-}
-
-.agregar:hover {
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-/* ---------- Vinos: una bodega ---------- */
-.bodega {
-  display: flex;
-  flex-direction: column;
-  gap: var(--sp-3);
-  padding: var(--sp-4);
-  background: var(--arena-100);
-  border-radius: var(--radio-md);
-}
-
-.cabeceraBodega {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: var(--sp-2) var(--sp-4);
-}
-
-.nombreBodega {
-  margin-right: auto;
-  font-size: 1.1rem;
   color: var(--oliva-700);
 }
 
-.accion {
-  padding: var(--sp-1);
-  background: none;
-  border: none;
-  font-size: var(--fs-small);
-  font-weight: 600;
-  color: var(--bordo-900);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-  cursor: pointer;
-}
-
-.accion:disabled {
-  color: var(--gris-600);
-  text-decoration: none;
-  cursor: default;
-}
-
-/* Región de la bodega y cubierto: un campo y su botón */
-.formRegion {
+/* Cubierto: un campo y su botón */
+.cubierto {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
   gap: var(--sp-3);
 }
 
-.formRegion > :first-child {
-  flex: 1 1 14rem;
+.cubierto > :first-child {
+  flex: 0 1 14rem;
 }

@@ -23,6 +23,9 @@ async function pedir(ruta, opciones = {}) {
 export const leerCarta = (idLocal, { fresca = false } = {}) =>
   pedir(`/api/v1/carta?local=${encodeURIComponent(idLocal)}${fresca ? '&fresca=1' : ''}`);
 
+// La carta de vinos y copas, compartida por los dos locales
+export const leerVinos = ({ fresca = false } = {}) => pedir(`/api/v1/carta/vinos${fresca ? '?fresca=1' : ''}`);
+
 // ---------- Edición (solo admin) ----------
 // El servidor sabe quién llama por el token de la sesión de Supabase.
 
@@ -38,18 +41,20 @@ async function escribir(ruta, metodo, cuerpo) {
 }
 
 // datos: { seccionId, nombre, precio | precios, descripcion?, traduccion?, detalle?, bodega?, region? }
+// (los arma datosDeLaCaja, en src/data/editorCarta.js)
 export const crearItem = (datos) => escribir('/api/v1/carta/items', 'POST', datos);
 
+// cambios: los mismos campos, más seccionId (cambia de categoría) o region (de su bodega)
 export const editarItem = (id, cambios) => escribir(`/api/v1/carta/items/${id}`, 'PATCH', cambios);
 
 export const borrarItem = (id) => escribir(`/api/v1/carta/items/${id}`, 'DELETE');
 
-// sentido: 'arriba' | 'abajo'
-export const moverItem = (id, sentido) => escribir(`/api/v1/carta/items/${id}`, 'PATCH', { mover: sentido });
+// posicion: desde 1, dentro de su categoría (en vinos, de su bodega)
+export const ubicarItem = (id, posicion) => escribir(`/api/v1/carta/items/${id}`, 'PATCH', { posicion });
 
-// { bodega, region?, mover? }: cambia la región de la bodega o la mueve entera
-export const editarBodega = (idSeccion, datos) =>
-  escribir(`/api/v1/carta/secciones/${idSeccion}/bodegas`, 'PATCH', datos);
+// Ubica la bodega entera en una posición dentro de su tipo de vino
+export const ubicarBodega = (idSeccion, bodega, posicion) =>
+  escribir(`/api/v1/carta/secciones/${idSeccion}/bodegas`, 'PATCH', { bodega, posicion });
 
 export const cambiarCubierto = (idLocal, cubierto) =>
   escribir(`/api/v1/carta/locales/${idLocal}`, 'PATCH', { cubierto });

@@ -7,6 +7,7 @@ import Boton from '../../src/components/Boton/Boton.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
 import NuevaReservaLocal from '../../src/components/NuevaReservaLocal/NuevaReservaLocal.jsx';
+import PestanasAdmin from '../../src/components/PestanasAdmin/PestanasAdmin.jsx';
 import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/data/locales.js';
 import {
   ESTADOS,
@@ -423,10 +424,11 @@ function Panel() {
 
   return (
     <div className={estilos.panel}>
+      <PestanasAdmin />
+
       <header className={estilos.cabecera}>
         <h1 className={estilos.titulo}>Reservas</h1>
         <div className={estilos.accionesCabecera}>
-          <Boton to="/admin/carta" variante="contorno">Editar la carta</Boton>
           {!nueva && (
             <Boton onClick={() => setNueva(filtros.idLocal || ID_LOCAL_POR_DEFECTO)}>Nueva reserva</Boton>
           )}

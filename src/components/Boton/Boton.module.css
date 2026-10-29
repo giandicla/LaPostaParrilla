@@ -58,6 +58,8 @@
   border-color: var(--arena);
 }
 
+/* Para fondos oscuros: borde y letras crema. Sobre fondo claro no se ve:
+   ahí va `secundario`. */
 .contorno {
   background-color: transparent;
   color: var(--crema);
@@ -67,6 +69,18 @@
 .contorno:hover {
   background-color: var(--crema);
   color: var(--bordo-900);
+}
+
+/* Para fondos claros: borde y letras bordo */
+.secundario {
+  background-color: transparent;
+  color: var(--bordo-900);
+  border-color: var(--bordo-900);
+}
+
+.secundario:hover {
+  background-color: var(--bordo-900);
+  color: var(--crema);
 }
 
 .texto {

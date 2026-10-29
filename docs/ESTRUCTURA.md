@@ -12,15 +12,15 @@
 | `/mis-reservas` | Cuenta | Próximas y anteriores; `esperando_pago` con "Pagar seña" y el tiempo que falta; cancelar hasta 1 h antes (con reintegro de la seña), después WhatsApp. El admin no la usa: lo lleva al panel |
 | `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado, con el estado de la seña; cancelar (pide el motivo, "No hay lugar" por defecto) y mover; "Reintegros pendientes" con "Reintentar"; notas internas; días bloqueados, enteros o por turno; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |
 | `/admin/dia` | Admin | Lista del día para imprimir. Acepta `?fecha=` y `?local=` |
-| `/admin/carta` | Admin | Editar la carta: un local (sus secciones y el cubierto) o "Vinos" (las secciones compartidas, por bodega). Por ítem: precio(s), nombre, descripción, traducción (detalle en vinos), subir, bajar, borrar; "Agregar" al final de cada sección. En vinos: región y subir/bajar de cada bodega. Links a imprimir cada local. Acepta `?vista=<id del local o vinos>` |
-| `/admin/carta/imprimir` | Admin | La carta de un local en hoja oficio a dos columnas, con el marco del local en cada hoja; abre la ventana de imprimir ("Guardar como PDF"). Acepta `?local=<id>` |
+| `/admin/carta` | Admin | Pestañas Reservas · Carta. Selector Parrilla · Vinos · Restaurante. Una caja arriba (`CajaCarta`): sin nada elegido agrega (va último en su categoría); con un producto elegido (Editar o el buscador) lo edita, incluida la categoría. Abajo la carta (`ListaCarta`) con ⠿ para arrastrar, Editar y Eliminar. Cubierto en la vista de un local. Acepta `?vista=<id del local o vinos>` |
 | `/nosotros` | Nosotros | Historia + un bloque por local + contacto |
 | `/api/v1/pagos` | API | `POST`: crea el pago y la preferencia de Checkout Pro de la seña y devuelve el `initPoint`. Requiere sesión (token de Supabase) |
 | `/api/v1/reservas/[id]/cancelacion` | API | `POST`: cancela la reserva (cliente o admin, con la sesión de quien llama) y reintegra la seña; también reintenta un reintegro pendiente |
 | `/api/webhooks/mercadopago` | API | `POST`: avisos de Mercado Pago. Valida la firma, consulta el pago real y concilia en la base |
-| `/api/v1/carta` | API | `GET ?local=<id>`: la carta de un local (sus secciones + las compartidas). Pública, cacheada 1 minuto; `&fresca=1` sin caché (el panel) |
-| `/api/v1/carta/items` y `/items/[id]` | API | `POST` crea un ítem; `PATCH` lo edita o lo mueve (`mover`); `DELETE` lo borra. Solo admin |
-| `/api/v1/carta/secciones/[id]/bodegas` | API | `PATCH`: región de una bodega o moverla entera. Solo admin |
+| `/api/v1/carta` | API | `GET ?local=<id>`: la carta de un local, sin vinos. Pública, cacheada 1 minuto; `&fresca=1` sin caché (el panel) |
+| `/api/v1/carta/vinos` | API | `GET`: la carta de vinos y copas, compartida. Mismo caché |
+| `/api/v1/carta/items` y `/items/[id]` | API | `POST` crea un ítem; `PATCH` lo edita (con `seccionId` cambia de categoría; `region` es de su bodega) o lo ubica (`posicion`); `DELETE` lo borra. Solo admin |
+| `/api/v1/carta/secciones/[id]/bodegas` | API | `PATCH`: región de una bodega o ubicarla entera (`posicion`). Solo admin |
 | `/api/v1/carta/locales/[id]` | API | `PATCH`: el cubierto. Solo admin |
 | `*` | — | `app/not-found.jsx` — página 404 con links de vuelta |
 
@@ -48,9 +48,9 @@
 | `Footer` | — | Links, redes, las dos direcciones |
 | `Hero` | `titulo`, `bajada`, `imagen`, `alt`, `conLogo`, `compacto`, `acciones` | Portada. Completa en el Inicio, compacta en el resto |
 | `Section` | `id`, `fondo` (`crema`/`arena`/`bordo`/`oliva`), `titulo`, `bajada`, `ancho`, `children` | Ancho máximo, padding vertical, color de fondo. El título lleva el fogón del logo encima |
-| `Boton` | `variante` (`primario`/`claro`/`contorno`/`texto`), `tamano`, `to`, `href`, `onClick`, `children` | Link interno, externo o botón según las props |
+| `Boton` | `variante` (`primario`/`claro`/`contorno`/`secundario`/`texto`; `claro` y `contorno` son para fondos oscuros, `secundario` es el contorno para fondos claros), `tamano`, `to`, `href`, `onClick`, `children` | Link interno, externo o botón según las props |
 | `LocalCard` | `local` | Tarjeta grande de un salón, con sus dos CTA |
-| `SelectorLocal` | `locales`, `localActivoId`, `onChange` | Toggle. Controlado |
+| `SelectorLocal` | `locales`, `localActivoId`, `onChange` | Toggle. Controlado. Una opción con `nota` la muestra debajo (Vinos: "De los dos locales") |
 | `SesionProvider` | `children` | Contexto de sesión: `useSesion()` → `sesion`, `perfil`, `cargando`, `esAdmin`, `recargarPerfil()` |
 | `RequiereSesion` | `admin?`, `soloClientes?`, `mensaje?`, `sinSesion?`, `children` | Muestra `children` solo con sesión (y rol admin si se pide); si no, explica y ofrece ingresar, o muestra `sinSesion`. Con `soloClientes`, al admin lo lleva a `/admin` con la misma query. Comodidad, no seguridad |
 | `NuevaReservaLocal` | `idLocalInicial`, `alGuardar(mensaje)`, `alCerrar` | Formulario del panel para cargar una reserva que tomó el local |
@@ -60,8 +60,10 @@
 | `Icono` | `nombre` (`google` / `instagram` / `whatsapp`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
 | `SeccionCarta` | `seccion`, `idAncla` | Una sección de la carta: platos (nombre, descripción, traducción EN/PT, uno o más precios) o vinos agrupados por bodega. La fuente y el filete del título los toma de la hoja que la contiene |
-| `HojaCarta` | `local`, `cubierto`, `columnas` (1 o 2), `children` | La hoja de la carta impresa: marco recto (parrilla) o redondeado (restaurante) según `local.carta.estilo`, logo, `local.carta.bajada` y el cubierto al pie. Dos columnas para imprimir |
-| `EditorItemCarta` | `seccion`, `item?`, `bodegas?`, `primero`, `ultimo`, `alCambiar`, `alCancelar?` | Un ítem en `/admin/carta`, con su validación; sin `item`, el formulario para agregar (en vinos pide bodega y región) |
+| `HojaCarta` | `local`, `cubierto`, `children` | La hoja con la estética de la carta impresa: marco recto (parrilla, vinos) o redondeado (restaurante) según `local.carta.estilo`, logo, `local.carta.bajada` y el cubierto al pie. `local` puede ser `CARTA_VINOS` |
+| `CajaCarta` | `carta`, `esVinos`, `edicion`, `alElegir`, `alTerminar`, `alCambiar` | La caja única del editor: buscador, categoría ("Tipo de vino" en vinos), precio o precios por tamaño, textos; en cepas, bodega, región y detalle |
+| `ListaCarta` | `carta`, `idEditando`, `alEditar`, `alCambiar`, `alError` | La carta en el panel: filas con ⠿ (arrastre con puntero y flechas del teclado), Editar y Eliminar; bodegas con su propia asa |
+| `PestanasAdmin` | — | Las secciones del panel (Reservas · Carta), con la actual marcada (`aria-current`). Una sección nueva es una pestaña más |
 | `GaleriaGrid` | `imagenes[]` | Grilla de 3 fotos, la del medio vertical |
 | `InfoLocal` | `local` | Horarios, mapa y contacto de UN local |
 
@@ -83,7 +85,7 @@ La única capa que habla con Supabase. Detalle en `docs/BACKEND.md`.
 | `reservas.js` | Franjas, días bloqueados, crear / listar / cancelar reservas, utilidades de fecha en hora argentina |
 | `admin.js` | Listar y filtrar reservas, mover, notas, bloqueos (por día o por turno), reintegros pendientes, suscripción en tiempo real |
 | `pagos.js` | `iniciarPago`, `cancelarReserva`, `reintentarReintegro`: llaman a las rutas de `app/api/` con el token de la sesión (el Access Token de Mercado Pago nunca llega al navegador) |
-| `carta.js` | `leerCarta(idLocal, { fresca })` (pública) y, para el admin, `crearItem`, `editarItem`, `borrarItem`, `moverItem`, `editarBodega`, `cambiarCubierto`: llaman a `app/api/v1/carta` |
+| `carta.js` | `leerCarta(idLocal, { fresca })` y `leerVinos({ fresca })` (públicas) y, para el admin, `crearItem`, `editarItem`, `borrarItem`, `ubicarItem`, `ubicarBodega`, `cambiarCubierto`: llaman a `app/api/v1/carta` |
 
 ## Servidor (`src/servidor/`)
 
@@ -127,7 +129,8 @@ Cada función devuelve el mensaje de error o `''`. La base repite las mismas reg
 | `marca.js` | `MARCA` — nombre, bajada, ciudad, Instagram, email, logo (blanco) y logoOscuro (bordo) |
 | `locales.js` | `LOCALES`, `getLocal(id)`, `esIdDeLocal(id)`, `ID_LOCAL_POR_DEFECTO` |
 | `platos.js` | `getPlatosDestacados()` — los platos con foto de la home, por local |
-| `carta.js` | `formatearPrecio(n)`. La carta ya no está acá: vive en la base (tablas `carta_secciones` y `carta_items`, desde la sesión 06) |
+| `carta.js` | `formatearPrecio(n)` y `CARTA_VINOS` (la vista de vinos, compartida). La carta vive en la base (tablas `carta_secciones` y `carta_items`, desde la sesión 06) |
+| `editorCarta.js` | Funciones puras del editor: `buscarEnCarta` (sin tildes), `posicionTrasArrastre`, `datosDeLaCaja` |
 | `textos.js` | `TEXTOS` — bienvenida, valores de la marca, historia, condiciones de reserva |
 
 Forma de un local:

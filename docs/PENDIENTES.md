@@ -44,7 +44,7 @@ grep -rn "PENDIENTE" src/
 - [x] Reemplazar los SVG placeholder de `public/img/` por las fotos reales.
 - [x] Reemplazar `public/logo.jpg` por la versión en alta (ahora SVG en `public/logo/`).
 - [x] ~~Cada vez que la familia cambie la carta, reemplazar el PDF~~. Ya no: desde la
-      sesión 06 la carta se edita en `/admin/carta` y el PDF sale de ahí.
+      sesión 06 la carta se edita en `/admin/carta` (el sitio ya no tiene PDF).
 
 ## Decisiones a tomar
 
@@ -148,13 +148,11 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       en la computadora del local
 
 ### Etapa 2.3 — Admin de contenido (parte 3)
-- [x] Pasar la carta a tablas, editable desde `/admin/carta`, con impresión en PDF
-      (sesión 06). Sin "agotado": decisión del usuario.
+- [x] Pasar la carta a tablas, editable desde `/admin/carta` (sesión 06; editor v2
+      el mismo día). Sin "agotado" y sin PDF: decisiones del usuario.
 - [ ] Fuentes de la carta: hoy son parecidas de Google (Oswald, Pathway Gothic One,
       Old Standard TT). Si la familia consigue las originales con licencia web
       (RT Flinton, HeyGotcha), se cambian en `src/styles/fuentesCarta.js`.
-- [ ] Probar la impresión de la carta en la computadora del local (hoja oficio,
-      "Guardar como PDF" en Chrome o Edge).
 - [ ] Editar franjas de reserva y horarios de atención desde el panel
 
 ### Etapa 3 — Pagos

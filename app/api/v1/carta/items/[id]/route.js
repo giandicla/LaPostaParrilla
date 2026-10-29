@@ -1,6 +1,7 @@
-// PATCH  /api/v1/carta/items/:id — { campos…, mover? } → 200 ítem
+// PATCH  /api/v1/carta/items/:id — { campos…, seccionId?, posicion? } → 200 ítem
 // DELETE /api/v1/carta/items/:id → 204
-// Solo el admin. `mover` ('arriba' | 'abajo') lo cambia de lugar en su sección.
+// Solo el admin. `seccionId` lo cambia de categoría (va al final); `posicion`
+// (desde 1) lo ubica en su categoría, o en su bodega si es un vino.
 import { ErrorHttp, json, manejar } from '../../../../../../src/servidor/respuestas.js';
 import { esquemaId, esquemaItemCambios, leerCuerpo } from '../../../../../../src/servidor/esquemas.js';
 import { usuarioDelPedido } from '../../../../../../src/servidor/supabase.js';

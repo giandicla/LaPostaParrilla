@@ -45,17 +45,22 @@ test('un ítem nuevo necesita sección, nombre y un precio entero positivo', () 
   assert.ok(!valido(esquemaItemNuevo, { seccionId: ID, nombre: 'Chorizo' }));
 });
 
-test('los cambios de un ítem traen algo y mover es arriba o abajo', () => {
+test('los cambios de un ítem traen algo; la posición es desde 1', () => {
   assert.ok(valido(esquemaItemCambios, { precio: 7000 }));
-  assert.ok(valido(esquemaItemCambios, { mover: 'arriba' }));
+  assert.ok(valido(esquemaItemCambios, { posicion: 2 }));
+  assert.ok(valido(esquemaItemCambios, { seccionId: ID }));
+  assert.ok(!valido(esquemaItemCambios, { posicion: 0 }));
+  // pasar de una categoría con tamaños a una sin: un precio y se borran los precios
+  assert.ok(valido(esquemaItemCambios, { seccionId: ID, precio: 9000, precios: null }));
+  assert.ok(valido(esquemaItemCambios, { precios: [21000, 30000], precio: null }));
+  assert.ok(!valido(esquemaItemCambios, { mover: 'arriba' }));
   assert.ok(valido(esquemaItemCambios, { descripcion: null }));
   assert.ok(!valido(esquemaItemCambios, {}));
-  assert.ok(!valido(esquemaItemCambios, { mover: 'costado' }));
 });
 
 test('una bodega cambia la región o se mueve', () => {
   assert.ok(valido(esquemaBodega, { bodega: 'Catena', region: 'Mendoza' }));
-  assert.ok(valido(esquemaBodega, { bodega: 'Catena', mover: 'abajo' }));
+  assert.ok(valido(esquemaBodega, { bodega: 'Catena', posicion: 1 }));
   assert.ok(!valido(esquemaBodega, { bodega: 'Catena' }));
 });
 

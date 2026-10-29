@@ -8,44 +8,57 @@ import SelectorLocal from '../../src/components/SelectorLocal/SelectorLocal.jsx'
 import SeccionCarta from '../../src/components/SeccionCarta/SeccionCarta.jsx';
 import HojaCarta from '../../src/components/HojaCarta/HojaCarta.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
+import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
 import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO, enlaceWhatsapp } from '../../src/data/locales.js';
-import { leerCarta } from '../../src/servicios/carta.js';
+import { leerCarta, leerVinos } from '../../src/servicios/carta.js';
+import { CARTA_VINOS } from '../../src/data/carta.js';
 import estilos from './page.module.css';
 
-// Índice de la carta: una entrada por sección, salvo las que pertenecen a un
-// grupo (las cepas de "Vinos"), que se resumen en una sola entrada al grupo.
-const armarIndice = (secciones) => {
-  const indice = [];
-  secciones.forEach((seccion) => {
-    if (!seccion.grupo) indice.push({ id: seccion.id, texto: seccion.titulo });
-    else if (!indice.some((entrada) => entrada.texto === seccion.grupo))
-      indice.push({ id: seccion.id, texto: seccion.grupo });
-  });
-  return indice;
-};
+// Las tres cartas del selector, con los vinos (compartidos) en el medio
+const VISTAS = [LOCALES[0], CARTA_VINOS, ...LOCALES.slice(1)];
+
+// Índice de la carta: una entrada por sección (en Vinos, una por tipo de vino)
+const armarIndice = (secciones) => secciones.map((seccion) => ({ id: seccion.id, texto: seccion.titulo }));
+
+// Links viejos, de cuando los vinos estaban al final de cada local:
+// #parrilla-vinos-malbec o #restaurante-copas-y-descorche
+const VINOS_VIEJO = /^#[a-z0-9-]+?-((?:vinos-[a-z0-9-]+)|copas-y-descorche)$/;
 
 function CartaContenido() {
   const parametros = useSearchParams();
   const router = useRouter();
 
-  // El local activo sale de la URL. Si el parámetro falta o es basura,
-  // se cae al primer local en vez de romper.
+  // La vista activa sale de la URL: un local o "vinos". Si el parámetro falta
+  // o es basura, se cae al primer local en vez de romper.
   const idPedido = parametros.get('local');
-  const idActivo = esIdDeLocal(idPedido) ? idPedido : ID_LOCAL_POR_DEFECTO;
-  const local = getLocal(idActivo);
+  const esVinos = idPedido === CARTA_VINOS.id;
+  const idActivo = esVinos || esIdDeLocal(idPedido) ? idPedido : ID_LOCAL_POR_DEFECTO;
+  // Vinos no tiene local: la portada usa la foto del local por defecto
+  const local = esVinos ? null : getLocal(idActivo);
+  const vista = esVinos ? CARTA_VINOS : local;
+  const portada = (local ?? getLocal(ID_LOCAL_POR_DEFECTO)).imagenes.hero;
+  const { esAdmin } = useSesion();
+
+  // Un link viejo a los vinos de un local va a la vista Vinos, a esa sección
+  useEffect(() => {
+    const viejo = !esVinos && window.location.hash.match(VINOS_VIEJO);
+    // scroll: false — el scroll a la sección lo hace el efecto de abajo cuando
+    // llega la carta; el de Next la dejaría arriba de todo
+    if (viejo) router.replace(`/carta?local=${CARTA_VINOS.id}#${CARTA_VINOS.id}-${viejo[1]}`, { scroll: false });
+  }, [esVinos, router]);
 
   // La carta se pide a la API cada vez que cambia el local. Se guarda con el
   // id del local para no mostrar la de otro mientras llega la nueva.
   const [pedido, setPedido] = useState({ idLocal: null, carta: null, error: null });
   useEffect(() => {
     let vigente = true;
-    leerCarta(idActivo)
+    (esVinos ? leerVinos() : leerCarta(idActivo))
       .then((carta) => vigente && setPedido({ idLocal: idActivo, carta, error: null }))
       .catch((error) => vigente && setPedido({ idLocal: idActivo, carta: null, error: error.message }));
     return () => {
       vigente = false;
     };
-  }, [idActivo]);
+  }, [idActivo, esVinos]);
   const cargando = pedido.idLocal !== idActivo;
   const carta = cargando ? null : pedido.carta;
 
@@ -70,26 +83,35 @@ function CartaContenido() {
     <main>
       <Hero
         compacto
-        imagen={local.imagenes.hero}
+        imagen={portada}
         alt=""
         titulo="Nuestra carta"
-        bajada={local.nombre}
+        bajada={esVinos ? CARTA_VINOS.carta.bajada : local.nombre}
       />
 
       <Section>
         <SelectorLocal
-          locales={LOCALES}
+          locales={VISTAS}
           localActivoId={idActivo}
           onChange={cambiarLocal}
         />
+
+        {/* Atajo del admin: de la carta que está mirando al editor de esa carta */}
+        {esAdmin && (
+          <p className={estilos.editar}>
+            <Boton to={`/admin/carta?vista=${idActivo}`} variante="secundario">
+              Editar esta carta
+            </Boton>
+          </p>
+        )}
 
         {cargando && <p className={estilos.estado}>Cargando la carta…</p>}
 
         {!cargando && pedido.error && (
           <div className={estilos.estado} role="alert">
             <p>No pudimos cargar la carta. Probá de nuevo en un momento.</p>
-            {local.whatsapp && (
-              <Boton href={enlaceWhatsapp(local, 'Hola, quería consultar la carta.')} variante="contorno">
+            {local?.whatsapp && (
+              <Boton href={enlaceWhatsapp(local, 'Hola, quería consultar la carta.')} variante="secundario">
                 Consultanos por WhatsApp
               </Boton>
             )}
@@ -110,7 +132,7 @@ function CartaContenido() {
               ))}
             </nav>
 
-            <HojaCarta local={local} cubierto={carta.cubierto}>
+            <HojaCarta local={vista} cubierto={carta.cubierto}>
               {carta.secciones.map((seccion, i) => {
                 // El título del grupo va una sola vez, antes de su primera sección
                 const abreGrupo =

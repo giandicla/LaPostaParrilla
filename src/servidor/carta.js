@@ -57,7 +57,6 @@ export function armarCarta({ cubierto, secciones, items }) {
 // ---------- Casos de uso (rutas de app/api/v1/carta) ----------
 // `base` es crearBaseCarta() de carta-base.js, o una falsa en los tests.
 
-const SENTIDO = { arriba: -1, abajo: 1 };
 const noEncontrado = () => new ErrorHttp(404, 'No encontramos ese ítem.');
 
 export async function leerCarta(idLocal, { base }) {
@@ -66,25 +65,42 @@ export async function leerCarta(idLocal, { base }) {
   return armarCarta(filas);
 }
 
+// La carta de vinos (y copas): las secciones compartidas por los dos locales
+export async function leerVinos({ base }) {
+  return armarCarta(await base.leerFilasVinos());
+}
+
 // Bajo RLS, un update de alguien que no es admin no falla: no toca ninguna
 // fila. Por eso se pregunta antes.
 export async function exigirAdmin(base) {
   if (!(await base.esAdmin())) throw new ErrorHttp(403, 'Solo el admin puede editar la carta.');
 }
 
+// Un vino nuevo con región cambia la de toda su bodega (la región es de la
+// bodega; sin región, la base le copia la que ya tiene)
 export async function crearItem(datos, { base }) {
   await exigirAdmin(base);
-  return base.crearItem(datos);
+  const item = await base.crearItem(datos);
+  if (datos.region && item.bodega) await base.editarBodega(item.seccion_id, item.bodega, { region: datos.region });
+  return item;
 }
 
-export async function editarItem(id, { mover, ...cambios }, { base }) {
+// `posicion` lo ubica en su grupo (arrastrar); `region`, en un vino, es de su
+// bodega: se aplica a todos sus vinos de esa sección (a la bodega nueva, si
+// también cambió).
+export async function editarItem(id, { posicion, region, ...cambios }, { base }) {
   await exigirAdmin(base);
   let item = null;
-  if (mover && !(await base.moverItem(id, SENTIDO[mover]))) throw noEncontrado();
   if (Object.keys(cambios).length > 0) {
     item = await base.editarItem(id, cambios);
     if (!item) throw noEncontrado();
   }
+  if (region !== undefined) {
+    item ??= await base.leerItem(id);
+    if (!item) throw noEncontrado();
+    if (item.bodega) await base.editarBodega(item.seccion_id, item.bodega, { region });
+  }
+  if (posicion != null && !(await base.ubicarItem(id, posicion))) throw noEncontrado();
   return item ?? { id };
 }
 
@@ -93,9 +109,9 @@ export async function borrarItem(id, { base }) {
   if (!(await base.borrarItem(id))) throw noEncontrado();
 }
 
-export async function editarBodega(idSeccion, { bodega, region, mover }, { base }) {
+export async function editarBodega(idSeccion, { bodega, region, posicion }, { base }) {
   await exigirAdmin(base);
-  if (mover) await base.moverBodega(idSeccion, bodega, SENTIDO[mover]);
+  if (posicion != null) await base.ubicarBodega(idSeccion, bodega, posicion);
   if (region !== undefined) await base.editarBodega(idSeccion, bodega, { region });
 }
 

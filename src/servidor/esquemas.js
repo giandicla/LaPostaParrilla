@@ -43,19 +43,30 @@ const camposItem = {
   precio: precio.optional(),
   precios: z.array(precio).min(2).optional(),
 };
-const mover = z.enum(['arriba', 'abajo']);
+const posicion = z.number().int().min(1);
 
 export const esquemaItemNuevo = z
   .object({ seccionId: z.uuid(), ...camposItem })
   .refine((item) => item.precio != null || item.precios != null, { path: ['precio'] });
 
+// strict: una clave desconocida (por ejemplo el viejo `mover`) es un 400
 export const esquemaItemCambios = z
-  .object({ ...camposItem, nombre: camposItem.nombre.optional(), mover: mover.optional() })
+  .object({
+    ...camposItem,
+    nombre: camposItem.nombre.optional(),
+    // null borra el que no corresponde al cambiar entre categorías con y sin tamaños
+    precio: precio.nullable().optional(),
+    precios: z.array(precio).min(2).nullable().optional(),
+    seccionId: z.uuid().optional(),
+    posicion: posicion.optional(),
+  })
+  .strict()
   .refine((cambios) => Object.keys(cambios).length > 0);
 
 export const esquemaBodega = z
-  .object({ bodega: z.string().trim().min(1).max(80), region: textoCarta(80), mover: mover.optional() })
-  .refine((datos) => datos.region !== undefined || datos.mover != null, { path: ['region'] });
+  .object({ bodega: z.string().trim().min(1).max(80), region: textoCarta(80), posicion: posicion.optional() })
+  .strict()
+  .refine((datos) => datos.region !== undefined || datos.posicion != null, { path: ['region'] });
 
 export const esquemaCubierto = z.object({ cubierto: precio });
 
