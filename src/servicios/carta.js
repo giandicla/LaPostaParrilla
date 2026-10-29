@@ -18,8 +18,10 @@ async function pedir(ruta, opciones = {}) {
   return datos;
 }
 
-// { cubierto, secciones } — la forma está documentada en src/servidor/carta.js
-export const leerCarta = (idLocal) => pedir(`/api/v1/carta?local=${encodeURIComponent(idLocal)}`);
+// { cubierto, secciones } — la forma está documentada en src/servidor/carta.js.
+// `fresca`: sin el caché de un minuto (el panel, después de guardar).
+export const leerCarta = (idLocal, { fresca = false } = {}) =>
+  pedir(`/api/v1/carta?local=${encodeURIComponent(idLocal)}${fresca ? '&fresca=1' : ''}`);
 
 // ---------- Edición (solo admin) ----------
 // El servidor sabe quién llama por el token de la sesión de Supabase.

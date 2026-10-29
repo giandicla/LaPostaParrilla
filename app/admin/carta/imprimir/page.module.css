@@ -1,0 +1,49 @@
+/* La hoja oficio de las cartas impresas (612 × 936 pt) */
+@page {
+  size: 8.5in 13in;
+  margin: 0.4in;
+}
+
+.main {
+  max-width: 8.5in;
+  margin: 0 auto;
+  padding: calc(var(--alto-navbar) + var(--sp-6)) var(--sp-4) var(--sp-12);
+}
+
+.barra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--sp-6);
+}
+
+/* "Vinos": el grupo de las cepas, a lo ancho de las dos columnas */
+.tituloGrupo {
+  column-span: all;
+  margin: var(--sp-4) 0;
+  padding-top: var(--sp-4);
+  border-top: 2px solid currentColor;
+  font-family: var(--seccion-fuente, var(--font-titulo));
+  font-size: calc(var(--seccion-tamano, var(--fs-h2)) * 1.35);
+  font-weight: var(--seccion-peso, 700);
+  letter-spacing: var(--seccion-espaciado, var(--tracking-titulo));
+  text-align: center;
+  text-transform: uppercase;
+}
+
+@media print {
+  .main {
+    max-width: none;
+    padding: 0;
+  }
+
+  .barra {
+    display: none;
+  }
+
+  /* El tamaño de letra de la carta impresa: los tamaños de la hoja están en
+     rem, así que se achica la base. Solo carga con esta página. */
+  :global(html) {
+    font-size: 11px;
+  }
+}

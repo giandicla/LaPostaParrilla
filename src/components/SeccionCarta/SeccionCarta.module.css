@@ -124,3 +124,18 @@
     font-size: 0.88rem;
   }
 }
+
+/* Al imprimir (dos columnas, varias hojas): no partir un plato ni una bodega,
+   y que el título no quede solo al pie de una columna */
+@media print {
+  .lista > li,
+  .bodega {
+    break-inside: avoid;
+  }
+
+  .encabezado,
+  .tamanos,
+  .nombreBodega {
+    break-after: avoid;
+  }
+}

@@ -23,6 +23,15 @@ test('las secciones del local van antes que las compartidas', () => {
   assert.equal(carta.cubierto, 1500);
 });
 
+test('marca las secciones compartidas por los dos locales', () => {
+  const carta = armarCarta({
+    cubierto: null,
+    secciones: [seccion('s-v', 'vinos-x', null, 1), seccion('s-a', 'a', 'parrilla', 1)],
+    items: [],
+  });
+  assert.deepEqual(carta.secciones.map((s) => s.compartida), [undefined, true]);
+});
+
 const vinos = (extra = []) =>
   armarCarta({
     cubierto: null,

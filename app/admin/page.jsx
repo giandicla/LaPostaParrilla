@@ -426,6 +426,7 @@ function Panel() {
       <header className={estilos.cabecera}>
         <h1 className={estilos.titulo}>Reservas</h1>
         <div className={estilos.accionesCabecera}>
+          <Boton to="/admin/carta" variante="contorno">Editar la carta</Boton>
           {!nueva && (
             <Boton onClick={() => setNueva(filtros.idLocal || ID_LOCAL_POR_DEFECTO)}>Nueva reserva</Boton>
           )}

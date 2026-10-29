@@ -13,7 +13,8 @@
 //                        detalle?, precio }] }] }
 //
 // `id` es el slug: arma las anclas públicas (#parrilla-entradas). `idSeccion`
-// es la clave de la base, para editar.
+// es la clave de la base, para editar. Las secciones de los dos locales (vinos
+// y copas) llevan además `compartida: true`.
 
 import { ErrorHttp } from './respuestas.js';
 
@@ -44,6 +45,7 @@ export function armarCarta({ cubierto, secciones, items }) {
       const base = sinNulos({
         id: seccion.slug, idSeccion: seccion.id, titulo: seccion.titulo,
         grupo: seccion.grupo, nota: seccion.nota, tamanos: seccion.tamanos,
+        compartida: seccion.local_id == null ? true : null,
       });
       return seccion.grupo === 'Vinos'
         ? { ...base, bodegas: agruparPorBodega(suyos) }
