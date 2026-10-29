@@ -102,20 +102,29 @@ locales bajo una marca" — es lo más importante de probar):**
 
 > Reescrita dos veces en la sesión 02: primero la carta pasó al PDF hoja por hoja;
 > después, a pedido del usuario (el PDF no se leía cómodo), volvió a HTML con los
-> datos reales transcriptos de los PDF.
+> datos reales transcriptos de los PDF. Sesión 06: la carta se pide a la API
+> (`/api/v1/carta`) y se dibuja con la estética de la carta impresa de cada local.
 
 **Qué tiene que verse:**
 - [ ] Un hero con el nombre del salón activo.
 - [ ] Un selector de dos botones ("La Posta Parrilla" / "La Posta II Restaurante"); en el
       celular, dos botones parejos que no se cortan.
 - [ ] Un índice de secciones que lleva a cada una sin que la navbar tape el título.
+- [ ] La carta dentro de una hoja color papel con el marco del local: doble y recto en
+      la Parrilla (con rombos bajo el logo), redondeado en La Posta II. El logo
+      real, con "Parrilla Patagónica" o "Restaurante" debajo.
 - [ ] Cada plato con nombre, precio, y abajo la traducción en inglés/portugués en
-      cursiva chica (y la descripción en castellano cuando la carta la tiene).
+      letra chica (y la descripción en castellano cuando la carta la tiene).
 - [ ] En las pizzas de La Posta II, dos columnas de precio: Chica y Grande.
 - [ ] En **las dos cartas**, "Vinos" con subsecciones por cepa y, dentro, por bodega
       con su región, y al final "Copas y descorche". Es la misma carta de vinos en
-      los dos locales (`src/data/vinos.json`).
-- [ ] Al final: el cubierto, la aclaración de temporada y "Descargar la carta en PDF".
+      los dos locales (secciones compartidas en la base).
+- [ ] Al pie de la hoja, el cubierto; debajo, la aclaración de temporada. **No** hay
+      link para descargar el PDF (lo baja solo el admin).
+- [ ] Un link con ancla (`/carta?local=restaurante#restaurante-pizzas-clasicas`)
+      abre directo en esa sección, aunque la carta tarde en llegar.
+- [ ] Si la API no responde, aparece "No pudimos cargar la carta" y el botón de
+      WhatsApp del local, no una página vacía.
 - [ ] Comparar algunos precios contra el PDF (la transcripción se verificó por
       script: los 188 precios de la parrilla y los 100 de La Posta II coinciden).
 
@@ -129,6 +138,32 @@ locales bajo una marca" — es lo más importante de probar):**
       de La Posta II, con ese botón ya marcado.
 - [ ] Escribir un valor sin sentido, por ejemplo `/carta?local=asado123`: la
       página **no se rompe** y cae a la carta de la Parrilla.
+
+---
+
+## Carta en el panel (`/admin/carta`)
+
+> Sesión 06. Con el admin. Los cambios se ven al instante en el panel y en hasta un
+> minuto en `/carta` (caché de la API).
+
+- [ ] En `/admin`, "Editar la carta" lleva a `/admin/carta`.
+- [ ] Arriba: Parrilla, Restaurante y Vinos. En un local, el cubierto y sus secciones;
+      en Vinos, las cepas y "Copas y descorche", por bodega.
+- [ ] Cambiar un precio (vale escribir `6.000` o `$ 6.000`) y guardar: "Guardar" se
+      deshabilita y el precio nuevo aparece en `/carta`.
+- [ ] Una pizza con un solo precio: mensaje "Cargá un precio por tamaño." y el foco
+      en el primer precio.
+- [ ] "Agregar" al final de una sección, guardar, y verlo último en la carta. Subirlo,
+      bajarlo (el primero no sube, el último no baja) y borrarlo (pide confirmación).
+- [ ] En Vinos: agregar un vino a una bodega que ya está → aparece dentro de esa
+      bodega. Subir una bodega entera. Cambiar la región de una bodega.
+- [ ] Con una cuenta que no es admin, `/admin/carta` dice que no tiene permisos.
+
+**Imprimir / Guardar PDF**
+- [ ] El botón de cada local abre `/admin/carta/imprimir` y la ventana de imprimir.
+- [ ] Hoja oficio (8,5 × 13 in), dos columnas, el marco del local en **todas** las
+      hojas, ningún plato partido entre columnas, "Vinos" a lo ancho y el cubierto al
+      final.
 
 ---
 

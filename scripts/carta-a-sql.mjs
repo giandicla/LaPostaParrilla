@@ -1,7 +1,9 @@
-// Genera la carga inicial de la carta (supabase/migrations/…_carta_datos.sql)
+// Generó la carga inicial de la carta (supabase/migrations/…_carta_datos.sql)
 // desde src/data/cartas.json y src/data/vinos.json. Se corrió una vez, en la
 // sesión 06, cuando la carta pasó a la base; desde ahí la carta se edita en el
-// panel y los JSON ya no existen.
+// panel (/admin/carta) y los JSON ya no existen (están en el historial de git,
+// commit anterior a "docs: menu now lives in the database"). Queda como registro
+// de cómo se hizo la migración: ya no se puede volver a correr.
 //
 //   node scripts/carta-a-sql.mjs
 

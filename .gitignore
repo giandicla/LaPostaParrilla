@@ -14,3 +14,6 @@ next-env.d.ts
 
 # Mercado Pago: checkpoint local del asistente del plugin
 .mp-integrate-progress.md
+
+# Espacio de trabajo de la IA (maquetas, ledger de los planes): no se versiona
+.superpowers/

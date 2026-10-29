@@ -4,6 +4,28 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-29 — La carta pasa a la base, con API, panel e impresión
+
+Rama `feat/carta-editable`. Spec `docs/superpowers/specs/2026-10-29-carta-editable-design.md`,
+plan `docs/superpowers/plans/2026-10-29-carta-editable.md`.
+
+- **Base:** migraciones `20261029120000_carta.sql` (tablas, trigger de reglas,
+  funciones de orden, RLS) y `20261029120100_carta_datos.sql` (carga inicial, 278
+  ítems, generada por `scripts/carta-a-sql.mjs`). pgTAP `08_carta.test.sql` (32).
+- **API:** `GET /api/v1/carta` (pública, caché de 1 minuto, `&fresca=1` sin caché) y
+  escrituras del admin en `items`, `secciones/[id]/bodegas` y `locales/[id]`. Lógica
+  en `src/servidor/carta.js` y `carta-base.js`.
+- **`/carta`** lee la API y toma la estética de la carta impresa (`HojaCarta`, fuentes
+  parecidas de Google en `src/styles/fuentesCarta.js`, logo real). Se sacó el link
+  público a los PDF y `public/cartas/`.
+- **Panel:** `/admin/carta` (editar, mover, agregar, borrar; bodegas; cubierto) y
+  `/admin/carta/imprimir` (hoja oficio, dos columnas, marco en cada hoja).
+- Se borraron `src/data/cartas.json`, `vinos.json` y su test; `procesar-assets.py`
+  ya no genera los PDF de la carta.
+- Tests: `node --test` 86, pgTAP 129 en 8 archivos. Build: `/carta` sigue estática.
+
+---
+
 ## 2026-10-18 — La vuelta de Mercado Pago iba a la preview
 
 Rama `fix/url-produccion`, [PR #10](https://github.com/giandicla/LaPostaParrilla/pull/10) (`d7f7307`).
