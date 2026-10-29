@@ -48,8 +48,7 @@ base de pruebas): lo que se haga en una preview queda en los datos reales.
 - **Server Components por defecto.** `'use client'` va en `Navbar`,
   `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `SelloMercadoPago`,
   `app/carta`, y en las páginas que usan la sesión: `reservas`, `reservas/pago`,
-  `ingresar`, `mis-reservas`, `admin`, `admin/dia`, `admin/carta`,
-  `admin/carta/imprimir`. Todas las páginas
+  `ingresar`, `mis-reservas`, `admin`, `admin/dia`, `admin/carta`. Todas las páginas
   siguen prerenderizándose como estáticas; las únicas rutas dinámicas son las de
   `app/api/`.
 - Navegación con `next/link`. `Boton` tiene dos props de destino, a propósito:
@@ -112,8 +111,8 @@ python scripts/procesar-assets.py "../Branding y fotos"
 
 La carpeta `Branding y fotos/` (al lado del repo, no adentro) tiene el manual de
 marca, el `Logo.ai`, las cartas en PDF y las fotos originales. La carta del sitio ya
-no sale de esos PDF: desde la sesión 06 se edita en `/admin/carta`, y el PDF para
-imprimir lo arma `/admin/carta/imprimir`.
+no sale de esos PDF: desde la sesión 06 se edita en `/admin/carta`. El sitio no
+imprime ni descarga la carta (decisión del usuario).
 
 ## Registro del proceso — OBLIGATORIO
 

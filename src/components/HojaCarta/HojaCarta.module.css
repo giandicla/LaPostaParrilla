@@ -100,22 +100,6 @@
   gap: var(--sp-8);
 }
 
-/* Dos columnas: la vista de impresión (/admin/carta/imprimir), como la hoja oficio */
-.dosColumnas {
-  max-width: none;
-}
-
-.dosColumnas .cuerpo {
-  display: block;
-  column-count: 2;
-  column-gap: var(--sp-8);
-  column-rule: 1px solid var(--tinta);
-}
-
-.dosColumnas .cuerpo > * {
-  margin-bottom: var(--sp-6);
-}
-
 .pie {
   display: flex;
   justify-content: space-between;
@@ -150,34 +134,3 @@
   }
 }
 
-/* ---------- Impresión ----------
-   El marco se repite en cada hoja: el doble filete pasa a ser un borde doble
-   (el outline no se parte entre hojas) y box-decoration-break lo clona en
-   cada fragmento. */
-@media print {
-  .hoja {
-    max-width: none;
-    padding: 0;
-    background: none;
-  }
-
-  .marco {
-    padding: 0.35in 0.4in;
-    border: 5px double var(--tinta);
-    outline: none;
-    -webkit-box-decoration-break: clone;
-    box-decoration-break: clone;
-  }
-
-  .redondeado .marco {
-    border-width: 4px;
-  }
-
-  .logo {
-    width: 190px;
-  }
-
-  .pie {
-    break-inside: avoid;
-  }
-}

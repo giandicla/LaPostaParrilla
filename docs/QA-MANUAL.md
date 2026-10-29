@@ -116,11 +116,14 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] Cada plato con nombre, precio, y abajo la traducción en inglés/portugués en
       letra chica (y la descripción en castellano cuando la carta la tiene).
 - [ ] En las pizzas de La Posta II, dos columnas de precio: Chica y Grande.
-- [ ] En **las dos cartas**, "Vinos" con subsecciones por cepa y, dentro, por bodega
-      con su región, y al final "Copas y descorche". Es la misma carta de vinos en
-      los dos locales (secciones compartidas en la base).
-- [ ] Al pie de la hoja, el cubierto; debajo, la aclaración de temporada. **No** hay
-      link para descargar el PDF (lo baja solo el admin).
+- [ ] El selector tiene tres opciones: La Posta Parrilla · **Vinos** ("De los dos
+      locales") · La Posta II Restaurante. Las cartas de los locales terminan en
+      "Tragos"; Vinos tiene las cepas, cada una por bodega con su región, y al final
+      "Copas y descorche".
+- [ ] Un link viejo a los vinos de un local (`/carta?local=parrilla#parrilla-vinos-malbec`)
+      termina en Vinos, en Malbec.
+- [ ] Al pie de la hoja de cada local, el cubierto; debajo, la aclaración de
+      temporada. **No** hay forma de descargar ni imprimir la carta.
 - [ ] Un link con ancla (`/carta?local=restaurante#restaurante-pizzas-clasicas`)
       abre directo en esa sección, aunque la carta tarde en llegar.
 - [ ] Si la API no responde, aparece "No pudimos cargar la carta" y el botón de
@@ -143,27 +146,28 @@ locales bajo una marca" — es lo más importante de probar):**
 
 ## Carta en el panel (`/admin/carta`)
 
-> Sesión 06. Con el admin. Los cambios se ven al instante en el panel y en hasta un
-> minuto en `/carta` (caché de la API).
+> Editor v2 (sesión 06). Con el admin. Los cambios se ven al instante en el panel y
+> en hasta un minuto en `/carta` (caché de la API).
 
-- [ ] En `/admin`, "Editar la carta" lleva a `/admin/carta`.
-- [ ] Arriba: Parrilla, Restaurante y Vinos. En un local, el cubierto y sus secciones;
-      en Vinos, las cepas y "Copas y descorche", por bodega.
-- [ ] Cambiar un precio (vale escribir `6.000` o `$ 6.000`) y guardar: "Guardar" se
-      deshabilita y el precio nuevo aparece en `/carta`.
-- [ ] Una pizza con un solo precio: mensaje "Cargá un precio por tamaño." y el foco
-      en el primer precio.
-- [ ] "Agregar" al final de una sección, guardar, y verlo último en la carta. Subirlo,
-      bajarlo (el primero no sube, el último no baja) y borrarlo (pide confirmación).
-- [ ] En Vinos: agregar un vino a una bodega que ya está → aparece dentro de esa
-      bodega. Subir una bodega entera. Cambiar la región de una bodega.
+- [ ] En `/admin`, las pestañas **Reservas · Carta**; "Carta" lleva al editor. En
+      `/carta`, el admin ve "Editar esta carta".
+- [ ] Arriba: Parrilla · Vinos · Restaurante. En un local, el cubierto, la caja y su
+      carta; en Vinos, la caja pide "Tipo de vino", bodega y región.
+- [ ] La caja vacía agrega: nombre, precio (`6.000` o `$ 6.000`), categoría; el
+      producto aparece último en su categoría.
+- [ ] Buscar "rucula" (sin tilde) encuentra "RÚCULA"; elegirlo carga la caja.
+- [ ] Editar desde la fila: la caja sube con el producto, la fila queda resaltada;
+      cambiar el precio y guardar.
+- [ ] Pasar una pizza a Entradas: la caja pasa de dos precios a uno; queda última en
+      Entradas.
+- [ ] Arrastrar con el mouse por el ⠿: el producto toma el lugar de la fila donde se
+      suelta; la línea bordo marca dónde cae.
+- [ ] En el celular, arrastrar con el dedo por el ⠿: la página no se desplaza mientras.
+- [ ] Con el teclado: Tab hasta el ⠿, flechas arriba/abajo; el foco sigue en el ⠿.
+- [ ] En Vinos: arrastrar una bodega entera; cambiar la bodega de un vino (queda
+      último en la nueva, con su región).
+- [ ] Eliminar pide confirmación.
 - [ ] Con una cuenta que no es admin, `/admin/carta` dice que no tiene permisos.
-
-**Imprimir / Guardar PDF**
-- [ ] El botón de cada local abre `/admin/carta/imprimir` y la ventana de imprimir.
-- [ ] Hoja oficio (8,5 × 13 in), dos columnas, el marco del local en **todas** las
-      hojas, ningún plato partido entre columnas, "Vinos" a lo ancho y el cubierto al
-      final.
 
 ---
 
