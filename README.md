@@ -24,7 +24,7 @@ Abre en `http://localhost:3000`.
 | `npm run start` | Sirve el build local, para revisar antes de pushear |
 | `npm run db:test` | Tests pgTAP de la base (con `npx supabase start` corriendo) |
 | `npm run db:reset` | Base local desde cero: migraciones + datos de prueba |
-| `python scripts/procesar-assets.py "../Branding y fotos"` | Regenera logo, fotos y PDF de las cartas desde la carpeta de branding |
+| `python scripts/procesar-assets.py "../Branding y fotos"` | Regenera el logo y las fotos desde la carpeta de branding |
 
 ## Stack
 
@@ -49,11 +49,14 @@ la pone la RLS de la base. Detalle en `docs/BACKEND.md`.
 
 ## Estado
 
-En producción: sitio completo con las dos cartas, ingreso con Google, reservas
-reales, "Mis reservas" y panel de admin con tiempo real.
+En producción: sitio completo, ingreso con Google, reservas reales con seña por
+Mercado Pago (modo de prueba), "Mis reservas", panel de admin con tiempo real, y la
+carta en la base: `/carta` con la estética de la carta impresa (Parrilla · Vinos ·
+Restaurante, los vinos compartidos) y el editor del panel (`/admin/carta`), servida
+por una API propia (`/api/v1/carta`).
 
-Próximo: pagos con Mercado Pago (seña de la reserva, gift cards y pedido para
-llevar), API del catálogo y carta editable desde el admin. El mapa completo
+Próximo: gift cards y pedido para llevar (los otros dos cobros decididos), mails de
+reservas (falta la cuenta de Brevo) y el pase de accesibilidad. El mapa completo
 contra la rúbrica de corrección está en `docs/RUBRICA.md`.
 
 ## Cómo se trabaja

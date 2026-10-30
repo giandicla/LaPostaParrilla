@@ -4,6 +4,20 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-10-30 — La carta en producción, probada por el usuario
+
+- **PR #12** (carta editable, `698911f`) y **PR #13** (editor v2, vinos aparte, sin
+  PDF, `964a33d`) en `main`, con `supabase db push` de `20261029120000`,
+  `20261029120100` y `20261029130000` antes de cada merge. Producción verificada:
+  `/carta` con Parrilla · Vinos · Restaurante, `/api/v1/carta/vinos`,
+  `/admin/carta/imprimir` responde 404.
+- El usuario lo probó con la cuenta de admin y lo aprobó. RUBRICA: E4 y E5 ✅.
+- `README.md` y `docs/CONTEXTO.md` al día (estado, etapas, la carta ya no es el PDF).
+- `.claude/launch.json`: el servidor de desarrollo para el panel de vista previa de
+  Claude Code (`npm run dev`, puerto 3000).
+
+---
+
 ## 2026-10-29 — Editor de la carta v2, vinos aparte, sin PDF
 
 Rama `feat/accesos-carta` (PR #13). Spec `docs/superpowers/specs/2026-10-29-editor-carta-v2-design.md`,
