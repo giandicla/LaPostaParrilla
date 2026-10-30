@@ -21,8 +21,11 @@ principales, arena `#CBC1B1` secundario, oliva `#757036` destacado; Baskerville
 para títulos y Gill Sans Nova para textos. (En la sesión 1 se había usado `#5F0004`,
 medido de un logo JPEG chico; el manual lo corrigió.)
 
-La carta del sitio es el PDF de la familia, mostrado hoja por hoja tal cual se
-imprime. Cuando cambien precios hay que regenerar las hojas (ver `CLAUDE.md`).
+La carta vive en la base desde la sesión 06 (2026-10-29): el admin la edita en
+`/admin/carta` y el sitio la muestra con la estética de las cartas impresas. Los
+vinos son una carta aparte, compartida por los dos locales. El sitio no imprime ni
+descarga la carta (decisión del usuario). Antes (sesión 02) la carta era el PDF de la
+familia, y después una transcripción a JSON.
 
 ## La consigna
 
@@ -102,5 +105,5 @@ que no guardaba nada.)*
 |---|---|---|
 | 1 | Boceto visual: 4 páginas maquetadas, dos locales, deploy | Hecha |
 | 2 | Backend con Supabase: ingreso con Google, reservas reales, panel de admin, mails (partes 1 y 2 del spec del backend) | **En producción** desde el 2026-10-06. Falta Brevo para que salgan los mails de reservas |
-| 2.3 | Admin de la carta y de los horarios (parte 3) | No empezada |
-| 3 | Pagos con Mercado Pago: seña de la reserva, gift cards, pedido para llevar (decisión del usuario, 2026-10-08) | No empezada; la clase fue el 2026-10-08 |
+| 2.3 | Admin de la carta y de los horarios (parte 3) | **Carta en producción** desde el 2026-10-29 (API propia, editor con arrastre, vinos compartidos). Faltan las franjas y los horarios |
+| 3 | Pagos con Mercado Pago: seña de la reserva, gift cards, pedido para llevar (decisión del usuario, 2026-10-08) | **Seña en producción** desde el 2026-10-18 (modo de prueba). Faltan gift cards y pedido para llevar |
