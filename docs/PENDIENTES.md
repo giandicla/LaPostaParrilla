@@ -68,9 +68,9 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
       (`src/data/menu.js`); `getDestacados()` ahora filtra por ese flag en vez de
       tomar una posición fija, así que ya no puede devolver menos de lo esperado
       en silencio ni platos que no representen la cocina del local.
-- [ ] `LocalCard` lee `local.horarios[0]` sin verificar que el array tenga
+- [x] `LocalCard` lee `local.horarios[0]` sin verificar que el array tenga
       elementos. Un tercer local sin horarios cargados rompería el render.
-- [ ] El proyecto usaba tres breakpoints distintos para la misma idea: 600px en la
+- [x] El proyecto usaba tres breakpoints distintos para la misma idea: 600px en la
       grilla de platos, 768px en navbar y footer, 900px en las grillas de locales y
       bienvenida. La tarea 14 lo resolvió a medias: la grilla de platos pasó a
       768px, igual que navbar y footer (900px queda aparte, para las grillas de
@@ -84,13 +84,13 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
 - [x] `--madera` sobre `--crema` daba un contraste de ~4.88:1 en los precios. Pasa
       AA (mínimo 4.5:1) pero con poco margen. Resuelto en la tarea 14: se oscureció
       el token a `#7A5134` (~6.02:1 sobre `--crema`).
-- [ ] El input de fecha de `/reservas` no tiene `min`, así que se puede pedir una
+- [x] El input de fecha de `/reservas` no tiene `min`, así que se puede pedir una
       fecha pasada. Se difirió a propósito: calcular la fecha de hoy durante el
       render de una página prerenderizada arriesga un desajuste de hidratación, y el
       formulario todavía no envía nada. Va junto con la validación real del CRUD.
 - [x] El panel mobile del navbar ahora cierra con Escape y devuelve el foco al botón
       hamburguesa al cerrarse. Resuelto en la tarea 14.
-- [ ] Al abrirse, el panel mobile todavía no mueve el foco hacia adentro. Quien lo
+- [x] Al abrirse, el panel mobile todavía no mueve el foco hacia adentro. Quien lo
       abre con teclado queda con el foco en el botón, detrás del panel. Se dejó
       pendiente a propósito en la etapa 1: mover el foco bien exige también atraparlo
       dentro del panel mientras está abierto, y eso es más trabajo del que justifica
@@ -100,6 +100,22 @@ introducida por esta tarea de documentación; quedan acá para que no se pierdan
       está documentado en el `.jsx`.
 - [x] `aSlug` en `app/carta/page.jsx` podía devolver cadena vacía. Ya no aplica:
       la carta escrita a mano (y `aSlug` con ella) se eliminó en la sesión 02.
+
+**Resueltos en el pase de accesibilidad (sesión 07, 2026-11-01, rama `fix/accesibilidad`):**
+`LocalCard` omite el horario si el local no tiene; los breakpoints quedan en una escala
+fija documentada en `src/styles/tokens.css` (420 · 600 · 768 · 900 · 1100; los 559/560
+pasaron a 600); la fecha de `/reservas` ya tenía `min` desde el CRUD; el panel mobile
+mueve el foco al primer link, lo atrapa (Tab y Shift+Tab) y Escape lo devuelve al
+botón; test del ranking de `estadoSena` agregado; Next 16.4.3 y `npm audit fix`: sin
+vulnerabilidades altas ni críticas (quedan 16 moderadas de `minimatch`, solo en la
+cadena de ESLint, de desarrollo). axe encontró además un contraste de 3.8:1 en
+"Lo que nos mueve" (inicio), corregido.
+
+- [ ] **Rendimiento en celular** (Lighthouse, `next start` local, 2026-11-01): inicio 74,
+      carta 48, reservas 63. Lo que más pesa: el LCP de las fotos del hero (7 a 11 s
+      con red lenta simulada), imágenes sin tamaños responsivos (hasta 900 KiB de
+      ahorro en el inicio) y saltos de layout (CLS 1 en `/carta` mientras llega la
+      carta de la API, 0.26 en `/reservas`).
 
 ## Diseño: que no parezca hecho por IA
 
@@ -173,14 +189,14 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       pago quedó en `reintegro_pendiente`: `7410e296` (cancelada por el cliente) y
       `c55bdcf1` (cancelada por el admin). Hasta resolverlo, el reintegro automático no está probado
       contra Mercado Pago.
-- [ ] **Falta el test del ranking de `estadoSena`** (que `[reintegrado, aprobado]` dé
+- [x] **Falta el test del ranking de `estadoSena`** (que `[reintegrado, aprobado]` dé
       `'aprobado'`): el informe del arreglo decía que estaba y no estaba
       (`hallazgos.md` 1.20). Además, `src/servicios/reservas.test.js` importa
       `estadoDelPago` sin usarlo.
 - [x] **Volver a prender la Vercel Authentication en las previews** (se apagó para
       que el webhook de Mercado Pago llegara). La volvió a prender el usuario el
       2026-10-18, después de pasar el webhook a producción.
-- [ ] **Next.js / `npm audit`:** 8 vulnerabilidades altas, anteriores a la seña
+- [x] **Next.js / `npm audit`:** 8 vulnerabilidades altas, anteriores a la seña
       (`next`, la cadena de `eslint-config-next`, `sharp`, `source-map-js`). Subir
       Next.
 - [x] Limpiar las reservas y pagos de prueba que quedaron en la base de producción.

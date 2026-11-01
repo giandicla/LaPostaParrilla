@@ -1,7 +1,7 @@
 // node --test "src/**/*.test.js"
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { estadoDelPago, estadoSena, puedePagar, sePuedeCancelar, turnoDe } from './reservas.js';
+import { estadoSena, puedePagar, sePuedeCancelar, turnoDe } from './reservas.js';
 
 // Fecha y hora de Argentina (UTC-3) dentro de `minutos`, como las guarda la base
 function dentroDe(minutos) {
@@ -44,4 +44,9 @@ test('estado de la seña: el pago cobrado, si hay', () => {
   assert.equal(estadoSena({ pagos: [{ estado: 'reintegrado' }] }), 'reintegrado');
   assert.equal(estadoSena({ pagos: [{ estado: 'iniciado' }] }), null);
   assert.equal(estadoSena({}), null);
+});
+
+test('estado de la seña: con varios pagos cobrados gana el aprobado', () => {
+  assert.equal(estadoSena({ pagos: [{ estado: 'reintegrado' }, { estado: 'aprobado' }] }), 'aprobado');
+  assert.equal(estadoSena({ pagos: [{ estado: 'reintegro_pendiente' }, { estado: 'reintegrado' }] }), 'reintegro_pendiente');
 });

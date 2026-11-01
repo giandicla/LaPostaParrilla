@@ -371,3 +371,19 @@ No lo arregles adivinando. Anotá:
 5. Reportá lo que encontraste (con esos datos) en vez de tocar el código vos
    mismo — así queda un registro de qué se probó y qué se encontró, en
    `docs/BITACORA.md` o donde se esté llevando el seguimiento del proyecto.
+
+## Mediciones automáticas (2026-11-01, sesión 07)
+
+Lighthouse 12.6.1 sobre el build de producción (`next start`, local), Chrome headless.
+axe-core 4.10.2 inyectado en el navegador, viewport 375 px.
+
+| Página | Rendimiento (cel / esc) | Accesibilidad | Buenas prácticas | SEO | axe |
+|---|---|---|---|---|---|
+| `/` | 74 / 87 | 100 | 100 | 100 | 0 (había 1 de contraste, corregida) |
+| `/carta` | 48 / 70 | 100 | 100 | 100 | 0 |
+| `/nosotros` | 74 / 94 | 100 | 100 | 100 | 0 |
+| `/reservas` | 63 / 91 | 100 | 100 | 100 | 0 |
+| `/ingresar` | — | — | — | — | 0 |
+
+Las páginas con sesión (`/admin`, `/mis-reservas`) no se midieron: piden login con Google.
+En local no hay compresión de texto; en Vercel sí, así que el rendimiento real es algo mejor.

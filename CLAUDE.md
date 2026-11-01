@@ -89,8 +89,8 @@ variables y despliegue en `docs/BACKEND.md`; diseño en
   vinos son secciones compartidas por los dos locales) y se edita en `/admin/carta`.
   Lo pidió el usuario.
 - Un componente = una carpeta: `Nombre/Nombre.jsx` + `Nombre.module.css`.
-- CSS **mobile first**. Breakpoints principales: 768px y 1100px (algunas grillas
-  puntuales usan otros; ver el hallazgo sobre breakpoints en `docs/PENDIENTES.md`).
+- CSS **mobile first**. Breakpoints: solo los de la escala documentada en
+  `src/styles/tokens.css` (420 · 600 · 768 · 900 · 1100); no agregar otros.
 - Datos sin confirmar se marcan con `// PENDIENTE`. Buscarlos:
   `grep -rn "PENDIENTE" src/`
 - Un dato que falta **se omite**, no se inventa: si un local no tiene teléfono

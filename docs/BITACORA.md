@@ -4,6 +4,24 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-01 — Pase de accesibilidad (E2) y dependencias
+
+Rama `fix/accesibilidad`. Presentación fijada para el **jueves 12 de noviembre**;
+el usuario saca el pedido para llevar, deja las gift cards en evaluación y decide
+que la seña no se reembolsa (PR aparte).
+
+- Menú mobile: el foco entra al primer link, queda atrapado (Tab / Shift+Tab) y
+  Escape lo devuelve al botón; `aria-controls` en el botón.
+- Una sola escala de breakpoints, documentada en `src/styles/tokens.css`.
+- axe: contraste 3.8:1 en "Lo que nos mueve" (crema suave sobre oliva) → crema plena.
+- `LocalCard` omite el horario si un local no tiene.
+- Next 16.4.3 + `npm audit fix`: sin vulnerabilidades altas ni críticas.
+- Test del ranking de `estadoSena`.
+- Lighthouse y axe registrados en `docs/QA-MANUAL.md`: Accesibilidad 100 en todas
+  las páginas públicas. RUBRICA: E2 e Interfaz ✅.
+
+---
+
 ## 2026-10-30 — La carta en producción, probada por el usuario
 
 - **PR #12** (carta editable, `698911f`) y **PR #13** (editor v2, vinos aparte, sin

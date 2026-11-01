@@ -1,3 +1,12 @@
+/* ---------- Breakpoints ----------
+   Las custom properties no sirven dentro de @media, así que la escala vive
+   acá como referencia. Mobile first; no se usan otros valores.
+     420px   celulares angostos: solo las columnas de precios de la carta
+     600px   piezas chicas: filas de formularios, selector de local, platos
+     768px   layout general: navbar en tablet, footer, grilla de platos
+     900px   grillas de locales y bienvenida (dos columnas con texto largo)
+     1100px  navbar horizontal (con los links de cuenta no entra antes) */
+
 :root {
   /* ---------- Marca ----------
      Paleta del manual de marca (Branding.LaPosta.pdf, hoja "Color"):
