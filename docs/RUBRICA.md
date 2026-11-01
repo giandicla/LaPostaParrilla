@@ -9,7 +9,7 @@ pendiente vive en `docs/PENDIENTES.md`; acá va el mapa contra la rúbrica.
 
 Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis) · ❌ falta
 
-Última revisión: **2026-10-30** (cierre de la sesión 06).
+Última revisión: **2026-11-01** (sesión 07, pase de accesibilidad).
 
 ---
 
@@ -34,7 +34,7 @@ Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis)
 | # | Entregable | Peso | Estado | Qué hay | Qué falta para Excelente |
 |---|---|---|---|---|---|
 | E1 | Repo + pipeline + preview | 10% | ✅ | Repo en GitHub, deploy automático a Vercel desde `main`. **CI** en `.github/workflows/ci.yml`: lint + tests + build, tests pgTAP de la base, tests Deno de la Edge Function. Plantilla de PR con checklist. Todo cambio por rama + PR desde la sesión 03 (PRs #1 a #7). **Preview de Vercel en cada PR, conectada a la base** desde la sesión 04 | Mantenerlo. Nota: las previews usan la base de producción |
-| E2 | Landing + vistas responsivas | 15% | 🟡 (Bueno) | 8 páginas maquetadas, semánticas, mobile first, marca real, foco visible, `prefers-reduced-motion` | Hallazgos de accesibilidad abiertos en `PENDIENTES.md`: el panel mobile no mueve ni atrapa el foco; breakpoints sueltos (600/421px). Correr Lighthouse / axe y dejar los números registrados |
+| E2 | Landing + vistas responsivas | 15% | ✅ (sesión 07) | 8 páginas maquetadas, semánticas, mobile first, marca real, foco visible, `prefers-reduced-motion`. **Pase de accesibilidad (2026-11-01):** foco del menú mobile movido y atrapado, escala de breakpoints única, contraste corregido. **Lighthouse** (celular y escritorio): Accesibilidad, Buenas prácticas y SEO **100** en inicio, carta, nosotros y reservas; **axe**: 0 violaciones en las 5 páginas públicas. Números en `docs/QA-MANUAL.md` | Rendimiento en celular (48 a 74): fotos del hero y saltos de layout, en `PENDIENTES.md` |
 | E3 | Formularios dinámicos con fetch + validación | 15% | ✅ (a confirmar en la preview, ya conectada a la base) | `/reservas`: franjas y días bloqueados pedidos a la base, horarios filtrados en vivo, errores de la base traducidos, pantalla de éxito. **Validación propia** (`src/validacion/reservas.js`, con tests en `node --test`): mensaje por campo al salir de él, revalida mientras se corrige, resumen y foco al primer error al enviar, `aria-invalid` + `aria-describedby`, contador de caracteres. Admin: mover, bloquear días y **nueva reserva del local** validados igual. Más de 6 personas: "Reservar por WhatsApp" con el mensaje armado. **La base repite las reglas** (trigger `validar_contacto`, tests pgTAP 03 y 04) | Probarlo a mano con sesión en la preview |
 | E4 | Catálogo navegable + API básica | 20% | ✅ (en producción desde el 2026-10-29, probado por el usuario) | Criterio Excelente de la grilla, textual: **"Catálogo + API interna, lógica funcional y checklist en PRs"**. La carta vive en la base y se sirve por una **API propia**: `GET /api/v1/carta?local=` (pública, cacheada) y escrituras del admin (`POST/PATCH/DELETE` en `items`, bodegas y cubierto) con Zod, códigos HTTP y errores en castellano. **Lógica:** armado de la carta (secciones propias + compartidas, vinos por bodega, orden), validación en front, API y base, permisos de admin. `/carta` lee la API con la estética de la carta impresa; índice por sección y toggle de local. PRs con plantilla y checklist | Probarlo en la preview. **Nota (sesión 06):** la versión anterior de esta fila decía que faltaban "búsqueda, filtros, agotado". Esa lista la había escrito la IA, no la cátedra; el usuario decidió no hacerlos (`hallazgos.md` 1.25) |
 | E5 | CRUD en Supabase + admin | 20% | ✅ (en producción desde el 2026-10-29, probado por el usuario) | Reservas: crear (cliente y admin, con reservas del local sin cuenta), listar, cancelar, confirmar/rechazar/mover; notas; días bloqueados; tiempo real. **Carta (sesión 06):** tablas `carta_secciones` y `carta_items` con RLS, trigger de reglas y funciones de orden; `/admin/carta` (editor v2): una caja para agregar o editar, con buscador y categoría desplegable; la carta abajo con arrastre (mouse, dedo y teclado), Editar y Eliminar; los vinos como carta aparte, compartida. pgTAP: 9 archivos, 150 asserts | Editar franjas y horarios desde el panel (etapa 2.3) |
@@ -46,7 +46,7 @@ Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis)
 |---|---|---|---|---|
 | Funcionalidad | 40% | 🟡 | Reservas reales en producción, login con Google, admin con tiempo real, **seña con Mercado Pago** (2026-10-18), **carta editable desde el panel** con API propia y vinos compartidos (2026-10-29) | Reintegro automático (bloqueado en modo de prueba), gift cards y pedido para llevar. Mails de reservas: falta `BREVO_API_KEY`, hoy la UI promete "te avisamos por mail" y no sale nada |
 | Código / Estructura | 20% | ✅ / 🟡 | Componentes por carpeta, capa `src/servicios/`, datos separados, migraciones, lint limpio. Tests en los tres niveles: funciones puras del front y del servidor (`node --test`, 86), base (pgTAP, 129 en 8 archivos) y Edge Function (Deno, 13). El código de servidor de pagos y de la carta vive aparte, en `src/servidor/`, y recibe la base (y Mercado Pago) por parámetro para testearse sin red | Sostenerlo en lo nuevo (gift cards, pedido); no hay tests de componentes React ni de las rutas; falta un test del ranking `estadoSena` (ver `PENDIENTES.md`) |
-| Interfaz / Accesibilidad | 15% | 🟡 | Marca real, contraste calculado, teclado en navbar | Los hallazgos de E2 y E3 |
+| Interfaz / Accesibilidad | 15% | ✅ | Marca real, contraste calculado y verificado con axe, teclado y foco atrapado en el menú, Lighthouse Accesibilidad 100 en las páginas públicas | Rendimiento en celular |
 | Despliegue | 15% | ✅ | https://lapostaparrilla.vercel.app, estable, deploy automático; previews por PR conectadas a la base; migraciones aplicadas con `supabase db push` | Mantener |
 | Documentación | 10% | ✅ | `CLAUDE.md`, `README.md` y `docs/` al día, registro del proceso con IA (sesión 05 con los hallazgos de Mercado Pago), specs por feature, pagos y variables de entorno documentados en `docs/BACKEND.md`, checklist de QA de la seña | Mantenerlo al sumar gift cards y pedido |
 
@@ -76,5 +76,5 @@ Tomadas por el usuario el 2026-10-08 (sesión 03):
 5. E6 — Mercado Pago: checkout + webhook + pruebas, en este orden: ~~seña de la
    reserva~~ (sesión 05, 2026-10-18), gift cards, pedido para llevar.
 6. ~~E5 — carta editable desde el admin~~ (sesión 06; editor v2 el mismo día, sin PDF).
-7. E2 — pase de accesibilidad (foco del menú, Lighthouse/axe) y QA manual.
+7. ~~E2 — pase de accesibilidad (foco del menú, Lighthouse/axe)~~ (sesión 07); QA manual.
 8. Demo — guion de la demo y preparación de la defensa técnica.

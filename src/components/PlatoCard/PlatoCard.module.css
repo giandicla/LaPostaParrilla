@@ -70,7 +70,7 @@
 }
 
 /* En mobile la grilla es de dos columnas angostas: la descripción no entra */
-@media (max-width: 559px) {
+@media (max-width: 599px) {
   .descripcion {
     display: none;
   }

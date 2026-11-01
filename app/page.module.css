@@ -74,7 +74,8 @@
 }
 
 .valor p {
-  color: var(--texto-claro-suave);
+  /* Crema plena, no la suave: sobre el oliva la suave da 3.8:1 (axe) */
+  color: var(--crema);
 }
 
 @media (min-width: 768px) {

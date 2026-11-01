@@ -20,6 +20,7 @@ export default function Navbar() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const pathname = usePathname();
   const botonHamburguesaRef = useRef(null);
+  const panelRef = useRef(null);
   const { sesion, esAdmin } = useSesion();
 
   // La navbar arranca translúcida sobre el hero y se vuelve sólida al bajar
@@ -46,15 +47,39 @@ export default function Navbar() {
     };
   }, [menuAbierto]);
 
-  // Escape cierra el panel mobile y devuelve el foco al botón que lo abrió.
+  // Con el panel mobile abierto el foco entra al primer link y queda atrapado
+  // entre los links y el botón de cerrar: lo de atrás está tapado.
+  // Escape lo cierra y devuelve el foco al botón que lo abrió.
   // El listener solo existe mientras el panel está abierto.
   useEffect(() => {
     if (!menuAbierto) return undefined;
+
+    const enfocables = () => [
+      ...panelRef.current.querySelectorAll('a, button'),
+      botonHamburguesaRef.current,
+    ];
+    enfocables()[0].focus();
 
     const alPresionarTecla = (evento) => {
       if (evento.key === 'Escape') {
         setMenuAbierto(false);
         botonHamburguesaRef.current?.focus();
+        return;
+      }
+      if (evento.key !== 'Tab') return;
+
+      const lista = enfocables();
+      const primero = lista[0];
+      const ultimo = lista[lista.length - 1];
+      if (evento.shiftKey && document.activeElement === primero) {
+        evento.preventDefault();
+        ultimo.focus();
+      } else if (!evento.shiftKey && document.activeElement === ultimo) {
+        evento.preventDefault();
+        primero.focus();
+      } else if (!lista.includes(document.activeElement)) {
+        evento.preventDefault();
+        primero.focus();
       }
     };
 
@@ -76,7 +101,11 @@ export default function Navbar() {
           <img src={MARCA.logo} alt={MARCA.nombre} className={estilos.logo} />
         </Link>
 
-        <ul className={`${estilos.enlaces} ${menuAbierto ? estilos.enlacesAbiertos : ''}`}>
+        <ul
+          id="menu-principal"
+          ref={panelRef}
+          className={`${estilos.enlaces} ${menuAbierto ? estilos.enlacesAbiertos : ''}`}
+        >
           {ENLACES.map((enlace) => (
             <li key={enlace.a}>
               <Link
@@ -133,6 +162,7 @@ export default function Navbar() {
           className={estilos.hamburguesa}
           onClick={() => setMenuAbierto((abierto) => !abierto)}
           aria-expanded={menuAbierto}
+          aria-controls="menu-principal"
           aria-label={menuAbierto ? 'Cerrar menú' : 'Abrir menú'}
         >
           <span className={`${estilos.barra} ${menuAbierto ? estilos.barraX1 : ''}`} />

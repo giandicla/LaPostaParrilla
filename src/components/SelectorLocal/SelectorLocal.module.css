@@ -43,7 +43,7 @@
 
 /* En el celular los nombres completos ("La Posta II Restaurante") no entran
    en una fila: dos columnas parejas, con el texto en dos líneas si hace falta. */
-@media (max-width: 559px) {
+@media (max-width: 599px) {
   .selector {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
@@ -58,7 +58,7 @@
   }
 }
 
-@media (min-width: 560px) {
+@media (min-width: 600px) {
   .opcion {
     padding: var(--sp-3) var(--sp-6);
     font-size: var(--fs-body);

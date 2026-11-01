@@ -2,8 +2,9 @@ import Boton from '../Boton/Boton.jsx';
 import estilos from './LocalCard.module.css';
 
 export default function LocalCard({ local }) {
-  // Resumen de horario: solo la primera franja, para no llenar la card
-  const primerHorario = local.horarios[0];
+  // Resumen de horario: solo la primera franja, para no llenar la card.
+  // Un local sin horarios cargados no muestra el dato (no se inventa).
+  const primerHorario = local.horarios?.[0];
 
   return (
     <article className={estilos.card}>
@@ -27,10 +28,12 @@ export default function LocalCard({ local }) {
             <dt>Dónde</dt>
             <dd>{local.direccion}</dd>
           </div>
-          <div className={estilos.dato}>
-            <dt>{primerHorario.dia}</dt>
-            <dd>{primerHorario.franja}</dd>
-          </div>
+          {primerHorario && (
+            <div className={estilos.dato}>
+              <dt>{primerHorario.dia}</dt>
+              <dd>{primerHorario.franja}</dd>
+            </div>
+          )}
         </dl>
 
         <div className={estilos.acciones}>
