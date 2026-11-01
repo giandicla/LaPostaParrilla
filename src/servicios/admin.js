@@ -61,15 +61,20 @@ export const bloquearDia = async ({ fecha, idLocal, turno, motivo }) =>
       .insert({ fecha, local_id: idLocal || null, turno: turno || null, motivo: motivo?.trim() || null })
   );
 
-// Señas de reservas canceladas que todavía no se devolvieron (el reembolso falló)
-export const listarReintegrosPendientes = async () =>
+// Señas que el local tiene que devolver a mano (canceló el local o el pago
+// llegó tarde): la app no reembolsa por Mercado Pago
+export const listarSenasADevolver = async () =>
   resultado(
     await supabase
       .from('pagos')
-      .select('id, monto, reserva_id, reservas(nombre, fecha, hora, local_id)')
+      .select('id, monto, mp_payment_id, reserva_id, reservas(nombre, fecha, hora, local_id)')
       .eq('estado', 'reintegro_pendiente')
       .order('actualizado_en')
   );
+
+// Después de devolverla desde la cuenta de Mercado Pago
+export const marcarSenaDevuelta = async (idPago) =>
+  resultado(await supabase.rpc('marcar_sena_devuelta', { p_pago_id: idPago }));
 
 export const desbloquearDia = async (id) =>
   resultado(await supabase.from('dias_bloqueados').delete().eq('id', id));

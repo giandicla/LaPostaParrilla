@@ -116,8 +116,9 @@ set local request.jwt.claims to '{"sub":"11111111-1111-1111-1111-111111111111","
 select lives_ok($$ select public.cancelar_reserva('cccccccc-cccc-cccc-cccc-cccccccccccc') $$,
   'el cliente cancela su reserva pagada con tiempo');
 reset role;
+-- Desde 20261101120000 la seña no se devuelve si cancela el cliente
 select is((select estado from public.pagos where id = 'c0c0c0c0-c0c0-c0c0-c0c0-c0c0c0c0c0c0'),
-  'reintegro_pendiente', 'al cancelar, la seña aprobada queda para reintegrar');
+  'aprobado', 'si cancela el cliente, la seña queda cobrada');
 
 -- ---------- Vencimiento ----------
 -- creada_en la fija la base al insertar: se retrocede con un update

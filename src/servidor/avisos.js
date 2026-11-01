@@ -1,7 +1,7 @@
 // Aviso de pago de Mercado Pago, con la firma ya validada. El cuerpo del
 // aviso no se usa: el estado real sale de GET /v1/payments/:id (clase 11).
-
-import { reintegrarEnMp, reintegrarPago } from './reintegros.js';
+// La app no reembolsa por Mercado Pago (no se puede en modo de prueba): un pago
+// tardío queda "a devolver" en el panel y el local lo devuelve a mano.
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
@@ -27,19 +27,10 @@ export async function procesarAvisoDePago(idPagoMp, { base, mp }) {
 
   const estado = await base.acreditarPago(idPago, String(pagoMp.id), pagoMp.status);
 
-  // Otro cobro aprobado sobre la misma preferencia: el guardado no es este,
-  // así que se devuelve este por su id y la fila no se toca
+  // Otro cobro aprobado sobre la misma preferencia: no tiene fila propia, así
+  // que solo queda en el log, con los dos ids para devolverlo a mano
   if (estado === 'duplicado') {
-    console.warn('Cobro duplicado de la seña, se reintegra', idPago, pagoMp.id);
-    await reintegrarEnMp(pagoMp.id, { mp });
-    return 'duplicado_reintegrado';
+    console.warn('Cobro duplicado de la seña: devolver a mano', idPago, pagoMp.id);
   }
-
-  if (estado !== 'reintegro_pendiente') return estado;
-
-  // Solo el pago aprobado es el que dejó la seña en reintegro_pendiente
-  if (pagoMp.status !== 'approved') return estado;
-
-  await reintegrarPago({ id: idPago, mp_payment_id: String(pagoMp.id) }, { base, mp });
-  return 'reintegrado';
+  return estado;
 }

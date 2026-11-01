@@ -24,12 +24,10 @@ export function crearBase(cliente = clienteSecreto()) {
       dato(await cliente.from('pagos').select('id').eq('id', id).maybeSingle()),
     acreditarPago: async (idPago, idPagoMp, estadoMp) =>
       dato(await cliente.rpc('acreditar_pago', { p_pago_id: idPago, p_mp_payment_id: idPagoMp, p_estado_mp: estadoMp })),
-    // Puede haber más de uno (p. ej. un cobro doble): se reintegran todos
-    pagosAReintegrar: async (reservaId) =>
-      dato(await cliente.from('pagos').select('id, mp_payment_id')
-        .eq('reserva_id', reservaId).eq('estado', 'reintegro_pendiente').order('creado_en')),
-    marcarReintegrado: async (idPago) =>
-      dato(await cliente.from('pagos').update({ estado: 'reintegrado', actualizado_en: ahora() })
-        .eq('id', idPago).eq('estado', 'reintegro_pendiente')),
+    // El estado de la seña cobrada de la reserva (aprobado o a devolver), si hay
+    estadoDeLaSena: async (reservaId) =>
+      dato(await cliente.from('pagos').select('estado')
+        .eq('reserva_id', reservaId).in('estado', ['aprobado', 'reintegro_pendiente'])
+        .order('actualizado_en', { ascending: false }).limit(1))[0]?.estado ?? null,
   };
 }

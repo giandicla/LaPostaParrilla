@@ -10,12 +10,10 @@ function falsos({ pagoMp, estadoFinal = 'aprobado', existe = true, falla = null 
     llamadas,
     mp: {
       obtenerPago: async () => { if (falla) throw falla; return pagoMp; },
-      reintegrar: async (...args) => llamadas.push(['reintegrar', ...args]),
     },
     base: {
       leerPago: async () => (existe ? { id: ID_PAGO } : null),
       acreditarPago: async (...args) => { llamadas.push(['acreditar', ...args]); return estadoFinal; },
-      marcarReintegrado: async (id) => llamadas.push(['marcarReintegrado', id]),
     },
   };
 }
@@ -26,10 +24,10 @@ test('acredita con el estado real que devuelve Mercado Pago', async () => {
   assert.deepEqual(deps.llamadas, [['acreditar', ID_PAGO, '555', 'approved']]);
 });
 
-test('un pago tardío queda reintegrado en el momento', async () => {
+test('un pago tardío queda a devolver, sin pedirle nada a Mercado Pago', async () => {
   const deps = falsos({ pagoMp: { id: 555, status: 'approved', external_reference: ID_PAGO }, estadoFinal: 'reintegro_pendiente' });
-  assert.equal(await procesarAvisoDePago('555', deps), 'reintegrado');
-  assert.deepEqual(deps.llamadas.slice(1), [['reintegrar', '555', 'reintegro-555'], ['marcarReintegrado', ID_PAGO]]);
+  assert.equal(await procesarAvisoDePago('555', deps), 'reintegro_pendiente');
+  assert.deepEqual(deps.llamadas, [['acreditar', ID_PAGO, '555', 'approved']]);
 });
 
 test('un pago que no salió de este sitio se ignora (sin 500, para que no reintente)', async () => {
@@ -42,20 +40,12 @@ test('un pago que no salió de este sitio se ignora (sin 500, para que no reinte
   assert.equal(await procesarAvisoDePago('1', desconocido), 'ignorado');
 });
 
-test('un segundo pago aprobado sobre la misma preferencia se reintegra por su propio id', async (t) => {
+test('un segundo pago aprobado sobre la misma preferencia queda en el log para devolverlo a mano', async (t) => {
   const aviso = t.mock.method(console, 'warn', () => {});
   const deps = falsos({ pagoMp: { id: 777, status: 'approved', external_reference: ID_PAGO }, estadoFinal: 'duplicado' });
-  assert.equal(await procesarAvisoDePago('777', deps), 'duplicado_reintegrado');
-  assert.deepEqual(deps.llamadas.slice(1), [['reintegrar', '777', 'reintegro-777']]);
+  assert.equal(await procesarAvisoDePago('777', deps), 'duplicado');
+  assert.deepEqual(deps.llamadas, [['acreditar', ID_PAGO, '777', 'approved']]);
   assert.equal(aviso.mock.callCount(), 1);
-});
-
-test('un aviso no aprobado sobre un pago en reintegro_pendiente no reintegra nada', async () => {
-  for (const status of ['pending', 'in_process', 'rejected', 'cancelled']) {
-    const deps = falsos({ pagoMp: { id: 888, status, external_reference: ID_PAGO }, estadoFinal: 'reintegro_pendiente' });
-    assert.equal(await procesarAvisoDePago('888', deps), 'reintegro_pendiente');
-    assert.deepEqual(deps.llamadas, [['acreditar', ID_PAGO, '888', status]]);
-  }
 });
 
 test('un 404 de Mercado Pago al leer el pago se ignora (sin 500)', async () => {

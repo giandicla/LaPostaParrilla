@@ -181,7 +181,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 
 **Pendientes que dejó la seña**
 
-- [ ] **Reintegro en modo de prueba.** Mercado Pago responde 401 "Unauthorized use of
+- [x] ~~**Reintegro en modo de prueba.**~~ Resuelto por decisión del usuario (2026-11-01): la seña no se reembolsa por Mercado Pago (ver `docs/BACKEND.md`). Lo que sigue es el texto original. Mercado Pago responde 401 "Unauthorized use of
       live credentials" al reembolsar con las credenciales del vendedor de prueba
       (`hallazgos.md` 1.18). Salidas: una aplicación con credenciales de prueba propias
       (`APP_USR` en "Credenciales de prueba"; la real solo tiene `TEST-`), o devolver
@@ -215,10 +215,10 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       Checkout Pro lo fija el servidor); sumar un chequeo en `avisos.js`.
 - [ ] `pagos.reserva_id` es `on delete cascade`: borrar un usuario borra sus registros
       de plata; evaluar `restrict`.
-- [ ] Los reintegros de cobros duplicados que fallan solo se loguean (`console.warn`), no
+- [ ] Los cobros duplicados de la misma preferencia solo quedan en el log (no aparecen en "Señas a devolver"). Antes: los reintegros de cobros duplicados que fallan solo se loguean (`console.warn`), no
       aparecen en el panel; un pago que quedó en `reintegro_pendiente` tras un
       reintegro exitoso con marcado fallido no se cura solo (sí con "Reintentar").
-- [ ] Mail de cancelación: la línea de reintegro sale para cualquier cancelación web del
+- [ ] Mail de cancelación del local: la línea de devolución de la seña sale para cualquier cancelación web del
       admin, también de filas viejas `pendiente` que nunca pagaron; condicionarla a
       `confirmada`.
 - [ ] `/reservas/pago` deja de consultar cuando la reserva pasa a `vencida`: un pago
@@ -229,5 +229,5 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] El texto "1 hora" de la ayuda de `/reservas` está escrito a mano; el control de
       puedePagar usa el reloj del navegador (el servidor igual lo valida).
 - [ ] `esUrlPublica` no reconoce `[::1]` ni IPs de la red local.
-- [ ] El plan (`docs/superpowers/plans/…`) todavía nombra `pagoAReintegrar`; el código
+- [x] (Ya no aplica: el reintegro automático se sacó.) El plan (`docs/superpowers/plans/…`) todavía nombra `pagoAReintegrar`; el código
       usa `pagosAReintegrar`.
