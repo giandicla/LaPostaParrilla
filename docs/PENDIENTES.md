@@ -154,7 +154,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [x] Tests: 33 pgTAP de la base, 7 de la lógica de mails, recorrido Playwright
 - [x] Proyecto remoto `la-posta`: migraciones, función, secretos, auth y variables en Vercel
 - [x] Credenciales de Google OAuth (cuenta de la facultad)
-- [ ] 👤 Cuenta de Brevo, remitente verificado y API key (solo para los mails de reservas: el ingreso es con Google y no manda mails)
+- [ ] 👤 Cuenta de Brevo (creada 2026-11-01 con el mail de la facultad), remitente verificado y API key (solo para los mails de reservas: el ingreso es con Google y no manda mails)
 - [x] Primer admin en producción: gdiclaudio@itba.edu.ar
 - [ ] Si las previews (que usan la base de producción) empiezan a ensuciar datos
       reales: proyecto de Supabase aparte para pruebas.
