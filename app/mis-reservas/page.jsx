@@ -86,16 +86,15 @@ function ListaReservas() {
   }, [sesion.user.id, version]);
 
   const alCancelar = async (reserva) => {
-    if (!window.confirm('¿Seguro que querés cancelar esta reserva?')) return;
+    const pregunta = estadoSena(reserva) === 'aprobado'
+      ? '¿Seguro que querés cancelar esta reserva? La seña no se devuelve.'
+      : '¿Seguro que querés cancelar esta reserva?';
+    if (!window.confirm(pregunta)) return;
     setError('');
     setAviso('');
     try {
-      const { reintegro } = await cancelarReserva(reserva.id);
-      setAviso({
-        hecho: 'Listo, cancelamos tu reserva y te devolvimos la seña.',
-        pendiente: 'Listo, cancelamos tu reserva. La devolución de la seña está en proceso.',
-        no_corresponde: 'Listo, cancelamos tu reserva.',
-      }[reintegro]);
+      await cancelarReserva(reserva.id);
+      setAviso('Listo, cancelamos tu reserva.');
       setVersion((v) => v + 1);
     } catch (e) {
       setError(e.message);

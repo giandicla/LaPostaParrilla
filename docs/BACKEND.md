@@ -169,12 +169,13 @@ Migraciones (aplicadas a producción el **2026-10-18**):
 | `20261015120000_sena_reservas` | `locales.sena`, tabla `pagos` con RLS, `acreditar_pago()`, `cancelar_reserva(id, motivo)`, trigger de reintegro pendiente, `vencer_reservas_sin_pagar()` y el job de `pg_cron` |
 | `20261015130000_bloqueo_por_turno` | `dias_bloqueados.turno` (mediodía / noche / todo el día) y su chequeo en `validar_reserva()` |
 | `20261018120000_sena_ajustes` | `creada_en` fijada por la base al insertar; `acreditar_pago()` devuelve `'duplicado'` ante un segundo cobro de la misma preferencia |
+| `20261101120000_sena_no_reembolsable` | El trigger `marcar_reintegro` solo actúa si cancela el admin; `marcar_sena_devuelta(id)` (solo admin) pasa una seña de `reintegro_pendiente` a `reintegrado` |
 
 - **`pg_cron`:** el job `vencer-reservas-sin-pagar` corre cada minuto. La extensión
   se activa en el proyecto remoto con la migración.
 - **Edge Function `notificar-reserva`:** redesplegada el **2026-10-18** con las
   plantillas nuevas (no se manda mail en `esperando_pago` ni `vencida`; el de
-  cancelación lleva el motivo y avisa del reintegro).
+  cancelación del local lleva el motivo y avisa que se devuelve la seña).
 - Nadie escribe `pagos` desde el navegador: solo el servidor, con la clave secreta.
 
 ### Una sola ventana de despliegue
@@ -187,18 +188,26 @@ cancelación del admin viejo chocaría con el motivo obligatorio. Orden que se u
 Vercel → prueba de punta a punta en la preview → merge. Para próximos cambios que
 toquen la base y el front a la vez, lo mismo.
 
-### Reintegros: limitación en modo de prueba
+### La seña no se reembolsa por Mercado Pago (desde 2026-11-01)
 
-Al cancelar una reserva con seña aprobada, el servidor pide el reembolso total
-(`POST /v1/payments/:id/refunds`, con la clave de idempotencia
-`reintegro-<id del pago de Mercado Pago>`). **Con estas credenciales, Mercado Pago
-lo rechaza** con 401 "Unauthorized use of live credentials" (`hallazgos.md` 1.18).
-Lo que pasa entonces es lo diseñado: la cancelación queda hecha, el pago en
-`reintegro_pendiente` y el panel de admin lo lista en "Reintegros pendientes" con
-"Reintentar". Salidas: una aplicación con credenciales de prueba propias (`APP_USR`
-en "Credenciales de prueba") o devolver el pago a mano desde el panel del vendedor
-de prueba. Hasta entonces el reintegro automático no está probado contra Mercado
-Pago, solo con tests.
+Hasta la sesión 07 el servidor pedía el reembolso al cancelar
+(`POST /v1/payments/:id/refunds`), pero **con credenciales de prueba Mercado Pago lo
+rechaza** con 401 "Unauthorized use of live credentials" (`hallazgos.md` 1.18), y el
+usuario decidió no usar cuentas con plata real. Como no se podía probar, se sacó
+(decisión del usuario, 2026-11-01). Regla actual:
+
+- **Cancela el cliente:** la seña no se devuelve (se avisa antes de pagar y al
+  cancelar). El pago queda `aprobado`.
+- **Cancela el local** (trigger `marcar_reintegro`, solo con `cancelada_por = 'admin'`)
+  **o el pago llega tarde** (`acreditar_pago()` sobre una reserva que ya no espera
+  pago): el pago queda `reintegro_pendiente` y el panel lo lista en "Señas a
+  devolver", con el número de operación. El local la devuelve desde su cuenta de
+  Mercado Pago y toca "Ya la devolví" (`marcar_sena_devuelta`, pasa a `reintegrado`).
+- **Cobro doble de la misma preferencia** (`'duplicado'`): no tiene fila propia; queda
+  solo en el log del servidor con los dos ids. Es muy raro con Checkout Pro.
+
+`POST /api/v1/reservas/:id/cancelacion` responde `{ sena: 'retenida' | 'a_devolver' |
+'no_corresponde' }` y una reserva que ya no está activa da 409.
 
 ## La carta
 

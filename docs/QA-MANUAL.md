@@ -265,16 +265,16 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] Mientras esperaba, "Mis reservas" mostraba "Pagar seña" y el tiempo que faltaba.
 - [ ] El vencimiento no manda mail.
 
-**Cancelación del cliente (con reintegro)**
-- [ ] Con 1 hora o más de anticipación, "Cancelar reserva" pide confirmación y cancela. Aviso esperado con el reintegro hecho: "Listo, cancelamos tu reserva y te devolvimos la seña."
-- [ ] **Esperado hoy en modo de prueba:** el aviso es "…La devolución de la seña está en proceso.", la reserva queda cancelada y el pago en *reintegro pendiente* (Mercado Pago rechaza el reembolso con 401; ver `docs/proceso/hallazgos.md` 1.18). Con credenciales de prueba propias, el pago pasaría a *reintegrado*.
+**Cancelación del cliente (la seña no se devuelve, desde 2026-11-01)**
+- [ ] `/reservas` avisa antes de pagar: "La seña se paga con Mercado Pago y no se devuelve si cancelás…".
+- [ ] Con 1 hora o más de anticipación, "Cancelar reserva" pregunta "…La seña no se devuelve." y cancela. Aviso: "Listo, cancelamos tu reserva." El pago sigue *aprobado* y no aparece en "Señas a devolver".
 - [ ] Con menos de 1 hora, en vez de cancelar aparece el link a WhatsApp.
 
 **Cancelación del admin (con motivo)**
-- [ ] "Cancelar" en el panel pide el motivo, prearmado "No hay lugar", editable, y avisa que se devuelve la seña.
+- [ ] "Cancelar" en el panel pide el motivo, prearmado "No hay lugar", editable, y avisa que la seña queda en "Señas a devolver".
 - [ ] Sin motivo no deja cancelar.
 - [ ] El cliente ve la reserva cancelada con el motivo; el mail de cancelación lo incluye.
-- [ ] Si el reembolso falla, la reserva queda cancelada y el pago aparece en "Reintegros pendientes" con "Reintentar".
+- [ ] La seña aparece en "Señas a devolver" con el monto y el número de operación. "Ya la devolví" pide confirmación y la saca de la lista; el cliente la ve como "Seña devuelta".
 
 **Bloqueo por turno**
 - [ ] En el panel, bloquear un día con turno "Noche" (o "Mediodía"); la lista muestra el turno.

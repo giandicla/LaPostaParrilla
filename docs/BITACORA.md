@@ -4,6 +4,22 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-01 — La seña no se reembolsa
+
+Rama `feat/sena-no-reembolsable`. Decisión del usuario: Mercado Pago no deja
+reembolsar en modo de prueba y no se usan cuentas con plata real, así que la app deja
+de pedir reembolsos.
+
+- Migración `20261101120000_sena_no_reembolsable`: el trigger `marcar_reintegro` solo
+  actúa si cancela el local; `marcar_sena_devuelta()` para el admin. pgTAP
+  `10_sena_no_reembolsable` (8) y `05_sena` ajustado.
+- Servidor: fuera `reintegros.js` y `mp.reintegrar`; la cancelación responde
+  `{ sena }` y una reserva ya cancelada da 409; el webhook ya no reembolsa.
+- Front: aviso antes de pagar y al cancelar; el panel muestra "Señas a devolver" con
+  el número de operación y "Ya la devolví".
+
+---
+
 ## 2026-11-01 — Pase de accesibilidad (E2) y dependencias
 
 Rama `fix/accesibilidad`. Presentación fijada para el **jueves 12 de noviembre**;

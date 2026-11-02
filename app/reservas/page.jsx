@@ -477,7 +477,7 @@ function FormularioReserva({ idInicial }) {
             <>
               <p className={estilos.aviso}>{TEXTOS.avisoReserva}</p>
               <p className={formulario.ayuda}>
-                La seña se paga con Mercado Pago. Si cancelás con más de 1 hora de anticipación, te la devolvemos.
+                La seña se paga con Mercado Pago y no se devuelve si cancelás. Si cancelamos nosotros, te la devolvemos.
               </p>
               <Boton type="submit" tamano="lg" className={estilos.botonEnviar} disabled={enviando}>
                 {enviando ? 'Enviando…' : `Reservar y pagar seña${sena ? ` (${formatearMonto(sena)})` : ''}`}

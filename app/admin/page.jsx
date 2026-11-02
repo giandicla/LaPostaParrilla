@@ -25,11 +25,12 @@ import {
   escucharReservas,
   guardarNota,
   listarBloqueos,
-  listarReintegrosPendientes,
+  listarSenasADevolver,
+  marcarSenaDevuelta,
   listarReservas,
   moverReserva,
 } from '../../src/servicios/admin.js';
-import { cancelarReserva, reintentarReintegro } from '../../src/servicios/pagos.js';
+import { cancelarReserva } from '../../src/servicios/pagos.js';
 import { LIMITES, validarFecha, validarHora, validarMotivo } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
@@ -66,8 +67,8 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const alCancelar = () => {
     const motivo = window.prompt(
       `Motivo de la cancelación${avisoMail ? ' (le llega al cliente por mail)' : ''}:` +
-        // Para que no se le devuelva la plata a mano a un cliente que ya no va a venir
-        (estadoSena(reserva) === 'aprobado' ? ' Se le devuelve la seña automáticamente.' : ''),
+        // La seña no se reembolsa sola: si cancela el local, se devuelve a mano
+        (estadoSena(reserva) === 'aprobado' ? ' La seña queda en "Señas a devolver".' : ''),
       'No hay lugar'
     );
     if (motivo === null) return;
@@ -75,12 +76,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
       alError('Escribí el motivo de la cancelación.');
       return;
     }
-    ejecutar(async () => {
-      const { reintegro } = await cancelarReserva(reserva.id, motivo.trim());
-      if (reintegro === 'pendiente') {
-        alError('La reserva quedó cancelada, pero no se pudo devolver la seña: reintentalo en "Reintegros pendientes".');
-      }
-    });
+    ejecutar(() => cancelarReserva(reserva.id, motivo.trim()));
   };
 
   const alMover = (evento) => {
@@ -318,14 +314,15 @@ function DiasBloqueados({ alError }) {
 }
 
 // ---------------------------------------------------------------------
-// Reintegros pendientes: señas de reservas canceladas cuyo reembolso falló
+// Señas a devolver: canceló el local o el pago llegó tarde. La app no
+// reembolsa por Mercado Pago: el local la devuelve desde su cuenta y la marca.
 // ---------------------------------------------------------------------
-function ReintegrosPendientes({ version, alCambiar, alError }) {
+function SenasADevolver({ version, alCambiar, alError }) {
   const [pendientes, setPendientes] = useState([]);
 
   useEffect(() => {
     let vigente = true;
-    listarReintegrosPendientes()
+    listarSenasADevolver()
       .then((lista) => vigente && setPendientes(lista))
       .catch((e) => vigente && alError(e.message));
     return () => {
@@ -336,25 +333,29 @@ function ReintegrosPendientes({ version, alCambiar, alError }) {
   if (!pendientes.length) return null;
 
   return (
-    <section className={estilos.bloque} aria-labelledby="titulo-reintegros">
-      <h2 id="titulo-reintegros" className={estilos.tituloBloque}>Reintegros pendientes</h2>
+    <section className={estilos.bloque} aria-labelledby="titulo-senas">
+      <h2 id="titulo-senas" className={estilos.tituloBloque}>Señas a devolver</h2>
+      <p className={formulario.ayuda}>
+        Devolvelas desde la cuenta de Mercado Pago (buscando el número de operación) y marcalas acá.
+      </p>
       <ul className={estilos.listaBloqueos}>
         {pendientes.map((p) => (
           <li key={p.id}>
             <span>
               <strong>{p.reservas.nombre}</strong> · {formatearFecha(p.reservas.fecha)} {p.reservas.hora.slice(0, 5)} ·{' '}
               {formatearMonto(Number(p.monto))}
+              {p.mp_payment_id && <> · operación {p.mp_payment_id}</>}
             </span>
             <button type="button" className={estilos.botonTexto} onClick={async () => {
+              if (!window.confirm(`¿Ya le devolviste la seña a ${p.reservas.nombre} desde Mercado Pago?`)) return;
               try {
-                const { reintegro } = await reintentarReintegro(p.reserva_id);
-                if (reintegro !== 'hecho') alError('Todavía no se pudo devolver la seña. Probá de nuevo en un rato.');
+                await marcarSenaDevuelta(p.id);
                 alCambiar();
               } catch (e) {
                 alError(e.message);
               }
             }}>
-              Reintentar
+              Ya la devolví
             </button>
           </li>
         ))}
@@ -460,7 +461,7 @@ function Panel() {
         </p>
       )}
 
-      <ReintegrosPendientes version={version} alCambiar={cargar} alError={alError} />
+      <SenasADevolver version={version} alCambiar={cargar} alError={alError} />
 
       <div className={estilos.filtros}>
         <label className={formulario.campo}>

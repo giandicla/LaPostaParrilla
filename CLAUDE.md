@@ -66,7 +66,10 @@ variables y despliegue en `docs/BACKEND.md`; diseño en
 - `POST /api/webhooks/mercadopago`: valida la firma, consulta el pago real y
   concilia con `acreditar_pago()`.
 - `POST /api/v1/reservas/:id/cancelacion`: cancela con la sesión del que llama y
-  reintegra la seña.
+  dice qué pasa con la seña. **La app no reembolsa por Mercado Pago** (decisión del
+  usuario, 2026-11-01): si cancela el cliente la seña no se devuelve; si cancela el
+  local o el pago llega tarde, queda en "Señas a devolver" y el local la devuelve a
+  mano. Ver `docs/BACKEND.md`.
 - **Nunca credenciales de producción de Mercado Pago.** `MP_ACCESS_TOKEN` es del
   vendedor de prueba y solo vive en el servidor; la única clave con
   `NEXT_PUBLIC_` es la Public Key (`NEXT_PUBLIC_MP_PUBLIC_KEY`, pública por diseño).
@@ -75,8 +78,6 @@ variables y despliegue en `docs/BACKEND.md`; diseño en
 - La vuelta desde Mercado Pago y el webhook usan `urlDelSitio()`
   (`src/servidor/sitio.js`): en producción el dominio que informa Vercel, en
   previews y local `APP_URL`. No volver a leer `process.env.APP_URL` directo.
-- El reintegro automático falla en modo prueba (Mercado Pago responde 401
-  "Unauthorized use of live credentials"): ver `docs/PENDIENTES.md`.
 
 ## Convenciones
 
