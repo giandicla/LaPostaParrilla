@@ -1,5 +1,6 @@
 import { MARCA } from '../../data/marca.js';
 import estilos from './Hero.module.css';
+import { srcSetDe } from '../../data/imagenes.js';
 
 export default function Hero({
   titulo,
@@ -14,6 +15,8 @@ export default function Hero({
     <header className={`${estilos.hero} ${compacto ? estilos.compacto : ''}`}>
       <img
         src={imagen}
+        srcSet={srcSetDe(imagen)}
+        sizes="100vw"
         alt={alt}
         className={estilos.fondo}
         /* el hero es lo primero que se ve: no se difiere su carga */

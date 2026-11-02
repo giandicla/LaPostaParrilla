@@ -1,8 +1,12 @@
 'use client';
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { backendDisponible } from '../../servicios/supabase.js';
-import { escucharSesion, obtenerPerfil } from '../../servicios/auth.js';
+import { backendDisponible } from '../../servicios/config.js';
+
+// supabase-js se importa después de pintar la página, no en el primer JS: en
+// las páginas públicas (inicio, carta, nosotros) solo hace falta para saber si
+// hay sesión, y pesaba ~245 KB en la carga inicial.
+const cargarAuth = () => import('../../servicios/auth.js');
 
 // La sesión del usuario, disponible en todo el sitio con useSesion().
 //
@@ -27,6 +31,7 @@ export default function SesionProvider({ children }) {
       return;
     }
     try {
+      const { obtenerPerfil } = await cargarAuth();
       setPerfil(await obtenerPerfil(nuevaSesion.user.id));
     } catch {
       setPerfil(null);
@@ -38,14 +43,23 @@ export default function SesionProvider({ children }) {
 
     // onAuthStateChange avisa enseguida con la sesión guardada (INITIAL_SESSION)
     // y después con cada ingreso, salida o renovación del token.
-    return escucharSesion((_evento, nuevaSesion) => {
-      setSesion(nuevaSesion);
-      // Fuera del callback: Supabase recomienda no esperar otras llamadas adentro
-      setTimeout(async () => {
-        await cargarPerfil(nuevaSesion);
-        setCargando(false);
-      }, 0);
+    let dejarDeEscuchar = null;
+    let vigente = true;
+    cargarAuth().then(({ escucharSesion }) => {
+      if (!vigente) return;
+      dejarDeEscuchar = escucharSesion((_evento, nuevaSesion) => {
+        setSesion(nuevaSesion);
+        // Fuera del callback: Supabase recomienda no esperar otras llamadas adentro
+        setTimeout(async () => {
+          await cargarPerfil(nuevaSesion);
+          setCargando(false);
+        }, 0);
+      });
     });
+    return () => {
+      vigente = false;
+      dejarDeEscuchar?.();
+    };
   }, [cargarPerfil]);
 
   const valor = {

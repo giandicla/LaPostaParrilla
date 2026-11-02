@@ -4,12 +4,12 @@
 
 // La carta de vinos (y copas) es una sola para los dos locales: no es un local,
 // es una tercera vista de la carta. Tiene la forma que HojaCarta y SelectorLocal
-// esperan de un local (`nombre`, `carta.estilo`, `carta.bajada`), más `nota`.
+// esperan de un local (`nombre`, `carta.bajada`), más `nota`.
 export const CARTA_VINOS = {
   id: 'vinos',
   nombre: 'Vinos',
   nota: 'De los dos locales',
-  carta: { estilo: 'recto', bajada: 'Carta de vinos' },
+  carta: { bajada: 'Carta de vinos' },
 };
 
 export const formatearPrecio = (precio) =>

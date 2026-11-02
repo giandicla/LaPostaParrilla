@@ -1,6 +1,6 @@
 'use client';
 
-import { Fragment, Suspense, useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
@@ -105,7 +105,7 @@ function CartaContenido() {
           </p>
         )}
 
-        {cargando && <p className={estilos.estado}>Cargando la carta…</p>}
+        {cargando && <p className={`${estilos.estado} ${estilos.cargando}`}>Cargando la carta…</p>}
 
         {!cargando && pedido.error && (
           <div className={estilos.estado} role="alert">
@@ -133,17 +133,11 @@ function CartaContenido() {
             </nav>
 
             <HojaCarta local={vista} cubierto={carta.cubierto}>
-              {carta.secciones.map((seccion, i) => {
-                // El título del grupo va una sola vez, antes de su primera sección
-                const abreGrupo =
-                  seccion.grupo && carta.secciones[i - 1]?.grupo !== seccion.grupo;
-                return (
-                  <Fragment key={seccion.id}>
-                    {abreGrupo && <h2 className={estilos.tituloGrupo}>{seccion.grupo}</h2>}
-                    <SeccionCarta seccion={seccion} idAncla={`${idActivo}-${seccion.id}`} />
-                  </Fragment>
-                );
-              })}
+              {/* Las cepas se ven como cualquier sección, sin el título del grupo
+                  ("Vinos"): la hoja tiene que verse igual que la de la parrilla */}
+              {carta.secciones.map((seccion) => (
+                <SeccionCarta key={seccion.id} seccion={seccion} idAncla={`${idActivo}-${seccion.id}`} />
+              ))}
             </HojaCarta>
 
             <p className={estilos.pie}>
@@ -156,11 +150,26 @@ function CartaContenido() {
   );
 }
 
+// Lo que trae el HTML prerenderizado mientras el navegador resuelve la URL: la
+// portada del local por defecto y el lugar de la carta. Con fallback={null} la
+// página llegaba vacía y la foto se pedía recién al hidratar (LCP de 9 s).
+function CartaEsperando() {
+  return (
+    <main>
+      <Hero compacto imagen={getLocal(ID_LOCAL_POR_DEFECTO).imagenes.hero} alt="" titulo="Nuestra carta"
+        bajada={getLocal(ID_LOCAL_POR_DEFECTO).nombre} />
+      <Section>
+        <p className={`${estilos.estado} ${estilos.cargando}`}>Cargando la carta…</p>
+      </Section>
+    </main>
+  );
+}
+
 export default function Carta() {
   // useSearchParams() adentro de CartaContenido exige un límite de Suspense
   // para que la ruta se pueda seguir prerenderizando como estática.
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<CartaEsperando />}>
       <CartaContenido />
     </Suspense>
   );

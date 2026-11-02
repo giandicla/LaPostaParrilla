@@ -9,17 +9,7 @@
   background: var(--papel);
   color: var(--tinta);
   font-family: var(--fuente-carta-texto), Georgia, serif;
-}
-
-.marco {
-  padding: var(--sp-6) var(--sp-4);
-  border: 2px solid var(--tinta);
-  outline: 1px solid var(--tinta);
-  outline-offset: 5px;
-}
-
-/* ---------- Estilo recto (la parrilla) ---------- */
-.recto {
+  /* Los títulos de las secciones (SeccionCarta) */
   --seccion-fuente: var(--fuente-carta-recto), 'Arial Narrow', sans-serif;
   --seccion-peso: 600;
   --seccion-tamano: 1.35rem;
@@ -27,19 +17,11 @@
   --seccion-filete: 3px solid var(--tinta);
 }
 
-/* ---------- Estilo redondeado (el restaurante) ---------- */
-.redondeado {
-  --seccion-fuente: var(--fuente-carta-redondeado), 'Arial Narrow', sans-serif;
-  --seccion-peso: 400;
-  --seccion-tamano: 1.6rem;
-  --seccion-espaciado: 0.04em;
-  --seccion-filete: 1.5px solid var(--tinta);
-}
-
-.redondeado .marco {
-  border-width: 1.5px;
-  border-radius: 22px;
-  outline-offset: 6px;
+.marco {
+  padding: var(--sp-6) var(--sp-4);
+  border: 2px solid var(--tinta);
+  outline: 1px solid var(--tinta);
+  outline-offset: 5px;
 }
 
 .cabecera {
@@ -58,14 +40,6 @@
   font-size: 0.8rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
-}
-
-.redondeado .bajada {
-  display: inline-block;
-  padding: var(--sp-1) var(--sp-4);
-  border-top: 1px solid var(--tinta);
-  border-bottom: 1px solid var(--tinta);
-  letter-spacing: 0.45em;
 }
 
 /* Filete grueso con un rombo en cada punta */

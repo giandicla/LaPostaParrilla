@@ -9,6 +9,7 @@ import { TEXTOS } from '../src/data/textos.js';
 import { LOCALES } from '../src/data/locales.js';
 import { getPlatosDestacados } from '../src/data/platos.js';
 import estilos from './page.module.css';
+import { srcSetDe } from '../src/data/imagenes.js';
 
 // Los datos son estáticos: no hace falta recalcularlos en cada render.
 const PLATOS = getPlatosDestacados();
@@ -51,6 +52,8 @@ export default function Inicio() {
               <img
                 key={foto.src}
                 src={foto.src}
+                srcSet={srcSetDe(foto.src)}
+                sizes="(min-width: 900px) 25vw, 50vw"
                 alt={foto.alt}
                 loading="lazy"
                 className={estilos.fotoBienvenida}

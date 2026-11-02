@@ -32,24 +32,18 @@
   border-bottom-color: currentColor;
 }
 
-/* "Vinos": el grupo que reúne las cepas, dentro de la hoja */
-.tituloGrupo {
-  padding-top: var(--sp-6);
-  border-top: 2px solid currentColor;
-  font-family: var(--seccion-fuente, var(--font-titulo));
-  font-size: calc(var(--seccion-tamano, var(--fs-h2)) * 1.35);
-  font-weight: var(--seccion-peso, 700);
-  letter-spacing: var(--seccion-espaciado, var(--tracking-titulo));
-  text-align: center;
-  text-transform: uppercase;
-}
-
 .pie {
   max-width: 720px;
   margin: var(--sp-8) auto 0;
   text-align: center;
   font-size: var(--fs-small);
   color: var(--gris-600);
+}
+
+/* Mientras llega la carta, el lugar que va a ocupar: sin esto el pie subía
+   hasta el selector y bajaba de golpe al llegar la carta (CLS de 1). */
+.cargando {
+  min-height: 100vh;
 }
 
 /* Cargando o error: en lugar de la hoja */
