@@ -9,7 +9,7 @@ pendiente vive en `docs/PENDIENTES.md`; acá va el mapa contra la rúbrica.
 
 Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis) · ❌ falta
 
-Última revisión: **2026-11-01** (sesión 07, pase de accesibilidad).
+Última revisión: **2026-11-02** (sesión 08: mails con Brevo, rendimiento, cartas unificadas).
 
 ---
 
@@ -44,11 +44,11 @@ Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis)
 
 | Criterio | Peso | Estado | Qué hay | Qué falta |
 |---|---|---|---|---|
-| Funcionalidad | 40% | 🟡 | Reservas reales en producción, login con Google, admin con tiempo real, **seña con Mercado Pago** (2026-10-18), **carta editable desde el panel** con API propia y vinos compartidos (2026-10-29) | Gift cards (en evaluación). Mails de reservas: falta `BREVO_API_KEY`, hoy la UI promete "te avisamos por mail" y no sale nada |
-| Código / Estructura | 20% | ✅ / 🟡 | Componentes por carpeta, capa `src/servicios/`, datos separados, migraciones, lint limpio. Tests en los tres niveles: funciones puras del front y del servidor (`node --test`, 86), base (pgTAP, 129 en 8 archivos) y Edge Function (Deno, 13). El código de servidor de pagos y de la carta vive aparte, en `src/servidor/`, y recibe la base (y Mercado Pago) por parámetro para testearse sin red | Sostenerlo en lo nuevo (gift cards, pedido); no hay tests de componentes React ni de las rutas; falta un test del ranking `estadoSena` (ver `PENDIENTES.md`) |
-| Interfaz / Accesibilidad | 15% | ✅ | Marca real, contraste calculado y verificado con axe, teclado y foco atrapado en el menú, Lighthouse Accesibilidad 100 en las páginas públicas | Rendimiento en celular |
+| Funcionalidad | 40% | 🟡 | Reservas reales en producción, login con Google, admin con tiempo real, **seña con Mercado Pago** (2026-10-18), **carta editable desde el panel** con API propia y vinos compartidos (2026-10-29) | Gift cards (en evaluación). Los mails de reservas salen desde el 2026-11-02 (Brevo) |
+| Código / Estructura | 20% | ✅ / 🟡 | Componentes por carpeta, capa `src/servicios/`, datos separados, migraciones, lint limpio. Tests en los tres niveles: funciones puras del front y del servidor (`node --test`, 100), base (pgTAP, 171 en 11 archivos) y Edge Function (Deno, 18). El código de servidor de pagos y de la carta vive aparte, en `src/servidor/`, y recibe la base (y Mercado Pago) por parámetro para testearse sin red | No hay tests de componentes React ni de las rutas (ver `PENDIENTES.md`) |
+| Interfaz / Accesibilidad | 15% | ✅ | Marca real, contraste calculado y verificado con axe, teclado y foco atrapado en el menú, Lighthouse Accesibilidad 100 en las páginas públicas | LCP en celular (ver `QA-MANUAL.md`) |
 | Despliegue | 15% | ✅ | https://lapostaparrilla.vercel.app, estable, deploy automático; previews por PR conectadas a la base; migraciones aplicadas con `supabase db push` | Mantener |
-| Documentación | 10% | ✅ | `CLAUDE.md`, `README.md` y `docs/` al día, registro del proceso con IA (sesión 05 con los hallazgos de Mercado Pago), specs por feature, pagos y variables de entorno documentados en `docs/BACKEND.md`, checklist de QA de la seña | Mantenerlo al sumar gift cards y pedido |
+| Documentación | 10% | ✅ | `CLAUDE.md`, `README.md` y `docs/` al día, registro del proceso con IA (hasta la sesión 08, con lo que hubo que pedir de nuevo), specs por feature, pagos y variables de entorno documentados en `docs/BACKEND.md`, checklist de QA de la seña | Mantenerlo |
 
 ---
 
@@ -74,7 +74,9 @@ Tomadas por el usuario el 2026-10-08 (sesión 03):
 3. ~~E4 — API de la carta + lógica del catálogo~~ (sesión 06).
 4. ~~E3 — validación propia y accesible en los formularios~~ (sesión 03, PR #2).
 5. E6 — Mercado Pago: checkout + webhook + pruebas, en este orden: ~~seña de la
-   reserva~~ (sesión 05, 2026-10-18), gift cards, pedido para llevar.
+   reserva~~ (sesión 05, 2026-10-18), gift cards (en evaluación), ~~pedido para
+   llevar~~ (descartado por el usuario, 2026-11-01).
 6. ~~E5 — carta editable desde el admin~~ (sesión 06; editor v2 el mismo día, sin PDF).
 7. ~~E2 — pase de accesibilidad (foco del menú, Lighthouse/axe)~~ (sesión 07); QA manual.
-8. Demo — guion de la demo y preparación de la defensa técnica.
+8. Demo — guion de la demo y preparación de la defensa técnica. **Lo pide el usuario
+   cuando quiera** (2026-11-02): no adelantarlo.

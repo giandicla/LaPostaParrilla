@@ -144,6 +144,18 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] **Falta textura humana**: no hay gente, familia, reseñas, Instagram, ni detalles
       de la carta impresa (papel, tipografía de menú). Todo es foto de producto.
 
+## Abiertos al 2026-11-02 (resumen para la próxima sesión)
+
+- [ ] **Gift cards**: en evaluación (decisión del usuario).
+- [ ] **LCP en celular** (4 a 8 s en Lighthouse): fotos del hero y JS de Next. Ver
+      `docs/QA-MANUAL.md`.
+- [ ] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail).
+- [ ] Editar franjas de reserva y horarios de atención desde el panel.
+- [ ] Probar la impresión de la lista del día en la computadora del local.
+- [ ] Tests de componentes React y de las rutas de `app/api/`.
+- [ ] Guion de la demo: **solo cuando lo pida el usuario**.
+- [ ] Los menores diferidos de esta página (seña, carta, accesibilidad).
+
 ## Etapas futuras
 
 ### Etapa 2 — Backend con Supabase (partes 1 y 2)
@@ -154,7 +166,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [x] Tests: 33 pgTAP de la base, 7 de la lógica de mails, recorrido Playwright
 - [x] Proyecto remoto `la-posta`: migraciones, función, secretos, auth y variables en Vercel
 - [x] Credenciales de Google OAuth (cuenta de la facultad)
-- [ ] 👤 Cuenta de Brevo (creada 2026-11-01 con el mail de la facultad), remitente verificado y API key (solo para los mails de reservas: el ingreso es con Google y no manda mails)
+- [x] 👤 Cuenta de Brevo (creada 2026-11-01 con el mail de la facultad), remitente verificado y API key (cargada 2026-11-02) (solo para los mails de reservas: el ingreso es con Google y no manda mails)
 - [x] Primer admin en producción: gdiclaudio@itba.edu.ar
 - [ ] Si las previews (que usan la base de producción) empiezan a ensuciar datos
       reales: proyecto de Supabase aparte para pruebas.
@@ -170,7 +182,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       Standard TT; Pathway Gothic One se sacó al unificar las cartas). Si la familia consigue las originales con licencia web
       (RT Flinton, HeyGotcha), se cambian en `src/styles/fuentesCarta.js`.
 - [ ] Editar franjas de reserva y horarios de atención desde el panel
-- [ ] **Redesplegar la Edge Function `notificar-reserva`** cuando esté Brevo: tiene el
+- [x] **Redesplegar la Edge Function `notificar-reserva`** (hecho 2026-11-02, con la plantilla nueva) cuando esté Brevo: tiene el
       mail nuevo de "el cliente cambió su reserva" (aviso al local + confirmación al
       cliente). Hasta entonces, si el cliente modifica, la función vieja le manda
       "Cambiamos el horario de tu reserva".
