@@ -4,6 +4,25 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-02 — Mails con Brevo, con la marca
+
+Rama `docs/brevo`. Cuenta de Brevo del usuario (mail de la facultad); remitente y
+avisos al local a `gdiclaudio@itba.edu.ar` (decisión del usuario: no se manda en
+nombre de la casilla real del local). Clave con permiso solo para emails
+transaccionales, cargada por el usuario.
+
+- Plantilla nueva (`supabase/functions/notificar-reserva/mensajes.ts`): logo en PNG
+  (`public/logo/logo-mail-blanco.png`, Gmail no muestra SVG), colores del manual,
+  datos en tabla, el cambio de horario con el anterior tachado.
+- Textos al cliente en tercera persona ("Tu reserva fue cancelada"), pedido del
+  usuario. El teléfono del cliente solo va en los mails al local, con links para
+  llamar y WhatsApp; al cliente se le muestra el WhatsApp del local.
+- La cancelación del cliente ahora también le llega a él (antes solo al local), y
+  dice que la seña no se reintegra; la del local, que se reintegra.
+- Deno: 18 tests (4 nuevos).
+
+---
+
 ## 2026-11-01 — Reservas: una por turno, modificar, estados y días bloqueados aparte
 
 Rama `feat/reservas-cliente`. Pedidos del usuario después de probar producción.

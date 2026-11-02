@@ -36,20 +36,20 @@ Deno.test('vencida o abandonada sin pagar: no manda nada', () => {
   assertEquals(armarMensajes({ tipo: 'UPDATE', reserva: abandonada, anterior: base }, sitio).length, 0);
 });
 
-Deno.test('cancelada: avisa al que no canceló', () => {
+Deno.test('cancelada: si cancela el cliente, avisa a los dos; si cancela el local, al cliente', () => {
   const porCliente = { ...confirmada, estado: 'cancelada' as const, cancelada_por: 'cliente' as const };
   const porAdmin = { ...confirmada, estado: 'cancelada' as const, cancelada_por: 'admin' as const,
     motivo_cancelacion: 'No hay lugar' };
-  assertEquals(destinos(armarMensajes({ tipo: 'UPDATE', reserva: porCliente, anterior: confirmada }, sitio)), ['admin']);
+  assertEquals(destinos(armarMensajes({ tipo: 'UPDATE', reserva: porCliente, anterior: confirmada }, sitio)), ['cliente', 'admin']);
   assertEquals(destinos(armarMensajes({ tipo: 'UPDATE', reserva: porAdmin, anterior: confirmada }, sitio)), ['cliente']);
 });
 
-Deno.test('cancelada por el admin: el mail lleva el motivo y avisa el reintegro', () => {
+Deno.test('cancelada por el admin: el mail lleva el motivo y avisa que la seña se reintegra', () => {
   const porAdmin = { ...confirmada, estado: 'cancelada' as const, cancelada_por: 'admin' as const,
     motivo_cancelacion: 'No hay <lugar>' };
   const [m] = armarMensajes({ tipo: 'UPDATE', reserva: porAdmin, anterior: confirmada }, sitio);
   assertEquals(m.html.includes('No hay &lt;lugar&gt;'), true);
-  assertEquals(m.html.includes('reintegramos la seña'), true);
+  assertEquals(m.html.includes('La seña se reintegra'), true);
 });
 
 Deno.test('movida de horario: avisa al cliente', () => {
@@ -76,7 +76,7 @@ Deno.test('escapa el HTML de lo que escribe el cliente', () => {
 Deno.test('reserva del local nueva con mail: le confirma al cliente y no avisa al admin', () => {
   const m = armarMensajes({ tipo: 'INSERT', reserva: delLocal, anterior: null }, sitio);
   assertEquals(destinos(m), ['cliente']);
-  assertEquals(m[0].asunto, 'Tu reserva en La Posta está confirmada');
+  assertEquals(m[0].asunto, 'Reserva confirmada en La Posta Parrilla');
 });
 
 Deno.test('reserva del local sin mail: no manda nada', () => {
@@ -98,4 +98,43 @@ Deno.test('reserva del local: el mail no manda a "Mis reservas" (no hay cuenta)'
   const [m] = armarMensajes({ tipo: 'INSERT', reserva: delLocal, anterior: null }, sitio);
   assertEquals(m.html.includes('/mis-reservas'), false);
   assertEquals(m.html.includes('WhatsApp'), true);
+});
+
+Deno.test('los mails al cliente van en tercera persona', () => {
+  const porAdmin = { ...confirmada, estado: 'cancelada' as const, cancelada_por: 'admin' as const, motivo_cancelacion: 'Cierre' };
+  const movida = { ...confirmada, hora: '21:00:00' };
+  const mails = [
+    ...armarMensajes({ tipo: 'UPDATE', reserva: confirmada, anterior: base }, sitio),
+    ...armarMensajes({ tipo: 'UPDATE', reserva: porAdmin, anterior: confirmada }, sitio),
+    ...armarMensajes({ tipo: 'UPDATE', reserva: movida, anterior: confirmada }, sitio),
+  ].filter((m) => m.para === 'cliente');
+  for (const m of mails) {
+    for (const primera of ['Cancelamos', 'Cambiamos', 'escribinos', 'Te esperamos', 'reintegramos']) {
+      assertEquals(m.html.includes(primera), false, `${m.asunto}: "${primera}"`);
+    }
+  }
+  assertEquals(mails.map((m) => m.asunto),
+    ['Reserva confirmada en La Posta Parrilla', 'Tu reserva fue cancelada', 'Tu reserva fue modificada']);
+});
+
+Deno.test('el teléfono del cliente va solo al local, con links para llamar y WhatsApp', () => {
+  const conTelefono = { ...confirmada, telefono: '2944 11-1111' };
+  const [cliente, admin] = armarMensajes({ tipo: 'UPDATE', reserva: conTelefono, anterior: { ...conTelefono, estado: 'esperando_pago' } }, sitio);
+  assertEquals(cliente.html.includes('2944 11-1111'), false);
+  assertEquals(admin.html.includes('href="tel:2944111111"'), true);
+  assertEquals(admin.html.includes('https://wa.me/5492944111111'), true);
+  // Al cliente, en cambio, el contacto del local
+  assertEquals(cliente.html.includes('https://wa.me/5492944966199'), true);
+});
+
+Deno.test('el cambio de horario muestra el anterior y el nuevo', () => {
+  const movida = { ...confirmada, hora: '21:00:00' };
+  const [m] = armarMensajes({ tipo: 'UPDATE', reserva: movida, anterior: confirmada }, sitio);
+  assertEquals(m.html.includes('viernes 9 de octubre, 20:30'), true);
+  assertEquals(m.html.includes('viernes 9 de octubre, 21:00'), true);
+});
+
+Deno.test('lleva el logo del sitio en PNG', () => {
+  const [m] = armarMensajes({ tipo: 'UPDATE', reserva: confirmada, anterior: base }, sitio);
+  assertEquals(m.html.includes(`${sitio}/logo/logo-mail-blanco.png`), true);
 });
