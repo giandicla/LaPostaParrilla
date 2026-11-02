@@ -9,10 +9,11 @@
 | `/reservas` | Reservas | "Reservar en:" con la foto de cada salón y, debajo, el formulario en una card (nombre, teléfono, fecha, hora, personas, comentarios hasta 100). Sin sesión: los salones y "Ingresar con Google". Con más de 6 personas el botón pasa a "Reservar por WhatsApp" con el mensaje armado. El admin no la usa: lo lleva al panel. Acepta `?local=<id>` |
 | `/reservas/pago` | Reservas | Adonde vuelve el cliente desde Mercado Pago (`?reserva=<id>`). No decide nada con la URL: espera (tiempo real + consulta cada 5 s) a que la reserva figure `confirmada`, o muestra pago rechazado con "Reintentar", reserva cancelada o vencida, o pago tardío (la seña se devuelve a mano) |
 | `/ingresar` | Cuenta | Un solo botón, "Continuar con Google" (la primera vez crea la cuenta). Acepta `?volver=<ruta>` |
-| `/mis-reservas` | Cuenta | Próximas y anteriores; `esperando_pago` con "Pagar seña" y el tiempo que falta; cancelar hasta 1 h antes (avisa que la seña no se devuelve), después WhatsApp. El admin no la usa: lo lleva al panel |
-| `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado, con el estado de la seña; cancelar (pide el motivo, "No hay lugar" por defecto) y mover; "Señas a devolver" (las devuelve el local a mano) con "Ya la devolví"; notas internas; días bloqueados, enteros o por turno; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |
+| `/mis-reservas` | Cuenta | Próximas (todas) y anteriores y canceladas (de a 5, con "Ver más"); `esperando_pago` con "Pagar seña" y el tiempo que falta; modificar fecha, hora y personas (`ModificarReserva`) y cancelar hasta 1 h antes (avisa que la seña no se devuelve), después WhatsApp. El admin no la usa: lo lleva al panel |
+| `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado, con el estado de la seña; cancelar (pide el motivo, "No hay lugar" por defecto) y mover; "Señas a devolver" (las devuelve el local a mano) con "Ya la devolví"; notas internas; las confirmadas de días pasados se ven "Terminada"; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |
 | `/admin/dia` | Admin | Lista del día para imprimir. Acepta `?fecha=` y `?local=` |
-| `/admin/carta` | Admin | Pestañas Reservas · Carta. Selector Parrilla · Vinos · Restaurante. Una caja arriba (`CajaCarta`): sin nada elegido agrega (va último en su categoría); con un producto elegido (Editar o el buscador) lo edita, incluida la categoría. Abajo la carta (`ListaCarta`) con ⠿ para arrastrar, Editar y Eliminar. Cubierto en la vista de un local. Acepta `?vista=<id del local o vinos>` |
+| `/admin/bloqueos` | Admin | Pestaña "Días bloqueados": bloquear un día o un turno, en un local o en los dos, y desbloquear |
+| `/admin/carta` | Admin | Pestañas Reservas · Días bloqueados · Carta. Selector Parrilla · Vinos · Restaurante. Una caja arriba (`CajaCarta`): sin nada elegido agrega (va último en su categoría); con un producto elegido (Editar o el buscador) lo edita, incluida la categoría. Abajo la carta (`ListaCarta`) con ⠿ para arrastrar, Editar y Eliminar. Cubierto en la vista de un local. Acepta `?vista=<id del local o vinos>` |
 | `/nosotros` | Nosotros | Historia + un bloque por local + contacto |
 | `/api/v1/pagos` | API | `POST`: crea el pago y la preferencia de Checkout Pro de la seña y devuelve el `initPoint`. Requiere sesión (token de Supabase) |
 | `/api/v1/reservas/[id]/cancelacion` | API | `POST`: cancela la reserva (cliente o admin, con la sesión de quien llama) y responde qué pasa con la seña (`retenida`, `a_devolver`, `no_corresponde`) |
@@ -55,7 +56,8 @@
 | `RequiereSesion` | `admin?`, `soloClientes?`, `mensaje?`, `sinSesion?`, `children` | Muestra `children` solo con sesión (y rol admin si se pide); si no, explica y ofrece ingresar, o muestra `sinSesion`. Con `soloClientes`, al admin lo lleva a `/admin` con la misma query. Comodidad, no seguridad |
 | `NuevaReservaLocal` | `idLocalInicial`, `alGuardar(mensaje)`, `alCerrar` | Formulario del panel para cargar una reserva que tomó el local |
 | `Campo` | `id`, `etiqueta`, `opcional?`, `ayuda?`, `error?`, `children(props)` | Etiqueta + control + error + ayuda. `children` es una función que recibe `id`, `aria-invalid` y `aria-describedby` para conectar el control con sus mensajes |
-| `EstadoReserva` | `estado` | Etiqueta de esperando pago / pendiente / confirmada / rechazada / cancelada / vencida |
+| `EstadoReserva` | `reserva` | Etiqueta de esperando pago / confirmada / terminada (confirmada de un día pasado) / cancelada / vencida |
+| `ModificarReserva` | `reserva`, `alGuardar`, `alCerrar` | Formulario de "Mis reservas" para cambiar fecha, hora y personas (`modificar_reserva`) |
 | `SelloMercadoPago` | — | Cartel oficial de Mercado Pago (Brand Brick de `@mercadopago/sdk-react`) bajo el botón de pagar la seña: Mercado Pago dibuja su logo y los medios de pago. Necesita `NEXT_PUBLIC_MP_PUBLIC_KEY`; sin ella no se muestra |
 | `Icono` | `nombre` (`google` / `instagram` / `whatsapp`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
@@ -63,7 +65,7 @@
 | `HojaCarta` | `local`, `cubierto`, `children` | La hoja con la estética de la carta impresa: marco recto (parrilla, vinos) o redondeado (restaurante) según `local.carta.estilo`, logo, `local.carta.bajada` y el cubierto al pie. `local` puede ser `CARTA_VINOS` |
 | `CajaCarta` | `carta`, `esVinos`, `edicion`, `alElegir`, `alTerminar`, `alCambiar` | La caja única del editor: buscador, categoría ("Tipo de vino" en vinos), precio o precios por tamaño, textos; en cepas, bodega, región y detalle |
 | `ListaCarta` | `carta`, `idEditando`, `alEditar`, `alCambiar`, `alError` | La carta en el panel: filas con ⠿ (arrastre con puntero y flechas del teclado), Editar y Eliminar; bodegas con su propia asa |
-| `PestanasAdmin` | — | Las secciones del panel (Reservas · Carta), con la actual marcada (`aria-current`). Una sección nueva es una pestaña más |
+| `PestanasAdmin` | — | Las secciones del panel (Reservas · Días bloqueados · Carta), con la actual marcada (`aria-current`). Una sección nueva es una pestaña más |
 | `GaleriaGrid` | `imagenes[]` | Grilla de 3 fotos, la del medio vertical |
 | `InfoLocal` | `local` | Horarios, mapa y contacto de UN local |
 

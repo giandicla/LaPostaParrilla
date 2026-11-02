@@ -2,16 +2,20 @@
 // fallan o devuelven vacío: lo garantiza la RLS de la base, no esta capa.
 
 import { supabase, resultado } from './supabase.js';
+import { hoyEnArgentina } from './reservas.js';
 
 const COLUMNAS =
   'id, usuario_id, origen, mail, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, motivo_cancelacion, creada_en, notas_reserva(nota), pagos(estado)';
 
-// filtros: { fecha?, idLocal?, estado? }
+// filtros: { fecha?, idLocal?, estado? }. 'terminada' y 'confirmada' se
+// separan por fecha (ver estadoVisible).
 export async function listarReservas({ fecha, idLocal, estado } = {}) {
   let consulta = supabase.from('reservas').select(COLUMNAS).order('fecha').order('hora');
   if (fecha) consulta = consulta.eq('fecha', fecha);
   if (idLocal) consulta = consulta.eq('local_id', idLocal);
-  if (estado) consulta = consulta.eq('estado', estado);
+  if (estado === 'terminada') consulta = consulta.eq('estado', 'confirmada').lt('fecha', hoyEnArgentina());
+  else if (estado === 'confirmada') consulta = consulta.eq('estado', 'confirmada').gte('fecha', hoyEnArgentina());
+  else if (estado) consulta = consulta.eq('estado', estado);
   const filas = resultado(await consulta);
   // notas_reserva llega como objeto o null: la relación es uno a uno
   return filas.map(({ notas_reserva: nota, ...reserva }) => ({ ...reserva, nota: nota?.nota ?? '' }));

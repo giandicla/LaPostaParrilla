@@ -1,0 +1,26 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  width: 100%;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--gris-300);
+}
+
+.campos {
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-4);
+}
+
+@media (min-width: 600px) {
+  .campos {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}

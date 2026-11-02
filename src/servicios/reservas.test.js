@@ -1,7 +1,7 @@
 // node --test "src/**/*.test.js"
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { estadoSena, puedePagar, sePuedeCancelar, turnoDe } from './reservas.js';
+import { estadoSena, estadoVisible, puedePagar, sePuedeCancelar, sePuedeModificar, turnoDe } from './reservas.js';
 
 // Fecha y hora de Argentina (UTC-3) dentro de `minutos`, como las guarda la base
 function dentroDe(minutos) {
@@ -22,6 +22,13 @@ test('cancelar desde la web: solo reservas activas', () => {
 
 test('una reserva sin pagar se puede cancelar siempre', () => {
   assert.equal(sePuedeCancelar({ ...dentroDe(30), estado: 'esperando_pago' }), true);
+});
+
+test('modificar desde la web: confirmada y hasta 1 hora antes', () => {
+  assert.equal(sePuedeModificar(dentroDe(90)), true);
+  assert.equal(sePuedeModificar(dentroDe(30)), false);
+  assert.equal(sePuedeModificar({ ...dentroDe(600), estado: 'esperando_pago' }), false);
+  assert.equal(sePuedeModificar({ ...dentroDe(600), estado: 'cancelada' }), false);
 });
 
 test('turno: antes de las 17 es mediodía', () => {
@@ -49,4 +56,11 @@ test('estado de la seña: el pago cobrado, si hay', () => {
 test('estado de la seña: con varios pagos cobrados gana el aprobado', () => {
   assert.equal(estadoSena({ pagos: [{ estado: 'reintegrado' }, { estado: 'aprobado' }] }), 'aprobado');
   assert.equal(estadoSena({ pagos: [{ estado: 'reintegro_pendiente' }, { estado: 'reintegrado' }] }), 'reintegro_pendiente');
+});
+
+test('una confirmada de un día anterior se ve como terminada', () => {
+  assert.equal(estadoVisible({ estado: 'confirmada', fecha: '2020-01-01' }), 'terminada');
+  assert.equal(estadoVisible({ estado: 'confirmada', fecha: '2999-01-01' }), 'confirmada');
+  assert.equal(estadoVisible({ estado: 'cancelada', fecha: '2020-01-01' }), 'cancelada');
+  assert.equal(estadoVisible({ estado: 'vencida', fecha: '2020-01-01' }), 'vencida');
 });

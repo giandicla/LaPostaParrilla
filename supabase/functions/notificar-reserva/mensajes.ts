@@ -14,6 +14,8 @@ export type Reserva = {
   comentarios: string | null;
   estado: 'esperando_pago' | 'pendiente' | 'confirmada' | 'rechazada' | 'cancelada' | 'vencida';
   cancelada_por: 'cliente' | 'admin' | null;
+  // Quién cambió la fecha o la hora por última vez (el cliente, desde "Mis reservas")
+  modificada_por?: 'cliente' | 'admin' | null;
   // Lo escribe el admin al cancelar; le llega al cliente
   motivo_cancelacion: string | null;
   origen: 'web' | 'local';
@@ -135,6 +137,15 @@ function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
   }
 
   if (r.fecha !== a.fecha || r.hora !== a.hora) {
+    if (r.modificada_por === 'cliente') {
+      const antes = `<p>Antes era el ${formatearCuando(a.fecha, a.hora)}.</p>`;
+      return [
+        { para: 'cliente', asunto: 'Cambiaste tu reserva en La Posta',
+          html: pagina('Tu reserva tiene un nuevo horario', `${detalle(r)}${antes}`) },
+        { para: 'admin', asunto: `Un cliente cambió su reserva — ${formatearCuando(r.fecha, r.hora)}`,
+          html: pagina('Se modificó una reserva', `${detalle(r)}${antes}`) },
+      ];
+    }
     return [{ para: 'cliente', asunto: 'Cambiamos el horario de tu reserva',
       html: pagina('Tu reserva tiene un nuevo horario',
         `${detalle(r)}<p>Antes era el ${formatearCuando(a.fecha, a.hora)}.</p>`) }];

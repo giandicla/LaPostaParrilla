@@ -4,6 +4,23 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-01 — Reservas: una por turno, modificar, estados y días bloqueados aparte
+
+Rama `feat/reservas-cliente`. Pedidos del usuario después de probar producción.
+
+- Migración `20261102120000_reservas_por_turno_y_modificar`: una reserva activa por
+  turno (almuerzo y cena el mismo día); `modificar_reserva()` para el cliente hasta 1
+  hora antes (fecha, hora y personas, mismo local; la seña sigue valiendo);
+  `modificada_por`. pgTAP `11_…` (13).
+- Mis reservas: "Modificar" (`ModificarReserva`); anteriores y canceladas de a 5 con
+  "Ver más" (antes se pedían todas).
+- Estados: las confirmadas de días pasados se ven "Terminada" (no es un estado de la
+  base); "Pendiente" y "Rechazada" salen del filtro (ya nada las crea).
+- Días bloqueados: pestaña propia, `/admin/bloqueos`.
+- Mail "el cliente cambió su reserva" en la Edge Function (falta desplegarla).
+
+---
+
 ## 2026-11-01 — La seña no se reembolsa
 
 Rama `feat/sena-no-reembolsable`. Decisión del usuario: Mercado Pago no deja

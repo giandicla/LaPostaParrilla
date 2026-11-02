@@ -57,6 +57,12 @@ Deno.test('movida de horario: avisa al cliente', () => {
   assertEquals(destinos(m), ['cliente']);
 });
 
+Deno.test('la cambió el cliente: le confirma a él y avisa al admin', () => {
+  const m = armarMensajes({ tipo: 'UPDATE', reserva: { ...base, estado: 'confirmada', hora: '21:00:00', modificada_por: 'cliente' },
+    anterior: { ...base, estado: 'confirmada' } }, sitio);
+  assertEquals(destinos(m), ['cliente', 'admin']);
+});
+
 Deno.test('otro cambio: no manda nada', () => {
   const m = armarMensajes({ tipo: 'UPDATE', reserva: { ...base, telefono: '222' }, anterior: base }, sitio);
   assertEquals(m.length, 0);

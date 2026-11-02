@@ -12,26 +12,23 @@ import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/
 import {
   ESTADOS,
   ETIQUETAS_SENA,
-  TURNOS,
   estadoSena,
+  estadoVisible,
   formatearFecha,
   formatearMonto,
   hoyEnArgentina,
   obtenerFranjas,
 } from '../../src/servicios/reservas.js';
 import {
-  bloquearDia,
-  desbloquearDia,
   escucharReservas,
   guardarNota,
-  listarBloqueos,
   listarSenasADevolver,
   marcarSenaDevuelta,
   listarReservas,
   moverReserva,
 } from '../../src/servicios/admin.js';
 import { cancelarReserva } from '../../src/servicios/pagos.js';
-import { LIMITES, validarFecha, validarHora, validarMotivo } from '../../src/validacion/reservas.js';
+import { validarFecha, validarHora } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
@@ -50,7 +47,9 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const [borradorNota, setBorradorNota] = useState(null);
   const nota = borradorNota ?? reserva.nota;
   const local = getLocal(reserva.local_id);
-  const activa = ['esperando_pago', 'pendiente', 'confirmada'].includes(reserva.estado);
+  // Una confirmada de un día que ya pasó (terminada) no se mueve ni se cancela
+  const activa = ['esperando_pago', 'pendiente', 'confirmada'].includes(reserva.estado)
+    && estadoVisible(reserva) !== 'terminada';
   const delLocal = reserva.origen === 'local';
   // Una reserva del local sin mail no recibe avisos: no se le promete uno
   const avisoMail = delLocal && !reserva.mail ? '' : ' Le avisamos al cliente por mail.';
@@ -98,7 +97,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   };
 
   return (
-    <li className={`${estilos.fila} ${estilos[reserva.estado]}`}>
+    <li className={`${estilos.fila} ${estilos[estadoVisible(reserva)]}`}>
       <div className={estilos.hora}>
         <span>{reserva.hora.slice(0, 5)}</span>
         <small>{formatearFecha(reserva.fecha)}</small>
@@ -107,7 +106,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
       <div className={estilos.datos}>
         <p className={estilos.nombre}>
           {reserva.nombre} · {reserva.personas} {reserva.personas === 1 ? 'persona' : 'personas'}{' '}
-          <EstadoReserva estado={reserva.estado} />
+          <EstadoReserva reserva={reserva} />
         </p>
         <p className={estilos.secundario}>
           {local?.nombre ?? reserva.local_id} ·{' '}
@@ -190,7 +189,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
       </div>
 
       <div className={estilos.acciones}>
-        {['pendiente', 'confirmada'].includes(reserva.estado) && !moviendo && (
+        {activa && reserva.estado !== 'esperando_pago' && !moviendo && (
           <button type="button" className={estilos.botonTexto} onClick={() => setMoviendo(true)}>Mover</button>
         )}
         {activa && (
@@ -198,118 +197,6 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
         )}
       </div>
     </li>
-  );
-}
-
-// ---------------------------------------------------------------------
-// Días bloqueados
-// ---------------------------------------------------------------------
-function DiasBloqueados({ alError }) {
-  const [bloqueos, setBloqueos] = useState([]);
-  const [version, setVersion] = useState(0);
-  const [errorBloqueo, setErrorBloqueo] = useState(null); // { campo, mensaje }
-  const hoy = hoyEnArgentina();
-  const cargar = () => setVersion((v) => v + 1);
-
-  useEffect(() => {
-    let vigente = true;
-    listarBloqueos(hoy)
-      .then((lista) => vigente && setBloqueos(lista))
-      .catch((e) => vigente && alError(e.message));
-    return () => {
-      vigente = false;
-    };
-  }, [hoy, alError, version]);
-
-  const alBloquear = async (evento) => {
-    evento.preventDefault();
-    const form = evento.currentTarget;
-    const datos = Object.fromEntries(new FormData(form));
-    const repetido = bloqueos.some((b) => b.fecha === datos.fecha && (b.local_id ?? '') === datos.local && (b.turno ?? '') === datos.turno);
-    const invalido = [
-      ['fecha', validarFecha(datos.fecha, { hoy }) || (repetido ? 'Ese día y turno ya está bloqueado.' : '')],
-      ['motivo', validarMotivo(datos.motivo)],
-    ].find(([, mensaje]) => mensaje);
-    if (invalido) {
-      setErrorBloqueo({ campo: invalido[0], mensaje: invalido[1] });
-      form.elements[invalido[0]].focus();
-      return;
-    }
-    setErrorBloqueo(null);
-    try {
-      await bloquearDia({ fecha: datos.fecha, idLocal: datos.local, turno: datos.turno, motivo: datos.motivo });
-      form.reset();
-      cargar();
-    } catch (e) {
-      // mensajeDeError traduce cualquier violación de unicidad como la de
-      // reservas; acá la única posible es el mismo día bloqueado dos veces
-      alError(e.message.includes('reserva activa') ? 'Ese día y turno ya está bloqueado.' : e.message);
-    }
-  };
-
-  return (
-    <section className={estilos.bloque} aria-labelledby="titulo-bloqueos">
-      <h2 id="titulo-bloqueos" className={estilos.tituloBloque}>Días bloqueados</h2>
-      <p className={formulario.ayuda}>
-        Un día o un turno bloqueado no se puede reservar desde la web. Las reservas que ya existían no se tocan.
-      </p>
-      <form className={estilos.formBloqueo} onSubmit={alBloquear} noValidate>
-        <input
-          name="fecha"
-          type="date"
-          required
-          min={hoy}
-          className={formulario.control}
-          aria-label="Fecha"
-          {...atributosDeError(errorBloqueo, 'fecha', 'bloqueo-error')}
-        />
-        <select name="local" className={formulario.control} aria-label="Local" defaultValue="">
-          <option value="">Los dos locales</option>
-          {LOCALES.map((l) => <option key={l.id} value={l.id}>{l.nombre}</option>)}
-        </select>
-        <select name="turno" className={formulario.control} aria-label="Turno" defaultValue="">
-          <option value="">Todo el día</option>
-          {Object.entries(TURNOS).map(([valor, texto]) => <option key={valor} value={valor}>{texto}</option>)}
-        </select>
-        <input
-          name="motivo"
-          placeholder="Motivo (opcional)"
-          maxLength={LIMITES.motivo}
-          className={formulario.control}
-          aria-label="Motivo"
-          {...atributosDeError(errorBloqueo, 'motivo', 'bloqueo-error')}
-        />
-        <button type="submit" className={estilos.confirmar}>Bloquear</button>
-        {errorBloqueo && (
-          <p id="bloqueo-error" className={estilos.errorForm} role="alert">{errorBloqueo.mensaje}</p>
-        )}
-      </form>
-      {bloqueos.length > 0 ? (
-        <ul className={estilos.listaBloqueos}>
-          {bloqueos.map((b) => (
-            <li key={b.id}>
-              <span>
-                <strong>{formatearFecha(b.fecha)}</strong> · {b.local_id ? getLocal(b.local_id)?.nombre : 'los dos locales'}
-                {b.turno ? ` · ${TURNOS[b.turno].toLowerCase()}` : ' · todo el día'}
-                {b.motivo && ` · ${b.motivo}`}
-              </span>
-              <button type="button" className={estilos.botonTexto} onClick={async () => {
-                try {
-                  await desbloquearDia(b.id);
-                  cargar();
-                } catch (e) {
-                  alError(e.message);
-                }
-              }}>
-                Desbloquear
-              </button>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p className={formulario.ayuda}>No hay días bloqueados.</p>
-      )}
-    </section>
   );
 }
 
@@ -515,7 +402,6 @@ function Panel() {
         <p className={estilos.vacio}>No hay reservas con esos filtros.</p>
       )}
 
-      <DiasBloqueados alError={alError} />
     </div>
   );
 }

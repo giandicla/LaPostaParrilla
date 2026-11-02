@@ -170,6 +170,10 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       Old Standard TT). Si la familia consigue las originales con licencia web
       (RT Flinton, HeyGotcha), se cambian en `src/styles/fuentesCarta.js`.
 - [ ] Editar franjas de reserva y horarios de atención desde el panel
+- [ ] **Redesplegar la Edge Function `notificar-reserva`** cuando esté Brevo: tiene el
+      mail nuevo de "el cliente cambió su reserva" (aviso al local + confirmación al
+      cliente). Hasta entonces, si el cliente modifica, la función vieja le manda
+      "Cambiamos el horario de tu reserva".
 
 ### Etapa 3 — Pagos
 - [x] **Seña de la reserva con Mercado Pago** (2026-10-18): Checkout Pro, webhook

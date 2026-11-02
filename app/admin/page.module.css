@@ -77,7 +77,8 @@
 
 .rechazada,
 .cancelada,
-.vencida {
+.vencida,
+.terminada {
   opacity: 0.65;
 }
 
