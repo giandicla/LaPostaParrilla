@@ -494,6 +494,36 @@ color `rgb(246, 242, 236)` sobre fondo crema. Arreglo: variante nueva `secundari
 **Lección:** verificar una interfaz es mirarla. Que un elemento exista y responda no
 dice que se vea.
 
+### 1.29 Un PR apilado se cerró solo al mergear su base (sesión 07)
+
+La IA abrió el PR #16 (seña no reembolsable) **encima de la rama** del #15
+(accesibilidad), para que el diff mostrara solo lo nuevo. Cuando el usuario pidió
+pasar todo a producción, la IA mergeó #15 con `gh pr merge --delete-branch`. Al
+borrarse `fix/accesibilidad`, GitHub **cerró** el #16 y no deja cambiarle la base a
+un PR cerrado. Hubo que abrir el #17 con la misma rama y el mismo texto.
+
+No se perdió código (la rama `feat/sena-no-reembolsable` seguía en el remoto), pero
+el historial de revisión quedó partido en dos PRs.
+
+**Lección:** con PRs apilados, primero se cambia la base del de arriba a `main` y
+recién después se borra la rama de abajo. O no se apilan.
+
+### 1.30 Cambiar el texto de un error rompía otro lado sin que fallara nada (sesión 07)
+
+Para la regla de una reserva por turno, la IA cambió el mensaje que
+`mensajeDeError()` (`src/servicios/supabase.js`) da para el código `23505`: de "Ya
+tenés una reserva activa ese día en ese local" a "Ya tenés una reserva en ese
+turno…". El formulario de días bloqueados reusa ese traductor y decidía su propio
+mensaje buscando `'reserva activa'` dentro del texto, para decir "Ese día y turno ya
+está bloqueado". Con el texto nuevo, la búsqueda no coincidía y el admin habría visto
+un mensaje sobre reservas al bloquear un día dos veces.
+
+Ningún test lo cubría y el lint no puede verlo. La IA lo encontró al mover el
+componente a `/admin/bloqueos`, leyendo el código que trasladaba (commit `86d8388`).
+
+**Lección:** comparar contra el texto de un mensaje es un contrato invisible. Lo
+robusto es comparar el código del error, no lo que se le muestra al usuario.
+
 
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -667,6 +697,19 @@ consigna de listar solo lo que lo obligaría a adivinar. Encontró tres cosas:
 Contrasta con 1.1 y 2.10: esta vez el revisor actuó **antes** del código, sobre el
 documento, y el arreglo costó dos párrafos del spec en lugar de una migración.
 
+### 2.12 axe encontró un contraste que la paleta "calculada" no cubría (sesión 07)
+
+El sitio venía con el contraste "calculado": los tokens anotan el contraste de cada
+color (`--oliva`: "blanco encima ~5.1:1"). En el pase de accesibilidad la IA corrió
+**axe** en cinco páginas y encontró un error: en "Lo que nos mueve" (inicio) el texto
+usa `--texto-claro-suave`, crema al 85 % de opacidad, sobre oliva: **3.8:1**, debajo
+del 4.5:1 de AA. El cálculo de los tokens era del blanco pleno, no de la variante
+suave. Se pasó a crema plena y Lighthouse dio Accesibilidad 100 en las cuatro páginas
+medidas.
+
+Contrasta con 1.28: otra vez un problema de color, esta vez encontrado por una
+herramienta que mide lo que se pinta y no lo que dice el código.
+
 ---
 
 ## Parte 3 — Lo que se aprendió sobre el método
@@ -772,6 +815,18 @@ publica evita decidir por él qué es correcto. Y una advertencia de la herramie
 (Vercel) se explica, no se silencia.
 
 ---
+
+### 3.10 Lo que no se puede probar, no se entrega (sesión 07, decisión del usuario)
+
+El reintegro automático de la seña estaba escrito y testeado con dobles, pero Mercado
+Pago no deja reembolsar con credenciales de prueba (1.18) y el usuario no quiso usar
+cuentas con plata real. En vez de entregar un camino que nunca corrió contra el
+servicio de verdad, el usuario decidió sacarlo: la seña no se devuelve si cancela el
+cliente, y si cancela el local la devuelve a mano desde el panel ("Señas a devolver").
+Se explica en la defensa.
+
+La IA había dejado el código "listo, falta probarlo"; la decisión de sacarlo fue del
+usuario.
 
 ## Para la presentación
 
