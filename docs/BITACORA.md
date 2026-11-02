@@ -19,6 +19,10 @@ inicio 65, carta 44, reservas 43, nosotros 51.
   CLS 0.26 → 0.
 - Fotos con `srcSet` y `sizes`: `scripts/variantes-img.mjs` genera versiones de 480
   y 960 px (48 archivos) y `src/data/imagenes.js`.
+- **Las tres cartas con la misma estética** (pedido del usuario): el restaurante deja
+  el estilo "redondeado" y los vinos dejan el título "Vinos" sobre las cepas; todo
+  como la hoja de la parrilla. Se va la fuente Pathway Gothic One (una descarga
+  menos).
 
 ---
 

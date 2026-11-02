@@ -32,18 +32,6 @@
   border-bottom-color: currentColor;
 }
 
-/* "Vinos": el grupo que reúne las cepas, dentro de la hoja */
-.tituloGrupo {
-  padding-top: var(--sp-6);
-  border-top: 2px solid currentColor;
-  font-family: var(--seccion-fuente, var(--font-titulo));
-  font-size: calc(var(--seccion-tamano, var(--fs-h2)) * 1.35);
-  font-weight: var(--seccion-peso, 700);
-  letter-spacing: var(--seccion-espaciado, var(--tracking-titulo));
-  text-align: center;
-  text-transform: uppercase;
-}
-
 .pie {
   max-width: 720px;
   margin: var(--sp-8) auto 0;

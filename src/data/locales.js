@@ -31,7 +31,7 @@ export const LOCALES = [
     whatsapp: '5492944966199', // formato para wa.me, sin + ni espacios
     // Cómo se ve su carta (la hoja de HojaCarta), como el PDF impreso del local.
     // La carta en sí vive en la base (tablas carta_secciones y carta_items).
-    carta: { estilo: 'recto', bajada: 'Parrilla Patagónica' },
+    carta: { bajada: 'Parrilla Patagónica' },
     horarios: HORARIOS,
     franjasReserva: FRANJAS_RESERVA,
     imagenes: {
@@ -58,7 +58,7 @@ export const LOCALES = [
     mapaEmbedUrl: MAPA_EMBED_URL,
     telefono: '+54 9 2944 86-1339',
     whatsapp: '5492944861339',
-    carta: { estilo: 'redondeado', bajada: 'Restaurante' },
+    carta: { bajada: 'Restaurante' },
     horarios: HORARIOS,
     franjasReserva: FRANJAS_RESERVA,
     imagenes: {

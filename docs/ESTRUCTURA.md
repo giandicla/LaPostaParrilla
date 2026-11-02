@@ -62,7 +62,7 @@
 | `Icono` | `nombre` (`google` / `instagram` / `whatsapp`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
 | `SeccionCarta` | `seccion`, `idAncla` | Una sección de la carta: platos (nombre, descripción, traducción EN/PT, uno o más precios) o vinos agrupados por bodega. La fuente y el filete del título los toma de la hoja que la contiene |
-| `HojaCarta` | `local`, `cubierto`, `children` | La hoja con la estética de la carta impresa: marco recto (parrilla, vinos) o redondeado (restaurante) según `local.carta.estilo`, logo, `local.carta.bajada` y el cubierto al pie. `local` puede ser `CARTA_VINOS` |
+| `HojaCarta` | `local`, `cubierto`, `children` | La hoja con la estética de la carta impresa de la parrilla, igual en las tres cartas: doble marco, logo, ornamento con rombos, `local.carta.bajada` y el cubierto al pie. `local` puede ser `CARTA_VINOS` |
 | `CajaCarta` | `carta`, `esVinos`, `edicion`, `alElegir`, `alTerminar`, `alCambiar` | La caja única del editor: buscador, categoría ("Tipo de vino" en vinos), precio o precios por tamaño, textos; en cepas, bodega, región y detalle |
 | `ListaCarta` | `carta`, `idEditando`, `alEditar`, `alCambiar`, `alError` | La carta en el panel: filas con ⠿ (arrastre con puntero y flechas del teclado), Editar y Eliminar; bodegas con su propia asa |
 | `PestanasAdmin` | — | Las secciones del panel (Reservas · Días bloqueados · Carta), con la actual marcada (`aria-current`). Una sección nueva es una pestaña más |
@@ -144,16 +144,17 @@ Forma de un local:
   franjasReserva: [string], imagenes: { card, hero, galeria: [{src, alt}] } }
 ```
 
-`telefono` y `whatsapp` pueden ser `null`. La UI esconde lo que falta. `carta.estilo` es
-`'recto'` o `'redondeado'`: el marco y los títulos de su carta impresa.
+`telefono` y `whatsapp` pueden ser `null`. La UI esconde lo que falta. `carta.bajada` es
+lo que va debajo del logo en la hoja de la carta (las tres hojas tienen la misma
+estética, la de la parrilla, desde el 2026-11-02).
 
 ## Estilos
 
 - `src/styles/tokens.css` — todas las custom properties. **Ningún color literal
   fuera de acá.**
 - `src/styles/global.css` — reset, base, foco visible, `prefers-reduced-motion`.
-- `src/styles/fuentesCarta.js` — las fuentes de la hoja de la carta (Oswald, Pathway
-  Gothic One, Old Standard TT), parecidas a las de las cartas impresas.
+- `src/styles/fuentesCarta.js` — las fuentes de la hoja de la carta (Oswald y Old
+  Standard TT), parecidas a las de las cartas impresas.
 - Un `.module.css` por componente, al lado del `.jsx`.
 
 ## Imágenes

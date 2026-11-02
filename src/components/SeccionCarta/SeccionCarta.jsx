@@ -5,10 +5,10 @@ import estilos from './SeccionCarta.module.css';
 // precios) o vinos (agrupados por bodega). La forma de los datos está
 // documentada en src/servidor/carta.js; la estética la pone HojaCarta.
 export default function SeccionCarta({ seccion, idAncla }) {
-  const { titulo, nota, tamanos, items, bodegas, grupo } = seccion;
-  // Las secciones de un grupo (las cepas, dentro de "Vinos") cuelgan del
-  // título del grupo: un nivel más abajo.
-  const Titulo = grupo ? 'h3' : 'h2';
+  const { titulo, nota, tamanos, items, bodegas } = seccion;
+  // Todas las secciones son h2, también las cepas: la carta de vinos ya no
+  // muestra el título del grupo
+  const Titulo = 'h2';
 
   return (
     <section id={idAncla} className={estilos.seccion}>

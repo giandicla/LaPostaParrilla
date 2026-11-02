@@ -110,9 +110,10 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] Un selector de dos botones ("La Posta Parrilla" / "La Posta II Restaurante"); en el
       celular, dos botones parejos que no se cortan.
 - [ ] Un índice de secciones que lleva a cada una sin que la navbar tape el título.
-- [ ] La carta dentro de una hoja color papel con el marco del local: doble y recto en
-      la Parrilla (con rombos bajo el logo), redondeado en La Posta II. El logo
-      real, con "Parrilla Patagónica" o "Restaurante" debajo.
+- [ ] La carta dentro de una hoja color papel, igual en las tres cartas: doble marco
+      recto y rombos bajo el logo. El logo real, con "Parrilla Patagónica",
+      "Carta de vinos" o "Restaurante" debajo. En Vinos, las cepas son secciones
+      como las de la parrilla (sin un título "Vinos" arriba).
 - [ ] Cada plato con nombre, precio, y abajo la traducción en inglés/portugués en
       letra chica (y la descripción en castellano cuando la carta la tiene).
 - [ ] En las pizzas de La Posta II, dos columnas de precio: Chica y Grande.
