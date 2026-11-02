@@ -1,7 +1,6 @@
 // La carta: se pide a la API propia (app/api/v1/carta), no a Supabase directo.
 // Leerla es público; editarla, solo del admin (con el token de la sesión).
 
-import { supabase } from './supabase.js';
 
 const ERROR_GENERICO = 'Algo salió mal. Probá de nuevo en un momento.';
 
@@ -30,6 +29,9 @@ export const leerVinos = ({ fresca = false } = {}) => pedir(`/api/v1/carta/vinos
 // El servidor sabe quién llama por el token de la sesión de Supabase.
 
 async function escribir(ruta, metodo, cuerpo) {
+  // Solo las escrituras del admin necesitan el token: el cliente se importa acá
+  // para que leer la carta en /carta no cargue supabase-js
+  const { supabase } = await import('./supabase.js');
   const { data } = await supabase.auth.getSession();
   const token = data.session?.access_token;
   if (!token) throw new Error('Ingresá con tu cuenta para continuar.');

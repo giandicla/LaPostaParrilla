@@ -83,6 +83,7 @@ La única capa que habla con Supabase. Detalle en `docs/BACKEND.md`.
 | Archivo | Qué exporta |
 |---|---|
 | `supabase.js` | El cliente, `backendDisponible`, `mensajeDeError(error)` (errores de Postgres/Auth en castellano) |
+| `config.js` | `backendDisponible` sin cargar supabase-js (la usan la navbar y la sesión en todas las páginas) |
 | `auth.js` | Ingresar con Google, salir, escuchar la sesión, leer y actualizar el perfil |
 | `reservas.js` | Franjas, días bloqueados, crear / listar / cancelar reservas, utilidades de fecha en hora argentina |
 | `admin.js` | Listar y filtrar reservas, mover, notas, bloqueos (por día o por turno), señas a devolver y marcarlas devueltas, suscripción en tiempo real |
@@ -129,6 +130,7 @@ Cada función devuelve el mensaje de error o `''`. La base repite las mismas reg
 |---|---|
 | `marca.js` | `MARCA` — nombre, bajada, ciudad, Instagram, email, logo (blanco) y logoOscuro (bordo) |
 | `locales.js` | `LOCALES`, `getLocal(id)`, `esIdDeLocal(id)`, `ID_LOCAL_POR_DEFECTO` |
+| `imagenes.js` | Generado por `scripts/variantes-img.mjs`: anchos de cada foto y `srcSetDe(src)` |
 | `platos.js` | `getPlatosDestacados()` — los platos con foto de la home, por local |
 | `carta.js` | `formatearPrecio(n)` y `CARTA_VINOS` (la vista de vinos, compartida). La carta vive en la base (tablas `carta_secciones` y `carta_items`, desde la sesión 06) |
 | `editorCarta.js` | Funciones puras del editor: `buscarEnCarta` (sin tildes), `posicionTrasArrastre`, `datosDeLaCaja` |

@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import Boton from '../Boton/Boton.jsx';
 import { useSesion } from '../SesionProvider/SesionProvider.jsx';
-import { backendDisponible } from '../../servicios/supabase.js';
+import { backendDisponible } from '../../servicios/config.js';
 import estilos from './RequiereSesion.module.css';
 
 // Muestra `children` solo si hay sesión (y, con `admin`, si además es admin).

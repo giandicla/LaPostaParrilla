@@ -6,7 +6,7 @@ import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import Icono from '../../src/components/Icono/Icono.jsx';
 import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
-import { backendDisponible } from '../../src/servicios/supabase.js';
+import { backendDisponible } from '../../src/servicios/config.js';
 import { ingresarConGoogle } from '../../src/servicios/auth.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';

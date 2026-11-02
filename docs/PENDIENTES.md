@@ -111,7 +111,7 @@ vulnerabilidades altas ni críticas (quedan 16 moderadas de `minimatch`, solo en
 cadena de ESLint, de desarrollo). axe encontró además un contraste de 3.8:1 en
 "Lo que nos mueve" (inicio), corregido.
 
-- [ ] **Rendimiento en celular** (Lighthouse, `next start` local, 2026-11-01): inicio 74,
+- [x] **Rendimiento en celular** — trabajado el 2026-11-02 (rama `perf/celular`): CLS de `/carta` y `/reservas` a 0, fotos con `srcSet` (480 · 960 · original), supabase-js fuera de la carga inicial de las páginas públicas. Queda el LCP, alto en la simulación de celular de Lighthouse. Texto original: (Lighthouse, `next start` local, 2026-11-01): inicio 74,
       carta 48, reservas 63. Lo que más pesa: el LCP de las fotos del hero (7 a 11 s
       con red lenta simulada), imágenes sin tamaños responsivos (hasta 900 KiB de
       ahorro en el inicio) y saltos de layout (CLS 1 en `/carta` mientras llega la

@@ -105,6 +105,8 @@ npm run build         # build de producción a .next/
 npm test              # tests de las funciones puras (node --test, src/**/*.test.js)
 npm run db:test       # tests pgTAP de la base (requiere `npx supabase start`)
 npm run db:reset      # base local desde cero: migraciones + usuarios de prueba
+node scripts/variantes-img.mjs   # versiones de 480 y 960 px de cada foto + src/data/imagenes.js
+                      # (correrlo después de procesar-assets.py o de sumar una foto)
 python scripts/procesar-assets.py "../Branding y fotos"
                       # regenera logo y fotos desde la carpeta de branding
                       # (requiere PyMuPDF y Pillow)

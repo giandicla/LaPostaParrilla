@@ -4,6 +4,24 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-02 — Rendimiento en el celular
+
+Rama `perf/celular`. Medido primero contra producción (Lighthouse celular):
+inicio 65, carta 44, reservas 43, nosotros 51.
+
+- **supabase-js (~245 KB) fuera de la carga inicial**: la navbar y `SesionProvider`
+  lo importaban en todas las páginas. Ahora `backendDisponible` sale de
+  `src/servicios/config.js` y el cliente se importa después de pintar la página.
+- **`/carta` llegaba vacía en el HTML** (`Suspense fallback={null}` alrededor de toda
+  la página): el fallback ahora trae la portada del local por defecto y el lugar de
+  la carta. CLS 1 → 0.
+- `/reservas` y `RequiereSesion` reservan el lugar mientras se sabe si hay sesión.
+  CLS 0.26 → 0.
+- Fotos con `srcSet` y `sizes`: `scripts/variantes-img.mjs` genera versiones de 480
+  y 960 px (48 archivos) y `src/data/imagenes.js`.
+
+---
+
 ## 2026-11-02 — Mails con Brevo, con la marca
 
 Rama `docs/brevo`. Cuenta de Brevo del usuario (mail de la facultad); remitente y

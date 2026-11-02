@@ -164,3 +164,9 @@
   width: 1.3em;
   height: 1.3em;
 }
+
+/* Mientras se sabe si hay sesión, el lugar del formulario: sin esto el pie
+   subía y bajaba de golpe al aparecer el formulario (CLS de 0.26). */
+.esperando {
+  min-height: 70vh;
+}

@@ -52,6 +52,12 @@
   color: var(--gris-600);
 }
 
+/* Mientras llega la carta, el lugar que va a ocupar: sin esto el pie subía
+   hasta el selector y bajaba de golpe al llegar la carta (CLS de 1). */
+.cargando {
+  min-height: 100vh;
+}
+
 /* Cargando o error: en lugar de la hoja */
 .estado {
   display: flex;

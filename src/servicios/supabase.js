@@ -12,7 +12,7 @@ const clave = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
 export const supabase = url && clave ? createClient(url, clave) : null;
 
-export const backendDisponible = supabase !== null;
+export { backendDisponible } from './config.js';
 
 const ERRORES_AUTH = {
   provider_disabled: 'El ingreso con Google no está disponible en este momento.',

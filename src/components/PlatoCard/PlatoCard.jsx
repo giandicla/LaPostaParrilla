@@ -1,11 +1,19 @@
 import estilos from './PlatoCard.module.css';
+import { srcSetDe } from '../../data/imagenes.js';
 
 // Card de plato con foto. Sin precio, a propósito: los precios están solo en
 // la carta en PDF, que es la que se mantiene al día.
 export default function PlatoCard({ nombre, descripcion, imagen, etiquetaLocal }) {
   return (
     <article className={estilos.card}>
-      <img src={imagen} alt={nombre} loading="lazy" className={estilos.imagen} />
+      <img
+        src={imagen}
+        srcSet={srcSetDe(imagen)}
+        sizes="(min-width: 768px) 25vw, 50vw"
+        alt={nombre}
+        loading="lazy"
+        className={estilos.imagen}
+      />
       {etiquetaLocal && <span className={estilos.etiqueta}>{etiquetaLocal}</span>}
 
       <div className={estilos.texto}>

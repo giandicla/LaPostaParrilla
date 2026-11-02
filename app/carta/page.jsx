@@ -105,7 +105,7 @@ function CartaContenido() {
           </p>
         )}
 
-        {cargando && <p className={estilos.estado}>Cargando la carta…</p>}
+        {cargando && <p className={`${estilos.estado} ${estilos.cargando}`}>Cargando la carta…</p>}
 
         {!cargando && pedido.error && (
           <div className={estilos.estado} role="alert">
@@ -156,11 +156,26 @@ function CartaContenido() {
   );
 }
 
+// Lo que trae el HTML prerenderizado mientras el navegador resuelve la URL: la
+// portada del local por defecto y el lugar de la carta. Con fallback={null} la
+// página llegaba vacía y la foto se pedía recién al hidratar (LCP de 9 s).
+function CartaEsperando() {
+  return (
+    <main>
+      <Hero compacto imagen={getLocal(ID_LOCAL_POR_DEFECTO).imagenes.hero} alt="" titulo="Nuestra carta"
+        bajada={getLocal(ID_LOCAL_POR_DEFECTO).nombre} />
+      <Section>
+        <p className={`${estilos.estado} ${estilos.cargando}`}>Cargando la carta…</p>
+      </Section>
+    </main>
+  );
+}
+
 export default function Carta() {
   // useSearchParams() adentro de CartaContenido exige un límite de Suspense
   // para que la ruta se pueda seguir prerenderizando como estática.
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<CartaEsperando />}>
       <CartaContenido />
     </Suspense>
   );

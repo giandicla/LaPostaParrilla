@@ -5,8 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { MARCA } from '../../data/marca.js';
 import { useSesion } from '../SesionProvider/SesionProvider.jsx';
-import { backendDisponible } from '../../servicios/supabase.js';
-import { salir } from '../../servicios/auth.js';
+import { backendDisponible } from '../../servicios/config.js';
 import estilos from './Navbar.module.css';
 
 const ENLACES = [
@@ -130,7 +129,7 @@ export default function Navbar() {
                 </li>
               )}
               <li>
-                <button type="button" className={estilos.enlace} onClick={() => salir()}>
+                <button type="button" className={estilos.enlace} onClick={async () => (await import('../../servicios/auth.js')).salir()}>
                   Salir
                 </button>
               </li>

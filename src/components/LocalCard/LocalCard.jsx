@@ -1,5 +1,6 @@
 import Boton from '../Boton/Boton.jsx';
 import estilos from './LocalCard.module.css';
+import { srcSetDe } from '../../data/imagenes.js';
 
 export default function LocalCard({ local }) {
   // Resumen de horario: solo la primera franja, para no llenar la card.
@@ -11,6 +12,8 @@ export default function LocalCard({ local }) {
       <div className={estilos.marcoImagen}>
         <img
           src={local.imagenes.card}
+          srcSet={srcSetDe(local.imagenes.card)}
+          sizes="(min-width: 900px) 50vw, 100vw"
           alt={`Salón de ${local.nombre}`}
           loading="lazy"
           className={estilos.imagen}

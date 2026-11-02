@@ -23,7 +23,10 @@
   color: var(--gris-600);
 }
 
+/* Ocupa el lugar de la página mientras se sabe si hay sesión, para que el pie
+   no salte cuando aparece el contenido */
 .cargando {
+  min-height: 70vh;
   text-align: center;
   color: var(--gris-600);
   font-style: italic;

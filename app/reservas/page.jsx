@@ -38,6 +38,7 @@ import SelloMercadoPago from '../../src/components/SelloMercadoPago/SelloMercado
 import { LIMITES, esGrupo, limpiarTelefono, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
+import { srcSetDe } from '../../src/data/imagenes.js';
 
 // Desde la web se reserva hasta LIMITES.personas.max. Se puede elegir más (hasta
 // el tope del local): en ese caso la reserva se pide por WhatsApp.
@@ -54,7 +55,14 @@ function Salones({ idLocal, onChange }) {
       {LOCALES.map((opcion) => {
         const contenido = (
           <>
-            <img src={opcion.imagenes.reserva ?? opcion.imagenes.card} alt="" className={estilos.fotoSalon} loading="lazy" />
+            <img
+              src={opcion.imagenes.reserva ?? opcion.imagenes.card}
+              srcSet={srcSetDe(opcion.imagenes.reserva ?? opcion.imagenes.card)}
+              sizes="(min-width: 768px) 30vw, 50vw"
+              alt=""
+              className={estilos.fotoSalon}
+              loading="lazy"
+            />
             <span className={estilos.nombreSalon}>{opcion.nombre}</span>
             <span className={estilos.taglineSalon}>{opcion.tagline}</span>
           </>
@@ -509,7 +517,7 @@ export default function Reservas() {
       <Hero compacto imagen="/img/comunes/sirviendo-vino.webp" alt="" titulo="Reservá tu mesa" bajada={MARCA.bajada} />
       <Section>
         {/* useSearchParams exige Suspense para que la ruta siga siendo estática */}
-        <Suspense fallback={null}>
+        <Suspense fallback={<div className={estilos.esperando} />}>
           <ReservasContenido />
         </Suspense>
       </Section>
