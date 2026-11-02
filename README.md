@@ -55,9 +55,14 @@ carta en la base: `/carta` con la estética de la carta impresa (Parrilla · Vin
 Restaurante, los vinos compartidos) y el editor del panel (`/admin/carta`), servida
 por una API propia (`/api/v1/carta`).
 
-Próximo: gift cards y pedido para llevar (los otros dos cobros decididos), mails de
-reservas (falta la cuenta de Brevo) y el pase de accesibilidad. El mapa completo
-contra la rúbrica de corrección está en `docs/RUBRICA.md`.
+Desde el 1 y 2 de noviembre, además: mails de reservas con Brevo (con la marca),
+modificar la reserva desde "Mis reservas", una reserva por turno, seña no
+reembolsable si cancela el cliente, días bloqueados en su propia pestaña del panel,
+accesibilidad (Lighthouse 100) y rendimiento en el celular.
+
+Pendiente: gift cards (en evaluación). El pedido para llevar se descartó (decisión del
+usuario, 2026-11-01). El mapa completo contra la rúbrica de corrección está en
+`docs/RUBRICA.md`; lo que falta, en `docs/PENDIENTES.md`.
 
 ## Cómo se trabaja
 

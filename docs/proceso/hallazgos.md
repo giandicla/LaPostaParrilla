@@ -524,7 +524,56 @@ componente a `/admin/bloqueos`, leyendo el código que trasladaba (commit `86d83
 **Lección:** comparar contra el texto de un mensaje es un contrato invisible. Lo
 robusto es comparar el código del error, no lo que se le muestra al usuario.
 
+### 1.31 Los mails nunca se habían mirado, y hubo que pedirlos de nuevo (sesión 08)
 
+La plantilla de los mails se escribió en la sesión 02 y tenía tests (a quién le llega
+cada mail, que se escape el HTML), pero hasta la sesión 08 no había Brevo y **nadie
+los había visto llegar**. Cuando el usuario los recibió pidió tres cosas:
+
+- **Estética:** el encabezado era "LA POSTA" escrito en un rectángulo bordo; ni logo
+  ni los colores del manual.
+- **Tercera persona:** "Cancelamos tu reserva", "Cambiamos el horario", "escribinos":
+  el local hablando en primera persona. El usuario pidió "tu reserva fue cancelada".
+- **El teléfono "así nomás":** el del cliente iba pegado al nombre, sin link, también
+  en el mail al propio cliente.
+
+Además, la cancelación del cliente solo le avisaba al local; desde el lado del
+cliente parecía que no había funcionado.
+
+Los tests verificaban destinatarios y escapes, no cómo se leía el mail. Se rehízo la
+plantilla (PR #20) y se sumaron tests de tercera persona y del teléfono.
+
+**Lección:** un mail es interfaz. Igual que en 1.28, que exista y llegue no dice que
+se vea bien: hay que abrirlo.
+
+### 1.32 La IA midió contra un servidor viejo (sesión 08)
+
+Para comparar el rendimiento antes y después, la IA levantó el build nuevo con
+`next start -p 3005`. Un `next start` del día anterior seguía ocupando ese puerto: el
+nuevo no arrancó (el aviso llegó después) y Lighthouse midió el servidor viejo con
+archivos del build nuevo en el disco. Salieron números que no tenían sentido (inicio
+56, CLS 0.345, 2.9 MB) y la IA los tomó como reales en un primer momento.
+
+Se detectó al ver que el servidor "nuevo" había terminado con error. Se cerró el
+proceso viejo y se midió de nuevo.
+
+**Lección:** antes de medir, confirmar qué se está midiendo. Y medir donde importa:
+los números de producción fueron distintos de los locales en las dos direcciones.
+
+### 1.33 Copiar la carta impresa tal cual no era lo que se quería en la web (sesión 08)
+
+En la sesión 06 la IA replicó cada carta impresa con su estética: la parrilla con
+doble marco recto y rombos, el restaurante con marco redondeado y otra fuente de
+títulos, y los vinos con un título "Vinos" sobre las cepas. Era fiel a los PDF. Pero
+en la web las tres están en el mismo selector, una al lado de la otra, y se veían
+como tres sitios distintos. El usuario pidió "que no sean diferentes": las tres con la
+hoja de la parrilla (PR #21).
+
+**Lección:** ser fiel a la fuente no es lo mismo que ser coherente en el destino.
+Cuando un diseño se copia de un original pensado para otro medio, vale preguntar si
+la diferencia se quiere conservar.
+
+## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
 
@@ -711,6 +760,17 @@ Contrasta con 1.28: otra vez un problema de color, esta vez encontrado por una
 herramienta que mide lo que se pinta y no lo que dice el código.
 
 ---
+
+
+### 2.13 Medir producción antes de optimizar cambió las prioridades (sesión 08)
+
+La sesión 07 había medido el rendimiento sobre el build local (inicio 74). Antes de
+optimizar, la IA midió producción: **inicio 65, carta 44, reservas 43**. Con esos
+números, y con lo que Lighthouse decía que pesaba, aparecieron tres causas que el
+local no mostraba igual: supabase-js (~245 KB) cargado en todas las páginas por la
+navbar, `/carta` llegando vacía en el HTML (CLS 1) y el pie saltando en las páginas
+con sesión. Arreglando esas tres cosas, las cuatro páginas quedaron entre 72 y 80 y
+sin saltos de layout.
 
 ## Parte 3 — Lo que se aprendió sobre el método
 

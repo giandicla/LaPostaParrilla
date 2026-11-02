@@ -20,6 +20,7 @@ donde no se esperaba, y las decisiones que hubo que tomar a mitad de camino.
 | `sesion-05-2026-10-15.md` | Quinta sesión (15 y 18/10): la seña de la reserva con Mercado Pago, hecha con subagentes; credenciales de prueba, reintegro bloqueado en modo de prueba y el despliegue en una sola ventana |
 | `sesion-06-2026-10-29.md` | Sexta sesión: qué falta según la rúbrica; la carta a la base, con API, panel del admin, estética del PDF e impresión. Ejecución en línea (sin subagentes por tarea) |
 | `sesion-07-2026-11-01.md` | Séptima sesión: qué falta para la entrega (12/11), pase de accesibilidad, seña no reembolsable y cambios a las reservas pedidos tras probar producción |
+| `sesion-08-2026-11-02.md` | Octava sesión (continuación de la 07): mails con Brevo y con la marca, rendimiento en el celular, las tres cartas con la misma estética |
 | `hallazgos.md` | Lo analítico: dónde falló la IA, dónde sorprendió, qué se aprendió |
 | `metodo.md` | Cómo se organizó el trabajo y por qué |
 | `ledger-sesion-01.md` | El registro crudo de la sesión, sin editar: las decisiones tal como se tomaron |

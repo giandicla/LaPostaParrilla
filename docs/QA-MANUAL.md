@@ -388,3 +388,34 @@ axe-core 4.10.2 inyectado en el navegador, viewport 375 px.
 
 Las páginas con sesión (`/admin`, `/mis-reservas`) no se midieron: piden login con Google.
 En local no hay compresión de texto; en Vercel sí, así que el rendimiento real es algo mejor.
+
+## Rendimiento en el celular, en producción (2026-11-02, sesión 08)
+
+**Qué son estos números.** Lighthouse es la herramienta de Google (viene en Chrome)
+que puntúa una página de 0 a 100. "Rendimiento" simula un celular de gama media con
+una red lenta y mide cuánto tarda en verse la página. Las partes que pesan:
+
+- **LCP** (*Largest Contentful Paint*): cuándo aparece lo más grande de la pantalla,
+  casi siempre la foto del hero. Bueno: menos de 2.5 s.
+- **CLS** (*Cumulative Layout Shift*): cuánto "salta" la página mientras carga (el
+  pie que baja de golpe, un botón que se corre). Bueno: menos de 0.1; 0 es perfecto.
+- **TBT** (*Total Blocking Time*): cuánto tiempo el navegador está ocupado con
+  JavaScript y no responde a toques.
+
+La rúbrica no pide un puntaje de rendimiento; se midió porque la demo es en vivo y
+desde un celular se nota. Los números varían entre corridas, por eso hay dos.
+
+| Página | Antes (2026-11-02) | Después del PR #21 | CLS antes → después |
+|---|---|---|---|
+| `/` | 65 | 74 · 75 | 0 → 0 |
+| `/carta` | 44 | 80 · 72 | 1 → 0 |
+| `/reservas` | 43 | 77 · 72 | 0.26 → 0 |
+| `/nosotros` | 51 | 72 · 79 | 0 → 0 |
+
+Lighthouse 12.6.1, modo celular, contra https://lapostaparrilla.vercel.app. Lo que
+queda alto es el LCP (entre 4 y 8 s en esa simulación): las fotos del hero y el
+JavaScript de Next. Para medir de nuevo:
+
+```bash
+npx lighthouse https://lapostaparrilla.vercel.app/carta --only-categories=performance --view
+```
