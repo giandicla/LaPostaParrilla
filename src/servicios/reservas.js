@@ -162,11 +162,16 @@ export const formatearFecha = (fecha) =>
     timeZone: 'UTC',
   }).format(new Date(`${fecha}T00:00:00Z`));
 
+// Los que se ven. 'terminada' no existe en la base: es una confirmada de un
+// día que ya pasó (ver estadoVisible). 'pendiente' y 'rechazada' siguen en la
+// base, de antes de la seña, pero ya nada las crea.
 export const ESTADOS = {
   esperando_pago: 'Esperando pago',
-  pendiente: 'Pendiente',
   confirmada: 'Confirmada',
-  rechazada: 'Rechazada',
+  terminada: 'Terminada',
   cancelada: 'Cancelada',
   vencida: 'Vencida',
 };
+
+export const estadoVisible = (reserva) =>
+  reserva.estado === 'confirmada' && reserva.fecha < hoyEnArgentina() ? 'terminada' : reserva.estado;

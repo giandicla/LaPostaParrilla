@@ -21,6 +21,11 @@
   color: var(--blanco);
 }
 
+.terminada {
+  background-color: var(--gris-300);
+  color: var(--gris-600);
+}
+
 .rechazada,
 .cancelada,
 .vencida {

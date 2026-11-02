@@ -28,7 +28,7 @@ restaurante.
   le entrega a clientes.
 - **Toda llamada a Supabase pasa por `src/servicios/`.** Ningún componente
   importa `@supabase/supabase-js`. Las reglas de negocio (6 personas, 1 hora para cancelar,
-  franjas, una reserva por día, seña y vencimiento) viven en la base, no en los componentes.
+  franjas, una reserva por turno, modificar hasta 1 hora antes, seña y vencimiento) viven en la base, no en los componentes.
   **Única excepción: `src/servidor/`**, el código que usan solo las rutas de
   `app/api/`. Ahí se crean clientes propios, incluido uno con la clave secreta
   (`SUPABASE_SECRET_KEY`, se saltea la RLS) para la tabla `pagos`. Ningún componente
@@ -48,7 +48,7 @@ base de pruebas): lo que se haga en una preview queda en los datos reales.
 - **Server Components por defecto.** `'use client'` va en `Navbar`,
   `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `SelloMercadoPago`,
   `app/carta`, y en las páginas que usan la sesión: `reservas`, `reservas/pago`,
-  `ingresar`, `mis-reservas`, `admin`, `admin/dia`, `admin/carta`. Todas las páginas
+  `ingresar`, `mis-reservas`, `admin`, `admin/dia`, `admin/bloqueos`, `admin/carta`. Todas las páginas
   siguen prerenderizándose como estáticas; las únicas rutas dinámicas son las de
   `app/api/`.
 - Navegación con `next/link`. `Boton` tiene dos props de destino, a propósito:

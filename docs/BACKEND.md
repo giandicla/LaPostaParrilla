@@ -170,6 +170,7 @@ Migraciones (aplicadas a producción el **2026-10-18**):
 | `20261015130000_bloqueo_por_turno` | `dias_bloqueados.turno` (mediodía / noche / todo el día) y su chequeo en `validar_reserva()` |
 | `20261018120000_sena_ajustes` | `creada_en` fijada por la base al insertar; `acreditar_pago()` devuelve `'duplicado'` ante un segundo cobro de la misma preferencia |
 | `20261101120000_sena_no_reembolsable` | El trigger `marcar_reintegro` solo actúa si cancela el admin; `marcar_sena_devuelta(id)` (solo admin) pasa una seña de `reintegro_pendiente` a `reintegrado` |
+| `20261102120000_reservas_por_turno_y_modificar` | Una reserva activa por usuario, local, día y **turno** (índice `reservas_una_activa_por_turno`); columna `modificada_por` (trigger `registrar_modificacion`); `modificar_reserva(id, fecha, hora, personas)` para el cliente, hasta 1 hora antes |
 
 - **`pg_cron`:** el job `vencer-reservas-sin-pagar` corre cada minuto. La extensión
   se activa en el proyecto remoto con la migración.

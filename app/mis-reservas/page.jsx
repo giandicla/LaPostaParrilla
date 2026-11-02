@@ -38,7 +38,7 @@ function TarjetaReserva({ reserva, alCancelar, alPagar, alModificar }) {
     <li className={estilos.tarjeta}>
       <div className={estilos.cabecera}>
         <h3 className={estilos.local}>{local?.nombre ?? reserva.local_id}</h3>
-        <EstadoReserva estado={reserva.estado} />
+        <EstadoReserva reserva={reserva} />
       </div>
       <p className={estilos.cuando}>{cuando}</p>
       <p className={estilos.detalle}>

@@ -13,6 +13,7 @@ import {
   ESTADOS,
   ETIQUETAS_SENA,
   estadoSena,
+  estadoVisible,
   formatearFecha,
   formatearMonto,
   hoyEnArgentina,
@@ -46,7 +47,9 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const [borradorNota, setBorradorNota] = useState(null);
   const nota = borradorNota ?? reserva.nota;
   const local = getLocal(reserva.local_id);
-  const activa = ['esperando_pago', 'pendiente', 'confirmada'].includes(reserva.estado);
+  // Una confirmada de un día que ya pasó (terminada) no se mueve ni se cancela
+  const activa = ['esperando_pago', 'pendiente', 'confirmada'].includes(reserva.estado)
+    && estadoVisible(reserva) !== 'terminada';
   const delLocal = reserva.origen === 'local';
   // Una reserva del local sin mail no recibe avisos: no se le promete uno
   const avisoMail = delLocal && !reserva.mail ? '' : ' Le avisamos al cliente por mail.';
@@ -94,7 +97,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   };
 
   return (
-    <li className={`${estilos.fila} ${estilos[reserva.estado]}`}>
+    <li className={`${estilos.fila} ${estilos[estadoVisible(reserva)]}`}>
       <div className={estilos.hora}>
         <span>{reserva.hora.slice(0, 5)}</span>
         <small>{formatearFecha(reserva.fecha)}</small>
@@ -103,7 +106,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
       <div className={estilos.datos}>
         <p className={estilos.nombre}>
           {reserva.nombre} · {reserva.personas} {reserva.personas === 1 ? 'persona' : 'personas'}{' '}
-          <EstadoReserva estado={reserva.estado} />
+          <EstadoReserva reserva={reserva} />
         </p>
         <p className={estilos.secundario}>
           {local?.nombre ?? reserva.local_id} ·{' '}
@@ -186,7 +189,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
       </div>
 
       <div className={estilos.acciones}>
-        {['pendiente', 'confirmada'].includes(reserva.estado) && !moviendo && (
+        {activa && reserva.estado !== 'esperando_pago' && !moviendo && (
           <button type="button" className={estilos.botonTexto} onClick={() => setMoviendo(true)}>Mover</button>
         )}
         {activa && (
