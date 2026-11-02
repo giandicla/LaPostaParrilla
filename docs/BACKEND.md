@@ -77,7 +77,7 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
 3. `npx supabase link --project-ref <ref>` y `npx supabase db push` (migraciones).
 4. Función de mails: `npx supabase functions deploy notificar-reserva` y sus
    secretos: `npx supabase secrets set NOTIFICACIONES_SECRETO=<algo largo y al azar>
-   MAIL_REMITENTE=lapostavla@gmail.com MAIL_ADMIN=lapostavla@gmail.com
+   MAIL_REMITENTE=gdiclaudio@itba.edu.ar MAIL_ADMIN=gdiclaudio@itba.edu.ar
    SITIO_URL=https://<dominio de vercel> BREVO_API_KEY=<clave>`.
 5. En el SQL Editor del proyecto, los dos secretos de Vault que usa el trigger:
    ```sql
@@ -90,8 +90,12 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
 7. 👤 **Google**: en Google Cloud Console crear un *OAuth client ID* (Web), con
    *Authorized redirect URI* = `https://<ref>.supabase.co/auth/v1/callback`.
    Pegar Client ID y Secret en Supabase → Auth → Providers → Google.
-8. 👤 **Brevo**: crear cuenta gratis, verificar el remitente `lapostavla@gmail.com`
-   (Senders), crear una API key (SMTP & API → API Keys) y cargarla en el paso 4.
+8. 👤 **Brevo**: crear cuenta gratis, verificar el remitente (Senders), crear una API
+   key (SMTP & API → API Keys) y cargarla con
+   `npx supabase secrets set BREVO_API_KEY=<clave>` (la carga el usuario; la clave no
+   pasa por el chat). **Remitente y avisos al local van al mail de la facultad**
+   (`gdiclaudio@itba.edu.ar`, decisión del usuario 2026-11-01): es el proyecto de la
+   materia y no se manda en nombre de la casilla real del local.
 9. **Vercel** → Settings → Environment Variables: `NEXT_PUBLIC_SUPABASE_URL` y
    `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` del proyecto (Settings → API Keys), para
    *Production* **y *Preview***. Sin *Preview*, las previews de los PR dicen "Todavía

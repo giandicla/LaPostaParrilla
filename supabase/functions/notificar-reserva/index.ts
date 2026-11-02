@@ -4,7 +4,7 @@
 // Variables (supabase secrets set ... / supabase/functions/.env en local):
 //   NOTIFICACIONES_SECRETO  el mismo valor guardado en Vault: sin él, 401
 //   BREVO_API_KEY           si falta, el mail se escribe en el log y no se envía
-//   MAIL_REMITENTE          dirección verificada en Brevo (lapostavla@gmail.com)
+//   MAIL_REMITENTE          dirección verificada en Brevo (la de la facultad, no la del local)
 //   MAIL_ADMIN              a quién avisar de reservas nuevas y cancelaciones
 //   SITIO_URL               para los links de los mails
 // SUPABASE_URL y SUPABASE_SERVICE_ROLE_KEY las pone Supabase solo.
