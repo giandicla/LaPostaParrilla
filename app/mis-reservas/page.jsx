@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
+import ModificarReserva from '../../src/components/ModificarReserva/ModificarReserva.jsx';
 import Icono from '../../src/components/Icono/Icono.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
@@ -16,15 +17,19 @@ import {
   estadoSena,
   faltaParaReserva,
   formatearFecha,
-  obtenerMisReservas,
+  obtenerMisAnteriores,
+  obtenerMisProximas,
+  POR_PAGINA,
   puedePagar,
   sePuedeCancelar,
+  sePuedeModificar,
   venceElPago,
 } from '../../src/servicios/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
-function TarjetaReserva({ reserva, alCancelar, alPagar }) {
+function TarjetaReserva({ reserva, alCancelar, alPagar, alModificar }) {
+  const [modificando, setModificando] = useState(false);
   const local = getLocal(reserva.local_id);
   const cuando = `${formatearFecha(reserva.fecha)}, ${reserva.hora.slice(0, 5)}`;
   const whatsapp = enlaceWhatsapp(local, `Hola! Quería cancelar mi reserva del ${cuando} a nombre de ${reserva.nombre}.`);
@@ -54,12 +59,28 @@ function TarjetaReserva({ reserva, alCancelar, alPagar }) {
         <p className={estilos.detalle}>Motivo: {reserva.motivo_cancelacion}</p>
       )}
 
-      {sePuedeCancelar(reserva) && (
-        <Boton variante="texto" onClick={() => alCancelar(reserva)}>Cancelar reserva</Boton>
+      {modificando ? (
+        <ModificarReserva
+          reserva={reserva}
+          alGuardar={() => {
+            setModificando(false);
+            alModificar();
+          }}
+          alCerrar={() => setModificando(false)}
+        />
+      ) : (
+        <div className={estilos.acciones}>
+          {sePuedeModificar(reserva) && (
+            <Boton variante="texto" onClick={() => setModificando(true)}>Modificar</Boton>
+          )}
+          {sePuedeCancelar(reserva) && (
+            <Boton variante="texto" onClick={() => alCancelar(reserva)}>Cancelar reserva</Boton>
+          )}
+        </div>
       )}
       {esActiva(reserva) && !sePuedeCancelar(reserva) && faltaParaReserva(reserva) > 0 && (
         <p className={estilos.aviso}>
-          Falta menos de 1 hora: para cancelar,{' '}
+          Falta menos de 1 hora: para cambiarla o cancelarla,{' '}
           {whatsapp ? <a href={whatsapp} target="_blank" rel="noreferrer"><Icono nombre="whatsapp" /> escribinos por WhatsApp</a> : 'escribinos'}.
         </p>
       )}
@@ -69,21 +90,50 @@ function TarjetaReserva({ reserva, alCancelar, alPagar }) {
 
 function ListaReservas() {
   const { sesion } = useSesion();
-  const [reservas, setReservas] = useState(null);
+  const [proximas, setProximas] = useState(null);
+  const [anteriores, setAnteriores] = useState([]);
+  // Cuántas anteriores ya se pidieron a la base (para "Ver más")
+  const [desde, setDesde] = useState(0);
+  const [hayMas, setHayMas] = useState(false);
   const [error, setError] = useState('');
   const [aviso, setAviso] = useState('');
-  // Subirlo vuelve a pedir la lista (después de cancelar)
+  // Subirlo vuelve a pedir las listas (después de cancelar o modificar)
   const [version, setVersion] = useState(0);
+  const idUsuario = sesion.user.id;
 
   useEffect(() => {
     let vigente = true;
-    obtenerMisReservas(sesion.user.id)
-      .then((lista) => vigente && setReservas(lista))
+    Promise.all([obtenerMisProximas(idUsuario), obtenerMisAnteriores(idUsuario)])
+      .then(([activas, viejas]) => {
+        if (!vigente) return;
+        // Las de hoy que ya pasaron vienen con las activas: van arriba de las anteriores
+        setProximas(activas.filter((r) => faltaParaReserva(r) > 0));
+        setAnteriores([...activas.filter((r) => faltaParaReserva(r) <= 0).reverse(), ...viejas]);
+        setDesde(viejas.length);
+        setHayMas(viejas.length === POR_PAGINA);
+      })
       .catch((e) => vigente && setError(e.message));
     return () => {
       vigente = false;
     };
-  }, [sesion.user.id, version]);
+  }, [idUsuario, version]);
+
+  const verMas = async () => {
+    try {
+      const mas = await obtenerMisAnteriores(idUsuario, desde);
+      setAnteriores((lista) => [...lista, ...mas]);
+      setDesde((n) => n + mas.length);
+      setHayMas(mas.length === POR_PAGINA);
+    } catch (e) {
+      setError(e.message);
+    }
+  };
+
+  const alModificar = () => {
+    setError('');
+    setAviso('Listo, guardamos los cambios de tu reserva.');
+    setVersion((v) => v + 1);
+  };
 
   const alCancelar = async (reserva) => {
     const pregunta = estadoSena(reserva) === 'aprobado'
@@ -110,13 +160,7 @@ function ListaReservas() {
     }
   };
 
-  if (!reservas && !error) return <p className={estilos.vacio} role="status">Cargando tus reservas…</p>;
-
-  // Próximas: activas y por venir, de la más cercana a la más lejana
-  const proximas = (reservas ?? [])
-    .filter((r) => esActiva(r) && faltaParaReserva(r) > 0)
-    .sort((a, b) => `${a.fecha}${a.hora}`.localeCompare(`${b.fecha}${b.hora}`));
-  const anteriores = (reservas ?? []).filter((r) => !proximas.includes(r));
+  if (!proximas && !error) return <p className={estilos.vacio} role="status">Cargando tus reservas…</p>;
 
   return (
     <div className={estilos.contenedor}>
@@ -124,9 +168,11 @@ function ListaReservas() {
       {aviso && <p className={formulario.exito} role="status">{aviso}</p>}
 
       <h2 className={estilos.subtitulo}>Próximas</h2>
-      {proximas.length ? (
+      {proximas?.length ? (
         <ul className={estilos.lista}>
-          {proximas.map((r) => <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} alPagar={alPagar} />)}
+          {proximas.map((r) => (
+            <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} alPagar={alPagar} alModificar={alModificar} />
+          ))}
         </ul>
       ) : (
         <p className={estilos.vacio}>No tenés reservas próximas.</p>
@@ -137,8 +183,11 @@ function ListaReservas() {
         <>
           <h2 className={estilos.subtitulo}>Anteriores y canceladas</h2>
           <ul className={`${estilos.lista} ${estilos.listaAnteriores}`}>
-            {anteriores.map((r) => <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} alPagar={alPagar} />)}
+            {anteriores.map((r) => (
+              <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} alPagar={alPagar} alModificar={alModificar} />
+            ))}
           </ul>
+          {hayMas && <Boton variante="secundario" onClick={verMas}>Ver más</Boton>}
         </>
       )}
     </div>

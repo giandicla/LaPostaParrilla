@@ -8,6 +8,7 @@ import estilos from './PestanasAdmin.module.css';
 // es una pestaña más acá.
 const PESTANAS = [
   { a: '/admin', texto: 'Reservas' },
+  { a: '/admin/bloqueos', texto: 'Días bloqueados' },
   { a: '/admin/carta', texto: 'Carta' },
 ];
 

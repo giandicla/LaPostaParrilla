@@ -22,7 +22,7 @@ const ERRORES_AUTH = {
 // Los que lanza la base con `raise exception` (código P0001) ya vienen en castellano.
 export function mensajeDeError(error) {
   if (!error) return null;
-  if (error.code === '23505') return 'Ya tenés una reserva activa ese día en ese local.';
+  if (error.code === '23505') return 'Ya tenés una reserva en ese turno, ese día y en ese local.';
   if (error.code === '23514') return 'Revisá los datos: algún valor no es válido.';
   if (error.code === '42501') return 'No tenés permiso para hacer eso.';
   if (error.code === 'P0001') return error.message;

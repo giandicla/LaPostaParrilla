@@ -33,14 +33,40 @@ export const crearReserva = async (idUsuario, reserva) =>
 
 // Filtra por usuario aunque la RLS ya lo haga para un cliente: a un admin la
 // RLS le deja ver todas, y "mis reservas" son solo las suyas.
-export const obtenerMisReservas = async (idUsuario) =>
+const ACTIVAS = '(esperando_pago,pendiente,confirmada)';
+
+// Próximas: todas las activas desde hoy (las de hoy que ya pasaron las separa
+// la página con faltaParaReserva)
+export const obtenerMisProximas = async (idUsuario) =>
   resultado(
     await supabase
       .from('reservas')
       .select(COLUMNAS)
       .eq('usuario_id', idUsuario)
-      .order('fecha', { ascending: false })
+      .in('estado', ['esperando_pago', 'pendiente', 'confirmada'])
+      .gte('fecha', hoyEnArgentina())
+      .order('fecha')
       .order('hora')
+  );
+
+// Anteriores y canceladas, de a `cantidad`, de la más reciente a la más vieja
+export const POR_PAGINA = 5;
+export const obtenerMisAnteriores = async (idUsuario, desde = 0, cantidad = POR_PAGINA) =>
+  resultado(
+    await supabase
+      .from('reservas')
+      .select(COLUMNAS)
+      .eq('usuario_id', idUsuario)
+      .or(`fecha.lt.${hoyEnArgentina()},estado.not.in.${ACTIVAS}`)
+      .order('fecha', { ascending: false })
+      .order('hora', { ascending: false })
+      .range(desde, desde + cantidad - 1)
+  );
+
+// Fecha, hora y personas, mismo local, hasta 1 hora antes (modificar_reserva)
+export const modificarReserva = async (id, { fecha, hora, personas }) =>
+  resultado(
+    await supabase.rpc('modificar_reserva', { p_id: id, p_fecha: fecha, p_hora: hora, p_personas: Number(personas) })
   );
 
 // ---------- Fechas y horas, siempre en hora de Argentina ----------
@@ -63,6 +89,10 @@ export const esActiva = (reserva) => ['esperando_pago', 'pendiente', 'confirmada
 // hasta 1 hora antes. Acá solo decide qué botón mostrar.
 export const sePuedeCancelar = (reserva) =>
   esActiva(reserva) && (reserva.estado === 'esperando_pago' || faltaParaReserva(reserva) >= UNA_HORA);
+
+// Misma regla que modificar_reserva(): confirmada y hasta 1 hora antes
+export const sePuedeModificar = (reserva) =>
+  ['pendiente', 'confirmada'].includes(reserva.estado) && faltaParaReserva(reserva) >= UNA_HORA;
 
 // ---------- Seña ----------
 

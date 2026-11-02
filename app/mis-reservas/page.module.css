@@ -83,3 +83,9 @@
 .nueva {
   align-self: flex-start;
 }
+
+.acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4);
+}

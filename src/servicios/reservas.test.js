@@ -1,7 +1,7 @@
 // node --test "src/**/*.test.js"
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { estadoSena, puedePagar, sePuedeCancelar, turnoDe } from './reservas.js';
+import { estadoSena, puedePagar, sePuedeCancelar, sePuedeModificar, turnoDe } from './reservas.js';
 
 // Fecha y hora de Argentina (UTC-3) dentro de `minutos`, como las guarda la base
 function dentroDe(minutos) {
@@ -22,6 +22,13 @@ test('cancelar desde la web: solo reservas activas', () => {
 
 test('una reserva sin pagar se puede cancelar siempre', () => {
   assert.equal(sePuedeCancelar({ ...dentroDe(30), estado: 'esperando_pago' }), true);
+});
+
+test('modificar desde la web: confirmada y hasta 1 hora antes', () => {
+  assert.equal(sePuedeModificar(dentroDe(90)), true);
+  assert.equal(sePuedeModificar(dentroDe(30)), false);
+  assert.equal(sePuedeModificar({ ...dentroDe(600), estado: 'esperando_pago' }), false);
+  assert.equal(sePuedeModificar({ ...dentroDe(600), estado: 'cancelada' }), false);
 });
 
 test('turno: antes de las 17 es mediodía', () => {
