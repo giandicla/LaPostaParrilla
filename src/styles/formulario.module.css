@@ -63,13 +63,6 @@ textarea.control {
   min-height: 96px;
 }
 
-.casilla {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-size: var(--fs-small);
-}
-
 .error,
 .exito {
   padding: var(--sp-3) var(--sp-4);

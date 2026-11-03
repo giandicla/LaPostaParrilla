@@ -251,7 +251,6 @@ function FormularioReserva({ idInicial }) {
       return;
     }
 
-    const guardarTelefono = new FormData(evento.currentTarget).get('guardarTelefono');
     const telefono = valores.telefono.trim();
     setEnviando(true);
     try {
@@ -264,7 +263,7 @@ function FormularioReserva({ idInicial }) {
         telefono,
         comentarios: valores.comentarios.trim() || null,
       });
-      if (guardarTelefono && telefono !== perfil?.telefono) {
+      if (telefono !== perfil?.telefono) {
         await actualizarPerfil(sesion.user.id, { nombre: perfil?.nombre ?? valores.nombre.trim(), telefono });
         recargarPerfil();
       }
@@ -347,28 +346,24 @@ function FormularioReserva({ idInicial }) {
               />
             )}
           </Campo>
-          <div className={formulario.campo}>
-            <Campo id="telefono" etiqueta="Teléfono" error={errorVisible('telefono')}>
-              {(props) => (
-                <input
-                  {...props}
-                  name="telefono"
-                  type="tel"
-                  required
-                  autoComplete="tel"
-                  placeholder="+54 9 2944 00-0000"
-                  value={valores.telefono}
-                  inputMode="tel"
-                  onChange={(e) => cambiar('telefono', limpiarTelefono(e.target.value))}
-                  onBlur={alSalir('telefono')}
-                  className={formulario.control}
-                />
-              )}
-            </Campo>
-            <label className={formulario.casilla}>
-              <input type="checkbox" name="guardarTelefono" defaultChecked /> Guardarlo para la próxima
-            </label>
-          </div>
+          {/* Se guarda en el perfil al reservar, siempre: la próxima vez ya viene escrito */}
+          <Campo id="telefono" etiqueta="Teléfono" error={errorVisible('telefono')}>
+            {(props) => (
+              <input
+                {...props}
+                name="telefono"
+                type="tel"
+                required
+                autoComplete="tel"
+                placeholder="+54 9 2944 00-0000"
+                value={valores.telefono}
+                inputMode="tel"
+                onChange={(e) => cambiar('telefono', limpiarTelefono(e.target.value))}
+                onBlur={alSalir('telefono')}
+                className={formulario.control}
+              />
+            )}
+          </Campo>
         </div>
 
         <div className={formulario.fila}>
