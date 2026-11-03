@@ -151,7 +151,9 @@ mails por el SMTP de Brevo, y eso destraba lo de entonces.
   1. `config push` con SMTP, plantillas, límite de envíos y largo de contraseña, con
      `enable_signup` **todavía en false**. Prueba de entrega: una cuenta de prueba
      creada a mano desde el panel de Supabase con un mail del usuario que no sea de
-     Google, y "Olvidé mi contraseña" a esa cuenta: ver que lleguen, a qué carpeta y
+     Google, y "Send password recovery" a esa cuenta **desde el panel** (con
+     `enable_signup = false` el proveedor de mail entero queda apagado, también para
+     ingresar: corrección de la revisión final): ver que lleguen, a qué carpeta y
      con la plantilla. (No se prueba con el mail de la facultad: ahí los mails de
      Brevo caen en spam, por eso el local dejó de recibir mails, PR #24. A los
      clientes les llegan bien, según el usuario.)

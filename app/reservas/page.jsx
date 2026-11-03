@@ -19,7 +19,7 @@ import {
 } from '../../src/data/locales.js';
 import { TEXTOS } from '../../src/data/textos.js';
 import { MARCA } from '../../src/data/marca.js';
-import { actualizarPerfil, ingresarConGoogle } from '../../src/servicios/auth.js';
+import { guardarTelefonoDelPerfil, ingresarConGoogle } from '../../src/servicios/auth.js';
 import { iniciarPago } from '../../src/servicios/pagos.js';
 import {
   MINUTOS_PARA_PAGAR,
@@ -263,8 +263,8 @@ function FormularioReserva({ idInicial }) {
         telefono,
         comentarios: valores.comentarios.trim() || null,
       });
-      if (telefono !== perfil?.telefono) {
-        await actualizarPerfil(sesion.user.id, { nombre: perfil?.nombre ?? valores.nombre.trim(), telefono });
+      if (telefono !== perfil?.telefono
+        && await guardarTelefonoDelPerfil(sesion.user.id, { nombre: perfil?.nombre ?? valores.nombre.trim(), telefono })) {
         recargarPerfil();
       }
       setCreada(reserva);

@@ -14,7 +14,6 @@ export const supabase = url && clave ? createClient(url, clave) : null;
 
 export { backendDisponible } from './config.js';
 
-const SIN_REGISTRO = 'Por ahora solo se puede crear la cuenta con Google.';
 const ERRORES_AUTH = {
   provider_disabled: 'El ingreso con Google no está disponible en este momento.',
   invalid_credentials: 'El mail o la contraseña no son correctos.',
@@ -22,8 +21,9 @@ const ERRORES_AUTH = {
   over_email_send_rate_limit: 'Mandamos demasiados mails seguidos. Probá de nuevo en unos minutos.',
   weak_password: 'La contraseña tiene que tener al menos 8 caracteres.',
   same_password: 'La contraseña nueva tiene que ser distinta de la anterior.',
-  signup_disabled: SIN_REGISTRO,
-  email_provider_disabled: SIN_REGISTRO,
+  signup_disabled: 'Por ahora solo se puede crear la cuenta con Google.',
+  // Proveedor de mail apagado: tampoco se puede ingresar con contraseña
+  email_provider_disabled: 'Por ahora solo se puede ingresar con Google.',
   email_address_invalid: 'Ese mail no parece válido. Ejemplo: nombre@gmail.com',
 };
 

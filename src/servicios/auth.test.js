@@ -1,6 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { resultadoDeRegistro } from './auth.js';
+import { guardarTelefonoDelPerfil, resultadoDeRegistro } from './auth.js';
+
+test('si guardar el teléfono falla, no corta la reserva: devuelve false sin lanzar', async () => {
+  // En los tests no hay cliente de Supabase: la llamada falla adentro
+  assert.equal(await guardarTelefonoDelPerfil('u', { nombre: 'Ana', telefono: '2944111111' }), false);
+});
 
 test('una cuenta nueva trae identidades', () => {
   assert.deepEqual(resultadoDeRegistro({ data: { user: { identities: [{ id: 'x' }] } }, error: null }), { cuentaNueva: true });

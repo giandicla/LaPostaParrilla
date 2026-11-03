@@ -71,3 +71,15 @@ export const obtenerPerfil = async (idUsuario) =>
 
 export const actualizarPerfil = async (idUsuario, { nombre, telefono }) =>
   resultado(await supabase.from('perfiles').update({ nombre, telefono }).eq('id', idUsuario));
+
+// Al reservar: guarda el teléfono para la próxima. Es comodidad, así que un
+// error acá no corta la reserva ni el pago. Devuelve si se guardó.
+export async function guardarTelefonoDelPerfil(idUsuario, datos) {
+  try {
+    await actualizarPerfil(idUsuario, datos);
+    return true;
+  } catch (e) {
+    console.error('No se pudo guardar el teléfono en el perfil', e);
+    return false;
+  }
+}

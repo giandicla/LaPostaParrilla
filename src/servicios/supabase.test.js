@@ -9,7 +9,8 @@ const casos = {
   weak_password: 'La contraseña tiene que tener al menos 8 caracteres.',
   same_password: 'La contraseña nueva tiene que ser distinta de la anterior.',
   signup_disabled: 'Por ahora solo se puede crear la cuenta con Google.',
-  email_provider_disabled: 'Por ahora solo se puede crear la cuenta con Google.',
+  // Con el proveedor de mail apagado tampoco se puede ingresar con contraseña
+  email_provider_disabled: 'Por ahora solo se puede ingresar con Google.',
   email_address_invalid: 'Ese mail no parece válido. Ejemplo: nombre@gmail.com',
   provider_disabled: 'El ingreso con Google no está disponible en este momento.',
 };

@@ -192,7 +192,6 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] Al reservar, el teléfono queda guardado (no hay casilla) y la próxima reserva lo trae escrito.
 - [ ] Lleva a la pantalla de Google y vuelve al sitio, a la página de la que venía.
 - [ ] La primera vez crea la cuenta: el nombre de Google aparece precargado al reservar.
-- [ ] No hay formulario de email ni "crear cuenta" en ningún lado.
 
 **Reservar**
 - [ ] Nombre y teléfono vienen precargados del perfil.

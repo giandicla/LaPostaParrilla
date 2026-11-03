@@ -65,9 +65,10 @@ npm run dev
   cualquier cuenta de Google (probado con una personal).
 - La contraseña de la base está en `supabase/.db-password` (ignorado por git).
 
-**Nota:** como el registro con email está apagado en `config.toml`, en local los
-usuarios de prueba del seed tampoco pueden ingresar con contraseña. Para probar en
-local con sesión hay que agregar `http://127.0.0.1:54321/auth/v1/callback` a las
+**Nota:** en local se puede crear una cuenta con mail y contraseña desde
+`/ingresar`: el mail de confirmación cae en Mailpit (http://127.0.0.1:54324). El link
+vuelve al sitio solo si su puerto está en `additional_redirect_urls` (3000). Para
+probar Google en local hay que agregar `http://127.0.0.1:54321/auth/v1/callback` a las
 URIs de redirección del cliente de Google.
 
 ## Puesta en producción (una sola vez)
