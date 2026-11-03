@@ -20,7 +20,7 @@ const NOMBRE = /^\p{L}[\p{L} '.-]*$/u;
 const TELEFONO = /^[0-9+()\s-]+$/;
 const FECHA = /^\d{4}-\d{2}-\d{2}$/;
 // Algo@algo.algo, sin espacios. La validación de verdad es que el mail llegue.
-const MAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const MAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 const limpio = (valor) => String(valor ?? '').trim();
 
