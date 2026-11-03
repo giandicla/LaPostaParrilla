@@ -449,10 +449,12 @@ verify_jwt = false
 [remotes.produccion]
 project_id = "dagxitkhqbztgetoultt"
 
-# Paso 1 de la puesta en producción: false hasta comprobar que los mails de
-# Brevo llegan (ver docs/superpowers/specs/2026-11-03-ingreso-con-mail-design.md)
+# Registro con mail prendido en producción el 2026-11-03 (paso 2). Con false,
+# la CLI apaga todo el proveedor de mail: tampoco se puede ingresar con
+# contraseña ni mandar mails de cuentas (ni desde el panel). Para volver atrás
+# si los mails de Brevo dejan de llegar: false y `config push`.
 [remotes.produccion.auth.email]
-enable_signup = false
+enable_signup = true
 
 # Los mails de Auth (confirmación, contraseña nueva) salen por Brevo. La clave
 # vive en supabase/.env (no se versiona); el login no es secreto.
