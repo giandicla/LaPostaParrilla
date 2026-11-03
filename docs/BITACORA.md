@@ -4,6 +4,23 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-03 — El local ya no recibe mails
+
+Rama `feat/sin-mails-al-local`. Pedido del usuario: los avisos al local (reserva
+nueva con la seña paga, cancelación y cambio del cliente) llegaban al mail de la
+facultad y caían en spam. La función `notificar-reserva` ahora le escribe **solo al
+cliente**; el local se entera por el panel, en tiempo real. Los mails al cliente no
+cambian (el usuario confirmó que le llegan bien).
+
+- `mensajes.ts`: fuera los tres mails al admin, el campo `para` y el teléfono con
+  links de llamada y WhatsApp (solo iba en esos mails). `index.ts`: deja de leer
+  `MAIL_ADMIN`.
+- Tests Deno: 19 (uno nuevo: ningún mail lleva al panel).
+- Hay que **redesplegar la función** (`npx supabase functions deploy notificar-reserva`)
+  para que llegue a producción; el secreto `MAIL_ADMIN` puede quedar o borrarse.
+
+---
+
 ## 2026-11-02 — Rendimiento en el celular
 
 Rama `perf/celular`. Medido primero contra producción (Lighthouse celular):

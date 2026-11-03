@@ -183,7 +183,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       (RT Flinton, HeyGotcha), se cambian en `src/styles/fuentesCarta.js`.
 - [ ] Editar franjas de reserva y horarios de atención desde el panel
 - [x] **Redesplegar la Edge Function `notificar-reserva`** (hecho 2026-11-02, con la plantilla nueva) cuando esté Brevo: tiene el
-      mail nuevo de "el cliente cambió su reserva" (aviso al local + confirmación al
+      mail nuevo de "el cliente cambió su reserva" (aviso al local, sacado el 2026-11-03, + confirmación al
       cliente). Hasta entonces, si el cliente modifica, la función vieja le manda
       "Cambiamos el horario de tu reserva".
 
