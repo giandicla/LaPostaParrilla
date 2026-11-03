@@ -17,12 +17,19 @@ export const ingresarConGoogle = async (volverA) =>
     })
   );
 
-// La cuenta queda sin confirmar hasta que se toca el link del mail. Si el mail
-// ya tenía cuenta, Supabase no avisa (para no revelar qué mails existen):
-// devuelve un usuario sin identidades y no manda nada. cuentaNueva lo distingue
-// solo para las pruebas; la pantalla dice lo mismo en los dos casos.
+// Un mail que ya tenía cuenta no es un error para la pantalla: dice lo mismo
+// que con una cuenta nueva, para no revelar qué mails existen. Supabase lo
+// avisa de dos formas según la configuración: un usuario sin identidades, o
+// el error user_already_exists. cuentaNueva queda solo para las pruebas.
+export function resultadoDeRegistro({ data, error }) {
+  if (error?.code === 'user_already_exists') return { cuentaNueva: false };
+  const datos = resultado({ data, error });
+  return { cuentaNueva: (datos.user?.identities?.length ?? 0) > 0 };
+}
+
+// La cuenta queda sin confirmar hasta que se toca el link del mail
 export async function crearCuenta({ nombre, mail, contrasena }, volverA) {
-  const datos = resultado(
+  return resultadoDeRegistro(
     await supabase.auth.signUp({
       email: normalizarMail(mail),
       password: contrasena,
@@ -30,7 +37,6 @@ export async function crearCuenta({ nombre, mail, contrasena }, volverA) {
       options: { data: { nombre: nombre.trim() }, emailRedirectTo: urlDeVuelta(volverA) },
     })
   );
-  return { cuentaNueva: (datos.user?.identities?.length ?? 0) > 0 };
 }
 
 export const ingresarConMail = async ({ mail, contrasena }) =>
