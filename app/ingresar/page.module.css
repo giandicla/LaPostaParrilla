@@ -53,6 +53,12 @@
   height: 1.3em;
 }
 
+/* La tarjeta de "Contraseña nueva" es un formulario: campos a la izquierda */
+.formulario {
+  gap: var(--sp-4);
+  text-align: left;
+}
+
 /* "o con tu mail", entre dos líneas */
 .separador {
   display: flex;
