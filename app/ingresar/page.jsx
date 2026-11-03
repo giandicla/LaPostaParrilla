@@ -5,6 +5,8 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import Icono from '../../src/components/Icono/Icono.jsx';
+import PestanasCuenta from '../../src/components/PestanasCuenta/PestanasCuenta.jsx';
+import FormularioCuenta from '../../src/components/FormularioCuenta/FormularioCuenta.jsx';
 import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
 import { backendDisponible } from '../../src/servicios/config.js';
 import { ingresarConGoogle } from '../../src/servicios/auth.js';
@@ -15,9 +17,14 @@ import estilos from './page.module.css';
 const destinoSeguro = (volver) =>
   volver?.startsWith('/') && !volver.startsWith('//') ? volver : '/mis-reservas';
 
-// Se ingresa solo con Google: no hay contraseñas que recordar ni mails de
-// confirmación que dependan de un servidor de correo. La primera vez que
-// alguien entra, se le crea la cuenta (y el perfil, por trigger en la base).
+const PESTANAS = [
+  { id: 'ingresar', etiqueta: 'Ingresar' },
+  { id: 'crear', etiqueta: 'Crear cuenta' },
+];
+
+// Con Google o con mail y contraseña, en dos pestañas. Con Google, la primera
+// vez que alguien entra se le crea la cuenta; con mail, la crea en "Crear
+// cuenta" y la confirma desde el mail. El perfil lo crea un trigger en la base.
 function IngresarContenido() {
   const parametros = useSearchParams();
   const router = useRouter();
@@ -25,6 +32,10 @@ function IngresarContenido() {
   const volver = destinoSeguro(parametros.get('volver'));
   const [yendo, setYendo] = useState(false);
   const [error, setError] = useState('');
+  const [pestana, setPestana] = useState('ingresar');
+  // Dentro de "Ingresar": el formulario de ingreso o el de "Olvidé mi contraseña"
+  const [modoIngreso, setModoIngreso] = useState('ingresar');
+  const modo = pestana === 'crear' ? 'crear' : modoIngreso;
 
   // Con sesión no hay nada que hacer acá: de vuelta a donde iba
   useEffect(() => {
@@ -48,17 +59,32 @@ function IngresarContenido() {
 
   return (
     <div className={estilos.tarjeta}>
-      <h2 className={estilos.titulo}>Ingresar</h2>
-      <p className={estilos.bajada}>
-        Con tu cuenta de Google podés reservar y ver o cancelar tus reservas.
-      </p>
+      <h2 className="visualmente-oculto">Tu cuenta</h2>
+      <PestanasCuenta
+        pestanas={PESTANAS}
+        activa={pestana}
+        alCambiar={(id) => {
+          setPestana(id);
+          setModoIngreso('ingresar');
+        }}
+      >
+        <p className={estilos.bajada}>Para reservar y ver o cancelar tus reservas.</p>
 
-      <button type="button" className={estilos.google} onClick={conGoogle} disabled={yendo}>
-        <Icono nombre="google" className={estilos.logoGoogle} />
-        {yendo ? 'Abriendo Google…' : 'Continuar con Google'}
-      </button>
+        {/* "Olvidé mi contraseña" es solo para cuentas con mail: ahí Google sobra */}
+        {modo !== 'olvide' && (
+          <>
+            <button type="button" className={estilos.google} onClick={conGoogle} disabled={yendo}>
+              <Icono nombre="google" className={estilos.logoGoogle} />
+              {yendo ? 'Abriendo Google…' : 'Continuar con Google'}
+            </button>
+            {error && <p className={formulario.error} role="alert">{error}</p>}
+            <p className={estilos.separador}>o con tu mail</p>
+          </>
+        )}
 
-      {error && <p className={formulario.error} role="alert">{error}</p>}
+        {/* key: al cambiar de formulario se vacían los campos y los errores */}
+        <FormularioCuenta key={modo} modo={modo} volver={volver} alCambiarModo={setModoIngreso} />
+      </PestanasCuenta>
 
       <p className={estilos.letraChica}>
         Solo usamos tu nombre y tu mail para gestionar tus reservas.

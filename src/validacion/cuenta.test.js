@@ -35,6 +35,13 @@ test('crear cuenta pide nombre, mail y contraseña', () => {
   assert.deepEqual(Object.keys(errores), ['nombre', 'mail', 'contrasena']);
 });
 
+test('el nombre vacío de la cuenta tiene su propio mensaje, no el de la reserva', () => {
+  assert.equal(validarCuenta({ nombre: ' ', mail: 'ana@hotmail.com', contrasena: '12345678' }, { modo: 'crear' }).nombre,
+    'Escribí tu nombre.');
+  assert.equal(validarCuenta({ nombre: 'Ana1', mail: 'ana@hotmail.com', contrasena: '12345678' }, { modo: 'crear' }).nombre,
+    'Usá solo letras y espacios en el nombre.');
+});
+
 test('olvidé mi contraseña pide solo el mail', () => {
   assert.deepEqual(Object.keys(validarCuenta({ mail: 'x' }, { modo: 'olvide' })), ['mail']);
 });

@@ -53,6 +53,22 @@
   height: 1.3em;
 }
 
+/* "o con tu mail", entre dos líneas */
+.separador {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-size: var(--fs-small);
+  color: var(--gris-600);
+}
+
+.separador::before,
+.separador::after {
+  content: '';
+  flex: 1;
+  border-top: 1px solid var(--gris-300);
+}
+
 .letraChica {
   font-size: 0.8rem;
   color: var(--gris-600);

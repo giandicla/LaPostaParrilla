@@ -41,7 +41,8 @@ export function validarCuenta(datos, { modo }) {
       contrasena: datos.contrasena ? '' : 'Escribí tu contraseña.',
     }),
     crear: () => ({
-      nombre: validarNombre(datos.nombre),
+      // El resto de las reglas del nombre son las de la reserva; el aviso de vacío, no
+      nombre: String(datos.nombre ?? '').trim() ? validarNombre(datos.nombre) : 'Escribí tu nombre.',
       mail: validarMailCuenta(datos.mail),
       contrasena: validarContrasena(datos.contrasena),
     }),
