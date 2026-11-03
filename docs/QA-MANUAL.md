@@ -218,6 +218,7 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] "Nueva reserva": queda confirmada, marcada "Cargada en el local"; se pueden cargar varias el
       mismo día; hasta 40 personas; con mail, aparece en la fila y le llega la confirmación.
 - [ ] Confirmar, rechazar, cancelar y mover funcionan y el cliente lo ve en "Mis reservas".
+- [ ] "Editar" en el panel: corregir nombre, teléfono, personas y comentarios (y mail en una del local) se guarda; 7 personas en una de la web o un mail inválido muestran el error en el campo.
 - [ ] Con el panel abierto, una reserva nueva aparece sola, con el aviso arriba.
 - [ ] La nota interna se guarda y el cliente **no** la ve.
 - [ ] Bloquear y desbloquear días.
