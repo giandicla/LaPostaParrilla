@@ -182,8 +182,14 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] `/reservas` muestra "Ingresá para continuar" y un botón a `/ingresar`.
 - [ ] El navbar muestra "Ingresar".
 
-**Ingresar (solo Google)**
-- [ ] `/ingresar` muestra un único botón "Continuar con Google", con el logo de Google.
+**Ingresar (Google o mail)**
+- [ ] `/ingresar` muestra dos pestañas, "Ingresar" y "Crear cuenta", y en las dos el botón "Continuar con Google", con el logo de Google.
+- [ ] Las pestañas se cambian con las flechas del teclado.
+- [ ] Crear cuenta con un mail que no sea de Google (Hotmail, Yahoo): llega "Confirmá tu cuenta en La Posta" con la plantilla de la marca; el botón confirma y deja la sesión iniciada.
+- [ ] Ingresar con mail y contraseña; con la contraseña mal dice "El mail o la contraseña no son correctos."; con la cuenta sin confirmar pide revisar el mail.
+- [ ] "Olvidé mi contraseña": llega "Elegí una contraseña nueva"; el link lleva a `/ingresar/contrasena`; después de guardar queda en "Mis reservas". El mismo link usado otra vez dice que venció.
+- [ ] Crear cuenta con un mail que ya tiene cuenta muestra el mismo aviso que una nueva.
+- [ ] Al reservar, el teléfono queda guardado (no hay casilla) y la próxima reserva lo trae escrito.
 - [ ] Lleva a la pantalla de Google y vuelve al sitio, a la página de la que venía.
 - [ ] La primera vez crea la cuenta: el nombre de Google aparece precargado al reservar.
 - [ ] No hay formulario de email ni "crear cuenta" en ningún lado.

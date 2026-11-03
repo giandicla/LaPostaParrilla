@@ -54,8 +54,12 @@ npm run dev
 - Migraciones de la seña (hasta `20261018120000`) aplicadas el 2026-10-18; función `notificar-reserva` redesplegada ese día.
 - Función `notificar-reserva` desplegada con sus secretos y los de Vault. Falta
   `BREVO_API_KEY`: hasta cargarla, los mails solo quedan en el log de la función.
-- Auth: Site URL `https://lapostaparrilla.vercel.app`. **Solo Google**: el proveedor
-  de email está apagado (la API rechaza registrarse con email). Se aplica con `npx supabase config push` (sección `[auth]` de
+- Auth: Site URL `https://lapostaparrilla.vercel.app`. **Google y mail con contraseña**
+  (desde la sesión 09): los mails de Auth salen por el SMTP de Brevo, configurado solo
+  para producción en `[remotes.produccion]` (host `smtp-relay.brevo.com`, login
+  `c1039d001@smtp-brevo.com`, clave `BREVO_SMTP_KEY` en `supabase/.env`). Ese bloque
+  también fija valores que producción ya tenía (pooler, storage) para que el push no
+  los cambie. **Antes de cada push: `npx supabase config diff`.** Se aplica con `npx supabase config push` (sección `[auth]` de
   `config.toml`; las credenciales salen de `supabase/.env`, que no se sube).
 - Google: cliente OAuth creado con la cuenta de la facultad. Ingresar funciona con
   cualquier cuenta de Google (probado con una personal).
@@ -257,6 +261,11 @@ Desde la sesión 06 la carta vive en la base. Diseño:
 
 ## Mails
 
-Al ingresar solo con Google, Supabase Auth no manda mails (no hay confirmaciones
-ni recuperación de contraseña). Los únicos mails son los de reservas, que manda
-la función `notificar-reserva` con Brevo cuando esté cargada `BREVO_API_KEY`.
+Hay dos tipos de mails, y salen por caminos distintos de Brevo:
+
+- **De cuentas** (confirmar la cuenta, contraseña nueva): los manda Supabase Auth por
+  SMTP. Plantillas en `supabase/templates/` (`confirmacion.html`, `recuperacion.html`),
+  con el mismo marco que los de reservas. En local caen en Mailpit
+  (http://127.0.0.1:54324).
+- **De reservas**: los manda la función `notificar-reserva` con la API de Brevo
+  (`BREVO_API_KEY`).

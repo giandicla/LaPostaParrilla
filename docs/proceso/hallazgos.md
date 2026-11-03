@@ -573,6 +573,21 @@ hoja de la parrilla (PR #21).
 Cuando un diseño se copia de un original pensado para otro medio, vale preguntar si
 la diferencia se quiere conservar.
 
+### 1.34 El diseño suponía cómo respondía Supabase a un mail repetido, y no era así (sesión 09)
+
+El diseño del ingreso con mail decía que, al crear una cuenta con un mail que ya
+existe, Supabase devuelve un usuario sin identidades y no avisa. La IA lo escribió
+como un hecho, sin probarlo. En el recorrido con Mailpit, Supabase local respondió
+`user_already_exists` y la pantalla mostró "Algo salió mal". Se corrigió con un test
+(`src/servicios/auth.test.js`) que trata las dos respuestas igual. Mismo patrón que
+1.9: una afirmación sobre un servicio externo se prueba antes de diseñar sobre ella.
+
+Corrección de 1.10 (sin editarla): el registro con mail vuelve en la sesión 09 porque
+ahora hay un SMTP propio (Brevo). El problema de entonces no era el registro, era no
+tener cómo mandar los mails.
+
+---
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -771,6 +786,18 @@ local no mostraba igual: supabase-js (~245 KB) cargado en todas las páginas por
 navbar, `/carta` llegando vacía en el HTML (CLS 1) y el pie saltando en las páginas
 con sesión. Arreglando esas tres cosas, las cuatro páginas quedaron entre 72 y 80 y
 sin saltos de layout.
+
+### 2.14 Comparar antes de empujar evitó cambiar producción sin querer (sesión 09)
+
+Antes del primer `config push` de Auth, la IA corrió `npx supabase config diff`. Además
+del SMTP y las plantillas, el push iba a cambiar el pooler de la base (de 15 a 20
+conexiones por defecto y de 200 a 100 clientes) y la analítica de storage, que no
+tenían nada que ver: `config.toml` no declaraba los valores que producción ya tenía.
+También faltaban en el archivo las URLs de las previews de Vercel, que estaban
+cargadas a mano en producción. Se fijaron los valores de producción en
+`[remotes.produccion]` y el diff quedó solo con Auth.
+
+---
 
 ## Parte 3 — Lo que se aprendió sobre el método
 

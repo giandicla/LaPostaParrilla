@@ -22,10 +22,13 @@ restaurante.
 - **Todo cambio va por rama + PR** (lo pide la rúbrica, E1). CI en
   `.github/workflows/ci.yml`; la plantilla del PR trae el checklist. No mergear
   sin el OK del usuario.
-- **Se ingresa solo con Google.** El registro con email está apagado en Supabase
-  (`[auth.email] enable_signup = false`): no volver a agregar formularios de email
-  o contraseña sin hablarlo, porque el servidor de mails de fábrica de Supabase no
-  le entrega a clientes.
+- **Se ingresa con Google o con mail y contraseña** (desde la sesión 09). Los mails
+  de Auth (confirmar la cuenta, contraseña nueva) salen por el **SMTP de Brevo solo en
+  producción**: bloque `[remotes.produccion]` de `supabase/config.toml`, clave
+  `BREVO_SMTP_KEY` en `supabase/.env` (no se sube). En local caen en Mailpit
+  (http://127.0.0.1:54324). El servidor de mails de fábrica de Supabase no le entrega a
+  clientes: no apagar el SMTP de producción. Antes de un `config push`, mirar
+  `npx supabase config diff`.
 - **Toda llamada a Supabase pasa por `src/servicios/`.** Ningún componente
   importa `@supabase/supabase-js`. Las reglas de negocio (6 personas, 1 hora para cancelar,
   franjas, una reserva por turno, modificar hasta 1 hora antes, seña y vencimiento) viven en la base, no en los componentes.
@@ -48,7 +51,7 @@ base de pruebas): lo que se haga en una preview queda en los datos reales.
 - **Server Components por defecto.** `'use client'` va en `Navbar`,
   `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `SelloMercadoPago`,
   `app/carta`, y en las páginas que usan la sesión: `reservas`, `reservas/pago`,
-  `ingresar`, `mis-reservas`, `admin`, `admin/dia`, `admin/bloqueos`, `admin/carta`. Todas las páginas
+  `ingresar`, `ingresar/contrasena`, `mis-reservas`, `admin`, `admin/dia`, `admin/bloqueos`, `admin/carta`. Todas las páginas
   siguen prerenderizándose como estáticas; las únicas rutas dinámicas son las de
   `app/api/`.
 - Navegación con `next/link`. `Boton` tiene dos props de destino, a propósito:
