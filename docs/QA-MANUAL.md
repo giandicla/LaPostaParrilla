@@ -203,7 +203,7 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] Un día bloqueado muestra el aviso y deshabilita el botón.
 - [ ] Una segunda reserva el mismo día en el mismo local: "Ya tenés una reserva activa…".
 - [ ] Al reservar: "Pedido de reserva enviado", estado pendiente.
-- [ ] Sin sesión: se ven los dos salones y "Ingresar con Google" vuelve a `/reservas`.
+- [ ] Sin sesión: se ven los dos salones; "Ingresar con Google" vuelve a `/reservas`, y "Ingresar con mail o crear cuenta" lleva a `/ingresar` y, al entrar, vuelve a `/reservas` con el mismo salón.
 
 **Mis reservas**
 - [ ] Muestra próximas (de la más cercana a la más lejana) y anteriores.

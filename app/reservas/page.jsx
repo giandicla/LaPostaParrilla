@@ -95,12 +95,14 @@ function SinSesion() {
   const [yendo, setYendo] = useState(false);
   const [error, setError] = useState('');
   const query = parametros.toString();
+  // Con Google o con mail, al terminar vuelve acá, con el salón ya elegido
+  const volver = query ? `${ruta}?${query}` : ruta;
 
   const conGoogle = async () => {
     setError('');
     setYendo(true);
     try {
-      await ingresarConGoogle(query ? `${ruta}?${query}` : ruta);
+      await ingresarConGoogle(volver);
     } catch (e) {
       setError(e.message);
       setYendo(false);
@@ -115,13 +117,17 @@ function SinSesion() {
       </div>
       <div className={formulario.formulario}>
         <p className={estilos.textoIngreso}>
-          Para pedir una mesa, ingresá con tu cuenta de Google: así ves y cancelás tus reservas desde acá.
+          Para pedir una mesa, ingresá con tu cuenta: así ves, cambiás y cancelás tus reservas desde acá.
         </p>
+        {/* Google sigue a un clic; con mail (o para crear la cuenta) se pasa por /ingresar */}
         <button type="button" className={estilos.google} onClick={conGoogle} disabled={yendo}>
           <Icono nombre="google" className={estilos.logoGoogle} />
           {yendo ? 'Abriendo Google…' : 'Ingresar con Google'}
         </button>
         {error && <p className={formulario.error} role="alert">{error}</p>}
+        <Boton variante="secundario" className={estilos.conMail} to={`/ingresar?volver=${encodeURIComponent(volver)}`}>
+          Ingresar con mail o crear cuenta
+        </Boton>
       </div>
     </div>
   );

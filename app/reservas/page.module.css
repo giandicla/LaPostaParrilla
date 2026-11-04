@@ -165,6 +165,11 @@
   height: 1.3em;
 }
 
+/* "Ingresar con mail o crear cuenta", debajo de Google y del mismo ancho natural */
+.conMail {
+  align-self: flex-start;
+}
+
 /* Mientras se sabe si hay sesión, el lugar del formulario: sin esto el pie
    subía y bajaba de golpe al aparecer el formulario (CLS de 0.26). */
 .esperando {
