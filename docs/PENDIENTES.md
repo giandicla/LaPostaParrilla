@@ -144,7 +144,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] **Falta textura humana**: no hay gente, familia, reseñas, Instagram, ni detalles
       de la carta impresa (papel, tipografía de menú). Todo es foto de producto.
 
-## Abiertos al 2026-11-02 (resumen para la próxima sesión)
+## Abiertos al 2026-11-04 (resumen para la próxima sesión)
 
 - [ ] **Gift cards**: en evaluación (decisión del usuario).
 - [ ] **Dominio propio para los mails**: hoy el remitente es un Gmail (2026-11-03) y a Hotmail/Outlook pueden caer en spam. Con un dominio autenticado en Brevo (DKIM + DMARC) llegan a todos.
@@ -155,8 +155,12 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] Probar la impresión de la lista del día en la computadora del local.
 - [ ] Tests de componentes React y de las rutas de `app/api/`.
 - [ ] Guion de la demo: **solo cuando lo pida el usuario**.
-- [x] Ingreso con mail y contraseña (2026-11-03, rama `feat/ingreso-con-mail`): falta la
-      puesta en producción en dos pasos (ver el spec del 2026-11-03).
+- [x] Ingreso con mail y contraseña: en producción desde el 2026-11-03 (PR #25), también
+      desde `/reservas` sin sesión (PR #27, 2026-11-04).
+- [ ] Menores del ingreso con mail: link de recuperación vencido con sesión abierta muestra
+      el formulario; algunos errores de Auth sin traducir; el aviso de límite de envíos
+      puede revelar que una cuenta existe; foco al cambiar de modo; las pestañas sin
+      `aria-label`.
 - [ ] Los menores diferidos de esta página (seña, carta, accesibilidad).
 
 ## Etapas futuras
