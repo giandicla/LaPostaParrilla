@@ -28,6 +28,13 @@ import {
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
+// Qué le decimos según lo que pasó con la seña (respuesta de la cancelación)
+const MENSAJE_CANCELADA = {
+  pedido: 'Listo, cancelamos tu reserva. Ya pedimos la devolución de la seña a Mercado Pago: vuelve al mismo medio de pago.',
+  fallo: 'Listo, cancelamos tu reserva. La devolución de la seña no salió todavía; la reintentamos desde el local.',
+  no_corresponde: 'Listo, cancelamos tu reserva.',
+};
+
 function TarjetaReserva({ reserva, alCancelar, alPagar, alModificar }) {
   const [modificando, setModificando] = useState(false);
   const local = getLocal(reserva.local_id);
@@ -137,14 +144,14 @@ function ListaReservas() {
 
   const alCancelar = async (reserva) => {
     const pregunta = estadoSena(reserva) === 'aprobado'
-      ? '¿Seguro que querés cancelar esta reserva? La seña no se devuelve.'
+      ? '¿Seguro que querés cancelar esta reserva? Te devolvemos la seña por Mercado Pago.'
       : '¿Seguro que querés cancelar esta reserva?';
     if (!window.confirm(pregunta)) return;
     setError('');
     setAviso('');
     try {
-      await cancelarReserva(reserva.id);
-      setAviso('Listo, cancelamos tu reserva.');
+      const { reintegro } = await cancelarReserva(reserva.id);
+      setAviso(MENSAJE_CANCELADA[reintegro] ?? MENSAJE_CANCELADA.no_corresponde);
       setVersion((v) => v + 1);
     } catch (e) {
       setError(e.message);

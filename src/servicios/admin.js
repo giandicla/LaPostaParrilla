@@ -68,8 +68,8 @@ export const bloquearDia = async ({ fecha, idLocal, turno, motivo }) =>
       .insert({ fecha, local_id: idLocal || null, turno: turno || null, motivo: motivo?.trim() || null })
   );
 
-// Señas que el local tiene que devolver a mano (canceló el local o el pago
-// llegó tarde): la app no reembolsa por Mercado Pago
+// Señas con la devolución pedida a Mercado Pago y todavía sin confirmar por el
+// webhook (o que falló al pedirla): el panel las muestra con "Reintentar"
 export const listarSenasADevolver = async () =>
   resultado(
     await supabase
@@ -78,10 +78,6 @@ export const listarSenasADevolver = async () =>
       .eq('estado', 'reintegro_pendiente')
       .order('actualizado_en')
   );
-
-// Después de devolverla desde la cuenta de Mercado Pago
-export const marcarSenaDevuelta = async (idPago) =>
-  resultado(await supabase.rpc('marcar_sena_devuelta', { p_pago_id: idPago }));
 
 export const desbloquearDia = async (id) =>
   resultado(await supabase.from('dias_bloqueados').delete().eq('id', id));

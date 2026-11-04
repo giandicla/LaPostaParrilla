@@ -272,16 +272,17 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] Mientras esperaba, "Mis reservas" mostraba "Pagar seña" y el tiempo que faltaba.
 - [ ] El vencimiento no manda mail.
 
-**Cancelación del cliente (la seña no se devuelve, desde 2026-11-01)**
-- [ ] `/reservas` avisa antes de pagar: "La seña se paga con Mercado Pago y no se devuelve si cancelás…".
-- [ ] Con 1 hora o más de anticipación, "Cancelar reserva" pregunta "…La seña no se devuelve." y cancela. Aviso: "Listo, cancelamos tu reserva." El pago sigue *aprobado* y no aparece en "Señas a devolver".
+**Cancelación del cliente (la seña se reembolsa, desde 2026-11-04)**
+- [ ] `/reservas` avisa antes de pagar: "…Si cancelás desde “Mis reservas” (hasta 1 hora antes) o cancelamos nosotros, te la devolvemos al mismo medio de pago."
+- [ ] El pago se hace en incógnito, sin sesión de Mercado Pago, con tarjeta de prueba titular `APRO`.
+- [ ] Con 1 hora o más de anticipación, "Cancelar reserva" pregunta "…Te devolvemos la seña por Mercado Pago." y cancela. Aviso: "…Ya pedimos la devolución de la seña a Mercado Pago…". La reserva muestra "Devolución de la seña en curso" y, cuando llega el webhook, "Seña devuelta". En Mercado Pago el pago figura *refunded*.
 - [ ] Con menos de 1 hora, en vez de cancelar aparece el link a WhatsApp.
 
 **Cancelación del admin (con motivo)**
-- [ ] "Cancelar" en el panel pide el motivo, prearmado "No hay lugar", editable, y avisa que la seña queda en "Señas a devolver".
+- [ ] "Cancelar" en el panel pide el motivo, prearmado "No hay lugar", editable, y avisa que la seña se le devuelve por Mercado Pago.
 - [ ] Sin motivo no deja cancelar.
 - [ ] El cliente ve la reserva cancelada con el motivo; el mail de cancelación lo incluye.
-- [ ] La seña aparece en "Señas a devolver" con el monto y el número de operación. "Ya la devolví" pide confirmación y la saca de la lista; el cliente la ve como "Seña devuelta".
+- [ ] Hasta que llega el webhook, la seña aparece en "Devoluciones de seña en curso" con el monto y el número de operación; después sale sola y el cliente la ve como "Seña devuelta". "Reintentar" vuelve a pedirla sin devolver dos veces.
 
 **Bloqueo por turno**
 - [ ] En el panel, bloquear un día con turno "Noche" (o "Mediodía"); la lista muestra el turno.
