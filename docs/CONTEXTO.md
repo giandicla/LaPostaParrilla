@@ -90,7 +90,8 @@ funciona, y las cards del Inicio pueden linkear directo a la carta correcta.
 
 ### Por qué las reservas del local no tienen cuenta
 
-Las reservas de la web son de un cliente con cuenta de Google. Las que toma el
+Las reservas de la web son de un cliente con cuenta (Google, o mail y contraseña
+desde el 2026-11-03). Las que toma el
 local (teléfono, WhatsApp, en la puerta) las carga el admin desde el panel, a nombre
 de alguien que no tiene cuenta. Por eso una reserva tiene `origen` (`web` o
 `local`): las del local no tienen `usuario_id`, entran confirmadas y pueden ser de
@@ -104,6 +105,6 @@ que no guardaba nada.)*
 | Etapa | Qué | Estado |
 |---|---|---|
 | 1 | Boceto visual: 4 páginas maquetadas, dos locales, deploy | Hecha |
-| 2 | Backend con Supabase: ingreso con Google, reservas reales, panel de admin, mails (partes 1 y 2 del spec del backend) | **En producción** desde el 2026-10-06. Mails de reservas con Brevo desde el 2026-11-02 (remitente: el mail de la facultad) |
+| 2 | Backend con Supabase: ingreso con Google, reservas reales, panel de admin, mails (partes 1 y 2 del spec del backend) | **En producción** desde el 2026-10-06. Mails de reservas con Brevo desde el 2026-11-02, solo al cliente desde el 2026-11-03 (remitente: `gianfrancodicla123@gmail.com`). Ingreso con mail y contraseña desde el 2026-11-03 |
 | 2.3 | Admin de la carta y de los horarios (parte 3) | **Carta en producción** desde el 2026-10-29 (API propia, editor con arrastre, vinos compartidos). Faltan las franjas y los horarios |
 | 3 | Pagos con Mercado Pago: seña de la reserva, gift cards, pedido para llevar (decisión del usuario, 2026-10-08) | **Seña en producción** desde el 2026-10-18 (modo de prueba); no reembolsable si cancela el cliente desde el 2026-11-01. Pedido para llevar: **descartado** (2026-11-01). Gift cards: en evaluación |

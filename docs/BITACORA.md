@@ -4,6 +4,19 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-04 — Ingresar con mail desde /reservas
+
+Rama `feat/reservas-ingresar-con-mail` (PR #27). Pedido del usuario: sin sesión,
+`/reservas` solo ofrecía Google. Ahora muestra una tarjeta centrada con "Ingresar o crear
+cuenta" arriba (lleva a `/ingresar?volver=...` y vuelve con el salón elegido), una "o" y
+"Continuar con Google" abajo, los dos del mismo ancho (el usuario pidió centrado y el
+de mail primero).
+
+Nota sobre la entrada de abajo: el registro con mail **no** quedó apagado; se prendió en
+producción el mismo 2026-11-03 (ver `docs/proceso/sesion-09-2026-11-03.md`).
+
+---
+
 ## 2026-11-03 — Ingreso con mail y contraseña
 
 Rama `feat/ingreso-con-mail`. Spec `docs/superpowers/specs/2026-11-03-ingreso-con-mail-design.md`,
