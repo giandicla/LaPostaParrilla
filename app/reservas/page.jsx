@@ -115,19 +115,20 @@ function SinSesion() {
         <h2 className={estilos.leyenda}>Reservar en:</h2>
         <Salones />
       </div>
-      <div className={formulario.formulario}>
+      <div className={`${formulario.formulario} ${estilos.ingreso}`}>
         <p className={estilos.textoIngreso}>
           Para pedir una mesa, ingresá con tu cuenta: así ves, cambiás y cancelás tus reservas desde acá.
         </p>
-        {/* Google sigue a un clic; con mail (o para crear la cuenta) se pasa por /ingresar */}
-        <button type="button" className={estilos.google} onClick={conGoogle} disabled={yendo}>
-          <Icono nombre="google" className={estilos.logoGoogle} />
-          {yendo ? 'Abriendo Google…' : 'Ingresar con Google'}
-        </button>
+        {/* Con mail (o para crear la cuenta) se pasa por /ingresar; Google, a un clic */}
+        <div className={estilos.botonesIngreso}>
+          <Boton to={`/ingresar?volver=${encodeURIComponent(volver)}`}>Ingresar o crear cuenta</Boton>
+          <p className={estilos.separador}>o</p>
+          <button type="button" className={estilos.google} onClick={conGoogle} disabled={yendo}>
+            <Icono nombre="google" className={estilos.logoGoogle} />
+            {yendo ? 'Abriendo Google…' : 'Continuar con Google'}
+          </button>
+        </div>
         {error && <p className={formulario.error} role="alert">{error}</p>}
-        <Boton variante="secundario" className={estilos.conMail} to={`/ingresar?volver=${encodeURIComponent(volver)}`}>
-          Ingresar con mail o crear cuenta
-        </Boton>
       </div>
     </div>
   );
