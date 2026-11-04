@@ -77,7 +77,7 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
 3. `npx supabase link --project-ref <ref>` y `npx supabase db push` (migraciones).
 4. Función de mails: `npx supabase functions deploy notificar-reserva` y sus
    secretos: `npx supabase secrets set NOTIFICACIONES_SECRETO=<algo largo y al azar>
-   MAIL_REMITENTE=gdiclaudio@itba.edu.ar MAIL_ADMIN=gdiclaudio@itba.edu.ar
+   MAIL_REMITENTE=gdiclaudio@itba.edu.ar
    SITIO_URL=https://<dominio de vercel> BREVO_API_KEY=<clave>`.
 5. En el SQL Editor del proyecto, los dos secretos de Vault que usa el trigger:
    ```sql
@@ -93,9 +93,11 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
 8. 👤 **Brevo**: crear cuenta gratis, verificar el remitente (Senders), crear una API
    key (SMTP & API → API Keys) y cargarla con
    `npx supabase secrets set BREVO_API_KEY=<clave>` (la carga el usuario; la clave no
-   pasa por el chat). **Remitente y avisos al local van al mail de la facultad**
+   pasa por el chat). **El remitente es el mail de la facultad**
    (`gdiclaudio@itba.edu.ar`, decisión del usuario 2026-11-01): es el proyecto de la
-   materia y no se manda en nombre de la casilla real del local.
+   materia y no se manda en nombre de la casilla real del local. **El local no recibe
+   mails** (decisión del usuario 2026-11-03: los avisos al mail de la facultad caían en
+   spam); se entera por el panel, en tiempo real.
 9. **Vercel** → Settings → Environment Variables: `NEXT_PUBLIC_SUPABASE_URL` y
    `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` del proyecto (Settings → API Keys), para
    *Production* **y *Preview***. Sin *Preview*, las previews de los PR dicen "Todavía
@@ -260,3 +262,6 @@ Desde la sesión 06 la carta vive en la base. Diseño:
 Al ingresar solo con Google, Supabase Auth no manda mails (no hay confirmaciones
 ni recuperación de contraseña). Los únicos mails son los de reservas, que manda
 la función `notificar-reserva` con Brevo cuando esté cargada `BREVO_API_KEY`.
+**Van solo al cliente** (desde el 2026-11-03): el local ve las reservas nuevas,
+cancelaciones y cambios en el panel, en tiempo real. El secreto `MAIL_ADMIN` ya no
+se usa.

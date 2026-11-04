@@ -29,8 +29,9 @@ export type Aviso = {
   anterior: Reserva | null;
 };
 
+// Todos los mails van al cliente. El local no recibe mails: se entera por el
+// panel, en tiempo real (pedido del usuario, 2026-11-03).
 export type Mensaje = {
-  para: 'cliente' | 'admin';
   asunto: string;
   html: string;
 };
@@ -70,17 +71,6 @@ const escapar = (texto: string) =>
   texto.replace(/[&<>"']/g, (c) =>
     ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]!);
 
-const soloDigitos = (telefono: string) => telefono.replace(/\D/g, '');
-
-// Un celular argentino cargado sin código de país (10 dígitos: área + número)
-// se pasa al formato de wa.me: 549 + área + número.
-function whatsappDe(telefono: string): string | null {
-  const d = soloDigitos(telefono);
-  if (d.length === 10) return `549${d}`;
-  if (d.startsWith('549') && d.length === 13) return d;
-  return null;
-}
-
 const enlace = (href: string, texto: string) =>
   `<a href="${href}" style="color:${C.bordo};text-decoration:underline">${texto}</a>`;
 
@@ -100,10 +90,9 @@ const parrafo = (html: string) =>
 const nota = (html: string) =>
   `<p style="margin:0 0 16px;padding:12px 16px;background:${C.arena100};border-left:4px solid ${C.oliva};font-family:${TEXTO};font-size:14px;line-height:1.5;color:${C.carbon}">${html}</p>`;
 
-// Los datos de la reserva, en una tabla. El teléfono del cliente solo va en los
-// mails al local, con link para llamar y para WhatsApp: al cliente no le sirve
-// ver el suyo. Con `antes`, muestra el horario viejo tachado y el nuevo.
-function detalle(r: Reserva, { paraLocal = false, antes }: { paraLocal?: boolean; antes?: Reserva | null } = {}): string {
+// Los datos de la reserva, en una tabla (sin el teléfono del cliente: no le
+// sirve ver el suyo). Con `antes`, muestra el horario viejo tachado y el nuevo.
+function detalle(r: Reserva, { antes }: { antes?: Reserva | null } = {}): string {
   const filas = [fila('Local', escapar(nombreLocal(r)))];
   if (antes) {
     filas.push(fila('Antes', formatearCuando(antes.fecha, antes.hora), true));
@@ -113,11 +102,6 @@ function detalle(r: Reserva, { paraLocal = false, antes }: { paraLocal?: boolean
     filas.push(fila('Día', dia), fila('Hora', `${hora} h`));
   }
   filas.push(fila('Personas', String(r.personas)), fila('A nombre de', escapar(r.nombre)));
-  if (paraLocal) {
-    const wa = whatsappDe(r.telefono);
-    filas.push(fila('Teléfono',
-      `${enlace(`tel:${soloDigitos(r.telefono)}`, escapar(r.telefono.trim()))}${wa ? ` · ${enlace(`https://wa.me/${wa}`, 'WhatsApp')}` : ''}`));
-  }
   if (r.comentarios) filas.push(fila('Comentarios', `<em>${escapar(r.comentarios)}</em>`));
   return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 20px">${filas.join('')}</table>`;
 }
@@ -158,18 +142,16 @@ export function armarMensajes(aviso: Aviso, sitio: string): Mensaje[] {
   const { reserva: r } = aviso;
   if (r.origen !== 'local') return mensajesWeb(aviso, sitio);
 
-  // Reserva cargada por el admin: el local ya sabe lo que hizo, así que los
-  // avisos son solo para el cliente, y solo si dejó un mail.
+  // Reserva cargada por el admin: solo si el cliente dejó un mail
   if (!r.mail) return [];
   if (aviso.tipo === 'INSERT') return [confirmacion(r, sitio, true)];
-  return mensajesWeb(aviso, sitio, true).filter((m) => m.para === 'cliente');
+  return mensajesWeb(aviso, sitio, true);
 }
 
 // Los mails al cliente van en tercera persona ("Tu reserva fue cancelada"),
 // no en primera del local ("Cancelamos tu reserva"): pedido del usuario.
 function confirmacion(r: Reserva, sitio: string, delLocal: boolean): Mensaje {
   return {
-    para: 'cliente',
     asunto: `Reserva confirmada en ${nombreLocal(r)}`,
     html: plantilla({
       sitio,
@@ -184,9 +166,7 @@ function confirmacion(r: Reserva, sitio: string, delLocal: boolean): Mensaje {
 
 function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
   const { tipo, reserva: r, anterior: a } = aviso;
-  const cuando = formatearCuando(r.fecha, r.hora);
   const misReservas = delLocal ? undefined : boton(`${sitio}/mis-reservas`, 'Ver mis reservas');
-  const alPanel = boton(`${sitio}/admin`, 'Abrir el panel');
 
   // Una reserva de la web nace esperando el pago: nadie se entera hasta que se paga
   if (tipo === 'INSERT' || !a) return [];
@@ -195,22 +175,9 @@ function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
     // Vencida o abandonada antes de pagar: no hubo reserva de verdad
     if (r.estado === 'vencida' || (a.estado === 'esperando_pago' && r.estado === 'cancelada')) return [];
 
-    if (r.estado === 'confirmada') {
-      const cliente = confirmacion(r, sitio, delLocal);
-      if (a.estado !== 'esperando_pago') return [cliente];
-      return [cliente, {
-        para: 'admin',
-        asunto: `Nueva reserva — ${cuando}`,
-        html: plantilla({
-          sitio,
-          titulo: 'Nueva reserva',
-          cuerpo: `${parrafo('Entró una reserva desde la web, con la seña paga.')}${detalle(r, { paraLocal: true })}`,
-          accion: alPanel,
-        }),
-      }];
-    }
+    if (r.estado === 'confirmada') return [confirmacion(r, sitio, delLocal)];
     if (r.estado === 'rechazada') {
-      return [{ para: 'cliente', asunto: 'Tu reserva no pudo confirmarse',
+      return [{ asunto: 'Tu reserva no pudo confirmarse',
         html: plantilla({
           sitio,
           titulo: 'Tu reserva no pudo confirmarse',
@@ -220,29 +187,20 @@ function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
     }
     if (r.estado === 'cancelada') {
       if (r.cancelada_por === 'cliente') {
-        return [
-          { para: 'cliente', asunto: 'Tu reserva fue cancelada',
-            html: plantilla({
-              sitio,
-              titulo: 'Tu reserva fue cancelada',
-              cuerpo: `${parrafo('La reserva se canceló desde "Mis reservas".')}${detalle(r)}${
-                r.origen === 'web' ? nota('Como la cancelación la hizo el cliente, la seña no se reintegra.') : ''}`,
-              accion: delLocal ? undefined : boton(`${sitio}/reservas`, 'Hacer otra reserva'),
-              pie: contacto(r),
-            }) },
-          { para: 'admin', asunto: `Reserva cancelada por el cliente — ${cuando}`,
-            html: plantilla({
-              sitio,
-              titulo: 'Reserva cancelada',
-              cuerpo: `${parrafo('El cliente canceló su reserva desde la web. La seña queda cobrada.')}${detalle(r, { paraLocal: true })}`,
-              accion: alPanel,
-            }) },
-        ];
+        return [{ asunto: 'Tu reserva fue cancelada',
+          html: plantilla({
+            sitio,
+            titulo: 'Tu reserva fue cancelada',
+            cuerpo: `${parrafo('La reserva se canceló desde "Mis reservas".')}${detalle(r)}${
+              r.origen === 'web' ? nota('Como la cancelación la hizo el cliente, la seña no se reintegra.') : ''}`,
+            accion: delLocal ? undefined : boton(`${sitio}/reservas`, 'Hacer otra reserva'),
+            pie: contacto(r),
+          }) }];
       }
       const motivo = r.motivo_cancelacion ? nota(`<strong>Motivo:</strong> ${escapar(r.motivo_cancelacion)}`) : '';
       const sena = r.origen === 'web'
         ? nota('La seña se reintegra en los próximos días, en el mismo medio de pago.') : '';
-      return [{ para: 'cliente', asunto: 'Tu reserva fue cancelada',
+      return [{ asunto: 'Tu reserva fue cancelada',
         html: plantilla({
           sitio,
           titulo: 'Tu reserva fue cancelada',
@@ -255,25 +213,16 @@ function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
 
   if (r.fecha !== a.fecha || r.hora !== a.hora) {
     if (r.modificada_por === 'cliente') {
-      return [
-        { para: 'cliente', asunto: 'Tu reserva fue modificada',
-          html: plantilla({
-            sitio,
-            titulo: 'Tu reserva fue modificada',
-            cuerpo: `${parrafo('Los cambios hechos desde "Mis reservas" quedaron guardados. La seña sigue valiendo.')}${detalle(r, { antes: a })}`,
-            accion: misReservas,
-            pie: contacto(r),
-          }) },
-        { para: 'admin', asunto: `Reserva modificada por el cliente — ${cuando}`,
-          html: plantilla({
-            sitio,
-            titulo: 'Reserva modificada',
-            cuerpo: `${parrafo('El cliente cambió su reserva desde la web.')}${detalle(r, { paraLocal: true, antes: a })}`,
-            accion: alPanel,
-          }) },
-      ];
+      return [{ asunto: 'Tu reserva fue modificada',
+        html: plantilla({
+          sitio,
+          titulo: 'Tu reserva fue modificada',
+          cuerpo: `${parrafo('Los cambios hechos desde "Mis reservas" quedaron guardados. La seña sigue valiendo.')}${detalle(r, { antes: a })}`,
+          accion: misReservas,
+          pie: contacto(r),
+        }) }];
     }
-    return [{ para: 'cliente', asunto: 'Tu reserva fue modificada',
+    return [{ asunto: 'Tu reserva fue modificada',
       html: plantilla({
         sitio,
         titulo: 'Tu reserva fue modificada',
