@@ -140,13 +140,22 @@ Plantilla en `.env.example`. Nunca se escribe el valor en un documento.
 
 | Variable | De dónde sale |
 |---|---|
-| `MP_ACCESS_TOKEN` | Credencial `APP_USR-…` de la aplicación creada **como el vendedor de prueba** (panel de desarrolladores de Mercado Pago, iniciando sesión como ese usuario) |
+| `MP_ACCESS_TOKEN` | Desde el 2026-11-04: el Access Token **de prueba** (`TEST-…`, modo sandbox) de la aplicación "La Posta Web" del usuario (autorizado por el usuario). Con el `APP_USR-…` del vendedor de prueba que se usaba antes Mercado Pago rechaza los reembolsos (401, `hallazgos.md` 1.18 y 1.35) |
 | `MP_WEBHOOK_SECRET` | La clave secreta que da el panel al configurar el webhook (ver abajo) |
 | `SUPABASE_SECRET_KEY` | Supabase → Settings → API Keys → *secret key*. Se saltea la RLS: solo servidor, solo para `pagos` |
 | `APP_URL` | URL pública del sitio **sin barra final**, solo para **previews y local** (en local `http://localhost:3000`; en la preview, la URL fija de la rama). Se usa para `notification_url` y `back_urls`. **En producción no se usa:** la URL sale de `VERCEL_PROJECT_PRODUCTION_URL`, que Vercel informa solo (`src/servidor/sitio.js`, desde el PR #10) |
-| `NEXT_PUBLIC_MP_PUBLIC_KEY` | Public Key `APP_USR-…` del mismo vendedor de prueba. Es **pública por diseño**: la usa el cartel de Mercado Pago (Brand Brick) en el navegador. Si falta, el cartel no aparece y lo demás sigue igual |
+| `NEXT_PUBLIC_MP_PUBLIC_KEY` | Public Key `TEST-…` de la misma aplicación. Es **pública por diseño**: la usa el cartel de Mercado Pago (Brand Brick) en el navegador. Si falta, el cartel no aparece y lo demás sigue igual |
 
 ### Cuentas de prueba y modo de prueba
+
+**Desde el 2026-11-04 (reembolsos):** con credenciales `TEST-` la preferencia se abre en
+`sandbox_init_point` (`src/servidor/mercadopago.js`) y se paga **en una ventana de
+incógnito, sin sesión de Mercado Pago**, con tarjeta de prueba (titular `APRO`) y
+cualquier mail que no sea de una cuenta de prueba. Pagar con la sesión de una cuenta de
+prueba da "Una de las partes con la que intentás hacer el pago es de prueba". La
+búsqueda de pagos (`/v1/payments/search`) no devuelve nada en sandbox: un pago se
+consulta por su número de operación. Lo que sigue es cómo era antes.
+
 
 No hay entorno Sandbox: se prueba **sobre la API real, con cuentas de prueba** y
 una sola `init_point` (ver `docs/proceso/hallazgos.md` 1.16). La aplicación real
@@ -186,6 +195,7 @@ Migraciones (aplicadas a producción el **2026-10-18**):
 | `20261015120000_sena_reservas` | `locales.sena`, tabla `pagos` con RLS, `acreditar_pago()`, `cancelar_reserva(id, motivo)`, trigger de reintegro pendiente, `vencer_reservas_sin_pagar()` y el job de `pg_cron` |
 | `20261015130000_bloqueo_por_turno` | `dias_bloqueados.turno` (mediodía / noche / todo el día) y su chequeo en `validar_reserva()` |
 | `20261018120000_sena_ajustes` | `creada_en` fijada por la base al insertar; `acreditar_pago()` devuelve `'duplicado'` ante un segundo cobro de la misma preferencia |
+| `20261104120000_reembolso_de_sena` | El trigger `marcar_reintegro` vuelve a actuar en cualquier cancelación; se borra `marcar_sena_devuelta` (el reembolso lo confirma el webhook) |
 | `20261101120000_sena_no_reembolsable` | El trigger `marcar_reintegro` solo actúa si cancela el admin; `marcar_sena_devuelta(id)` (solo admin) pasa una seña de `reintegro_pendiente` a `reintegrado` |
 | `20261102120000_reservas_por_turno_y_modificar` | Una reserva activa por usuario, local, día y **turno** (índice `reservas_una_activa_por_turno`); columna `modificada_por` (trigger `registrar_modificacion`); `modificar_reserva(id, fecha, hora, personas)` para el cliente, hasta 1 hora antes |
 
@@ -206,26 +216,34 @@ cancelación del admin viejo chocaría con el motivo obligatorio. Orden que se u
 Vercel → prueba de punta a punta en la preview → merge. Para próximos cambios que
 toquen la base y el front a la vez, lo mismo.
 
-### La seña no se reembolsa por Mercado Pago (desde 2026-11-01)
+### Reembolso de la seña (desde 2026-11-04)
 
-Hasta la sesión 07 el servidor pedía el reembolso al cancelar
-(`POST /v1/payments/:id/refunds`), pero **con credenciales de prueba Mercado Pago lo
-rechaza** con 401 "Unauthorized use of live credentials" (`hallazgos.md` 1.18), y el
-usuario decidió no usar cuentas con plata real. Como no se podía probar, se sacó
-(decisión del usuario, 2026-11-01). Regla actual:
+Del 2026-11-01 al 2026-11-04 la seña no se reembolsaba: con las credenciales del
+vendedor de prueba Mercado Pago responde 401 "Unauthorized use of live credentials" a
+`POST /v1/payments/:id/refunds`, con o sin saldo (`hallazgos.md` 1.18 y 1.35). Con las
+credenciales de prueba `TEST-` de la aplicación del usuario el reembolso funciona
+(probado con Checkout Pro el 2026-11-04), así que volvió (decisión del usuario). Regla:
 
-- **Cancela el cliente:** la seña no se devuelve (se avisa antes de pagar y al
-  cancelar). El pago queda `aprobado`.
-- **Cancela el local** (trigger `marcar_reintegro`, solo con `cancelada_por = 'admin'`)
-  **o el pago llega tarde** (`acreditar_pago()` sobre una reserva que ya no espera
-  pago): el pago queda `reintegro_pendiente` y el panel lo lista en "Señas a
-  devolver", con el número de operación. El local la devuelve desde su cuenta de
-  Mercado Pago y toca "Ya la devolví" (`marcar_sena_devuelta`, pasa a `reintegrado`).
-- **Cobro doble de la misma preferencia** (`'duplicado'`): no tiene fila propia; queda
-  solo en el log del servidor con los dos ids. Es muy raro con Checkout Pro.
+- **Toda cancelación con la seña cobrada la devuelve:** la del cliente (hasta 1 hora
+  antes, regla de la base) y la del local. El trigger `marcar_reintegro` deja el pago
+  en `reintegro_pendiente` y `cancelaciones.js` pide el reembolso total con
+  `PaymentRefund` (`reintegros.js`), con clave de idempotencia `reintegro-<id del pago
+  de Mercado Pago>`: reintentar no devuelve dos veces.
+- **El reembolso se confirma por webhook**, no al pedirlo: Mercado Pago avisa el pago
+  con `status: 'refunded'` y `avisos.js` lo pasa a `reintegrado`
+  (`confirmarReintegro`, comparando también el id de Mercado Pago).
+- **Pago tardío** (`acreditar_pago()` sobre una reserva que ya no espera pago): el
+  webhook pide el reembolso en el momento; si Mercado Pago falla, responde 500 y el
+  aviso se reintenta. **Cobro doble** de la misma preferencia: se reembolsa por su
+  propio id.
+- Si el pedido falla, la cancelación queda hecha y el panel lista la seña en
+  "Devoluciones de seña en curso" con **Reintentar** (vuelve a llamar a
+  `POST /api/v1/reservas/:id/cancelacion`, que sobre una reserva cancelada solo pide el
+  reembolso). Ahí también se ven las pedidas que todavía no confirmó el webhook.
 
-`POST /api/v1/reservas/:id/cancelacion` responde `{ sena: 'retenida' | 'a_devolver' |
-'no_corresponde' }` y una reserva que ya no está activa da 409.
+`POST /api/v1/reservas/:id/cancelacion` responde `{ reintegro: 'pedido' | 'fallo' |
+'no_corresponde' }`. La migración `20261104120000_reembolso_de_sena` vuelve a activar el
+trigger para cualquier cancelación y borra `marcar_sena_devuelta`.
 
 ## La carta
 

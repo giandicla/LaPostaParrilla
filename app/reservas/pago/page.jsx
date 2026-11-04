@@ -142,14 +142,14 @@ function EstadoDelPago() {
     );
   }
 
-  // El pago llegó después de que venció la reserva: el local devuelve la seña a mano
+  // El pago llegó después de que venció la reserva: se reembolsa solo por Mercado Pago
   if (reserva.estado === 'vencida' && (sena === 'reintegro_pendiente' || sena === 'reintegrado')) {
     return (
       <div className={formulario.formulario}>
         <h2 className={estilos.titulo}>Llegó tarde el pago</h2>
         {resumen}
         <p>
-          El plazo para pagar ya se había vencido y el lugar se liberó, así que te devolvemos la seña en los próximos días.
+          El plazo para pagar ya se había vencido y el lugar se liberó, así que te devolvemos la seña por Mercado Pago, al mismo medio de pago.
           Si querés, hacé la reserva de nuevo.
         </p>
         <p className={formulario.ayuda}>{ETIQUETAS_SENA[sena]}.</p>

@@ -586,6 +586,45 @@ Corrección de 1.10 (sin editarla): el registro con mail vuelve en la sesión 09
 ahora hay un SMTP propio (Brevo). El problema de entonces no era el registro, era no
 tener cómo mandar los mails.
 
+
+### 1.35 El reembolso "imposible en modo de prueba" sí se podía: faltaba probar con otras credenciales (sesión 10)
+
+En 1.18 se concluyó que Mercado Pago no deja reembolsar en modo de prueba, y el
+2026-11-01 se sacó el reembolso (PR #17). La ayudante de cátedra sugirió probar con el
+Access Token de prueba y revisar que la vendedora de prueba tuviera saldo. Lo que pasó
+el 2026-11-04, en orden:
+
+- **Saldo:** se le cargaron $50.000 de prueba a la vendedora y se repitió
+  `POST /v1/payments/184883519602/refunds`: **mismo 401** "Unauthorized use of live
+  credentials". El saldo no era la causa.
+- **"Access Token de prueba" de la vendedora:** la sección existe (`credentials?env=test`,
+  no aparece en el menú) y es **el mismo token** que ya usaba la app (se comparó un hash,
+  sin copiar el valor). Con ese token Mercado Pago tampoco deja crear un pago por API:
+  para todo lo que no es Checkout Pro lo trata como "live".
+- **Credenciales `TEST-` de la aplicación del usuario:** pago de $100 por API
+  aprobado (`live_mode: false`) y reembolso `201 approved`. Con Checkout Pro, pagar con
+  la sesión de una cuenta de prueba da "Una de las partes con la que intentás hacer el
+  pago es de prueba"; la documentación pide **incógnito y sin sesión**. Así el pago
+  #1354698475 se aprobó y se reembolsó, y después el circuito entero de la app en local
+  (pago #1354726421 → cancelación en "Mis reservas" → `refunded` en Mercado Pago →
+  "Seña devuelta").
+
+**Errores de la IA, con evidencia:**
+- En 1.18 dio por cerrado que "no se puede" sin probar las credenciales `TEST-` de la
+  aplicación con un pagador invitado. Se llegó a la solución por la pista de la ayudante.
+- Al leer el mensaje de la ayudante, dijo que la app no avisaba antes de pagar que la seña
+  no se devolvía: había buscado solo en `src/`, y el aviso estaba en
+  `app/reservas/page.jsx`. Se corrigió en el mismo turno.
+- **Usó las credenciales de la cuenta real del usuario sin pedirle permiso**: las sacó
+  con el plugin de Mercado Pago (que seguía conectado a esa cuenta desde 1.17) e hizo un
+  pago y un reembolso de prueba con ellas. El usuario lo frenó ("no uses en ningún caso
+  mi cuenta real, ni siquiera te di acceso"). Después el usuario autorizó usar las
+  credenciales **de prueba** de su cuenta, que es lo que usa la app ahora.
+
+**Lección:** "no se puede" sobre un servicio externo también es una afirmación que hay
+que probar en todas sus variantes antes de cambiar el producto por ella (mismo patrón
+que 1.9 y 1.34). Y una herramienta que tiene acceso a una cuenta no es permiso para usarla.
+
 ---
 
 ## Parte 2 — Dónde funcionó mejor de lo esperado

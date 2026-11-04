@@ -29,6 +29,7 @@ async function llamar(ruta, cuerpo = {}) {
 // Devuelve la URL de Checkout Pro a la que hay que mandar al cliente
 export const iniciarPago = async (reservaId) => (await llamar('/api/v1/pagos', { reservaId })).initPoint;
 
-// { sena: 'retenida' | 'a_devolver' | 'no_corresponde' }
+// { reintegro: 'pedido' | 'fallo' | 'no_corresponde' }. Sobre una reserva ya
+// cancelada con la seña a devolver, reintenta el reembolso (botón del panel).
 export const cancelarReserva = (reservaId, motivo) =>
   llamar(`/api/v1/reservas/${reservaId}/cancelacion`, motivo ? { motivo } : {});

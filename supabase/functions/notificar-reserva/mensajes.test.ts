@@ -44,6 +44,13 @@ Deno.test('cancelada: un solo mail, al cliente, cancele quien cancele', () => {
   assertEquals(asuntos(armarMensajes({ tipo: 'UPDATE', reserva: porAdmin, anterior: confirmada }, sitio)), ['Tu reserva fue cancelada']);
 });
 
+Deno.test('cancelada por el cliente: el mail avisa que la seña se reintegra', () => {
+  const porCliente = { ...confirmada, estado: 'cancelada' as const, cancelada_por: 'cliente' as const };
+  const [m] = armarMensajes({ tipo: 'UPDATE', reserva: porCliente, anterior: confirmada }, sitio);
+  assertEquals(m.html.includes('La seña se reintegra'), true);
+  assertEquals(m.html.includes('no se reintegra'), false);
+});
+
 Deno.test('cancelada por el admin: el mail lleva el motivo y avisa que la seña se reintegra', () => {
   const porAdmin = { ...confirmada, estado: 'cancelada' as const, cancelada_por: 'admin' as const,
     motivo_cancelacion: 'No hay <lugar>' };

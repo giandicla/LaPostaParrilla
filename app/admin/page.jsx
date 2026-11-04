@@ -24,7 +24,6 @@ import {
   escucharReservas,
   guardarNota,
   listarSenasADevolver,
-  marcarSenaDevuelta,
   listarReservas,
 } from '../../src/servicios/admin.js';
 import { cancelarReserva } from '../../src/servicios/pagos.js';
@@ -60,8 +59,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const alCancelar = () => {
     const motivo = window.prompt(
       `Motivo de la cancelación${avisoMail ? ' (le llega al cliente por mail)' : ''}:` +
-        // La seña no se reembolsa sola: si cancela el local, se devuelve a mano
-        (estadoSena(reserva) === 'aprobado' ? ' La seña queda en "Señas a devolver".' : ''),
+        (estadoSena(reserva) === 'aprobado' ? ' La seña se le devuelve por Mercado Pago.' : ''),
       'No hay lugar'
     );
     if (motivo === null) return;
@@ -151,11 +149,13 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
 }
 
 // ---------------------------------------------------------------------
-// Señas a devolver: canceló el local o el pago llegó tarde. La app no
-// reembolsa por Mercado Pago: el local la devuelve desde su cuenta y la marca.
+// Devoluciones de seña sin confirmar: el reembolso ya se le pidió a Mercado
+// Pago (o falló al pedirlo) y el webhook todavía no lo confirmó. "Reintentar"
+// lo vuelve a pedir; con la misma clave de idempotencia no devuelve dos veces.
 // ---------------------------------------------------------------------
 function SenasADevolver({ version, alCambiar, alError }) {
   const [pendientes, setPendientes] = useState([]);
+  const [reintentando, setReintentando] = useState(null);
 
   useEffect(() => {
     let vigente = true;
@@ -171,9 +171,9 @@ function SenasADevolver({ version, alCambiar, alError }) {
 
   return (
     <section className={estilos.bloque} aria-labelledby="titulo-senas">
-      <h2 id="titulo-senas" className={estilos.tituloBloque}>Señas a devolver</h2>
+      <h2 id="titulo-senas" className={estilos.tituloBloque}>Devoluciones de seña en curso</h2>
       <p className={formulario.ayuda}>
-        Devolvelas desde la cuenta de Mercado Pago (buscando el número de operación) y marcalas acá.
+        Se pidieron a Mercado Pago y se confirman solas cuando llega su aviso. Si una queda acá mucho tiempo, reintentala.
       </p>
       <ul className={estilos.listaBloqueos}>
         {pendientes.map((p) => (
@@ -183,16 +183,18 @@ function SenasADevolver({ version, alCambiar, alError }) {
               {formatearMonto(Number(p.monto))}
               {p.mp_payment_id && <> · operación {p.mp_payment_id}</>}
             </span>
-            <button type="button" className={estilos.botonTexto} onClick={async () => {
-              if (!window.confirm(`¿Ya le devolviste la seña a ${p.reservas.nombre} desde Mercado Pago?`)) return;
+            <button type="button" className={estilos.botonTexto} disabled={reintentando === p.id} onClick={async () => {
+              setReintentando(p.id);
               try {
-                await marcarSenaDevuelta(p.id);
+                await cancelarReserva(p.reserva_id);
                 alCambiar();
               } catch (e) {
                 alError(e.message);
+              } finally {
+                setReintentando(null);
               }
             }}>
-              Ya la devolví
+              {reintentando === p.id ? 'Reintentando…' : 'Reintentar'}
             </button>
           </li>
         ))}

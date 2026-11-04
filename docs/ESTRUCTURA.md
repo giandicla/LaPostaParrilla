@@ -7,17 +7,17 @@
 | `/` | Inicio | Los 8 bloques de la home |
 | `/carta` | Carta | La carta del local activo, pedida a `GET /api/v1/carta`, dibujada como la carta impresa del local (`HojaCarta`): índice de secciones arriba, una sección abajo de la otra, vinos por cepa y bodega, cubierto al pie. Mientras carga, "Cargando la carta…"; si falla, mensaje y WhatsApp del local. Acepta `?local=<id>` y anclas (`#parrilla-entradas`) |
 | `/reservas` | Reservas | "Reservar en:" con la foto de cada salón y, debajo, el formulario en una card (nombre, teléfono, fecha, hora, personas, comentarios hasta 100). Sin sesión: los salones y una tarjeta centrada con "Ingresar o crear cuenta" (lleva a `/ingresar` y vuelve con el salón elegido) y, debajo, "Continuar con Google". Con más de 6 personas el botón pasa a "Reservar por WhatsApp" con el mensaje armado. El admin no la usa: lo lleva al panel. Acepta `?local=<id>` |
-| `/reservas/pago` | Reservas | Adonde vuelve el cliente desde Mercado Pago (`?reserva=<id>`). No decide nada con la URL: espera (tiempo real + consulta cada 5 s) a que la reserva figure `confirmada`, o muestra pago rechazado con "Reintentar", reserva cancelada o vencida, o pago tardío (la seña se devuelve a mano) |
+| `/reservas/pago` | Reservas | Adonde vuelve el cliente desde Mercado Pago (`?reserva=<id>`). No decide nada con la URL: espera (tiempo real + consulta cada 5 s) a que la reserva figure `confirmada`, o muestra pago rechazado con "Reintentar", reserva cancelada o vencida, o pago tardío (la seña se reembolsa sola) |
 | `/ingresar` | Cuenta | Dos pestañas, "Ingresar" y "Crear cuenta" (`PestanasCuenta`); en las dos, "Continuar con Google" y, abajo, el formulario con mail (`FormularioCuenta`). Ingresar: mail, contraseña y "Olvidé mi contraseña". Crear cuenta: nombre, mail y contraseña (8 o más); llega un mail para confirmarla. Acepta `?volver=<ruta>` |
 | `/ingresar/contrasena` | Cuenta | A donde lleva el link del mail de "Olvidé mi contraseña": contraseña nueva y repetida; sin sesión (link vencido o usado) explica que hay que pedir otro |
 | `/mis-reservas` | Cuenta | Próximas (todas) y anteriores y canceladas (de a 5, con "Ver más"); `esperando_pago` con "Pagar seña" y el tiempo que falta; modificar fecha, hora y personas (`ModificarReserva`) y cancelar hasta 1 h antes (avisa que la seña no se devuelve), después WhatsApp. El admin no la usa: lo lleva al panel |
-| `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado, con el estado de la seña; cancelar (pide el motivo, "No hay lugar" por defecto) y editar (fecha, hora, personas, nombre, teléfono, comentarios y, en las del local, mail: `EditarReserva`); "Señas a devolver" (las devuelve el local a mano) con "Ya la devolví"; notas internas; las confirmadas de días pasados se ven "Terminada"; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |
+| `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado, con el estado de la seña; cancelar (pide el motivo, "No hay lugar" por defecto) y editar (fecha, hora, personas, nombre, teléfono, comentarios y, en las del local, mail: `EditarReserva`); "Devoluciones de seña en curso" (reembolsos pedidos sin confirmar por el webhook, o que fallaron) con "Reintentar"; notas internas; las confirmadas de días pasados se ven "Terminada"; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |
 | `/admin/dia` | Admin | Lista del día para imprimir. Acepta `?fecha=` y `?local=` |
 | `/admin/bloqueos` | Admin | Pestaña "Días bloqueados": bloquear un día o un turno, en un local o en los dos, y desbloquear |
 | `/admin/carta` | Admin | Pestañas Reservas · Días bloqueados · Carta. Selector Parrilla · Vinos · Restaurante. Una caja arriba (`CajaCarta`): sin nada elegido agrega (va último en su categoría); con un producto elegido (Editar o el buscador) lo edita, incluida la categoría. Abajo la carta (`ListaCarta`) con ⠿ para arrastrar, Editar y Eliminar. Cubierto en la vista de un local. Acepta `?vista=<id del local o vinos>` |
 | `/nosotros` | Nosotros | Historia + un bloque por local + contacto |
 | `/api/v1/pagos` | API | `POST`: crea el pago y la preferencia de Checkout Pro de la seña y devuelve el `initPoint`. Requiere sesión (token de Supabase) |
-| `/api/v1/reservas/[id]/cancelacion` | API | `POST`: cancela la reserva (cliente o admin, con la sesión de quien llama) y responde qué pasa con la seña (`retenida`, `a_devolver`, `no_corresponde`) |
+| `/api/v1/reservas/[id]/cancelacion` | API | `POST`: cancela la reserva (cliente o admin, con la sesión de quien llama) pide el reembolso de la seña y responde `reintegro`: `pedido`, `fallo` o `no_corresponde`. Sobre una reserva ya cancelada, reintenta el reembolso |
 | `/api/webhooks/mercadopago` | API | `POST`: avisos de Mercado Pago. Valida la firma, consulta el pago real y concilia en la base |
 | `/api/v1/carta` | API | `GET ?local=<id>`: la carta de un local, sin vinos. Pública, cacheada 1 minuto; `&fresca=1` sin caché (el panel) |
 | `/api/v1/carta/vinos` | API | `GET`: la carta de vinos y copas, compartida. Mismo caché |
@@ -90,7 +90,7 @@ La única capa que habla con Supabase. Detalle en `docs/BACKEND.md`.
 | `config.js` | `backendDisponible` sin cargar supabase-js (la usan la navbar y la sesión en todas las páginas) |
 | `auth.js` | Ingresar con Google o con mail, crear cuenta, pedir y cambiar la contraseña, salir, escuchar la sesión, leer y actualizar el perfil |
 | `reservas.js` | Franjas, días bloqueados, crear / listar / cancelar reservas, utilidades de fecha en hora argentina |
-| `admin.js` | Listar y filtrar reservas, editar, notas, bloqueos (por día o por turno), señas a devolver y marcarlas devueltas, suscripción en tiempo real |
+| `admin.js` | Listar y filtrar reservas, editar, notas, bloqueos (por día o por turno), devoluciones de seña en curso, suscripción en tiempo real |
 | `pagos.js` | `iniciarPago`, `cancelarReserva`: llaman a las rutas de `app/api/` con el token de la sesión (el Access Token de Mercado Pago nunca llega al navegador) |
 | `carta.js` | `leerCarta(idLocal, { fresca })` y `leerVinos({ fresca })` (públicas) y, para el admin, `crearItem`, `editarItem`, `borrarItem`, `ubicarItem`, `ubicarBodega`, `cambiarCubierto`: llaman a `app/api/v1/carta` |
 
@@ -104,7 +104,8 @@ variables de entorno en `docs/BACKEND.md`.
 |---|---|
 | `avisos.js` | Procesa un aviso de pago ya firmado: lee el pago real en Mercado Pago, concilia con `acreditar_pago`; un cobro duplicado queda en el log |
 | `base.js` | La base vista desde pagos: leer reserva, crear pago, acreditar, estado de la seña. Usa la clave secreta |
-| `cancelaciones.js` | Cancela con la sesión de quien llama y dice qué pasa con la seña (no reembolsa) |
+| `cancelaciones.js` | Cancela con la sesión de quien llama y pide el reembolso de la seña |
+| `reintegros.js` | Pide el reembolso total a Mercado Pago (`PaymentRefund`) con clave de idempotencia por pago |
 | `carta.js` | `armarCarta` (de las filas de la base a la carta que dibuja la web; la forma está documentada ahí) y los casos de uso de las rutas de la carta, que exigen admin para escribir |
 | `carta-base.js` | La carta vista desde las rutas: leer las filas, escribir con el cliente de quien llama, errores de la base en castellano |
 | `esquemas.js` | Esquemas Zod de lo que llega a las rutas (400 si no cumple) y `leerCuerpo` |

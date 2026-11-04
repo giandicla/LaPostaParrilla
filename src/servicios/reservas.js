@@ -115,7 +115,7 @@ export const estadoDelPago = (reserva) =>
     .filter((estado) => ORDEN_DE_PAGOS.includes(estado))
     .sort((a, b) => ORDEN_DE_PAGOS.indexOf(a) - ORDEN_DE_PAGOS.indexOf(b))[0] ?? null;
 
-// La seña es el pago cobrado (aprobado, a devolver o devuelto), si hay
+// La seña es el pago cobrado (aprobado, en devolución o devuelto), si hay
 const COBRADOS = ['aprobado', 'reintegro_pendiente', 'reintegrado'];
 export const estadoSena = (reserva) => {
   const estado = estadoDelPago(reserva);
@@ -124,7 +124,7 @@ export const estadoSena = (reserva) => {
 
 export const ETIQUETAS_SENA = {
   aprobado: 'Seña pagada',
-  reintegro_pendiente: 'Seña a devolver',
+  reintegro_pendiente: 'Devolución de la seña en curso',
   reintegrado: 'Seña devuelta',
 };
 

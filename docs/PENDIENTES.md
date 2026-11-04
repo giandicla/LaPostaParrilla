@@ -204,7 +204,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 
 **Pendientes que dejó la seña**
 
-- [x] ~~**Reintegro en modo de prueba.**~~ Resuelto por decisión del usuario (2026-11-01): la seña no se reembolsa por Mercado Pago (ver `docs/BACKEND.md`). Lo que sigue es el texto original. Mercado Pago responde 401 "Unauthorized use of
+- [x] ~~**Reintegro en modo de prueba.**~~ Resuelto el 2026-11-04: con las credenciales `TEST-` de la aplicación el reembolso funciona y volvió (ver `docs/BACKEND.md` y `hallazgos.md` 1.35). Del 01 al 04/11 la seña no se reembolsaba. Lo que sigue es el texto original. Mercado Pago responde 401 "Unauthorized use of
       live credentials" al reembolsar con las credenciales del vendedor de prueba
       (`hallazgos.md` 1.18). Salidas: una aplicación con credenciales de prueba propias
       (`APP_USR` en "Credenciales de prueba"; la real solo tiene `TEST-`), o devolver
@@ -238,7 +238,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       Checkout Pro lo fija el servidor); sumar un chequeo en `avisos.js`.
 - [ ] `pagos.reserva_id` es `on delete cascade`: borrar un usuario borra sus registros
       de plata; evaluar `restrict`.
-- [ ] Los cobros duplicados de la misma preferencia solo quedan en el log (no aparecen en "Señas a devolver"). Antes: los reintegros de cobros duplicados que fallan solo se loguean (`console.warn`), no
+- [ ] Si falla el reembolso de un cobro duplicado de la misma preferencia, solo queda en el log (no tiene fila propia ni aparece en el panel); el webhook se reintenta. Antes: los reintegros de cobros duplicados que fallan solo se loguean (`console.warn`), no
       aparecen en el panel; un pago que quedó en `reintegro_pendiente` tras un
       reintegro exitoso con marcado fallido no se cura solo (sí con "Reintentar").
 - [ ] Mail de cancelación del local: la línea de devolución de la seña sale para cualquier cancelación web del

@@ -4,6 +4,31 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-04 — La seña vuelve a reembolsarse
+
+Rama `feat/reembolso-de-sena`. La ayudante de cátedra sugirió volver a probar los
+reembolsos; con las credenciales de prueba `TEST-` de la aplicación del usuario funcionan
+(con las del vendedor de prueba, 401 aunque tenga saldo: `hallazgos.md` 1.35). Decisión
+del usuario: se devuelve en toda cancelación, y se da por devuelta cuando lo confirma el
+webhook.
+
+- `reintegros.js` (vuelve): `PaymentRefund` con clave de idempotencia por pago.
+  `cancelaciones.js` pide el reembolso al cancelar (o lo reintenta sobre una reserva ya
+  cancelada) y responde `{ reintegro: 'pedido' | 'fallo' | 'no_corresponde' }`.
+- `avisos.js`: el pago `refunded` pasa la seña a `reintegrado` (`confirmarReintegro`);
+  un pago tardío o un cobro doble piden el reembolso en el momento.
+- `mercadopago.js`: con un token `TEST-` usa `sandbox_init_point`.
+- Migración `20261104120000_reembolso_de_sena`: `marcar_reintegro` en cualquier
+  cancelación y se borra `marcar_sena_devuelta`. pgTAP `10_reembolso_de_sena` y
+  `05_sena` ajustados.
+- Front: aviso antes de pagar, confirmación y mensaje al cancelar en "Mis reservas",
+  "Devoluciones de seña en curso" con "Reintentar" en el panel, etiqueta "Devolución de
+  la seña en curso". Mails: la seña se reintegra también si cancela el cliente.
+- Probado en local de punta a punta (pago en sandbox en incógnito, el webhook simulado
+  con la misma lógica de la ruta porque Mercado Pago no llega a localhost).
+
+---
+
 ## 2026-11-04 — Ingresar con mail desde /reservas
 
 Rama `feat/reservas-ingresar-con-mail` (PR #27). Pedido del usuario: sin sesión,

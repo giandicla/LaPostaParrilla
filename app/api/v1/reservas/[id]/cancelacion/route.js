@@ -1,11 +1,12 @@
-// POST /api/v1/reservas/:id/cancelacion — { motivo? } → 200 { sena }
-// La usan el cliente (Mis reservas) y el admin (panel, con motivo).
-// sena: 'retenida' (canceló el cliente), 'a_devolver' (canceló el local) o
-// 'no_corresponde' (no había seña cobrada).
+// POST /api/v1/reservas/:id/cancelacion — { motivo? } → 200 { reintegro }
+// La usan el cliente (Mis reservas) y el admin (panel, con motivo). Pide el
+// reembolso de la seña; sobre una reserva ya cancelada, reintenta el reembolso.
+// reintegro: 'pedido' | 'fallo' | 'no_corresponde'.
 import { ErrorHttp, json, manejar } from '../../../../../../src/servidor/respuestas.js';
 import { esquemaCancelacion, esquemaId, leerCuerpo } from '../../../../../../src/servidor/esquemas.js';
 import { usuarioDelPedido } from '../../../../../../src/servidor/supabase.js';
 import { crearBase } from '../../../../../../src/servidor/base.js';
+import { crearMercadoPago } from '../../../../../../src/servidor/mercadopago.js';
 import { cancelarReserva } from '../../../../../../src/servidor/cancelaciones.js';
 
 export const POST = manejar(async (pedido, { params }) => {
@@ -13,6 +14,6 @@ export const POST = manejar(async (pedido, { params }) => {
   if (!esquemaId.safeParse(id).success) throw new ErrorHttp(400, 'Ese id de reserva no es válido.');
   const usuario = await usuarioDelPedido(pedido);
   const { motivo } = await leerCuerpo(pedido, esquemaCancelacion);
-  const resultado = await cancelarReserva({ reservaId: id, motivo }, { usuario, base: crearBase() });
+  const resultado = await cancelarReserva({ reservaId: id, motivo }, { usuario, base: crearBase(), mp: crearMercadoPago() });
   return json(resultado);
 });

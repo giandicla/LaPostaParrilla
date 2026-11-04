@@ -157,7 +157,7 @@ function confirmacion(r: Reserva, sitio: string, delLocal: boolean): Mensaje {
       sitio,
       titulo: 'Tu reserva está confirmada',
       cuerpo: `${parrafo(`La mesa queda reservada a nombre de ${escapar(r.nombre)}.`)}${detalle(r)}${
-        delLocal ? '' : nota('La seña está acreditada. La reserva se puede modificar desde la web hasta 1 hora antes; si se cancela, la seña no se reintegra.')}`,
+        delLocal ? '' : nota('La seña está acreditada. La reserva se puede modificar o cancelar desde la web hasta 1 hora antes; si se cancela, la seña se reintegra en el mismo medio de pago.')}`,
       accion: delLocal ? undefined : boton(`${sitio}/mis-reservas`, 'Ver mis reservas'),
       pie: contacto(r),
     }),
@@ -192,7 +192,7 @@ function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
             sitio,
             titulo: 'Tu reserva fue cancelada',
             cuerpo: `${parrafo('La reserva se canceló desde "Mis reservas".')}${detalle(r)}${
-              r.origen === 'web' ? nota('Como la cancelación la hizo el cliente, la seña no se reintegra.') : ''}`,
+              r.origen === 'web' ? nota('La seña se reintegra en el mismo medio de pago.') : ''}`,
             accion: delLocal ? undefined : boton(`${sitio}/reservas`, 'Hacer otra reserva'),
             pie: contacto(r),
           }) }];

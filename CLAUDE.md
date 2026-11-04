@@ -69,13 +69,14 @@ variables y despliegue en `docs/BACKEND.md`; diseño en
 - `POST /api/webhooks/mercadopago`: valida la firma, consulta el pago real y
   concilia con `acreditar_pago()`.
 - `POST /api/v1/reservas/:id/cancelacion`: cancela con la sesión del que llama y
-  dice qué pasa con la seña. **La app no reembolsa por Mercado Pago** (decisión del
-  usuario, 2026-11-01): si cancela el cliente la seña no se devuelve; si cancela el
-  local o el pago llega tarde, queda en "Señas a devolver" y el local la devuelve a
-  mano. Ver `docs/BACKEND.md`.
-- **Nunca credenciales de producción de Mercado Pago.** `MP_ACCESS_TOKEN` es del
-  vendedor de prueba y solo vive en el servidor; la única clave con
-  `NEXT_PUBLIC_` es la Public Key (`NEXT_PUBLIC_MP_PUBLIC_KEY`, pública por diseño).
+  pide el reembolso de la seña con `PaymentRefund` (desde 2026-11-04; cancele el
+  cliente o el local, y también si el pago llega tarde). La seña queda
+  `reintegro_pendiente` hasta que el webhook trae el pago `refunded`. Ver `docs/BACKEND.md`.
+- **Nunca credenciales de producción de Mercado Pago.** `MP_ACCESS_TOKEN` es el
+  Access Token de prueba (`TEST-`, sandbox) de la aplicación del usuario: con el del
+  vendedor de prueba Mercado Pago no deja reembolsar. Solo vive en el servidor; la única
+  clave con `NEXT_PUBLIC_` es la Public Key (`NEXT_PUBLIC_MP_PUBLIC_KEY`, pública por
+  diseño). La cuenta real del usuario no se usa para nada más.
 - **Las previews comparten la base de producción:** un cambio de esquema se aplica
   (`supabase db push`) en la misma ventana que el merge, no antes.
 - La vuelta desde Mercado Pago y el webhook usan `urlDelSitio()`
