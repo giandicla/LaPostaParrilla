@@ -33,8 +33,11 @@ export const crearReservaLocal = async (reserva) =>
       .single()
   );
 
-export const moverReserva = async (id, { fecha, hora }) =>
-  resultado(await supabase.from('reservas').update({ fecha, hora }).eq('id', id));
+// datos: { fecha, hora, personas, nombre, telefono, comentarios, mail? }. El
+// mail va solo en las del local: las de la web usan el de la cuenta. Las
+// reglas (franjas, topes de personas, contacto) las vuelve a poner la base.
+export const editarReserva = async (id, datos) =>
+  resultado(await supabase.from('reservas').update(datos).eq('id', id));
 
 // Una nota vacía borra la nota
 export async function guardarNota(idReserva, nota) {
