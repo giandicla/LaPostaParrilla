@@ -82,7 +82,7 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
 3. `npx supabase link --project-ref <ref>` y `npx supabase db push` (migraciones).
 4. Función de mails: `npx supabase functions deploy notificar-reserva` y sus
    secretos: `npx supabase secrets set NOTIFICACIONES_SECRETO=<algo largo y al azar>
-   MAIL_REMITENTE=gianfrancodicla123@gmail.com MAIL_ADMIN=gdiclaudio@itba.edu.ar
+   MAIL_REMITENTE=gianfrancodicla123@gmail.com
    SITIO_URL=https://<dominio de vercel> BREVO_API_KEY=<clave>`.
 5. En el SQL Editor del proyecto, los dos secretos de Vault que usa el trigger:
    ```sql
@@ -107,7 +107,8 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
    "La Posta"), que sí está autenticada: el 2026-11-03 el mail de contraseña nueva
    llegó a Hotmail ("Entregado" en Brevo). No se manda
    en nombre de la casilla real del local. Lo ideal sería un dominio propio autenticado
-   en Brevo (ver `PENDIENTES.md`).
+   en Brevo (ver `PENDIENTES.md`). **El local no recibe
+   mails** (decisión del usuario 2026-11-03): se entera por el panel, en tiempo real.
 9. **Vercel** → Settings → Environment Variables: `NEXT_PUBLIC_SUPABASE_URL` y
    `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` del proyecto (Settings → API Keys), para
    *Production* **y *Preview***. Sin *Preview*, las previews de los PR dicen "Todavía
@@ -276,4 +277,6 @@ Hay dos tipos de mails, y salen por caminos distintos de Brevo:
   con el mismo marco que los de reservas. En local caen en Mailpit
   (http://127.0.0.1:54324).
 - **De reservas**: los manda la función `notificar-reserva` con la API de Brevo
-  (`BREVO_API_KEY`).
+  (`BREVO_API_KEY`). **Van solo al cliente** (desde el 2026-11-03): el local ve las
+  reservas nuevas, cancelaciones y cambios en el panel, en tiempo real. El secreto
+  `MAIL_ADMIN` ya no se usa.

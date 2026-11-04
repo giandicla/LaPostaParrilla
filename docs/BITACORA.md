@@ -26,6 +26,42 @@ plan `docs/superpowers/plans/2026-11-03-ingreso-con-mail.md`.
 
 ---
 
+## 2026-11-03 — El local ya no recibe mails
+
+Rama `feat/sin-mails-al-local`. Pedido del usuario: los avisos al local (reserva
+nueva con la seña paga, cancelación y cambio del cliente) llegaban al mail de la
+facultad y caían en spam. La función `notificar-reserva` ahora le escribe **solo al
+cliente**; el local se entera por el panel, en tiempo real. Los mails al cliente no
+cambian (el usuario confirmó que le llegan bien).
+
+- `mensajes.ts`: fuera los tres mails al admin, el campo `para` y el teléfono con
+  links de llamada y WhatsApp (solo iba en esos mails). `index.ts`: deja de leer
+  `MAIL_ADMIN`.
+- Tests Deno: 19 (uno nuevo: ningún mail lleva al panel).
+- Hay que **redesplegar la función** (`npx supabase functions deploy notificar-reserva`)
+  para que llegue a producción; el secreto `MAIL_ADMIN` puede quedar o borrarse.
+
+---
+
+## 2026-11-03 — Editar una reserva desde el panel
+
+Rama `feat/editar-reserva-panel`. En el panel, "Mover" pasa a ser **"Editar"**: fecha,
+hora, personas, nombre, teléfono, comentarios y, en las reservas del local, el mail
+(las de la web usan el de la cuenta). Componente nuevo `EditarReserva`; en
+`src/servicios/admin.js`, `moverReserva` pasa a `editarReserva`.
+
+- **Sin migración**: la política "reservas: el admin edita" ya dejaba actualizar
+  cualquier columna, y los checks y triggers que había (`validar_contacto`, tope de
+  6 / 40 personas, mail solo en las del local, `validar_reserva`) ya controlaban los
+  datos nuevos. pgTAP `12_admin_edita_reserva.test.sql` (12) lo deja fijado.
+- El mail al cliente sigue saliendo solo si cambian la fecha o la hora (como antes con
+  "Mover"); el formulario lo avisa.
+- Tests: `node --test` 100, pgTAP 183 en 12 archivos. Probado en local con sesión de
+  admin: errores por campo, error de la base (día bloqueado) y guardado, en escritorio
+  y a 375 px.
+
+---
+
 ## 2026-11-02 — Rendimiento en el celular
 
 Rama `perf/celular`. Medido primero contra producción (Lighthouse celular):

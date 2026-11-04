@@ -7,6 +7,7 @@ import Boton from '../../src/components/Boton/Boton.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
 import NuevaReservaLocal from '../../src/components/NuevaReservaLocal/NuevaReservaLocal.jsx';
+import EditarReserva from '../../src/components/EditarReserva/EditarReserva.jsx';
 import PestanasAdmin from '../../src/components/PestanasAdmin/PestanasAdmin.jsx';
 import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/data/locales.js';
 import {
@@ -25,29 +26,22 @@ import {
   listarSenasADevolver,
   marcarSenaDevuelta,
   listarReservas,
-  moverReserva,
 } from '../../src/servicios/admin.js';
 import { cancelarReserva } from '../../src/servicios/pagos.js';
-import { validarFecha, validarHora } from '../../src/validacion/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
-// Conecta un control de los formularios chicos del panel con su mensaje de error
-const atributosDeError = (error, campo, idMensaje) =>
-  error?.campo === campo ? { 'aria-invalid': true, 'aria-describedby': idMensaje } : {};
-
 // ---------------------------------------------------------------------
-// Una reserva en el panel: datos, acciones según el estado, mover, nota
+// Una reserva en el panel: datos, acciones según el estado, editar, nota
 // ---------------------------------------------------------------------
 function FilaReserva({ reserva, franjas, alCambiar, alError }) {
-  const [moviendo, setMoviendo] = useState(false);
-  const [errorMover, setErrorMover] = useState(null); // { campo, mensaje }
+  const [editando, setEditando] = useState(false);
   // Borrador de la nota mientras se escribe; null = se muestra la guardada.
   // Así una recarga (por tiempo real) no pisa lo que se está escribiendo.
   const [borradorNota, setBorradorNota] = useState(null);
   const nota = borradorNota ?? reserva.nota;
   const local = getLocal(reserva.local_id);
-  // Una confirmada de un día que ya pasó (terminada) no se mueve ni se cancela
+  // Una confirmada de un día que ya pasó (terminada) no se edita ni se cancela
   const activa = ['esperando_pago', 'pendiente', 'confirmada'].includes(reserva.estado)
     && estadoVisible(reserva) !== 'terminada';
   const delLocal = reserva.origen === 'local';
@@ -76,24 +70,6 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
       return;
     }
     ejecutar(() => cancelarReserva(reserva.id, motivo.trim()));
-  };
-
-  const alMover = (evento) => {
-    evento.preventDefault();
-    const datos = Object.fromEntries(new FormData(evento.currentTarget));
-    const invalido =
-      [['fecha', validarFecha(datos.fecha, { hoy: hoyEnArgentina() })], ['hora', validarHora(datos.hora, { franjas })]]
-        .find(([, mensaje]) => mensaje);
-    if (invalido) {
-      setErrorMover({ campo: invalido[0], mensaje: invalido[1] });
-      evento.currentTarget.elements[invalido[0]].focus();
-      return;
-    }
-    setErrorMover(null);
-    ejecutar(async () => {
-      await moverReserva(reserva.id, { fecha: datos.fecha, hora: datos.hora });
-      setMoviendo(false);
-    });
   };
 
   return (
@@ -148,49 +124,23 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
           )}
         </div>
 
-        {moviendo && (
-          <form className={estilos.mover} onSubmit={alMover} noValidate>
-            <input
-              name="fecha"
-              type="date"
-              required
-              defaultValue={reserva.fecha}
-              min={hoyEnArgentina()}
-              className={formulario.control}
-              aria-label="Nueva fecha"
-              {...atributosDeError(errorMover, 'fecha', `mover-error-${reserva.id}`)}
-            />
-            <select
-              name="hora"
-              required
-              defaultValue={reserva.hora.slice(0, 5)}
-              className={formulario.control}
-              aria-label="Nueva hora"
-              {...atributosDeError(errorMover, 'hora', `mover-error-${reserva.id}`)}
-            >
-              {franjas.map((h) => <option key={h} value={h}>{h}</option>)}
-            </select>
-            <button type="submit" className={estilos.botonChico}>Guardar</button>
-            <button
-              type="button"
-              className={estilos.botonTexto}
-              onClick={() => {
-                setMoviendo(false);
-                setErrorMover(null);
-              }}
-            >
-              Cancelar
-            </button>
-            {errorMover && (
-              <p id={`mover-error-${reserva.id}`} className={estilos.errorForm} role="alert">{errorMover.mensaje}</p>
-            )}
-          </form>
+        {editando && (
+          <EditarReserva
+            reserva={reserva}
+            franjas={franjas}
+            avisaPorMail={Boolean(avisoMail)}
+            alGuardar={() => {
+              setEditando(false);
+              alCambiar();
+            }}
+            alCerrar={() => setEditando(false)}
+          />
         )}
       </div>
 
       <div className={estilos.acciones}>
-        {activa && reserva.estado !== 'esperando_pago' && !moviendo && (
-          <button type="button" className={estilos.botonTexto} onClick={() => setMoviendo(true)}>Mover</button>
+        {activa && reserva.estado !== 'esperando_pago' && !editando && (
+          <button type="button" className={estilos.botonTexto} onClick={() => setEditando(true)}>Editar</button>
         )}
         {activa && (
           <button type="button" className={estilos.botonTexto} onClick={alCancelar}>Cancelar</button>
@@ -281,7 +231,7 @@ function Panel() {
     };
   }, [filtros, version]);
 
-  // Franjas de cada local, para el selector de "Mover"
+  // Franjas de cada local, para el selector de hora de "Editar"
   useEffect(() => {
     Promise.all(LOCALES.map(async (l) => [l.id, await obtenerFranjas(l.id)]))
       .then((pares) => setFranjas(Object.fromEntries(pares)))

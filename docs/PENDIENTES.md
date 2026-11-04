@@ -150,7 +150,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] **Dominio propio para los mails**: hoy el remitente es un Gmail (2026-11-03) y a Hotmail/Outlook pueden caer en spam. Con un dominio autenticado en Brevo (DKIM + DMARC) llegan a todos.
 - [ ] **LCP en celular** (4 a 8 s en Lighthouse): fotos del hero y JS de Next. Ver
       `docs/QA-MANUAL.md`.
-- [ ] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail).
+- [x] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail, personas). Hecho 2026-11-03.
 - [ ] Editar franjas de reserva y horarios de atención desde el panel.
 - [ ] Probar la impresión de la lista del día en la computadora del local.
 - [ ] Tests de componentes React y de las rutas de `app/api/`.
@@ -173,8 +173,8 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [x] Primer admin en producción: gdiclaudio@itba.edu.ar
 - [ ] Si las previews (que usan la base de producción) empiezan a ensuciar datos
       reales: proyecto de Supabase aparte para pruebas.
-- [ ] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail,
-      personas). Hoy solo se mueve de fecha y hora.
+- [x] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail,
+      personas). Hecho 2026-11-03: "Editar" reemplaza a "Mover" (`EditarReserva`).
 - [ ] El link de "Imprimir" del panel abre otra página: probar la impresión real
       en la computadora del local
 
@@ -186,7 +186,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       (RT Flinton, HeyGotcha), se cambian en `src/styles/fuentesCarta.js`.
 - [ ] Editar franjas de reserva y horarios de atención desde el panel
 - [x] **Redesplegar la Edge Function `notificar-reserva`** (hecho 2026-11-02, con la plantilla nueva) cuando esté Brevo: tiene el
-      mail nuevo de "el cliente cambió su reserva" (aviso al local + confirmación al
+      mail nuevo de "el cliente cambió su reserva" (aviso al local, sacado el 2026-11-03, + confirmación al
       cliente). Hasta entonces, si el cliente modifica, la función vieja le manda
       "Cambiamos el horario de tu reserva".
 
