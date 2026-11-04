@@ -55,7 +55,11 @@ export function validarCuenta(datos, { modo }) {
   return Object.fromEntries(Object.entries(errores).filter(([, mensaje]) => mensaje));
 }
 
-// El mismo aviso haya o no una cuenta con ese mail: la pantalla no revela qué
-// mails están registrados
+// Los avisos son los mismos haya o no una cuenta con ese mail: la pantalla no
+// revela qué mails están registrados. Mencionan spam porque, sin dominio propio,
+// Hotmail suele mandar estos mails a "Correo no deseado".
+export const mensajeTrasOlvido = (mail) =>
+  `Listo. Si ${normalizarMail(mail)} es el mail de tu cuenta, te llega un link para elegir una contraseña nueva. Si no lo ves en unos minutos, revisá la carpeta de spam o correo no deseado.`;
+
 export const mensajeTrasCrear = (mail) =>
   `Te mandamos un mail a ${normalizarMail(mail)} para confirmar la cuenta. Si no lo ves, revisá la carpeta de spam.`;

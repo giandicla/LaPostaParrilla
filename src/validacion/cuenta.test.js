@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
   mensajeTrasCrear,
+  mensajeTrasOlvido,
   normalizarMail,
   validarContrasena,
   validarCuenta,
@@ -55,6 +56,13 @@ test('al ingresar no se exige el largo, solo que haya contraseña', () => {
 test('contraseña nueva: largo y repetición', () => {
   assert.deepEqual(Object.keys(validarCuenta({ contrasena: '1234567', repetida: '1234567' }, { modo: 'nueva' })), ['contrasena']);
   assert.deepEqual(Object.keys(validarCuenta({ contrasena: '12345678', repetida: '12345679' }, { modo: 'nueva' })), ['repetida']);
+});
+
+test('después de pedir la contraseña nueva el aviso es el mismo para todos y menciona spam', () => {
+  assert.equal(
+    mensajeTrasOlvido(' Ana@Hotmail.com'),
+    'Listo. Si ana@hotmail.com es el mail de tu cuenta, te llega un link para elegir una contraseña nueva. Si no lo ves en unos minutos, revisá la carpeta de spam o correo no deseado.'
+  );
 });
 
 test('después de crear la cuenta el aviso no dice si el mail ya existía', () => {

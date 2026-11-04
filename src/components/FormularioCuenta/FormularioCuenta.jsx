@@ -5,7 +5,7 @@ import Boton from '../Boton/Boton.jsx';
 import Campo from '../Campo/Campo.jsx';
 import { crearCuenta, ingresarConMail, pedirNuevaContrasena } from '../../servicios/auth.js';
 import { LIMITES } from '../../validacion/reservas.js';
-import { LIMITES_CUENTA, mensajeTrasCrear, normalizarMail, validarCuenta } from '../../validacion/cuenta.js';
+import { LIMITES_CUENTA, mensajeTrasCrear, mensajeTrasOlvido, validarCuenta } from '../../validacion/cuenta.js';
 import formulario from '../../styles/formulario.module.css';
 import estilos from './FormularioCuenta.module.css';
 
@@ -47,7 +47,7 @@ export default function FormularioCuenta({ modo, volver, alCambiarModo }) {
         setListo(mensajeTrasCrear(datos.mail));
       } else {
         await pedirNuevaContrasena(datos.mail);
-        setListo(`Si hay una cuenta con ${normalizarMail(datos.mail)}, te llega un mail para elegir una contraseña nueva.`);
+        setListo(mensajeTrasOlvido(datos.mail));
       }
     } catch (e) {
       setErrorBase(e.message);
