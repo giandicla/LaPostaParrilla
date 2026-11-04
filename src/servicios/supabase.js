@@ -16,6 +16,15 @@ export { backendDisponible } from './config.js';
 
 const ERRORES_AUTH = {
   provider_disabled: 'El ingreso con Google no está disponible en este momento.',
+  invalid_credentials: 'El mail o la contraseña no son correctos.',
+  email_not_confirmed: 'Todavía no confirmaste tu cuenta: revisá tu mail (y la carpeta de spam).',
+  over_email_send_rate_limit: 'Mandamos demasiados mails seguidos. Probá de nuevo en unos minutos.',
+  weak_password: 'La contraseña tiene que tener al menos 8 caracteres.',
+  same_password: 'La contraseña nueva tiene que ser distinta de la anterior.',
+  signup_disabled: 'Por ahora solo se puede crear la cuenta con Google.',
+  // Proveedor de mail apagado: tampoco se puede ingresar con contraseña
+  email_provider_disabled: 'Por ahora solo se puede ingresar con Google.',
+  email_address_invalid: 'Ese mail no parece válido. Ejemplo: nombre@gmail.com',
 };
 
 // Traduce los errores de Postgres y de Auth a mensajes para el usuario.

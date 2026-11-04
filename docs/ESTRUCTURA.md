@@ -8,7 +8,8 @@
 | `/carta` | Carta | La carta del local activo, pedida a `GET /api/v1/carta`, dibujada como la carta impresa del local (`HojaCarta`): índice de secciones arriba, una sección abajo de la otra, vinos por cepa y bodega, cubierto al pie. Mientras carga, "Cargando la carta…"; si falla, mensaje y WhatsApp del local. Acepta `?local=<id>` y anclas (`#parrilla-entradas`) |
 | `/reservas` | Reservas | "Reservar en:" con la foto de cada salón y, debajo, el formulario en una card (nombre, teléfono, fecha, hora, personas, comentarios hasta 100). Sin sesión: los salones y "Ingresar con Google". Con más de 6 personas el botón pasa a "Reservar por WhatsApp" con el mensaje armado. El admin no la usa: lo lleva al panel. Acepta `?local=<id>` |
 | `/reservas/pago` | Reservas | Adonde vuelve el cliente desde Mercado Pago (`?reserva=<id>`). No decide nada con la URL: espera (tiempo real + consulta cada 5 s) a que la reserva figure `confirmada`, o muestra pago rechazado con "Reintentar", reserva cancelada o vencida, o pago tardío (la seña se devuelve a mano) |
-| `/ingresar` | Cuenta | Un solo botón, "Continuar con Google" (la primera vez crea la cuenta). Acepta `?volver=<ruta>` |
+| `/ingresar` | Cuenta | Dos pestañas, "Ingresar" y "Crear cuenta" (`PestanasCuenta`); en las dos, "Continuar con Google" y, abajo, el formulario con mail (`FormularioCuenta`). Ingresar: mail, contraseña y "Olvidé mi contraseña". Crear cuenta: nombre, mail y contraseña (8 o más); llega un mail para confirmarla. Acepta `?volver=<ruta>` |
+| `/ingresar/contrasena` | Cuenta | A donde lleva el link del mail de "Olvidé mi contraseña": contraseña nueva y repetida; sin sesión (link vencido o usado) explica que hay que pedir otro |
 | `/mis-reservas` | Cuenta | Próximas (todas) y anteriores y canceladas (de a 5, con "Ver más"); `esperando_pago` con "Pagar seña" y el tiempo que falta; modificar fecha, hora y personas (`ModificarReserva`) y cancelar hasta 1 h antes (avisa que la seña no se devuelve), después WhatsApp. El admin no la usa: lo lleva al panel |
 | `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado, con el estado de la seña; cancelar (pide el motivo, "No hay lugar" por defecto) y editar (fecha, hora, personas, nombre, teléfono, comentarios y, en las del local, mail: `EditarReserva`); "Señas a devolver" (las devuelve el local a mano) con "Ya la devolví"; notas internas; las confirmadas de días pasados se ven "Terminada"; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |
 | `/admin/dia` | Admin | Lista del día para imprimir. Acepta `?fecha=` y `?local=` |
@@ -60,6 +61,8 @@
 | `EditarReserva` | `reserva`, `franjas`, `avisaPorMail`, `alGuardar`, `alCerrar` | Formulario del panel para corregir una reserva: fecha, hora, personas y contacto (el mail, solo en las del local) |
 | `ModificarReserva` | `reserva`, `alGuardar`, `alCerrar` | Formulario de "Mis reservas" para cambiar fecha, hora y personas (`modificar_reserva`) |
 | `SelloMercadoPago` | — | Cartel oficial de Mercado Pago (Brand Brick de `@mercadopago/sdk-react`) bajo el botón de pagar la seña: Mercado Pago dibuja su logo y los medios de pago. Necesita `NEXT_PUBLIC_MP_PUBLIC_KEY`; sin ella no se muestra |
+| `PestanasCuenta` | `pestanas`, `activa`, `alCambiar`, `children` | Pestañas accesibles de `/ingresar` (flechas, Inicio y Fin) |
+| `FormularioCuenta` | `modo` (`ingresar` / `crear` / `olvide`), `volver`, `alCambiarModo` | Los formularios con mail de `/ingresar`. Nunca dice si un mail ya tiene cuenta |
 | `Icono` | `nombre` (`google` / `instagram` / `whatsapp`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
 | `SeccionCarta` | `seccion`, `idAncla` | Una sección de la carta: platos (nombre, descripción, traducción EN/PT, uno o más precios) o vinos agrupados por bodega. La fuente y el filete del título los toma de la hoja que la contiene |
@@ -85,7 +88,7 @@ La única capa que habla con Supabase. Detalle en `docs/BACKEND.md`.
 |---|---|
 | `supabase.js` | El cliente, `backendDisponible`, `mensajeDeError(error)` (errores de Postgres/Auth en castellano) |
 | `config.js` | `backendDisponible` sin cargar supabase-js (la usan la navbar y la sesión en todas las páginas) |
-| `auth.js` | Ingresar con Google, salir, escuchar la sesión, leer y actualizar el perfil |
+| `auth.js` | Ingresar con Google o con mail, crear cuenta, pedir y cambiar la contraseña, salir, escuchar la sesión, leer y actualizar el perfil |
 | `reservas.js` | Franjas, días bloqueados, crear / listar / cancelar reservas, utilidades de fecha en hora argentina |
 | `admin.js` | Listar y filtrar reservas, editar, notas, bloqueos (por día o por turno), señas a devolver y marcarlas devueltas, suscripción en tiempo real |
 | `pagos.js` | `iniciarPago`, `cancelarReserva`: llaman a las rutas de `app/api/` con el token de la sesión (el Access Token de Mercado Pago nunca llega al navegador) |

@@ -4,6 +4,28 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-03 — Ingreso con mail y contraseña
+
+Rama `feat/ingreso-con-mail`. Spec `docs/superpowers/specs/2026-11-03-ingreso-con-mail-design.md`,
+plan `docs/superpowers/plans/2026-11-03-ingreso-con-mail.md`.
+
+- `/ingresar` con dos pestañas (`PestanasCuenta`, opción B de la maqueta, elegida por
+  el usuario): Google en las dos y, abajo, mail y contraseña (`FormularioCuenta`).
+  Crear cuenta pide nombre, mail y contraseña; el teléfono no (decisión del usuario).
+- "Olvidé mi contraseña" y `/ingresar/contrasena`.
+- `src/validacion/cuenta.js` (mail en minúsculas y sin espacios, contraseña de 8 a 72,
+  repetición) y errores de Auth en castellano en `supabase.js`.
+- Un mail que ya tiene cuenta muestra el mismo aviso que uno nuevo: Supabase local
+  responde `user_already_exists` y no un usuario vacío, como suponía el diseño.
+- Mails de Auth por el SMTP de Brevo solo en producción (`[remotes.produccion]`), con
+  plantillas propias. En producción el registro queda apagado hasta probar que los
+  mails llegan (paso 1).
+- `/reservas`: el teléfono se guarda siempre en el perfil (sin casilla).
+- Tests: `node --test` 122, pgTAP 174 en 12 archivos (`13_perfil_registro_con_mail`).
+  Recorrido completo en local con Mailpit.
+
+---
+
 ## 2026-11-03 — El local ya no recibe mails
 
 Rama `feat/sin-mails-al-local`. Pedido del usuario: los avisos al local (reserva

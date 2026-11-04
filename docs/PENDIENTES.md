@@ -147,6 +147,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 ## Abiertos al 2026-11-02 (resumen para la próxima sesión)
 
 - [ ] **Gift cards**: en evaluación (decisión del usuario).
+- [ ] **Dominio propio para los mails**: hoy el remitente es un Gmail (2026-11-03) y a Hotmail/Outlook pueden caer en spam. Con un dominio autenticado en Brevo (DKIM + DMARC) llegan a todos.
 - [ ] **LCP en celular** (4 a 8 s en Lighthouse): fotos del hero y JS de Next. Ver
       `docs/QA-MANUAL.md`.
 - [x] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail, personas). Hecho 2026-11-03.
@@ -154,6 +155,8 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] Probar la impresión de la lista del día en la computadora del local.
 - [ ] Tests de componentes React y de las rutas de `app/api/`.
 - [ ] Guion de la demo: **solo cuando lo pida el usuario**.
+- [x] Ingreso con mail y contraseña (2026-11-03, rama `feat/ingreso-con-mail`): falta la
+      puesta en producción en dos pasos (ver el spec del 2026-11-03).
 - [ ] Los menores diferidos de esta página (seña, carta, accesibilidad).
 
 ## Etapas futuras
@@ -166,7 +169,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [x] Tests: 33 pgTAP de la base, 7 de la lógica de mails, recorrido Playwright
 - [x] Proyecto remoto `la-posta`: migraciones, función, secretos, auth y variables en Vercel
 - [x] Credenciales de Google OAuth (cuenta de la facultad)
-- [x] 👤 Cuenta de Brevo (creada 2026-11-01 con el mail de la facultad), remitente verificado y API key (cargada 2026-11-02) (solo para los mails de reservas: el ingreso es con Google y no manda mails)
+- [x] 👤 Cuenta de Brevo (creada 2026-11-01 con el mail de la facultad), remitente verificado y API key (cargada 2026-11-02) (API key para los mails de reservas; desde el 2026-11-03, también clave SMTP para los mails de cuentas)
 - [x] Primer admin en producción: gdiclaudio@itba.edu.ar
 - [ ] Si las previews (que usan la base de producción) empiezan a ensuciar datos
       reales: proyecto de Supabase aparte para pruebas.

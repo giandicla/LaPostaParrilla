@@ -54,16 +54,21 @@ npm run dev
 - Migraciones de la seña (hasta `20261018120000`) aplicadas el 2026-10-18; función `notificar-reserva` redesplegada ese día.
 - Función `notificar-reserva` desplegada con sus secretos y los de Vault. Falta
   `BREVO_API_KEY`: hasta cargarla, los mails solo quedan en el log de la función.
-- Auth: Site URL `https://lapostaparrilla.vercel.app`. **Solo Google**: el proveedor
-  de email está apagado (la API rechaza registrarse con email). Se aplica con `npx supabase config push` (sección `[auth]` de
+- Auth: Site URL `https://lapostaparrilla.vercel.app`. **Google y mail con contraseña**
+  (desde la sesión 09): los mails de Auth salen por el SMTP de Brevo, configurado solo
+  para producción en `[remotes.produccion]` (host `smtp-relay.brevo.com`, login
+  `c1039d001@smtp-brevo.com`, clave `BREVO_SMTP_KEY` en `supabase/.env`). Ese bloque
+  también fija valores que producción ya tenía (pooler, storage) para que el push no
+  los cambie. **Antes de cada push: `npx supabase config diff`.** Se aplica con `npx supabase config push` (sección `[auth]` de
   `config.toml`; las credenciales salen de `supabase/.env`, que no se sube).
 - Google: cliente OAuth creado con la cuenta de la facultad. Ingresar funciona con
   cualquier cuenta de Google (probado con una personal).
 - La contraseña de la base está en `supabase/.db-password` (ignorado por git).
 
-**Nota:** como el registro con email está apagado en `config.toml`, en local los
-usuarios de prueba del seed tampoco pueden ingresar con contraseña. Para probar en
-local con sesión hay que agregar `http://127.0.0.1:54321/auth/v1/callback` a las
+**Nota:** en local se puede crear una cuenta con mail y contraseña desde
+`/ingresar`: el mail de confirmación cae en Mailpit (http://127.0.0.1:54324). El link
+vuelve al sitio solo si su puerto está en `additional_redirect_urls` (3000). Para
+probar Google en local hay que agregar `http://127.0.0.1:54321/auth/v1/callback` a las
 URIs de redirección del cliente de Google.
 
 ## Puesta en producción (una sola vez)
@@ -77,7 +82,7 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
 3. `npx supabase link --project-ref <ref>` y `npx supabase db push` (migraciones).
 4. Función de mails: `npx supabase functions deploy notificar-reserva` y sus
    secretos: `npx supabase secrets set NOTIFICACIONES_SECRETO=<algo largo y al azar>
-   MAIL_REMITENTE=gdiclaudio@itba.edu.ar
+   MAIL_REMITENTE=gianfrancodicla123@gmail.com
    SITIO_URL=https://<dominio de vercel> BREVO_API_KEY=<clave>`.
 5. En el SQL Editor del proyecto, los dos secretos de Vault que usa el trigger:
    ```sql
@@ -93,11 +98,17 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
 8. 👤 **Brevo**: crear cuenta gratis, verificar el remitente (Senders), crear una API
    key (SMTP & API → API Keys) y cargarla con
    `npx supabase secrets set BREVO_API_KEY=<clave>` (la carga el usuario; la clave no
-   pasa por el chat). **El remitente es el mail de la facultad**
-   (`gdiclaudio@itba.edu.ar`, decisión del usuario 2026-11-01): es el proyecto de la
-   materia y no se manda en nombre de la casilla real del local. **El local no recibe
-   mails** (decisión del usuario 2026-11-03: los avisos al mail de la facultad caían en
-   spam); se entera por el panel, en tiempo real.
+   pasa por el chat). **Remitente: `gianfrancodicla123@gmail.com`** (decisión del
+   usuario 2026-11-03), para los mails de cuentas (`admin_email` en
+   `[remotes.produccion.auth.email.smtp]`) y los de reservas (`MAIL_REMITENTE`). Antes
+   era el de la facultad (`gdiclaudio@itba.edu.ar`, 2026-11-01), pero `itba.edu.ar` no
+   autoriza a Brevo en su SPF y Hotmail rechazaba los mails (soft bounce). Con el Gmail,
+   Brevo reescribe la dirección a una suya (`…@12649373.brevosend.com`, con el nombre
+   "La Posta"), que sí está autenticada: el 2026-11-03 el mail de contraseña nueva
+   llegó a Hotmail ("Entregado" en Brevo). No se manda
+   en nombre de la casilla real del local. Lo ideal sería un dominio propio autenticado
+   en Brevo (ver `PENDIENTES.md`). **El local no recibe
+   mails** (decisión del usuario 2026-11-03): se entera por el panel, en tiempo real.
 9. **Vercel** → Settings → Environment Variables: `NEXT_PUBLIC_SUPABASE_URL` y
    `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` del proyecto (Settings → API Keys), para
    *Production* **y *Preview***. Sin *Preview*, las previews de los PR dicen "Todavía
@@ -259,9 +270,13 @@ Desde la sesión 06 la carta vive en la base. Diseño:
 
 ## Mails
 
-Al ingresar solo con Google, Supabase Auth no manda mails (no hay confirmaciones
-ni recuperación de contraseña). Los únicos mails son los de reservas, que manda
-la función `notificar-reserva` con Brevo cuando esté cargada `BREVO_API_KEY`.
-**Van solo al cliente** (desde el 2026-11-03): el local ve las reservas nuevas,
-cancelaciones y cambios en el panel, en tiempo real. El secreto `MAIL_ADMIN` ya no
-se usa.
+Hay dos tipos de mails, y salen por caminos distintos de Brevo:
+
+- **De cuentas** (confirmar la cuenta, contraseña nueva): los manda Supabase Auth por
+  SMTP. Plantillas en `supabase/templates/` (`confirmacion.html`, `recuperacion.html`),
+  con el mismo marco que los de reservas. En local caen en Mailpit
+  (http://127.0.0.1:54324).
+- **De reservas**: los manda la función `notificar-reserva` con la API de Brevo
+  (`BREVO_API_KEY`). **Van solo al cliente** (desde el 2026-11-03): el local ve las
+  reservas nuevas, cancelaciones y cambios en el panel, en tiempo real. El secreto
+  `MAIL_ADMIN` ya no se usa.

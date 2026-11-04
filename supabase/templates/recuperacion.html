@@ -1,0 +1,21 @@
+<!doctype html>
+<!-- Mail de Supabase Auth de "Olvidé mi contraseña". Mismo marco que
+     confirmacion.html y que los mails de reservas. -->
+<html lang="es"><body style="margin:0;padding:0;background:#EDE7DD">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#EDE7DD"><tr><td align="center" style="padding:24px 12px">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;border-collapse:collapse">
+    <tr><td align="center" style="background:#600003;padding:26px 24px">
+      <img src="{{ .SiteURL }}/logo/logo-mail-blanco.png" width="160" alt="La Posta" style="display:block;width:160px;max-width:55%;height:auto;border:0">
+    </td></tr>
+    <tr><td style="height:4px;background:#757036;font-size:0;line-height:0">&nbsp;</td></tr>
+    <tr><td style="background:#F6F2EC;padding:32px 28px 24px">
+      <h1 style="margin:0 0 18px;font-family:Baskerville,'Libre Baskerville',Georgia,'Times New Roman',serif;font-weight:normal;font-size:22px;letter-spacing:2px;text-transform:uppercase;color:#600003">Contraseña nueva</h1>
+      <p style="margin:0 0 16px;font-family:'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',Arial,sans-serif;font-size:15px;line-height:1.55;color:#1C1512">Pediste elegir una contraseña nueva para tu cuenta de La Posta. El link vale por una hora.</p>
+      <p style="margin:4px 0 20px"><a href="{{ .ConfirmationURL }}" style="display:inline-block;background:#600003;color:#FFFFFF;font-family:'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',Arial,sans-serif;font-size:14px;letter-spacing:1px;text-transform:uppercase;text-decoration:none;padding:12px 22px;border-radius:4px">Elegir contraseña nueva</a></p>
+      <p style="margin:8px 0 0;padding-top:16px;border-top:1px solid #CBC1B1;font-family:'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',Arial,sans-serif;font-size:13px;line-height:1.6;color:#5A524C">Si no fuiste vos, ignorá este mail: tu contraseña no cambia.</p>
+    </td></tr>
+    <tr><td align="center" style="background:#CBC1B1;padding:14px 24px;font-family:'Gill Sans','Gill Sans MT',Calibri,'Trebuchet MS',Arial,sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#1C1512">
+      La Posta · Villa La Angostura
+    </td></tr>
+  </table>
+</td></tr></table></body></html>
