@@ -102,7 +102,10 @@ pantallas de consentimiento); el resto se puede hacer desde la CLI.
    usuario 2026-11-03), para los mails de cuentas (`admin_email` en
    `[remotes.produccion.auth.email.smtp]`) y los de reservas (`MAIL_REMITENTE`). Antes
    era el de la facultad (`gdiclaudio@itba.edu.ar`, 2026-11-01), pero `itba.edu.ar` no
-   autoriza a Brevo en su SPF y Hotmail rechazaba los mails (soft bounce). No se manda
+   autoriza a Brevo en su SPF y Hotmail rechazaba los mails (soft bounce). Con el Gmail,
+   Brevo reescribe la dirección a una suya (`…@12649373.brevosend.com`, con el nombre
+   "La Posta"), que sí está autenticada: el 2026-11-03 el mail de contraseña nueva
+   llegó a Hotmail ("Entregado" en Brevo). No se manda
    en nombre de la casilla real del local. Lo ideal sería un dominio propio autenticado
    en Brevo (ver `PENDIENTES.md`).
 9. **Vercel** → Settings → Environment Variables: `NEXT_PUBLIC_SUPABASE_URL` y
