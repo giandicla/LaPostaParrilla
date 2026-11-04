@@ -149,7 +149,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] **Gift cards**: en evaluación (decisión del usuario).
 - [ ] **LCP en celular** (4 a 8 s en Lighthouse): fotos del hero y JS de Next. Ver
       `docs/QA-MANUAL.md`.
-- [ ] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail).
+- [x] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail, personas). Hecho 2026-11-03.
 - [ ] Editar franjas de reserva y horarios de atención desde el panel.
 - [ ] Probar la impresión de la lista del día en la computadora del local.
 - [ ] Tests de componentes React y de las rutas de `app/api/`.
@@ -170,8 +170,8 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [x] Primer admin en producción: gdiclaudio@itba.edu.ar
 - [ ] Si las previews (que usan la base de producción) empiezan a ensuciar datos
       reales: proyecto de Supabase aparte para pruebas.
-- [ ] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail,
-      personas). Hoy solo se mueve de fecha y hora.
+- [x] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail,
+      personas). Hecho 2026-11-03: "Editar" reemplaza a "Mover" (`EditarReserva`).
 - [ ] El link de "Imprimir" del panel abre otra página: probar la impresión real
       en la computadora del local
 

@@ -139,21 +139,6 @@
   font-size: var(--fs-small);
 }
 
-.mover {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-  align-items: center;
-  margin-top: var(--sp-2);
-}
-
-.mover .control,
-.mover input,
-.mover select {
-  width: auto;
-  padding: var(--sp-2);
-}
-
 .acciones {
   display: flex;
   flex-wrap: wrap;
@@ -252,7 +237,7 @@
   }
 }
 
-/* Error de los formularios chicos (mover, bloquear): ocupa su propia línea */
+/* Error de los formularios chicos (bloquear): ocupa su propia línea */
 .errorForm {
   flex-basis: 100%;
   grid-column: 1 / -1;
