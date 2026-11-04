@@ -464,7 +464,9 @@ host = "smtp-relay.brevo.com"
 port = 587
 user = "c1039d001@smtp-brevo.com"
 pass = "env(BREVO_SMTP_KEY)"
-admin_email = "gdiclaudio@itba.edu.ar"
+# Gmail y no el de la facultad: itba.edu.ar no autoriza a Brevo en su SPF y
+# Hotmail rechazaba los mails (soft bounce, 2026-11-03). Decisión del usuario.
+admin_email = "gianfrancodicla123@gmail.com"
 sender_name = "La Posta"
 
 # Valores que producción ya tiene y que el resto del archivo no declara igual:

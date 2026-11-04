@@ -147,6 +147,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 ## Abiertos al 2026-11-02 (resumen para la próxima sesión)
 
 - [ ] **Gift cards**: en evaluación (decisión del usuario).
+- [ ] **Dominio propio para los mails**: hoy el remitente es un Gmail (2026-11-03) y a Hotmail/Outlook pueden caer en spam. Con un dominio autenticado en Brevo (DKIM + DMARC) llegan a todos.
 - [ ] **LCP en celular** (4 a 8 s en Lighthouse): fotos del hero y JS de Next. Ver
       `docs/QA-MANUAL.md`.
 - [ ] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail).
