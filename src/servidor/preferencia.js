@@ -6,11 +6,19 @@ export const MINUTOS_PARA_PAGAR = 15;
 export const venceLaReserva = (creadaEn) =>
   new Date(new Date(creadaEn).getTime() + MINUTOS_PARA_PAGAR * 60 * 1000);
 
+// Direcciones que Mercado Pago no alcanza: la propia máquina (también en IPv6,
+// que URL devuelve entre corchetes), la red local y los nombres .local
+const LOCAL = [
+  /^localhost$/, /\.localhost$/, /\.local$/, /^0\.0\.0\.0$/,
+  /^127\./, /^10\./, /^192\.168\./, /^172\.(1[6-9]|2\d|3[01])\./, /^169\.254\./,
+  /^\[::1?\]$/, /^\[f[cd][0-9a-f]{2}:/i, /^\[fe80:/i,
+];
+
 // Mercado Pago rechaza auto_return y notification_url con URLs locales
 export function esUrlPublica(url) {
   try {
     const { protocol, hostname } = new URL(url);
-    return protocol === 'https:' && !['localhost', '127.0.0.1', '0.0.0.0'].includes(hostname);
+    return protocol === 'https:' && !LOCAL.some((patron) => patron.test(hostname));
   } catch {
     return false;
   }

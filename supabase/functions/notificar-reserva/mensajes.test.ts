@@ -59,6 +59,17 @@ Deno.test('cancelada por el admin: el mail lleva el motivo y avisa que la seña 
   assertEquals(m.html.includes('La seña se reintegra'), true);
 });
 
+Deno.test('una reserva web pendiente (de antes de la seña) cancelada no promete devolver la seña', () => {
+  const pendiente = { ...base, estado: 'pendiente' as const };
+  const porAdmin = { ...pendiente, estado: 'cancelada' as const, cancelada_por: 'admin' as const, motivo_cancelacion: 'Cierre' };
+  const porCliente = { ...pendiente, estado: 'cancelada' as const, cancelada_por: 'cliente' as const };
+  for (const reserva of [porAdmin, porCliente]) {
+    const [m] = armarMensajes({ tipo: 'UPDATE', reserva, anterior: pendiente }, sitio);
+    assertEquals(m.asunto, 'Tu reserva fue cancelada');
+    assertEquals(m.html.includes('seña'), false);
+  }
+});
+
 Deno.test('movida de horario: avisa al cliente', () => {
   const m = armarMensajes({ tipo: 'UPDATE', reserva: { ...base, hora: '21:00:00' }, anterior: base }, sitio);
   assertEquals(asuntos(m), ['Tu reserva fue modificada']);

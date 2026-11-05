@@ -105,6 +105,17 @@ export const venceElPago = (reserva) =>
 export const puedePagar = (reserva, ahora = Date.now()) =>
   reserva.estado === 'esperando_pago' && venceElPago(reserva).getTime() > ahora;
 
+// La pantalla de vuelta de Mercado Pago sigue mirando la reserva mientras
+// puede cambiar. Un pago hecho en el último minuto puede avisar después de que
+// venció la reserva: por eso sigue 10 minutos más, hasta ver "Llegó tarde el
+// pago" o la seña devuelta. Confirmada, o con la seña ya devuelta, no cambia más.
+export const MINUTOS_DE_GRACIA = 10;
+export const sigueMirandoElPago = (reserva, ahora = Date.now()) => {
+  if (reserva.estado === 'esperando_pago') return true;
+  if (reserva.estado === 'confirmada' || estadoSena(reserva) === 'reintegrado') return false;
+  return venceElPago(reserva).getTime() + MINUTOS_DE_GRACIA * 60 * 1000 > ahora;
+};
+
 // De varios pagos de una reserva cuenta el más avanzado, de mayor a menor.
 // El embed de Supabase no trae orden, así que se rankea acá.
 const ORDEN_DE_PAGOS = ['aprobado', 'reintegro_pendiente', 'reintegrado', 'rechazado', 'iniciado'];

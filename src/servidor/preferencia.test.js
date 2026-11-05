@@ -59,3 +59,19 @@ test('URL pública: HTTPS y no local', () => {
   assert.equal(esUrlPublica('https://localhost:3000'), false);
   assert.equal(esUrlPublica(undefined), false);
 });
+
+test('esUrlPublica: la máquina propia en IPv6 y la red local no son públicas', () => {
+  for (const url of [
+    'https://[::1]:3000', 'https://127.0.0.2', 'https://0.0.0.0', 'https://192.168.0.10:3000',
+    'https://10.0.0.5', 'https://172.16.4.1', 'https://172.31.255.1', 'https://169.254.1.1',
+    'https://mi-pc.local', 'https://app.localhost', 'https://[fd12:3456::1]', 'https://[fe80::1]',
+  ]) {
+    assert.equal(esUrlPublica(url), false, url);
+  }
+});
+
+test('esUrlPublica: dominios e IPs públicas sí lo son, aunque se parezcan a una local', () => {
+  for (const url of ['https://172.32.0.1', 'https://8.8.8.8', 'https://local-posta.vercel.app', 'https://10x.com.ar']) {
+    assert.equal(esUrlPublica(url), true, url);
+  }
+});

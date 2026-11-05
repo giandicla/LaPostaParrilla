@@ -9,11 +9,12 @@ function falsos({ pagoMp, estadoFinal = 'aprobado', existe = true, falla = null 
   return {
     llamadas,
     mp: {
-      obtenerPago: async () => { if (falla) throw falla; return pagoMp; },
+      // Mercado Pago informa lo cobrado en transaction_amount: la seña, salvo que el test diga otra cosa
+      obtenerPago: async () => { if (falla) throw falla; return { transaction_amount: 10000, ...pagoMp }; },
       reintegrar: async (...args) => llamadas.push(['reintegrar', ...args]),
     },
     base: {
-      leerPago: async () => (existe ? { id: ID_PAGO } : null),
+      leerPago: async () => (existe ? { id: ID_PAGO, monto: '10000.00' } : null),
       acreditarPago: async (...args) => { llamadas.push(['acreditar', ...args]); return estadoFinal; },
       confirmarReintegro: async (...args) => llamadas.push(['confirmar', ...args]),
     },
@@ -79,4 +80,22 @@ test('un 404 de Mercado Pago al leer el pago se ignora (sin 500)', async () => {
 test('otro error de Mercado Pago al leer el pago sigue siendo un error (para que reintente)', async () => {
   const deps = falsos({ falla: Object.assign(new Error('Caído'), { status: 500 }) });
   await assert.rejects(procesarAvisoDePago('999', deps), /Caído/);
+});
+
+test('un pago aprobado por otro monto no confirma la reserva: se devuelve', async (t) => {
+  t.mock.method(console, 'error', () => {});
+  const deps = falsos({ pagoMp: { id: 777, status: 'approved', external_reference: ID_PAGO, transaction_amount: 100 } });
+  assert.equal(await procesarAvisoDePago('777', deps), 'monto_distinto_reintegro_pedido');
+  assert.deepEqual(deps.llamadas, [['reintegrar', '777', 'reintegro-777']]);
+});
+
+test('el monto se compara como número: 10000 cobrado es la seña de "10000.00"', async () => {
+  const deps = falsos({ pagoMp: { id: 555, status: 'approved', external_reference: ID_PAGO, transaction_amount: 10000.0 } });
+  assert.equal(await procesarAvisoDePago('555', deps), 'aprobado');
+});
+
+test('un pago rechazado por otro monto no se reembolsa (no se cobró nada)', async () => {
+  const deps = falsos({ pagoMp: { id: 778, status: 'rejected', external_reference: ID_PAGO, transaction_amount: 100 }, estadoFinal: 'rechazado' });
+  assert.equal(await procesarAvisoDePago('778', deps), 'rechazado');
+  assert.deepEqual(deps.llamadas, [['acreditar', ID_PAGO, '778', 'rejected']]);
 });

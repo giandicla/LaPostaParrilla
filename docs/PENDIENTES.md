@@ -230,27 +230,31 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 
 **Menores diferidos de las revisiones** (no bloquean; una línea cada uno):
 
-- [ ] `cancelar_reserva` lee sin `for update`: un webhook o el cron concurrentes podrían
-      pisar los chequeos (el dinero lo cubre `marcar_reintegro`).
-- [ ] Un `p_motivo` de más de 120 caracteres da el error crudo `23514` en vez de un
-      mensaje en castellano (el front ya limita a 120).
-- [ ] `acreditar_pago` no compara el monto cobrado con el de la preferencia (en
-      Checkout Pro lo fija el servidor); sumar un chequeo en `avisos.js`.
-- [ ] `pagos.reserva_id` es `on delete cascade`: borrar un usuario borra sus registros
-      de plata; evaluar `restrict`.
+- [x] `cancelar_reserva` lee sin `for update`. Hecho 2026-11-05 (migración
+      `20261105120000_cancelar_reserva_ajustes`).
+- [x] Un `p_motivo` de más de 120 caracteres da el error crudo `23514`. Hecho 2026-11-05:
+      "El motivo puede tener hasta 120 caracteres." (misma migración).
+- [x] `acreditar_pago` no compara el monto cobrado. Hecho 2026-11-05 en `avisos.js`: un
+      pago aprobado por otro monto no confirma la reserva y se reembolsa.
+- [x] ~~`pagos.reserva_id` es `on delete cascade`: evaluar `restrict`.~~ Se queda en
+      cascada (decisión del usuario, 2026-11-05): el local nunca borra clientes, porque le
+      sirven para fidelizar y hacer campañas. Solo se van a borrar cuentas para limpiar
+      los datos de prueba antes o después de la presentación, y ahí la cascada es lo que
+      conviene.
 - [ ] Si falla el reembolso de un cobro duplicado de la misma preferencia, solo queda en el log (no tiene fila propia ni aparece en el panel); el webhook se reintenta. Antes: los reintegros de cobros duplicados que fallan solo se loguean (`console.warn`), no
       aparecen en el panel; un pago que quedó en `reintegro_pendiente` tras un
       reintegro exitoso con marcado fallido no se cura solo (sí con "Reintentar").
-- [ ] Mail de cancelación del local: la línea de devolución de la seña sale para cualquier cancelación web del
-      admin, también de filas viejas `pendiente` que nunca pagaron; condicionarla a
-      `confirmada`.
-- [ ] `/reservas/pago` deja de consultar cuando la reserva pasa a `vencida`: un pago
-      tardío cuyo aviso llega después no se ve hasta recargar.
-- [ ] Tests faltantes: rutas y adaptadores (`base.js`, `supabase.js`) sin tests;
-      pruebas pgTAP de bloqueo global por turno, borde de las 17:00 y cancelaciones
-      del admin sin motivo.
+- [x] Mail de cancelación: la línea de devolución de la seña salía también para filas
+      `pendiente` que nunca pagaron. Hecho 2026-11-05: solo si estaba `confirmada`
+      (falta redesplegar `notificar-reserva`).
+- [x] `/reservas/pago` dejaba de consultar al vencer. Hecho 2026-11-05: sigue 10 minutos
+      más (`sigueMirandoElPago`), así un pago tardío se ve sin recargar.
+- [x] Tests faltantes: rutas (2026-11-05, Vitest); pgTAP de bloqueo de un turno en los
+      dos locales, corte de las 17:00 y cancelación directa del admin sin motivo
+      (`14_cancelar_reserva_ajustes`). Los adaptadores (`base.js`, `supabase.js`) siguen
+      sin test propio: los cubren los tests de rutas solo hasta su interfaz.
 - [ ] El texto "1 hora" de la ayuda de `/reservas` está escrito a mano; el control de
       puedePagar usa el reloj del navegador (el servidor igual lo valida).
-- [ ] `esUrlPublica` no reconoce `[::1]` ni IPs de la red local.
+- [x] `esUrlPublica` no reconoce `[::1]` ni IPs de la red local. Hecho 2026-11-05.
 - [x] (Ya no aplica: el reintegro automático se sacó.) El plan (`docs/superpowers/plans/…`) todavía nombra `pagoAReintegrar`; el código
       usa `pagosAReintegrar`.

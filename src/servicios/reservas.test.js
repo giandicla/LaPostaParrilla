@@ -1,7 +1,7 @@
 // node --test "src/**/*.test.js"
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { estadoSena, estadoVisible, puedePagar, sePuedeCancelar, sePuedeModificar, turnoDe } from './reservas.js';
+import { estadoSena, estadoVisible, puedePagar, sePuedeCancelar, sePuedeModificar, sigueMirandoElPago, turnoDe } from './reservas.js';
 
 // Fecha y hora de Argentina (UTC-3) dentro de `minutos`, como las guarda la base
 function dentroDe(minutos) {
@@ -63,4 +63,17 @@ test('una confirmada de un día anterior se ve como terminada', () => {
   assert.equal(estadoVisible({ estado: 'confirmada', fecha: '2999-01-01' }), 'confirmada');
   assert.equal(estadoVisible({ estado: 'cancelada', fecha: '2020-01-01' }), 'cancelada');
   assert.equal(estadoVisible({ estado: 'vencida', fecha: '2020-01-01' }), 'vencida');
+});
+
+test('la pantalla de pago sigue mirando 10 minutos después de vencer, por si el pago llega tarde', () => {
+  const creada = '2026-10-15T20:00:00.000Z'; // vence 20:15
+  const a = (hora) => Date.parse(`2026-10-15T${hora}:00.000Z`);
+  const vencida = { estado: 'vencida', creada_en: creada, pagos: [] };
+  assert.equal(sigueMirandoElPago({ ...vencida, estado: 'esperando_pago' }, a('20:40')), true);
+  assert.equal(sigueMirandoElPago(vencida, a('20:20')), true);
+  assert.equal(sigueMirandoElPago(vencida, a('20:25')), false);
+  // Llegó tarde y se está devolviendo: se sigue mirando hasta ver la seña devuelta
+  assert.equal(sigueMirandoElPago({ ...vencida, pagos: [{ estado: 'reintegro_pendiente' }] }, a('20:20')), true);
+  assert.equal(sigueMirandoElPago({ ...vencida, pagos: [{ estado: 'reintegrado' }] }, a('20:16')), false);
+  assert.equal(sigueMirandoElPago({ ...vencida, estado: 'confirmada' }, a('20:05')), false);
 });
