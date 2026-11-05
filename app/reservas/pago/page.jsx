@@ -20,6 +20,7 @@ import {
   formatearFecha,
   obtenerReserva,
   puedePagar,
+  sigueMirandoElPago,
   venceElPago,
 } from '../../../src/servicios/reservas.js';
 import formulario from '../../../src/styles/formulario.module.css';
@@ -35,9 +36,10 @@ function EstadoDelPago() {
   const [abriendo, setAbriendo] = useState(false);
   const [errorPago, setErrorPago] = useState('');
 
-  // Una vez que la reserva deja de esperar el pago (confirmada, vencida,
-  // cancelada) no hay nada más que esperar: se dejan el sondeo y el tiempo real
-  const sigueEsperando = !reserva || reserva.estado === 'esperando_pago';
+  // Cuando la reserva ya no puede cambiar se dejan el sondeo y el tiempo real
+  // (ver sigueMirandoElPago: después de vencer, sigue un rato por si el pago
+  // llega tarde)
+  const [terminado, setTerminado] = useState(false);
 
   // Al volver con "atrás" desde Mercado Pago, el navegador restaura la página
   // tal cual estaba (bfcache): sin esto quedaría trabada en "Abriendo…"
@@ -48,7 +50,7 @@ function EstadoDelPago() {
   }, []);
 
   useEffect(() => {
-    if (!id || !sigueEsperando) return undefined;
+    if (!id || terminado) return undefined;
     let vigente = true;
     const leer = () =>
       obtenerReserva(id)
@@ -57,6 +59,7 @@ function EstadoDelPago() {
           if (r) {
             setReserva(r);
             setError('');
+            setTerminado(!sigueMirandoElPago(r));
           } else {
             setError('No encontramos esa reserva.');
           }
@@ -71,7 +74,7 @@ function EstadoDelPago() {
       dejarDeEscuchar();
       clearInterval(intervalo);
     };
-  }, [id, sigueEsperando]);
+  }, [id, terminado]);
 
   const reintentar = async () => {
     setErrorPago('');

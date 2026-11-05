@@ -4,6 +4,31 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-05 — Menores de la seña
+
+Rama `fix/menores-de-la-sena`. Los menores que habían quedado de las revisiones de la seña.
+
+- **Monto cobrado:** `avisos.js` compara `transaction_amount` con el monto de la seña en
+  la base. Un pago aprobado por otro monto no confirma la reserva y se reembolsa (en
+  Checkout Pro no debería pasar: el monto lo fija el servidor).
+- **`cancelar_reserva` con `for update`** y motivo de más de 120 caracteres con mensaje
+  en castellano (migración `20261105120000_cancelar_reserva_ajustes`).
+- **Mail de cancelación:** "la seña se reintegra" solo si la reserva estaba confirmada
+  (con la seña cobrada). Hay que redesplegar `notificar-reserva`.
+- **Pago tardío en `/reservas/pago`:** la pantalla sigue mirando 10 minutos después del
+  vencimiento. Probado en local: con la reserva vencida, se cargó un pago aprobado en la
+  base y la pantalla pasó sola de "La reserva no se completó" a "Llegó tarde el pago";
+  con la seña devuelta, dejó de consultar.
+- **`esUrlPublica`:** `[::1]`, IPs de la red local (10/8, 172.16/12, 192.168/16,
+  169.254/16, IPv6 privadas) y nombres `.local` / `.localhost` no son públicos.
+- Tests: pgTAP `14_cancelar_reserva_ajustes` (10: motivo largo, cancelación directa del
+  admin sin motivo, un turno bloqueado en los dos locales, corte de las 17:00), 6 en
+  `node --test`, 1 de ruta y 1 de Deno.
+- Quedan para decidir con el usuario: `pagos.reserva_id` en cascada y el registro de los
+  reembolsos de cobros duplicados que fallan.
+
+---
+
 ## 2026-11-05 — Menores del ingreso con mail
 
 Rama `fix/menores-ingreso-con-mail`. Los cinco que quedaron de la revisión final de la

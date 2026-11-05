@@ -44,8 +44,8 @@ function aviso({ idDato = ID_PAGO_MP, tipo = 'payment', secreto = SECRETO, idPed
 
 beforeEach(() => {
   vi.stubEnv('MP_WEBHOOK_SECRET', SECRETO);
-  estado.pagoMp = { id: Number(ID_PAGO_MP), external_reference: ID, status: 'approved' };
-  estado.pagoLocal = { id: ID };
+  estado.pagoMp = { id: Number(ID_PAGO_MP), external_reference: ID, status: 'approved', transaction_amount: 10000 };
+  estado.pagoLocal = { id: ID, monto: '10000.00' };
   estado.acreditado = 'confirmada';
   estado.llamadas = [];
 });
@@ -115,6 +115,16 @@ describe('POST /api/webhooks/mercadopago', () => {
     const { cuerpo } = await leer(await POST(aviso()));
     expect(cuerpo.estado).toBe('reintegro_pedido');
     expect(estado.llamadas).toContainEqual(['reintegrar', ID_PAGO_MP, `reintegro-${ID_PAGO_MP}`]);
+  });
+
+  test('un pago aprobado por otro monto se reembolsa y no se acredita', async () => {
+    estado.pagoMp.transaction_amount = 1;
+    const consola = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const { status, cuerpo } = await leer(await POST(aviso()));
+    expect(status).toBe(200);
+    expect(cuerpo.estado).toBe('monto_distinto_reintegro_pedido');
+    expect(estado.llamadas.map(([nombre]) => nombre)).toEqual(['obtenerPago', 'reintegrar']);
+    consola.mockRestore();
   });
 
   test('si la base falla responde 500, así Mercado Pago reintenta', async () => {

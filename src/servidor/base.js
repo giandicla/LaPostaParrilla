@@ -21,7 +21,7 @@ export function crearBase(cliente = clienteSecreto()) {
     guardarPreferencia: async (idPago, idPreferencia) =>
       dato(await cliente.from('pagos').update({ mp_preference_id: idPreferencia, actualizado_en: ahora() }).eq('id', idPago)),
     leerPago: async (id) =>
-      dato(await cliente.from('pagos').select('id').eq('id', id).maybeSingle()),
+      dato(await cliente.from('pagos').select('id, monto').eq('id', id).maybeSingle()),
     acreditarPago: async (idPago, idPagoMp, estadoMp) =>
       dato(await cliente.rpc('acreditar_pago', { p_pago_id: idPago, p_mp_payment_id: idPagoMp, p_estado_mp: estadoMp })),
     // Puede haber más de uno (p. ej. un cobro doble): se piden todos

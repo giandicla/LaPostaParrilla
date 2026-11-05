@@ -186,19 +186,22 @@ function mensajesWeb(aviso: Aviso, sitio: string, delLocal = false): Mensaje[] {
         }) }];
     }
     if (r.estado === 'cancelada') {
+      // Solo una reserva web confirmada tenía la seña cobrada. Las 'pendiente'
+      // son de antes de la seña (o del local): no hay nada que devolver.
+      const conSena = r.origen === 'web' && a.estado === 'confirmada';
       if (r.cancelada_por === 'cliente') {
         return [{ asunto: 'Tu reserva fue cancelada',
           html: plantilla({
             sitio,
             titulo: 'Tu reserva fue cancelada',
             cuerpo: `${parrafo('La reserva se canceló desde "Mis reservas".')}${detalle(r)}${
-              r.origen === 'web' ? nota('La seña se reintegra en el mismo medio de pago.') : ''}`,
+              conSena ? nota('La seña se reintegra en el mismo medio de pago.') : ''}`,
             accion: delLocal ? undefined : boton(`${sitio}/reservas`, 'Hacer otra reserva'),
             pie: contacto(r),
           }) }];
       }
       const motivo = r.motivo_cancelacion ? nota(`<strong>Motivo:</strong> ${escapar(r.motivo_cancelacion)}`) : '';
-      const sena = r.origen === 'web'
+      const sena = conSena
         ? nota('La seña se reintegra en los próximos días, en el mismo medio de pago.') : '';
       return [{ asunto: 'Tu reserva fue cancelada',
         html: plantilla({

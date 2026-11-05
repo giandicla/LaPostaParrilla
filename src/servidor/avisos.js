@@ -25,12 +25,22 @@ export async function procesarAvisoDePago(idPagoMp, { base, mp }) {
 
   // Pagos que no salieron de este sitio: se responde 200 igual, para que
   // Mercado Pago no los reintente durante horas
-  if (!idPago || !UUID.test(idPago) || !(await base.leerPago(idPago))) return 'ignorado';
+  const pago = idPago && UUID.test(idPago) ? await base.leerPago(idPago) : null;
+  if (!pago) return 'ignorado';
 
   // Confirmación del reembolso que pidió la app
   if (pagoMp.status === 'refunded') {
     await base.confirmarReintegro(idPago, String(pagoMp.id));
     return 'reintegrado';
+  }
+
+  // En Checkout Pro el monto lo fija el servidor en la preferencia, así que no
+  // debería cambiar. Si un pago aprobado no cobró la seña exacta, no confirma
+  // la reserva: se devuelve y queda en el log (la reserva vence sola).
+  if (pagoMp.status === 'approved' && Number(pagoMp.transaction_amount) !== Number(pago.monto)) {
+    console.error('El monto cobrado no es el de la seña, se reembolsa', idPago, pagoMp.id, pagoMp.transaction_amount, pago.monto);
+    await pedirReintegro(pagoMp.id, { mp });
+    return 'monto_distinto_reintegro_pedido';
   }
 
   const estado = await base.acreditarPago(idPago, String(pagoMp.id), pagoMp.status);
