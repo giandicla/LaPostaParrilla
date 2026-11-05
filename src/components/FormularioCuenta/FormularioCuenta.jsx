@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Boton from '../Boton/Boton.jsx';
 import Campo from '../Campo/Campo.jsx';
 import { crearCuenta, ingresarConMail, pedirNuevaContrasena } from '../../servicios/auth.js';
@@ -16,13 +16,25 @@ const BOTON = { ingresar: 'Ingresar', crear: 'Crear cuenta', olvide: 'Mandar el 
 // Los formularios de cuenta con mail: ingresar, crear cuenta y olvidé mi
 // contraseña. modo: 'ingresar' | 'crear' | 'olvide'. Al ingresar, la página
 // redirige sola cuando aparece la sesión. alCambiarModo(modo) para pasar de
-// ingresar a "olvidé" y volver.
-export default function FormularioCuenta({ modo, volver, alCambiarModo }) {
+// ingresar a "olvidé" y volver. enfocar: al aparecer, el foco va al mail (se
+// usa al cambiar de modo, cuando desaparece el botón que se tocó).
+export default function FormularioCuenta({ modo, volver, alCambiarModo, enfocar = false }) {
   const [errores, setErrores] = useState({});
   const [errorBase, setErrorBase] = useState('');
   const [enviando, setEnviando] = useState(false);
   const [listo, setListo] = useState('');
   const prefijo = `cuenta-${modo}`;
+  const formRef = useRef(null);
+  const listoRef = useRef(null);
+
+  useEffect(() => {
+    if (enfocar) formRef.current?.elements.mail?.focus();
+  }, [enfocar]);
+
+  // Al mandar, el formulario se reemplaza por el aviso: el foco va al aviso
+  useEffect(() => {
+    if (listo) listoRef.current?.focus();
+  }, [listo]);
 
   const alEnviar = async (evento) => {
     evento.preventDefault();
@@ -57,7 +69,7 @@ export default function FormularioCuenta({ modo, volver, alCambiarModo }) {
 
   if (listo) {
     return (
-      <div className={estilos.listo} role="status">
+      <div ref={listoRef} tabIndex={-1} className={estilos.listo} role="status">
         <p>{listo}</p>
         {modo === 'olvide' && (
           <Boton variante="texto" onClick={() => alCambiarModo('ingresar')}>Volver a ingresar</Boton>
@@ -67,7 +79,7 @@ export default function FormularioCuenta({ modo, volver, alCambiarModo }) {
   }
 
   return (
-    <form className={estilos.formulario} onSubmit={alEnviar} noValidate>
+    <form ref={formRef} className={estilos.formulario} onSubmit={alEnviar} noValidate>
       {modo === 'olvide' && (
         <p className={formulario.ayuda}>Escribí el mail de tu cuenta y te mandamos un link para elegir una contraseña nueva.</p>
       )}

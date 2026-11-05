@@ -61,5 +61,15 @@ export function validarCuenta(datos, { modo }) {
 export const mensajeTrasOlvido = (mail) =>
   `Listo. Si ${normalizarMail(mail)} es el mail de tu cuenta, te llega un link para elegir una contraseña nueva. Si no lo ves en unos minutos, revisá la carpeta de spam o correo no deseado.`;
 
+// Cuando el link del mail venció o ya se usó, Supabase vuelve al sitio con el
+// error en la URL (en el hash, o en la query si el flujo es PKCE):
+//   /ingresar/contrasena#error=access_denied&error_code=otp_expired&…
+// Devuelve el código, o '' si el link vino bien. Recibe window.location.
+export function errorDelLink({ hash = '', search = '' } = {}) {
+  const enHash = new URLSearchParams(hash.replace(/^#/, ''));
+  const enQuery = new URLSearchParams(search);
+  return enHash.get('error_code') || enHash.get('error') || enQuery.get('error_code') || enQuery.get('error') || '';
+}
+
 export const mensajeTrasCrear = (mail) =>
   `Te mandamos un mail a ${normalizarMail(mail)} para confirmar la cuenta. Si no lo ves, revisá la carpeta de spam.`;

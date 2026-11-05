@@ -4,6 +4,34 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-05 — Menores del ingreso con mail
+
+Rama `fix/menores-ingreso-con-mail`. Los cinco que quedaron de la revisión final de la
+sesión 09.
+
+- **El límite de envíos revelaba qué mails tienen cuenta.** Probado contra Supabase Auth
+  local: pedir "Olvidé mi contraseña" dos veces seguidas con un mail que tiene cuenta da
+  429 ("you can only request this after N seconds"); con uno que no tiene, da ok. Lo
+  mismo al crear otra vez una cuenta sin confirmar. Ahora ese error por cuenta se responde
+  como enviado (`esEsperaDeLaCuenta` en `src/servicios/auth.js`); el límite general del
+  sitio, que no dice nada de nadie, se sigue mostrando.
+- **Link vencido con la sesión abierta:** supabase-js conserva la sesión anterior y deja
+  el error en la URL, así que se veía el formulario de contraseña nueva. Ahora
+  `/ingresar/contrasena` lee el error (`errorDelLink`) y muestra "El link venció".
+  Probado en el navegador con un link real de Mailpit usado dos veces: antes del arreglo,
+  formulario; después, el aviso.
+- **Errores de Auth traducidos:** demasiados intentos, cuenta suspendida, link vencido,
+  sesión vencida, datos inválidos, demora y sin conexión. Uno desconocido sigue dando el
+  mensaje genérico, nunca el texto en inglés.
+- **Foco:** al pasar a "Olvidé mi contraseña" o volver, va al mail del formulario nuevo
+  (antes quedaba en la nada porque el botón tocado desaparece); al mandar, va al aviso
+  "Listo…". Al cambiar de pestaña se queda en la pestaña.
+- **Pestañas:** el grupo se llama "Ingresar o crear cuenta" para el lector de pantalla.
+- Tests: 14 nuevos en `node --test` y 7 en Vitest (`PestanasCuenta` nuevo, foco de
+  `FormularioCuenta`).
+
+---
+
 ## 2026-11-05 — Tests de las rutas y de los componentes
 
 Rama `test/componentes-y-rutas`. Cierra el faltante de Código / Estructura en la rúbrica.

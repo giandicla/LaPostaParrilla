@@ -6,9 +6,10 @@ import estilos from './PestanasCuenta.module.css';
 // Pestañas accesibles (patrón "tabs" de WAI-ARIA): flechas izquierda y
 // derecha, Inicio y Fin. Solo la pestaña activa entra en el orden del Tab.
 //   pestanas  [{ id, etiqueta }]
+//   etiqueta  nombre del grupo de pestañas, para el lector de pantalla
 //   activa    id de la pestaña elegida
 //   alCambiar(id)
-export default function PestanasCuenta({ pestanas, activa, alCambiar, children }) {
+export default function PestanasCuenta({ pestanas, etiqueta, activa, alCambiar, children }) {
   const lista = useRef(null);
 
   const elegir = (indice) => {
@@ -32,7 +33,7 @@ export default function PestanasCuenta({ pestanas, activa, alCambiar, children }
 
   return (
     <div>
-      <div ref={lista} role="tablist" className={estilos.lista} onKeyDown={alTeclear}>
+      <div ref={lista} role="tablist" aria-label={etiqueta} className={estilos.lista} onKeyDown={alTeclear}>
         {pestanas.map(({ id, etiqueta }) => (
           <button
             key={id}
