@@ -4,6 +4,31 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-05 — Tests de las rutas y de los componentes
+
+Rama `test/componentes-y-rutas`. Cierra el faltante de Código / Estructura en la rúbrica.
+
+- **Vitest + React Testing Library + jsdom** (lo que recomienda la guía de Next 16), solo
+  como dependencias de desarrollo. `vitest.config.js` tiene dos proyectos: `rutas`
+  (entorno Node) y `componentes` (jsdom). Los tests de `node --test` siguen igual;
+  `npm test` corre las dos tandas, así el CI no cambia.
+- **Rutas** (`app/api/**/route.test.js`, `app/api/v1/carta/escrituras.test.js`, 58 tests):
+  se llama al handler con un `Request` real. Se reemplazan solo los adaptadores
+  (`supabase.js`, `base.js`, `carta-base.js`, `mercadopago.js`); la lógica, Zod y el
+  manejo de errores corren de verdad. Cubre 201/200/204, 400, 401, 403, 404, 409 y 500
+  sin detalles; el webhook con firmas HMAC reales (válida, con otro secreto, sin firma,
+  sin secreto cargado, firma de otro `data.id`); reembolso y pago tardío; caché de la carta.
+- **Componentes** (56 tests): `Boton`, `Campo`, `LocalCard`, `InfoLocal`, `Navbar` (menú
+  mobile: foco, trampa de Tab, Escape, scroll; links según la sesión), `RequiereSesion`,
+  `FormularioCuenta`, `EditarReserva`, `ModificarReserva`.
+- Se comprobó que los tests detectan errores: con el chequeo de firma salteado, el caché
+  cambiado, el `aria-invalid` sacado de `Campo`, el foco de Escape sacado y los
+  comentarios sin recortar, fallan 11 tests; con el código original pasan todos.
+- **Descartado (decisión del usuario):** editar franjas y horarios desde el panel. Ya no
+  cambian entre temporadas (`hallazgos.md` 1.37).
+
+---
+
 ## 2026-11-04 — La seña vuelve a reembolsarse
 
 Rama `feat/reembolso-de-sena`. La ayudante de cátedra sugirió volver a probar los

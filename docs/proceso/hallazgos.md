@@ -643,6 +643,27 @@ su servidor y qué le responde antes de suponer una regla de negocio.
 
 ---
 
+### 1.37 Un pendiente heredado de un plan viejo se leyó como requisito, y la IA explicó mal su origen (sesión 11)
+
+Para elegir qué hacer antes de la entrega, la IA propuso primero "editar franjas de
+reserva y horarios desde el panel", marcado como "Recomendado" porque era lo único que
+`docs/RUBRICA.md` ponía como faltante en E5. Al preguntarle al usuario cuándo cambiaban
+los horarios, respondió que ya no los cambian: antes había horario de invierno y de
+verano, ahora no. La funcionalidad no hacía falta y se descartó (decisión del usuario).
+
+Al proponer descartarla, la IA dijo que ese faltante "lo escribí yo como idea", igual
+que la lista de búsqueda y filtros de 1.25. Revisando el historial antes de escribir
+esta entrada, no era exactamente así: venía del spec del backend del 2026-10-01
+(`docs/superpowers/specs/2026-10-01-backend-supabase-design.md`, "parte 3: el admin
+edita la carta y los horarios"), escrito por la IA y aprobado por el usuario cuando
+todavía cambiaban los horarios. Lo que sí era de la IA es haberlo pasado a la columna
+"qué falta para Excelente" de la rúbrica, donde la grilla no lo pide.
+
+Lección: es el mismo mecanismo que 1.25 (un plan propio leído después como exigencia
+externa), y además la IA contestó de memoria sobre el origen en vez de mirar el
+`git log`. Antes de recomendar trabajo por "la rúbrica lo pide", confirmar que lo pide
+la grilla; antes de decir de dónde salió algo, buscarlo.
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían

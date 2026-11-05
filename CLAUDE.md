@@ -106,7 +106,8 @@ variables y despliegue en `docs/BACKEND.md`; diseño en
 ```bash
 npm run dev           # servidor de desarrollo
 npm run build         # build de producción a .next/
-npm test              # tests de las funciones puras (node --test, src/**/*.test.js)
+npm test              # funciones puras (node --test, src/**/*.test.js) + rutas y componentes (Vitest)
+npm run test:vitest   # Vitest en modo watch (app/api/**/*.test.js, src/components/**/*.test.jsx)
 npm run db:test       # tests pgTAP de la base (requiere `npx supabase start`)
 npm run db:reset      # base local desde cero: migraciones + usuarios de prueba
 node scripts/variantes-img.mjs   # versiones de 480 y 960 px de cada foto + src/data/imagenes.js

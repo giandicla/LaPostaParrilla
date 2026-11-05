@@ -22,6 +22,7 @@ Abre en `http://localhost:3000`.
 | `npm run dev` | Servidor de desarrollo |
 | `npm run build` | Build de producción a `.next/` |
 | `npm run start` | Sirve el build local, para revisar antes de pushear |
+| `npm test` | Tests de funciones puras (`node --test`) y de rutas y componentes (Vitest) |
 | `npm run db:test` | Tests pgTAP de la base (con `npx supabase start` corriendo) |
 | `npm run db:reset` | Base local desde cero: migraciones + datos de prueba |
 | `python scripts/procesar-assets.py "../Branding y fotos"` | Regenera el logo y las fotos desde la carpeta de branding |
