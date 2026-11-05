@@ -26,6 +26,11 @@ webhook.
   la seña en curso". Mails: la seña se reintegra también si cancela el cliente.
 - Probado en local de punta a punta (pago en sandbox en incógnito, el webhook simulado
   con la misma lógica de la ruta porque Mercado Pago no llega a localhost).
+- En producción el mismo día (PR #29, `69c9ba9`): webhook de prueba de la aplicación,
+  variables nuevas en Vercel, `db push` y `notificar-reserva` v11. Probado con el webhook
+  real: pago #1354726481 reembolsado y marcado `reintegrado`. Una seña de prueba del 02/11
+  cobrada con la aplicación anterior se marcó `reintegrado` a mano (no se puede
+  reembolsar con el token nuevo).
 
 ---
 
