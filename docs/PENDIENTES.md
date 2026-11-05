@@ -151,9 +151,9 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] **LCP en celular** (4 a 8 s en Lighthouse): fotos del hero y JS de Next. Ver
       `docs/QA-MANUAL.md`.
 - [x] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail, personas). Hecho 2026-11-03.
-- [ ] Editar franjas de reserva y horarios de atención desde el panel.
+- [x] ~~Editar franjas de reserva y horarios de atención desde el panel.~~ Descartado por el usuario el 2026-11-05: la familia ya no cambia los horarios entre temporadas. Si cambian, una migración (`hallazgos.md` 1.37).
 - [ ] Probar la impresión de la lista del día en la computadora del local.
-- [ ] Tests de componentes React y de las rutas de `app/api/`.
+- [x] Tests de componentes React y de las rutas de `app/api/`: hecho el 2026-11-05 con Vitest + Testing Library (58 tests de las 9 rutas, 56 de 9 componentes). `npm test` corre las dos tandas.
 - [ ] Guion de la demo: **solo cuando lo pida el usuario**.
 - [x] Ingreso con mail y contraseña: en producción desde el 2026-11-03 (PR #25), también
       desde `/reservas` sin sesión (PR #27, 2026-11-04).
@@ -188,7 +188,7 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] Fuentes de la carta: hoy son parecidas de Google (Oswald y Old
       Standard TT; Pathway Gothic One se sacó al unificar las cartas). Si la familia consigue las originales con licencia web
       (RT Flinton, HeyGotcha), se cambian en `src/styles/fuentesCarta.js`.
-- [ ] Editar franjas de reserva y horarios de atención desde el panel
+- [x] ~~Editar franjas de reserva y horarios de atención desde el panel~~ (descartado, 2026-11-05)
 - [x] **Redesplegar la Edge Function `notificar-reserva`** (hecho 2026-11-02, con la plantilla nueva) cuando esté Brevo: tiene el
       mail nuevo de "el cliente cambió su reserva" (aviso al local, sacado el 2026-11-03, + confirmación al
       cliente). Hasta entonces, si el cliente modifica, la función vieja le manda
