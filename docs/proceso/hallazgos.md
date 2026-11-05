@@ -625,6 +625,22 @@ el 2026-11-04, en orden:
 que probar en todas sus variantes antes de cambiar el producto por ella (mismo patrón
 que 1.9 y 1.34). Y una herramienta que tiene acceso a una cuenta no es permiso para usarla.
 
+
+### 1.36 La clave del webhook no se veía por un error de Mercado Pago, no por la cuenta (sesión 10)
+
+Al configurar el webhook de la aplicación "La Posta Web" en modo prueba, la clave
+secreta aparecía como puntos en el panel, sin forma de copiarla (ni inspeccionando ni
+regenerándola), y el plugin de Mercado Pago solo mostraba los primeros 7 caracteres. La
+IA primero sospechó que hacía falta activar las credenciales de producción. Con el
+usuario logueado en el navegador de la app, la IA miró las llamadas de red: el panel
+pide `…/webhooks/signature?applicationId=…&environment=test` y Mercado Pago responde
+**502**. Con `environment=production` el mismo endpoint devuelve la clave, que es una
+sola por aplicación (empieza igual que la que mostraba el plugin). El usuario la copió
+desde esa respuesta y el webhook real validó la firma en producción (pago #1354726481).
+
+**Lección:** cuando una pantalla de un tercero "no muestra" un dato, mirar qué pide a
+su servidor y qué le responde antes de suponer una regla de negocio.
+
 ---
 
 ## Parte 2 — Dónde funcionó mejor de lo esperado
