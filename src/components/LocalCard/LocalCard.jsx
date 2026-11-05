@@ -17,6 +17,7 @@ export default function LocalCard({ local }) {
           alt={`Salón de ${local.nombre}`}
           loading="lazy"
           className={estilos.imagen}
+          style={local.imagenes.encuadreCard ? { objectPosition: local.imagenes.encuadreCard } : undefined}
         />
         <span className={estilos.etiqueta}>{local.nombre}</span>
       </div>

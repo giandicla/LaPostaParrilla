@@ -873,6 +873,21 @@ También faltaban en el archivo las URLs de las previews de Vercel, que estaban
 cargadas a mano en producción. Se fijaron los valores de producción en
 `[remotes.produccion]` y el diff quedó solo con Auth.
 
+### 2.15 En lo visual, el usuario decidió mirando y la IA dejó de proponer a ciegas (sesión 11)
+
+Los cambios de estética del inicio se hicieron con dos copias del sitio abiertas a la
+vez (`localhost:3000` y `:3001`, la segunda en un worktree aparte) para comparar lado a
+lado. Las primeras propuestas de la IA para la foto de portada no le gustaron al usuario:
+cambiar a una foto horizontal, mostrarla entera con costados muy desenfocados y partir la
+portada en foto y texto. Lo que quedó salió de pedidos chicos del usuario mirando la
+pantalla ("un poco menos negro", "menos difuminado").
+
+Para el encuadre de las fotos de la bienvenida, en vez de adivinar porcentajes, la IA
+armó en la copia de prueba una foto que se arrastra con el mouse y muestra su posición.
+El usuario eligió las tres posiciones (`54% 81%`, `64% 30%`, `100% 20%`) y la IA solo
+las pasó al sitio (`app/page.jsx`). Lección: cuando el criterio es del usuario y es
+visual, darle la herramienta para decidir rinde más que otra ronda de propuestas.
+
 ---
 
 ## Parte 3 — Lo que se aprendió sobre el método

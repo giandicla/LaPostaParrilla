@@ -30,18 +30,30 @@
   transform: scale(1.04);
 }
 
+/* En el celular, más chica y pegada a la esquina: en la tarjeta angosta
+   tapaba el cartel de la foto de la parrilla */
 .etiqueta {
   position: absolute;
-  top: var(--sp-4);
-  left: var(--sp-4);
+  top: var(--sp-2);
+  left: var(--sp-2);
   background-color: var(--bordo-900);
   color: var(--crema);
-  font-size: 0.75rem;
+  font-size: 0.625rem;
   font-weight: 600;
-  letter-spacing: var(--tracking-etiqueta);
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: var(--sp-2) var(--sp-4);
+  padding: var(--sp-1) var(--sp-2);
   border-radius: var(--radio-sm);
+}
+
+@media (min-width: 600px) {
+  .etiqueta {
+    top: var(--sp-3);
+    left: var(--sp-3);
+    font-size: 0.6875rem;
+    letter-spacing: 0.1em;
+    padding: var(--sp-1) var(--sp-3);
+  }
 }
 
 .cuerpo {
