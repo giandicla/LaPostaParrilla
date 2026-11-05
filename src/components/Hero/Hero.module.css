@@ -22,6 +22,37 @@
   object-fit: cover;
 }
 
+/* Foto entera (prop `entera`): solo en pantallas apaisadas. En vertical, la
+   foto cubre todo como siempre y la copia desenfocada no se muestra. */
+.difuso {
+  display: none;
+}
+
+@media (orientation: landscape) {
+  /* La foto de adelante ocupa el centro, más ancha que entera (un poco de
+     zoom), y se funde con los costados en vez de cortar en seco */
+  .entera .fondo {
+    left: 50%;
+    width: min(100%, 64vw);
+    transform: translateX(-50%);
+    object-fit: cover;
+    -webkit-mask-image: linear-gradient(to right, transparent, var(--carbon) 12%, var(--carbon) 88%, transparent);
+    mask-image: linear-gradient(to right, transparent, var(--carbon) 12%, var(--carbon) 88%, transparent);
+  }
+
+  .entera .difuso {
+    display: block;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(10px) brightness(0.8);
+    /* El desenfoque deja los bordes transparentes: se agranda un poco */
+    transform: scale(1.05);
+  }
+}
+
 /* Velo bordo→carbón: garantiza contraste del texto sobre cualquier foto */
 .velo {
   position: absolute;

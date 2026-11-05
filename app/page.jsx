@@ -25,6 +25,7 @@ export default function Inicio() {
     <main>
       <Hero
         imagen="/img/comunes/hero-fuego.webp"
+        entera
         alt=""
         conLogo
         titulo={MARCA.nombreCompleto}
