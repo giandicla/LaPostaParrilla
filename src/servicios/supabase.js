@@ -25,6 +25,19 @@ const ERRORES_AUTH = {
   // Proveedor de mail apagado: tampoco se puede ingresar con contraseña
   email_provider_disabled: 'Por ahora solo se puede ingresar con Google.',
   email_address_invalid: 'Ese mail no parece válido. Ejemplo: nombre@gmail.com',
+  email_address_not_authorized: 'No pudimos mandar el mail a esa dirección. Probá con otra o ingresá con Google.',
+  over_request_rate_limit: 'Hubo demasiados intentos seguidos. Esperá unos minutos y probá de nuevo.',
+  user_banned: 'Esta cuenta está suspendida. Escribinos por WhatsApp para resolverlo.',
+  // El link del mail (confirmar la cuenta o contraseña nueva) venció o ya se usó
+  otp_expired: 'El link venció o ya se usó. Pedí uno nuevo.',
+  flow_state_expired: 'El link venció o ya se usó. Pedí uno nuevo.',
+  // Al guardar la contraseña nueva con una sesión que ya no vale
+  session_not_found: 'Tu sesión venció. Ingresá de nuevo.',
+  session_expired: 'Tu sesión venció. Ingresá de nuevo.',
+  refresh_token_not_found: 'Tu sesión venció. Ingresá de nuevo.',
+  bad_jwt: 'Tu sesión venció. Ingresá de nuevo.',
+  validation_failed: 'Revisá los datos: algún valor no es válido.',
+  request_timeout: 'Tardó demasiado en responder. Probá de nuevo.',
 };
 
 // Traduce los errores de Postgres y de Auth a mensajes para el usuario.
@@ -36,6 +49,8 @@ export function mensajeDeError(error) {
   if (error.code === '42501') return 'No tenés permiso para hacer eso.';
   if (error.code === 'P0001') return error.message;
   if (ERRORES_AUTH[error.code]) return ERRORES_AUTH[error.code];
+  // Sin conexión (o Supabase no responde): supabase-js no le pone código
+  if (error.name === 'AuthRetryableFetchError') return 'No pudimos conectarnos. Revisá tu conexión y probá de nuevo.';
 
   console.error(error);
   return 'Algo salió mal. Probá de nuevo en un momento.';

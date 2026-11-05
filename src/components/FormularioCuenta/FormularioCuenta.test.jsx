@@ -96,3 +96,22 @@ describe('FormularioCuenta: ingresar y olvidé', () => {
     expect(screen.getByRole('status').textContent).toContain(mensajeTrasOlvido('nadie@gmail.com'));
   });
 });
+
+describe('FormularioCuenta: foco', () => {
+  test('al aparecer por un cambio de modo (enfocar), el foco va al mail', () => {
+    render(<FormularioCuenta modo="olvide" enfocar alCambiarModo={() => {}} />);
+    expect(document.activeElement).toBe(screen.getByLabelText('Mail'));
+  });
+
+  test('al cargar la página no roba el foco', () => {
+    render(<FormularioCuenta modo="ingresar" alCambiarModo={() => {}} />);
+    expect(document.activeElement).toBe(document.body);
+  });
+
+  test('al mandar, el foco pasa al aviso que reemplaza al formulario', async () => {
+    render(<FormularioCuenta modo="olvide" alCambiarModo={() => {}} />);
+    await escribir('Mail', 'ana@gmail.com');
+    await enviar('Mandar el mail');
+    expect(document.activeElement).toBe(screen.getByRole('status'));
+  });
+});

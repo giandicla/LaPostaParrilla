@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { guardarTelefonoDelPerfil, resultadoDeRegistro } from './auth.js';
+import { esEsperaDeLaCuenta, guardarTelefonoDelPerfil, resultadoDeRegistro } from './auth.js';
 
 test('si guardar el teléfono falla, no corta la reserva: devuelve false sin lanzar', async () => {
   // En los tests no hay cliente de Supabase: la llamada falla adentro
@@ -20,4 +20,24 @@ test('un mail ya registrado no es un error para la pantalla (no se revela que ex
 test('otros errores se lanzan con el mensaje traducido', () => {
   assert.throws(() => resultadoDeRegistro({ data: null, error: { code: 'weak_password' } }),
     { message: 'La contraseña tiene que tener al menos 8 caracteres.' });
+});
+
+// Textos reales de Supabase Auth: el límite por cuenta y el general del sitio
+const ESPERA_DE_LA_CUENTA = { code: 'over_email_send_rate_limit', message: 'For security purposes, you can only request this after 42 seconds.' };
+const LIMITE_DEL_SITIO = { code: 'over_email_send_rate_limit', message: 'email rate limit exceeded' };
+
+test('la espera de un minuto por cuenta se reconoce; el límite general del sitio, no', () => {
+  assert.equal(esEsperaDeLaCuenta(ESPERA_DE_LA_CUENTA), true);
+  assert.equal(esEsperaDeLaCuenta({ ...ESPERA_DE_LA_CUENTA, message: 'For security purposes, you can only request this after 1 second.' }), true);
+  assert.equal(esEsperaDeLaCuenta(LIMITE_DEL_SITIO), false);
+  assert.equal(esEsperaDeLaCuenta(null), false);
+});
+
+test('crear una cuenta con un mail que ya la tiene y choca con la espera no lo revela', () => {
+  assert.deepEqual(resultadoDeRegistro({ data: null, error: ESPERA_DE_LA_CUENTA }), { cuentaNueva: false });
+});
+
+test('el límite general del sitio sí se avisa: no dice nada de ninguna cuenta', () => {
+  assert.throws(() => resultadoDeRegistro({ data: null, error: LIMITE_DEL_SITIO }),
+    { message: 'Mandamos demasiados mails seguidos. Probá de nuevo en unos minutos.' });
 });

@@ -1,6 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  errorDelLink,
   mensajeTrasCrear,
   mensajeTrasOlvido,
   normalizarMail,
@@ -70,4 +71,18 @@ test('después de crear la cuenta el aviso no dice si el mail ya existía', () =
     mensajeTrasCrear('ana@hotmail.com'),
     'Te mandamos un mail a ana@hotmail.com para confirmar la cuenta. Si no lo ves, revisá la carpeta de spam.'
   );
+});
+
+test('el link del mail vencido trae el error en el hash', () => {
+  assert.equal(errorDelLink({ hash: '#error=access_denied&error_code=otp_expired&error_description=Email+link+is+invalid+or+has+expired' }), 'otp_expired');
+});
+
+test('en el flujo PKCE el error viene en la query', () => {
+  assert.equal(errorDelLink({ search: '?error=access_denied&error_code=flow_state_expired' }), 'flow_state_expired');
+  assert.equal(errorDelLink({ search: '?error=server_error' }), 'server_error');
+});
+
+test('un link que vino bien no tiene error', () => {
+  assert.equal(errorDelLink({ hash: '#access_token=abc&type=recovery', search: '' }), '');
+  assert.equal(errorDelLink({}), '');
 });

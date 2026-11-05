@@ -17,12 +17,23 @@ export const ingresarConGoogle = async (volverA) =>
     })
   );
 
+// Supabase limita los mails a uno por minuto **por cuenta** ("you can only
+// request this after N seconds"). Ese error solo puede salir si el mail ya
+// tiene cuenta: mostrarlo diría que existe. Se responde como si se hubiera
+// mandado (el mail anterior, de hace menos de un minuto, ya está en camino).
+// El límite general del sitio (pocos mails por hora, para todos) usa el mismo
+// código con otro texto, y ese sí se muestra: no dice nada de nadie.
+export const esEsperaDeLaCuenta = (error) =>
+  error?.code === 'over_email_send_rate_limit' && /after \d+ seconds?/i.test(error.message ?? '');
+
 // Un mail que ya tenía cuenta no es un error para la pantalla: dice lo mismo
 // que con una cuenta nueva, para no revelar qué mails existen. Supabase lo
 // avisa de dos formas según la configuración: un usuario sin identidades, o
-// el error user_already_exists. cuentaNueva queda solo para las pruebas.
+// el error user_already_exists. Y si la cuenta existe sin confirmar, vuelve a
+// mandar el mail y puede chocar con la espera de un minuto (ver arriba).
+// cuentaNueva queda solo para las pruebas.
 export function resultadoDeRegistro({ data, error }) {
-  if (error?.code === 'user_already_exists') return { cuentaNueva: false };
+  if (error?.code === 'user_already_exists' || esEsperaDeLaCuenta(error)) return { cuentaNueva: false };
   const datos = resultado({ data, error });
   return { cuentaNueva: (datos.user?.identities?.length ?? 0) > 0 };
 }
@@ -42,13 +53,13 @@ export async function crearCuenta({ nombre, mail, contrasena }, volverA) {
 export const ingresarConMail = async ({ mail, contrasena }) =>
   resultado(await supabase.auth.signInWithPassword({ email: normalizarMail(mail), password: contrasena })).session;
 
-// Responde igual exista o no la cuenta
+// Responde igual exista o no la cuenta, también si se pide dos veces seguidas
 export async function pedirNuevaContrasena(mail) {
-  resultado(
-    await supabase.auth.resetPasswordForEmail(normalizarMail(mail), {
-      redirectTo: urlDeVuelta('/ingresar/contrasena'),
-    })
-  );
+  const respuesta = await supabase.auth.resetPasswordForEmail(normalizarMail(mail), {
+    redirectTo: urlDeVuelta('/ingresar/contrasena'),
+  });
+  if (esEsperaDeLaCuenta(respuesta.error)) return;
+  resultado(respuesta);
 }
 
 // Con la sesión que abre el link del mail de "Olvidé mi contraseña"

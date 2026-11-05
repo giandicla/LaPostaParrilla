@@ -157,10 +157,10 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] Guion de la demo: **solo cuando lo pida el usuario**.
 - [x] Ingreso con mail y contraseña: en producción desde el 2026-11-03 (PR #25), también
       desde `/reservas` sin sesión (PR #27, 2026-11-04).
-- [ ] Menores del ingreso con mail: link de recuperación vencido con sesión abierta muestra
-      el formulario; algunos errores de Auth sin traducir; el aviso de límite de envíos
-      puede revelar que una cuenta existe; foco al cambiar de modo; las pestañas sin
-      `aria-label`.
+- [x] Menores del ingreso con mail (hecho 2026-11-05, rama `fix/menores-ingreso-con-mail`):
+      link de recuperación vencido con sesión abierta; errores de Auth sin traducir; el
+      aviso de límite de envíos revelaba que una cuenta existe; foco al cambiar de modo;
+      las pestañas sin `aria-label`.
 - [ ] Los menores diferidos de esta página (seña, carta, accesibilidad).
 
 ## Etapas futuras

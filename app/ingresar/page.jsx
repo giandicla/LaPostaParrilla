@@ -36,6 +36,13 @@ function IngresarContenido() {
   // Dentro de "Ingresar": el formulario de ingreso o el de "Olvidé mi contraseña"
   const [modoIngreso, setModoIngreso] = useState('ingresar');
   const modo = pestana === 'crear' ? 'crear' : modoIngreso;
+  // Al pasar a "Olvidé" (o volver) desaparece el botón que se tocó: el foco va
+  // al mail del formulario nuevo. Al cambiar de pestaña se queda en la pestaña.
+  const [enfocarFormulario, setEnfocarFormulario] = useState(false);
+  const cambiarModo = (nuevo) => {
+    setModoIngreso(nuevo);
+    setEnfocarFormulario(true);
+  };
 
   // Con sesión no hay nada que hacer acá: de vuelta a donde iba
   useEffect(() => {
@@ -62,10 +69,12 @@ function IngresarContenido() {
       <h2 className="visualmente-oculto">Tu cuenta</h2>
       <PestanasCuenta
         pestanas={PESTANAS}
+        etiqueta="Ingresar o crear cuenta"
         activa={pestana}
         alCambiar={(id) => {
           setPestana(id);
           setModoIngreso('ingresar');
+          setEnfocarFormulario(false);
         }}
       >
         <p className={estilos.bajada}>Para reservar y ver o cancelar tus reservas.</p>
@@ -83,7 +92,8 @@ function IngresarContenido() {
         )}
 
         {/* key: al cambiar de formulario se vacían los campos y los errores */}
-        <FormularioCuenta key={modo} modo={modo} volver={volver} alCambiarModo={setModoIngreso} />
+        <FormularioCuenta key={modo} modo={modo} volver={volver} alCambiarModo={cambiarModo}
+          enfocar={enfocarFormulario} />
       </PestanasCuenta>
 
       <p className={estilos.letraChica}>

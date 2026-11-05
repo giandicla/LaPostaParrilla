@@ -13,6 +13,12 @@ const casos = {
   email_provider_disabled: 'Por ahora solo se puede ingresar con Google.',
   email_address_invalid: 'Ese mail no parece válido. Ejemplo: nombre@gmail.com',
   provider_disabled: 'El ingreso con Google no está disponible en este momento.',
+  over_request_rate_limit: 'Hubo demasiados intentos seguidos. Esperá unos minutos y probá de nuevo.',
+  user_banned: 'Esta cuenta está suspendida. Escribinos por WhatsApp para resolverlo.',
+  otp_expired: 'El link venció o ya se usó. Pedí uno nuevo.',
+  session_not_found: 'Tu sesión venció. Ingresá de nuevo.',
+  bad_jwt: 'Tu sesión venció. Ingresá de nuevo.',
+  validation_failed: 'Revisá los datos: algún valor no es válido.',
 };
 
 for (const [code, mensaje] of Object.entries(casos)) {
@@ -20,3 +26,13 @@ for (const [code, mensaje] of Object.entries(casos)) {
     assert.equal(mensajeDeError({ code }), mensaje);
   });
 }
+
+test('sin conexión (error de red de supabase-js, sin código) lo dice', () => {
+  assert.equal(mensajeDeError({ name: 'AuthRetryableFetchError', message: 'Failed to fetch' }),
+    'No pudimos conectarnos. Revisá tu conexión y probá de nuevo.');
+});
+
+test('un error de Auth desconocido da el mensaje genérico, nunca el texto en inglés', (t) => {
+  t.mock.method(console, 'error', () => {});
+  assert.equal(mensajeDeError({ code: 'algo_nuevo', message: 'Something new' }), 'Algo salió mal. Probá de nuevo en un momento.');
+});

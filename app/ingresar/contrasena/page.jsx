@@ -8,7 +8,7 @@ import Boton from '../../../src/components/Boton/Boton.jsx';
 import Campo from '../../../src/components/Campo/Campo.jsx';
 import RequiereSesion from '../../../src/components/RequiereSesion/RequiereSesion.jsx';
 import { cambiarContrasena } from '../../../src/servicios/auth.js';
-import { LIMITES_CUENTA, validarCuenta } from '../../../src/validacion/cuenta.js';
+import { LIMITES_CUENTA, errorDelLink, validarCuenta } from '../../../src/validacion/cuenta.js';
 import formulario from '../../../src/styles/formulario.module.css';
 import estilos from '../page.module.css';
 
@@ -65,7 +65,9 @@ function ContrasenaNueva() {
   );
 }
 
-// Sin sesión: el link venció, ya se usó o se abrió en otro navegador
+// Sin sesión, o con el error del link en la URL: venció, ya se usó o se abrió
+// en otro navegador. Con una sesión ya abierta (la de antes), Supabase la
+// conserva aunque el link falle: sin mirar la URL se mostraría el formulario.
 const LinkVencido = (
   <div className={estilos.tarjeta}>
     <h2 className={estilos.titulo}>El link venció</h2>
@@ -77,6 +79,11 @@ const LinkVencido = (
 );
 
 export default function Contrasena() {
+  // Se lee una sola vez, al cargar: supabase-js no borra el error de la URL.
+  // En el servidor no hay URL; no cambia el HTML de la hidratación porque
+  // RequiereSesion muestra "Cargando…" hasta tener la sesión.
+  const [linkFallido] = useState(() => typeof window !== 'undefined' && Boolean(errorDelLink(window.location)));
+
   return (
     <main>
       <Hero compacto imagen="/img/comunes/entrada-noche.webp" alt="" titulo="Tu cuenta" bajada="Reservas · La Posta" />
@@ -84,7 +91,7 @@ export default function Contrasena() {
         {/* RequiereSesion usa useSearchParams: Suspense para que la ruta siga estática */}
         <Suspense fallback={null}>
           <RequiereSesion sinSesion={LinkVencido}>
-            <ContrasenaNueva />
+            {linkFallido ? LinkVencido : <ContrasenaNueva />}
           </RequiereSesion>
         </Suspense>
       </Section>
