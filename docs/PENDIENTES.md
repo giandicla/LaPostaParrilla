@@ -236,8 +236,11 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
       "El motivo puede tener hasta 120 caracteres." (misma migración).
 - [x] `acreditar_pago` no compara el monto cobrado. Hecho 2026-11-05 en `avisos.js`: un
       pago aprobado por otro monto no confirma la reserva y se reembolsa.
-- [ ] `pagos.reserva_id` es `on delete cascade`: borrar un usuario borra sus registros
-      de plata; evaluar `restrict`.
+- [x] ~~`pagos.reserva_id` es `on delete cascade`: evaluar `restrict`.~~ Se queda en
+      cascada (decisión del usuario, 2026-11-05): el local nunca borra clientes, porque le
+      sirven para fidelizar y hacer campañas. Solo se van a borrar cuentas para limpiar
+      los datos de prueba antes o después de la presentación, y ahí la cascada es lo que
+      conviene.
 - [ ] Si falla el reembolso de un cobro duplicado de la misma preferencia, solo queda en el log (no tiene fila propia ni aparece en el panel); el webhook se reintenta. Antes: los reintegros de cobros duplicados que fallan solo se loguean (`console.warn`), no
       aparecen en el panel; un pago que quedó en `reintegro_pendiente` tras un
       reintegro exitoso con marcado fallido no se cura solo (sí con "Reintentar").

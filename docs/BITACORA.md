@@ -24,8 +24,9 @@ Rama `fix/menores-de-la-sena`. Los menores que habían quedado de las revisiones
 - Tests: pgTAP `14_cancelar_reserva_ajustes` (10: motivo largo, cancelación directa del
   admin sin motivo, un turno bloqueado en los dos locales, corte de las 17:00), 6 en
   `node --test`, 1 de ruta y 1 de Deno.
-- Quedan para decidir con el usuario: `pagos.reserva_id` en cascada y el registro de los
-  reembolsos de cobros duplicados que fallan.
+- `pagos.reserva_id` sigue en cascada (decisión del usuario): las cuentas no se borran,
+  salvo para limpiar los datos de prueba de la presentación. Queda para decidir el registro
+  de los reembolsos de cobros duplicados que fallan.
 
 ---
 
