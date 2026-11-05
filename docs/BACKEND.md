@@ -172,11 +172,19 @@ vendedor (1.17), así que la app se creó a mano desde el vendedor de prueba.
 
 ### Webhook
 
-Se configura en el panel de Mercado Pago **iniciando sesión como el vendedor de
-prueba** (panel de desarrolladores → la aplicación → Webhooks): URL
-`https://lapostaparrilla.vercel.app/api/webhooks/mercadopago` (para probar una
-preview, la URL de la rama), evento **"Pagos"**. De ahí sale
-`MP_WEBHOOK_SECRET`. La ruta responde 200 si procesó (o no era un pago), 401 si la
+Desde el 2026-11-04 está en la aplicación **"La Posta Web"** del usuario, en **modo
+prueba** (se configuró con el plugin de Mercado Pago, `save_webhook`): URL
+`https://lapostaparrilla.vercel.app/api/webhooks/mercadopago`, evento **"Pagos"**. Las
+previews reciben los avisos en su propia URL porque cada pago manda
+`notification_url` (sale de `APP_URL`), pero necesitan la Vercel Authentication apagada
+(ver abajo).
+
+`MP_WEBHOOK_SECRET` es la clave secreta de esa aplicación (una sola por aplicación). El
+panel la muestra con puntos porque el pedido del modo prueba
+(`…/webhooks/signature?environment=test`) le responde 502; se obtiene abriendo, con la
+sesión del usuario, `https://www.mercadopago.com.ar/developers/panel/applications/api/webhooks/signature?applicationId=462476463404106&environment=production`
+(`hallazgos.md` 1.36). Antes del 2026-11-04 el webhook estaba en la aplicación del
+vendedor de prueba, con otra clave. La ruta responde 200 si procesó (o no era un pago), 401 si la
 firma no vale y 500 si falla la consulta a Mercado Pago o a la base, para que
 Mercado Pago reintente.
 
