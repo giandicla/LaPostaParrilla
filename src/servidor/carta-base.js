@@ -6,9 +6,11 @@ import { ErrorHttp } from './respuestas.js';
 
 // Los errores de la base, en castellano. Las reglas del trigger y de las
 // funciones (P0001) ya vienen escritas para el panel.
-function traducir(error) {
+export function traducir(error) {
   if (error.code === 'P0001') return new ErrorHttp(400, error.message);
   if (error.code === '23514') return new ErrorHttp(400, 'Revisá los datos: algún valor no es válido.');
+  // La única clave foránea que se escribe desde el panel es la categoría del ítem
+  if (error.code === '23503') return new ErrorHttp(404, 'No encontramos esa categoría.');
   if (error.code === '42501') return new ErrorHttp(403, 'Solo el admin puede editar la carta.');
   return new Error(error.message);
 }

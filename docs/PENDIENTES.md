@@ -144,12 +144,35 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] **Falta textura humana**: no hay gente, familia, reseñas, Instagram, ni detalles
       de la carta impresa (papel, tipografía de menú). Todo es foto de producto.
 
-## Abiertos al 2026-11-04 (resumen para la próxima sesión)
+## Abiertos al 2026-11-05 (resumen para la próxima sesión)
 
-- [ ] **Gift cards**: en evaluación (decisión del usuario).
-- [ ] **Dominio propio para los mails**: hoy el remitente es un Gmail (2026-11-03) y a Hotmail/Outlook pueden caer en spam. Con un dominio autenticado en Brevo (DKIM + DMARC) llegan a todos.
-- [ ] **LCP en celular** (4 a 8 s en Lighthouse): fotos del hero y JS de Next. Ver
-      `docs/QA-MANUAL.md`.
+Decisiones del usuario del 2026-11-05. Criterio: al profesor le importa que el sitio se
+vea bien y que cumpla en funcionalidad y seguridad, no el contenido.
+
+- **Sigue abierto:**
+  - [ ] **Estética del resto del sitio**: el usuario la va marcando navegando.
+  - [ ] **Gift cards**: en evaluación. Es lo único que la rúbrica marca en Funcionalidad.
+  - [ ] **Probar en producción, con el webhook real, la cancelación del local y el pago
+        tardío** (en local están probados).
+  - [ ] **Limpiar los datos de prueba de producción**, justo antes de la presentación
+        (reservas, pagos y cuentas de prueba).
+  - [ ] Consultar con el profesor si prefiere otra forma de estilos.
+- **Para más adelante:**
+  - [ ] **LCP en celular** (4 a 8 s en Lighthouse): fotos del hero y JS de Next. Ver
+        `docs/QA-MANUAL.md`.
+- **Fuera del alcance del TP:**
+  - [ ] **Dominio propio para los mails**: hoy el remitente es un Gmail (2026-11-03) y a
+        Hotmail/Outlook pueden caer en spam. Con un dominio autenticado en Brevo (DKIM +
+        DMARC) llegan a todos. Se ve si el sitio pasa a uso real.
+- **No hace falta:**
+  - Imprimir la lista del día en la computadora del local.
+  - Los datos que tenía que pasar la familia (historia de `/nosotros`, tagline): quedan
+    los borradores.
+- **Carta:**
+  - [x] Una categoría inexistente daba 500: ahora es un 404 con aviso.
+  - Moverse en el buscador con Tab no hace falta.
+- **Seña:** los menores que quedan (el "1 hora" escrito a mano en la ayuda, sin tests
+  propios de los adaptadores) no son un problema; se ven si hace falta.
 - [x] Panel: editar los datos de una reserva ya cargada (nombre, teléfono, mail, personas). Hecho 2026-11-03.
 - [x] ~~Editar franjas de reserva y horarios de atención desde el panel.~~ Descartado por el usuario el 2026-11-05: la familia ya no cambia los horarios entre temporadas. Si cambian, una migración (`hallazgos.md` 1.37).
 - [ ] Probar la impresión de la lista del día en la computadora del local.
