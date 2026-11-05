@@ -6,7 +6,7 @@ const ANCHOS = {
     960,
     1200
   ],
-  "/img/comunes/hero-fuego.webp": [
+  "/img/comunes/hero-cordero.webp": [
     480,
     960,
     1638
@@ -71,6 +71,11 @@ const ANCHOS = {
     960,
     1200
   ],
+  "/img/parrilla/tira-de-asado.webp": [
+    480,
+    960,
+    1200
+  ],
   "/img/restaurante/card.webp": [
     480,
     960,
@@ -112,6 +117,11 @@ const ANCHOS = {
     1200
   ],
   "/img/restaurante/salon.webp": [
+    480,
+    960,
+    1200
+  ],
+  "/img/restaurante/tres-pizzas.webp": [
     480,
     960,
     1200

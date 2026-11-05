@@ -14,17 +14,21 @@ import { srcSetDe } from '../src/data/imagenes.js';
 // Los datos son estáticos: no hace falta recalcularlos en cada render.
 const PLATOS = getPlatosDestacados();
 
+// Fotos y encuadres elegidos por el usuario (2026-11-05). La segunda es la
+// alta de la derecha. `posicion` es qué parte de la foto se ve al recortarla
+// (object-position, horizontal y vertical).
 const FOTOS_BIENVENIDA = [
-  { src: '/img/comunes/salon-calido.webp', alt: 'Salón de La Posta con lámparas cálidas y ventanales de troncos' },
-  { src: '/img/comunes/sirviendo-vino.webp', alt: 'Mozo sirviendo vino tinto en la mesa' },
-  { src: '/img/comunes/entrada-noche.webp', alt: 'Entrada de La Posta iluminada de noche' },
+  { src: '/img/parrilla/tira-de-asado.webp', alt: 'Tira de asado sobre tabla de madera, con una copa de vino', posicion: '54% 81%' },
+  { src: '/img/comunes/sirviendo-vino.webp', alt: 'Mozo sirviendo vino tinto en la mesa', posicion: '64% 30%' },
+  { src: '/img/restaurante/tres-pizzas.webp', alt: 'Tres pizzas de La Posta II Restaurante sobre la mesa', posicion: '100% 20%' },
 ];
 
 export default function Inicio() {
   return (
     <main>
       <Hero
-        imagen="/img/comunes/hero-fuego.webp"
+        imagen="/img/comunes/hero-cordero.webp"
+        entera
         alt=""
         conLogo
         titulo={MARCA.nombreCompleto}
@@ -57,6 +61,7 @@ export default function Inicio() {
                 alt={foto.alt}
                 loading="lazy"
                 className={estilos.fotoBienvenida}
+                style={{ objectPosition: foto.posicion }}
               />
             ))}
           </div>

@@ -39,13 +39,16 @@ P = 'Fotos La Posta I Parrilla'
 R = 'Fotos La Posta II Restaurante'
 FOTOS = [
     # Comunes
-    (P, 'cordero en asador.jpg', 'comunes/hero-fuego.webp', 1638),
+    (P, 'Cordero patagonico.jpg', 'comunes/hero-cordero.webp', 1638),
     (P, 'Salon calido.jpg', 'comunes/salon-calido.webp', 1200),
     (R, 'Entrada de noche iluminada.jpg', 'comunes/entrada-noche.webp', 1200),
     (P, 'Sirviendo vino.jpg', 'comunes/sirviendo-vino.webp', 1200),
+    # Bienvenida del inicio (elegidas por el usuario, 2026-11-05)
+    (P, 'Tira de asado 2.jpg', 'parrilla/tira-de-asado.webp', 1200),
+    (R, 'Tres pizzas.jpg', 'restaurante/tres-pizzas.webp', 1200),
     # Parrilla
     (P, 'Plano mesa con comida de arriba.jpg', 'parrilla/hero.webp', 1638),
-    (P, 'Ventana con logo.jpg', 'parrilla/card.webp', 1200),
+    (P, 'Frente con nieve.jpeg', 'parrilla/card.webp', 1200),
     (P, 'Cartel techo.jpg', 'parrilla/cartel.webp', 1200),
     (P, 'Cordero patagonico.jpg', 'parrilla/cordero-patagonico.webp', 1200),
     (P, 'Abriendo vino.jpg', 'parrilla/abriendo-vino.webp', 1200),

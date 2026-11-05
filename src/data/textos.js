@@ -2,15 +2,16 @@
 // PENDIENTE: la familia tiene que revisar y corregir estos textos — son un borrador.
 
 export const TEXTOS = {
+  // Redacción del usuario (2026-11-05), con retoques de estilo
   bienvenida: {
     titulo: 'Dos salones, una misma mesa',
     parrafos: [
-      'La Posta es un lugar de madera y fuego en el corazón de Villa La Angostura. ' +
-        'Lo llevamos en familia desde hace años, y creció hasta ser dos salones con ' +
-        'personalidad propia.',
-      'En La Posta Parrilla mandan las brasas, el cordero al asador y las mesas largas. ' +
-        'En La Posta II Restaurante, las pizzas, las pastas caseras y el fogón a leña. ' +
-        'Dos maneras de pasar la misma noche.',
+      'La Posta es un lugar cálido en el corazón de Villa La Angostura: dos propuestas ' +
+        'gastronómicas en dos locales, uno al lado del otro.',
+      'En La Posta Parrilla nos enfocamos en los cortes clásicos y en nuestro tradicional ' +
+        'cordero patagónico al asador. En La Posta II Restaurante, la carta se centra en ' +
+        'las pizzas, las pastas caseras y otros platos hechos con productos de primera ' +
+        'calidad. Dos maneras distintas de disfrutar tu paso por Villa La Angostura.',
     ],
   },
   // Textuales del manual de marca (Branding.LaPosta.pdf, hoja 2)

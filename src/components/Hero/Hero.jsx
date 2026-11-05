@@ -2,17 +2,25 @@ import { MARCA } from '../../data/marca.js';
 import estilos from './Hero.module.css';
 import { srcSetDe } from '../../data/imagenes.js';
 
+// entera: en pantallas apaisadas la foto (vertical) se muestra completa al
+// centro, y a los costados la misma foto agrandada y desenfocada. Sin esto, una
+// foto vertical se agranda hasta cubrir el ancho y se ve solo una franja.
 export default function Hero({
   titulo,
   bajada,
   imagen,
   alt = '',
+  entera = false,
   conLogo = false,
   compacto = false,
   acciones,
 }) {
   return (
-    <header className={`${estilos.hero} ${compacto ? estilos.compacto : ''}`}>
+    <header className={`${estilos.hero} ${compacto ? estilos.compacto : ''} ${entera ? estilos.entera : ''}`}>
+      {/* Misma foto que la de adelante: el navegador la baja una sola vez */}
+      {entera && (
+        <img src={imagen} srcSet={srcSetDe(imagen)} sizes="100vw" alt="" aria-hidden="true" className={estilos.difuso} />
+      )}
       <img
         src={imagen}
         srcSet={srcSetDe(imagen)}

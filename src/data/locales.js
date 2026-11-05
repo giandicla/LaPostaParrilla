@@ -36,6 +36,9 @@ export const LOCALES = [
     franjasReserva: FRANJAS_RESERVA,
     imagenes: {
       card: '/img/parrilla/card.webp',
+      // La foto del frente es vertical y la tarjeta apaisada: se muestra la
+      // parte de arriba, así el cartel "LA POSTA" queda a la vista
+      encuadreCard: 'center top',
       hero: '/img/parrilla/hero.webp',
       // La foto para elegir salón en /reservas (en prueba, pedido del usuario)
       reserva: '/img/parrilla/reserva.webp',

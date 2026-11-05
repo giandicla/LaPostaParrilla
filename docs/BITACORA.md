@@ -4,6 +4,28 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-05 — Estética del inicio
+
+Rama `feat/hero-foto-entera`. Cambios pedidos por el usuario mirando el sitio y
+comparando dos copias locales (`hallazgos.md` 2.15).
+
+- **Portada:** la foto es "Cordero patagónico" (`comunes/hero-cordero.webp`; sale la de
+  los corderos en el asador). En pantallas apaisadas va al centro, al 64 % del ancho, y
+  se funde con los costados: la misma foto agrandada y con poco desenfoque (prop
+  `entera` de `Hero`). En el celular, como antes.
+- **Tarjeta de la parrilla:** foto del frente con nieve, mejorada por el usuario con
+  Gemini. Encuadrada desde arriba (`imagenes.encuadreCard` en `locales.js`) para que se
+  vea el cartel.
+- **Etiquetas de las tarjetas de los salones:** más chicas y más pegadas a la esquina,
+  sobre todo en el celular, donde tapaban el cartel.
+- **Texto de bienvenida:** redacción del usuario (`src/data/textos.js`).
+- **Fotos de la bienvenida:** tira de asado, sirviendo vino (la alta) y tres pizzas, con
+  los encuadres que eligió el usuario.
+- Las fotos nuevas están en `scripts/procesar-assets.py` y tienen sus versiones de 480 y
+  960 px.
+
+---
+
 ## 2026-11-05 — Menores de la seña
 
 Rama `fix/menores-de-la-sena`. Los menores que habían quedado de las revisiones de la seña.
