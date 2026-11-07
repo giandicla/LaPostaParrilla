@@ -484,6 +484,9 @@ sender_name = "La Posta"
 default_pool_size = 15
 max_client_conn = 200
 
+[remotes.produccion.storage.image_transformation]
+enabled = true
+
 [remotes.produccion.storage.analytics]
 max_namespaces = 10
 enabled = true
