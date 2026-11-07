@@ -162,9 +162,9 @@ site_url = "https://lapostaparrilla.vercel.app"
 # The public URL that Auth serves on. Defaults to the API external URL with `/auth/v1` appended.
 # external_url = ""
 # A list of *exact* URLs that auth providers are permitted to redirect to post authentication.
-# Las previews de Vercel también (están cargadas en producción desde el panel):
-# sin ellas, un `config push` las borraría y Google dejaría de volver a la preview.
-additional_redirect_urls = ["https://lapostaparrilla.vercel.app/**", "https://la-posta-parrilla-*-gdiclaudio-3350s-projects.vercel.app/**", "http://localhost:3000/**", "http://127.0.0.1:3000/**"]
+# En local: el sitio de desarrollo. Producción tiene su propia lista en
+# [remotes.produccion.auth], al final.
+additional_redirect_urls = ["https://lapostaparrilla.vercel.app/**", "http://localhost:3000/**", "http://127.0.0.1:3000/**"]
 # How long tokens are valid for, in seconds. Defaults to 3600 (1 hour), maximum 604,800 (1 week).
 jwt_expiry = 3600
 # JWT issuer URL. If not set, defaults to auth.external_url.
@@ -449,6 +449,15 @@ verify_jwt = false
 [remotes.produccion]
 project_id = "dagxitkhqbztgetoultt"
 
+# Producción solo vuelve a su propio dominio (auditoría de seguridad, 2026-11-06).
+# Antes estaba también el comodín de las previews de Vercel
+# (la-posta-parrilla-*-gdiclaudio-3350s-projects.vercel.app): los links de los
+# mails y la vuelta de Google llevan la sesión en la URL, y cualquier host que
+# encajara con el comodín la recibía. Sin él, ingresar desde una preview
+# termina en el sitio de producción. Tampoco localhost: en producción no sirve.
+[remotes.produccion.auth]
+additional_redirect_urls = ["https://lapostaparrilla.vercel.app/**"]
+
 # Registro con mail prendido en producción el 2026-11-03 (paso 2). Con false,
 # la CLI apaga todo el proveedor de mail: tampoco se puede ingresar con
 # contraseña ni mandar mails de cuentas (ni desde el panel). Para volver atrás
@@ -474,6 +483,9 @@ sender_name = "La Posta"
 [remotes.produccion.db.pooler]
 default_pool_size = 15
 max_client_conn = 200
+
+[remotes.produccion.storage.image_transformation]
+enabled = true
 
 [remotes.produccion.storage.analytics]
 max_namespaces = 10

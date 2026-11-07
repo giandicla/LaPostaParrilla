@@ -4,6 +4,29 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-06 — Arreglos de la auditoría de seguridad
+
+Rama `fix/seguridad-auditoria` (PR #37). Arregla lo que encontró la auditoría de
+seguridad (skill `security-audit` de Cloudflare, perfil deep; sesión 12).
+
+- **Redirect abierto en `/ingresar`:** `?volver=/\otro-sitio.com` llevaba a otro sitio.
+  `destinoSeguro` pasa a `src/validacion/destino.js`, resuelve la ruta con `URL` y solo
+  acepta el origen propio.
+- **Redirects de Auth en producción:** solo `lapostaparrilla.vercel.app`
+  (`[remotes.produccion.auth]` de `supabase/config.toml`). Se van el comodín de las
+  previews de Vercel y localhost. Ingresar desde una preview termina en producción.
+- **Topes de uso** (migración `20261106120000_topes_de_uso.sql`, test pgTAP 15):
+  - hasta 10 reservas web por cliente cada 24 horas;
+  - hasta 3 cambios del cliente por reserva (pedir lo mismo no cuenta ni manda mail);
+  - hasta 5 intentos de pago por reserva (`POST /api/v1/pagos` responde 429).
+- Una reserva nueva ya no puede traer `modificada_por` ni el contador de cambios.
+- **Panel:** `listarReservas` pide de a páginas (PostgREST corta en 1000 filas) y
+  `/admin/dia` filtra el estado en la base.
+- **Cabeceras de seguridad** en `next.config.mjs`: `frame-ancestors 'none'`, `nosniff`,
+  `Referrer-Policy`.
+- **Sin arreglar:** el cupo global de mails de Auth (30 por hora) se puede agotar sin
+  captcha. Hace falta un captcha con claves del dueño.
+
 ## 2026-11-05 — Estética del inicio
 
 Rama `feat/hero-foto-entera`. Cambios pedidos por el usuario mirando el sitio y

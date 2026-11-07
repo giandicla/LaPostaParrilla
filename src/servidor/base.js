@@ -16,6 +16,12 @@ export function crearBase(cliente = clienteSecreto()) {
       dato(await cliente.from('reservas')
         .select('id, usuario_id, estado, fecha, hora, creada_en, locales(nombre, sena)')
         .eq('id', id).maybeSingle()),
+    contarPagos: async (reservaId) => {
+      const { count, error } = await cliente.from('pagos')
+        .select('id', { count: 'exact', head: true }).eq('reserva_id', reservaId);
+      if (error) throw new Error(error.message);
+      return count ?? 0;
+    },
     crearPago: async ({ reservaId, monto }) =>
       dato(await cliente.from('pagos').insert({ reserva_id: reservaId, monto }).select('id, monto').single()),
     guardarPreferencia: async (idPago, idPreferencia) =>

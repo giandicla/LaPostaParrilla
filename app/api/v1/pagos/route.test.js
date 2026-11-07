@@ -11,6 +11,7 @@ vi.mock('../../../../src/servidor/supabase.js', async () => {
 vi.mock('../../../../src/servidor/base.js', () => ({
   crearBase: () => ({
     leerReserva: async () => estado.reserva,
+    contarPagos: async () => 0,
     crearPago: async (datos) => {
       estado.llamadas.push(['crearPago', datos]);
       return { id: 'p-1', monto: datos.monto };
