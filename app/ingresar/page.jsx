@@ -10,12 +10,9 @@ import FormularioCuenta from '../../src/components/FormularioCuenta/FormularioCu
 import { useSesion } from '../../src/components/SesionProvider/SesionProvider.jsx';
 import { backendDisponible } from '../../src/servicios/config.js';
 import { ingresarConGoogle } from '../../src/servicios/auth.js';
+import { destinoSeguro } from '../../src/validacion/destino.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
-
-// Solo se vuelve a rutas internas: un ?volver=https://otro-sitio no se sigue
-const destinoSeguro = (volver) =>
-  volver?.startsWith('/') && !volver.startsWith('//') ? volver : '/mis-reservas';
 
 const PESTANAS = [
   { id: 'ingresar', etiqueta: 'Ingresar' },

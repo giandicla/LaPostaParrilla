@@ -7,16 +7,35 @@ import { hoyEnArgentina } from './reservas.js';
 const COLUMNAS =
   'id, usuario_id, origen, mail, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, motivo_cancelacion, creada_en, notas_reserva(nota), pagos(estado)';
 
-// filtros: { fecha?, idLocal?, estado? }. 'terminada' y 'confirmada' se
-// separan por fecha (ver estadoVisible).
-export async function listarReservas({ fecha, idLocal, estado } = {}) {
-  let consulta = supabase.from('reservas').select(COLUMNAS).order('fecha').order('hora');
-  if (fecha) consulta = consulta.eq('fecha', fecha);
-  if (idLocal) consulta = consulta.eq('local_id', idLocal);
-  if (estado === 'terminada') consulta = consulta.eq('estado', 'confirmada').lt('fecha', hoyEnArgentina());
-  else if (estado === 'confirmada') consulta = consulta.eq('estado', 'confirmada').gte('fecha', hoyEnArgentina());
-  else if (estado) consulta = consulta.eq('estado', estado);
-  const filas = resultado(await consulta);
+// PostgREST devuelve como mucho max_rows filas por pedido (1000): se piden
+// de a páginas hasta traer todas. Con el orden por id, ninguna se repite ni
+// se saltea entre páginas.
+const POR_PAGINA = 1000;
+
+async function todasLasFilas(armarConsulta) {
+  const filas = [];
+  for (let desde = 0; ; desde += POR_PAGINA) {
+    const pagina = resultado(await armarConsulta().range(desde, desde + POR_PAGINA - 1));
+    filas.push(...pagina);
+    if (pagina.length < POR_PAGINA) return filas;
+  }
+}
+
+// filtros: { fecha?, idLocal?, estado?, estados? }. 'terminada' y 'confirmada'
+// se separan por fecha (ver estadoVisible). estados: lista de estados de la
+// base (la lista del día pide solo confirmadas y pendientes).
+export async function listarReservas({ fecha, idLocal, estado, estados } = {}) {
+  const armarConsulta = () => {
+    let consulta = supabase.from('reservas').select(COLUMNAS).order('fecha').order('hora').order('id');
+    if (fecha) consulta = consulta.eq('fecha', fecha);
+    if (idLocal) consulta = consulta.eq('local_id', idLocal);
+    if (estados?.length) consulta = consulta.in('estado', estados);
+    if (estado === 'terminada') consulta = consulta.eq('estado', 'confirmada').lt('fecha', hoyEnArgentina());
+    else if (estado === 'confirmada') consulta = consulta.eq('estado', 'confirmada').gte('fecha', hoyEnArgentina());
+    else if (estado) consulta = consulta.eq('estado', estado);
+    return consulta;
+  };
+  const filas = await todasLasFilas(armarConsulta);
   // notas_reserva llega como objeto o null: la relación es uno a uno
   return filas.map(({ notas_reserva: nota, ...reserva }) => ({ ...reserva, nota: nota?.nota ?? '' }));
 }

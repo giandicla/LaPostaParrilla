@@ -5,6 +5,8 @@
 import { ErrorHttp } from './respuestas.js';
 import { armarPreferencia, venceLaReserva } from './preferencia.js';
 
+export const MAX_PAGOS_POR_RESERVA = 5;
+
 export async function iniciarPagoDeSena({ reservaId, usuarioId }, { base, mp, appUrl, ahora = new Date() }) {
   const reserva = await base.leerReserva(reservaId);
   if (!reserva || reserva.usuario_id !== usuarioId) {
@@ -15,6 +17,12 @@ export async function iniciarPagoDeSena({ reservaId, usuarioId }, { base, mp, ap
   }
   if (venceLaReserva(reserva.creada_en) <= ahora) {
     throw new ErrorHttp(409, 'Se venció el plazo para pagar la seña. Hacé la reserva de nuevo.');
+  }
+
+  // Cada intento crea una fila y una preferencia de Mercado Pago: con 5 alcanza
+  // de sobra (la base tiene el mismo tope, por las dudas)
+  if ((await base.contarPagos(reservaId)) >= MAX_PAGOS_POR_RESERVA) {
+    throw new ErrorHttp(429, 'Hubo demasiados intentos de pago para esta reserva. Hacé la reserva de nuevo.');
   }
 
   // El monto sale de la base, nunca del navegador

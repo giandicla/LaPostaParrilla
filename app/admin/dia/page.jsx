@@ -20,8 +20,9 @@ function ListaDelDia() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    listarReservas({ fecha, idLocal })
-      .then((lista) => setReservas(lista.filter((r) => ['confirmada', 'pendiente'].includes(r.estado))))
+    // El filtro va en la base: las canceladas no ocupan lugar en la respuesta
+    listarReservas({ fecha, idLocal, estados: ['confirmada', 'pendiente'] })
+      .then(setReservas)
       .catch((e) => setError(e.message));
   }, [fecha, idLocal]);
 

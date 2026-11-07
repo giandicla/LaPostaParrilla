@@ -8,10 +8,11 @@ const reserva = {
   creada_en: '2026-10-15T20:00:00.000Z', locales: { nombre: 'La Posta Parrilla', sena: '10000.00' },
 };
 
-function falsos(cambios = {}) {
+function falsos(cambios = {}, pagosPrevios = 0) {
   const llamadas = [];
   const base = {
     leerReserva: async () => ({ ...reserva, ...cambios }),
+    contarPagos: async () => pagosPrevios,
     crearPago: async (datos) => { llamadas.push(['crearPago', datos]); return { id: 'p-1', monto: datos.monto }; },
     guardarPreferencia: async (...args) => llamadas.push(['guardarPreferencia', ...args]),
   };
@@ -36,6 +37,17 @@ test('una reserva ajena es un 404', async () => {
 test('una reserva que no espera el pago es un 409', async () => {
   await assert.rejects(iniciarPagoDeSena({ reservaId: 'r-1', usuarioId: 'u-1' }, falsos({ estado: 'confirmada' })),
     (e) => e.status === 409);
+});
+
+test('con 5 intentos de pago ya hechos es un 429 y no se crea nada', async () => {
+  const deps = falsos({}, 5);
+  await assert.rejects(iniciarPagoDeSena({ reservaId: 'r-1', usuarioId: 'u-1' }, deps), (e) => e.status === 429);
+  assert.deepEqual(deps.llamadas, []);
+});
+
+test('con 4 intentos previos todavía se puede pagar', async () => {
+  const deps = falsos({}, 4);
+  assert.deepEqual(await iniciarPagoDeSena({ reservaId: 'r-1', usuarioId: 'u-1' }, deps), { initPoint: 'https://mp/pagar' });
 });
 
 test('pasados los 15 minutos es un 409, aunque pg_cron todavía no la haya vencido', async () => {
