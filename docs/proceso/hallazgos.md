@@ -664,6 +664,21 @@ externa), y además la IA contestó de memoria sobre el origen en vez de mirar e
 `git log`. Antes de recomendar trabajo por "la rúbrica lo pide", confirmar que lo pide
 la grilla; antes de decir de dónde salió algo, buscarlo.
 
+### 1.38 Un control de seguridad escrito por la IA decía más de lo que hacía (sesión 12)
+
+`destinoSeguro`, en `app/ingresar/page.jsx`, venía del commit `23ea373` (2026-10-01).
+Su comentario decía: "Solo se vuelve a rutas internas: un ?volver=https://otro-sitio no
+se sigue". El control aceptaba lo que empezara con `/` y no con `//`. Pero el navegador,
+y el router de Next, leen `/\otro-sitio.com` como `//otro-sitio.com`. Ese link pasaba
+el control y llevaba al usuario a otro sitio.
+
+Lo encontró la auditoría de seguridad de la sesión 12, no una revisión ni un test. El
+arreglo (`src/validacion/destino.js`) resuelve la ruta con `URL`, que normaliza igual
+que el navegador, y acepta solo el origen propio. Ahora tiene un test con las variantes.
+
+Lección: un control de seguridad hecho comparando texto, sin un test con los casos de
+ataque conocidos, da una falsa tranquilidad. El comentario lo presentaba como resuelto.
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
