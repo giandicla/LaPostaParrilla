@@ -37,6 +37,8 @@ const ERRORES_AUTH = {
   refresh_token_not_found: 'Tu sesión venció. Ingresá de nuevo.',
   bad_jwt: 'Tu sesión venció. Ingresá de nuevo.',
   validation_failed: 'Revisá los datos: algún valor no es válido.',
+  // El token de Turnstile no vino, venció o ya se usó
+  captcha_failed: 'No pudimos completar la verificación. Esperá a que aparezca el tilde y probá de nuevo.',
   request_timeout: 'Tardó demasiado en responder. Probá de nuevo.',
 };
 

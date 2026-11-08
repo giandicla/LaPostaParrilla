@@ -61,6 +61,14 @@ npm run dev
   también fija valores que producción ya tenía (pooler, storage) para que el push no
   los cambie. **Antes de cada push: `npx supabase config diff`.** Se aplica con `npx supabase config push` (sección `[auth]` de
   `config.toml`; las credenciales salen de `supabase/.env`, que no se sube).
+- **Captcha (Cloudflare Turnstile, desde 2026-11-07).** Supabase Auth lo exige al crear
+  la cuenta, al ingresar con contraseña y al pedir una contraseña nueva; el formulario
+  lo muestra con el componente `Captcha`. Widget "La Posta" en la cuenta de Cloudflare
+  del usuario, solo para `lapostaparrilla.vercel.app`. En previews no hay captcha válido:
+  ahí se ingresa con Google. El secreto va en `supabase/.env` como `TURNSTILE_SECRET`
+  (`[remotes.produccion.auth.captcha]`). En local, las claves de prueba de Cloudflare,
+  que siempre pasan. **Para apagarlo:** `enabled = false` en ese bloque, `config push`,
+  y revertir el PR del captcha.
 - Google: cliente OAuth creado con la cuenta de la facultad. Ingresar funciona con
   cualquier cuenta de Google (probado con una personal).
 - La contraseña de la base está en `supabase/.db-password` (ignorado por git).

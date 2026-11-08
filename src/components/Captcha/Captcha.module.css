@@ -1,0 +1,6 @@
+/* El widget de Turnstile mide 300 × 65 px: se reserva el lugar para que no salte */
+.captcha {
+  display: flex;
+  justify-content: center;
+  min-height: 65px;
+}
