@@ -38,25 +38,31 @@ export function resultadoDeRegistro({ data, error }) {
   return { cuentaNueva: (datos.user?.identities?.length ?? 0) > 0 };
 }
 
+// captcha: el token de Turnstile (componente Captcha). Supabase lo pide en
+// estas tres llamadas y cada token sirve para un solo intento.
+
 // La cuenta queda sin confirmar hasta que se toca el link del mail
-export async function crearCuenta({ nombre, mail, contrasena }, volverA) {
+export async function crearCuenta({ nombre, mail, contrasena }, volverA, captcha) {
   return resultadoDeRegistro(
     await supabase.auth.signUp({
       email: normalizarMail(mail),
       password: contrasena,
       // crear_perfil() lee "nombre" de los metadatos
-      options: { data: { nombre: nombre.trim() }, emailRedirectTo: urlDeVuelta(volverA) },
+      options: { data: { nombre: nombre.trim() }, emailRedirectTo: urlDeVuelta(volverA), captchaToken: captcha },
     })
   );
 }
 
-export const ingresarConMail = async ({ mail, contrasena }) =>
-  resultado(await supabase.auth.signInWithPassword({ email: normalizarMail(mail), password: contrasena })).session;
+export const ingresarConMail = async ({ mail, contrasena }, captcha) =>
+  resultado(await supabase.auth.signInWithPassword({
+    email: normalizarMail(mail), password: contrasena, options: { captchaToken: captcha },
+  })).session;
 
 // Responde igual exista o no la cuenta, también si se pide dos veces seguidas
-export async function pedirNuevaContrasena(mail) {
+export async function pedirNuevaContrasena(mail, captcha) {
   const respuesta = await supabase.auth.resetPasswordForEmail(normalizarMail(mail), {
     redirectTo: urlDeVuelta('/ingresar/contrasena'),
+    captchaToken: captcha,
   });
   if (esEsperaDeLaCuenta(respuesta.error)) return;
   resultado(respuesta);

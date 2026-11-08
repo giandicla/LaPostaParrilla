@@ -215,11 +215,17 @@ token_verifications = 30
 # Number of Web3 logins that can be made in a 5 minute interval per IP address.
 web3 = 30
 
-# Configure one of the supported captcha providers: `hcaptcha`, `turnstile`.
-# [auth.captcha]
-# enabled = true
-# provider = "hcaptcha"
-# secret = ""
+# Captcha de Cloudflare Turnstile (desde 2026-11-07): sin él, cualquiera podía
+# gastar el cupo de 30 mails por hora de todo el sitio con registros o pedidos
+# de contraseña nueva. Supabase lo pide al crear la cuenta, al ingresar con
+# contraseña y al pedir una contraseña nueva (componente Captcha).
+# En local, el secreto de prueba que publica Cloudflare: siempre pasa y
+# combina con la clave de prueba del sitio. Producción usa el suyo, en
+# [remotes.produccion.auth.captcha].
+[auth.captcha]
+enabled = true
+provider = "turnstile"
+secret = "1x0000000000000000000000000000000AA"
 
 [auth.email]
 # Registro con mail y contraseña (sesión 09). En producción lo controla el
@@ -457,6 +463,15 @@ project_id = "dagxitkhqbztgetoultt"
 # termina en el sitio de producción. Tampoco localhost: en producción no sirve.
 [remotes.produccion.auth]
 additional_redirect_urls = ["https://lapostaparrilla.vercel.app/**"]
+
+# Captcha: el secreto del widget "La Posta" de Turnstile (cuenta de Cloudflare
+# del usuario). Vive en supabase/.env como TURNSTILE_SECRET, no se versiona.
+# Para apagarlo si falla: enabled = false y `config push` (y revertir el PR
+# del captcha, para que los formularios no lo esperen).
+[remotes.produccion.auth.captcha]
+enabled = true
+provider = "turnstile"
+secret = "env(TURNSTILE_SECRET)"
 
 # Registro con mail prendido en producción el 2026-11-03 (paso 2). Con false,
 # la CLI apaga todo el proveedor de mail: tampoco se puede ingresar con

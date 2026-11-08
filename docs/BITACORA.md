@@ -4,6 +4,18 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-07 — Captcha en los formularios con mail
+
+Rama `feat/captcha-turnstile`. Cierra el último punto de la auditoría: el cupo de 30
+mails de Auth por hora, para todo el sitio, se podía agotar sin cuenta.
+
+- Componente `Captcha` (Cloudflare Turnstile, modo "Managed": casi siempre pasa solo).
+  Va en crear cuenta, ingresar con contraseña y "Olvidé mi contraseña".
+- Supabase verifica el token (`[auth.captcha]` y `[remotes.produccion.auth.captcha]`).
+  Cada token sirve para un intento: después de un error se pide otro.
+- En previews el captcha no valida (el widget es solo del dominio de producción):
+  ahí se ingresa con Google. Cómo apagarlo, en `docs/BACKEND.md`.
+
 ## 2026-11-06 — Arreglos de la auditoría de seguridad
 
 Rama `fix/seguridad-auditoria` (PR #37). Arregla lo que encontró la auditoría de

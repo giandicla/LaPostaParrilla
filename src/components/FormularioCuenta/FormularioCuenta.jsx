@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Boton from '../Boton/Boton.jsx';
 import Campo from '../Campo/Campo.jsx';
+import Captcha from '../Captcha/Captcha.jsx';
 import { crearCuenta, ingresarConMail, pedirNuevaContrasena } from '../../servicios/auth.js';
 import { LIMITES } from '../../validacion/reservas.js';
 import { LIMITES_CUENTA, mensajeTrasCrear, mensajeTrasOlvido, validarCuenta } from '../../validacion/cuenta.js';
@@ -26,6 +27,9 @@ export default function FormularioCuenta({ modo, volver, alCambiarModo, enfocar 
   const prefijo = `cuenta-${modo}`;
   const formRef = useRef(null);
   const listoRef = useRef(null);
+  // Token de Turnstile: sirve para un intento, después se pide otro
+  const [captcha, setCaptcha] = useState('');
+  const captchaRef = useRef(null);
 
   useEffect(() => {
     if (enfocar) formRef.current?.elements.mail?.focus();
@@ -47,22 +51,28 @@ export default function FormularioCuenta({ modo, volver, alCambiarModo, enfocar 
       evento.currentTarget.elements[primero].focus();
       return;
     }
+    if (!captcha) {
+      setErrorBase('Esperá a que termine la verificación de abajo y probá de nuevo.');
+      return;
+    }
 
     setEnviando(true);
     try {
       if (modo === 'ingresar') {
-        await ingresarConMail(datos);
+        await ingresarConMail(datos, captcha);
         return; // sigue "Ingresando…" hasta que la página redirige
       }
       if (modo === 'crear') {
-        await crearCuenta(datos, volver);
+        await crearCuenta(datos, volver, captcha);
         setListo(mensajeTrasCrear(datos.mail));
       } else {
-        await pedirNuevaContrasena(datos.mail);
+        await pedirNuevaContrasena(datos.mail, captcha);
         setListo(mensajeTrasOlvido(datos.mail));
       }
     } catch (e) {
       setErrorBase(e.message);
+      // El token ya se usó: para reintentar hace falta uno nuevo
+      captchaRef.current?.reiniciar();
     }
     setEnviando(false);
   };
@@ -107,6 +117,8 @@ export default function FormularioCuenta({ modo, volver, alCambiarModo, enfocar 
           )}
         </Campo>
       )}
+
+      <Captcha ref={captchaRef} alCambiar={setCaptcha} />
 
       {errorBase && <p className={formulario.error} role="alert">{errorBase}</p>}
 
