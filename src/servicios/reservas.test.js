@@ -1,7 +1,13 @@
 // node --test "src/**/*.test.js"
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { estadoSena, estadoVisible, puedePagar, sePuedeCancelar, sePuedeModificar, sigueMirandoElPago, turnoDe } from './reservas.js';
+import { estadoSena, estadoVisible, horaDeVencimiento, puedePagar, sePuedeCancelar, sePuedeModificar, sigueMirandoElPago, turnoDe } from './reservas.js';
+
+test('la hora en que vence el pago va en 24 horas, hora de Argentina, sin "a. m."', () => {
+  // 03:42 UTC + 15 minutos = 00:57 en Argentina
+  assert.equal(horaDeVencimiento({ creada_en: '2026-11-10T03:42:00.000Z' }), '00:57');
+  assert.equal(horaDeVencimiento({ creada_en: '2026-11-10T23:30:00.000Z' }), '20:45');
+});
 
 // Fecha y hora de Argentina (UTC-3) dentro de `minutos`, como las guarda la base
 function dentroDe(minutos) {

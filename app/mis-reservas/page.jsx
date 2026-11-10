@@ -17,13 +17,13 @@ import {
   estadoSena,
   faltaParaReserva,
   formatearFecha,
+  horaDeVencimiento,
   obtenerMisAnteriores,
   obtenerMisProximas,
   POR_PAGINA,
   puedePagar,
   sePuedeCancelar,
   sePuedeModificar,
-  venceElPago,
 } from '../../src/servicios/reservas.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
@@ -56,7 +56,7 @@ function TarjetaReserva({ reserva, alCancelar, alPagar, alModificar }) {
         <>
           <p className={estilos.aviso}>
             Falta pagar la seña: guardamos tu lugar hasta las{' '}
-            {new Intl.DateTimeFormat('es-AR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Argentina/Buenos_Aires' }).format(venceElPago(reserva))}.
+            {horaDeVencimiento(reserva)}.
           </p>
           <Boton onClick={() => alPagar(reserva)}>Pagar seña</Boton>
         </>

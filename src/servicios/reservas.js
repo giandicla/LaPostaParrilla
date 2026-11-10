@@ -102,6 +102,13 @@ export const MINUTOS_PARA_PAGAR = 15;
 export const venceElPago = (reserva) =>
   new Date(new Date(reserva.creada_en).getTime() + MINUTOS_PARA_PAGAR * 60 * 1000);
 
+// "00:57": en 24 horas y sin "a. m." (el formato de 12 horas de es-AR termina en
+// punto y la oración quedaba "hasta las 12:57 a. m..")
+export const horaDeVencimiento = (reserva) =>
+  new Intl.DateTimeFormat('es-AR', {
+    hour: '2-digit', minute: '2-digit', hourCycle: 'h23', timeZone: 'America/Argentina/Buenos_Aires',
+  }).format(venceElPago(reserva));
+
 export const puedePagar = (reserva, ahora = Date.now()) =>
   reserva.estado === 'esperando_pago' && venceElPago(reserva).getTime() > ahora;
 
