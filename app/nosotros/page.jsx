@@ -8,6 +8,11 @@ import { MARCA } from '../../src/data/marca.js';
 import Icono from '../../src/components/Icono/Icono.jsx';
 import estilos from './page.module.css';
 
+export const metadata = {
+  title: 'Nosotros',
+  description: 'La historia de La Posta, sus dos salones en Villa La Angostura y cómo llegar.',
+};
+
 export default function Nosotros() {
   return (
     <main>

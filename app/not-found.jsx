@@ -2,7 +2,7 @@ import Section from '../src/components/Section/Section.jsx';
 import Boton from '../src/components/Boton/Boton.jsx';
 
 export const metadata = {
-  title: 'Página no encontrada · La Posta',
+  title: { absolute: 'Página no encontrada · La Posta' },
 };
 
 export default function NoEncontrada() {
