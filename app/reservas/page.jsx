@@ -23,7 +23,6 @@ import { guardarTelefonoDelPerfil, ingresarConGoogle } from '../../src/servicios
 import { iniciarPago } from '../../src/servicios/pagos.js';
 import {
   MINUTOS_PARA_PAGAR,
-  TURNOS,
   crearReserva,
   faltaParaReserva,
   formatearFecha,
@@ -32,10 +31,10 @@ import {
   obtenerDiasBloqueados,
   obtenerFranjas,
   obtenerSena,
-  turnoDe,
 } from '../../src/servicios/reservas.js';
 import SelloMercadoPago from '../../src/components/SelloMercadoPago/SelloMercadoPago.jsx';
 import { LIMITES, esGrupo, limpiarTelefono, validarReserva, hayErrores } from '../../src/validacion/reservas.js';
+import { bloqueosDelDia, cierreDelDia, horaBloqueada } from '../../src/validacion/bloqueos.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 import { srcSetDe } from '../../src/data/imagenes.js';
@@ -198,15 +197,16 @@ function FormularioReserva({ idInicial }) {
     };
   }, [idLocal]);
 
-  const delDia = bloqueos.filter((b) => b.fecha === fecha && (!b.local_id || b.local_id === idLocal));
-  // Un bloqueo sin turno cierra el día; con turno, solo esos horarios
-  const bloqueo = delDia.find((b) => !b.turno);
-  const turnosCompletos = delDia.filter((b) => b.turno).map((b) => b.turno);
+  const delDia = bloqueosDelDia(bloqueos, fecha, idLocal);
+  // Un bloqueo de todo el día (o varios que tapan todos los horarios) cierra el
+  // día; uno con horas saca solo esos horarios
+  const bloqueo = cierreDelDia(delDia, franjas);
+  const horasBloqueadas = bloqueo ? [] : franjas.filter((h) => horaBloqueada(delDia, h));
 
-  // Si es hoy, solo los horarios que todavía no pasaron; y nunca los de un turno completo
+  // Si es hoy, solo los horarios que todavía no pasaron; y nunca los bloqueados
   // (sin useMemo: el React Compiler ya lo memoiza)
   const franjasDisponibles = franjas.filter(
-    (h) => (!fecha || faltaParaReserva({ fecha, hora: h }) > 0) && !turnosCompletos.includes(turnoDe(h))
+    (h) => (!fecha || faltaParaReserva({ fecha, hora: h }) > 0) && !horaBloqueada(delDia, h)
   );
 
   // Los errores no se guardan: se calculan de los valores en cada render.
@@ -417,9 +417,10 @@ function FormularioReserva({ idInicial }) {
             )}
           </Campo>
         </div>
-        {turnosCompletos.length > 0 && (
+        {horasBloqueadas.length > 0 && (
           <p className={formulario.ayuda}>
-            Ese día ya está completo el turno {turnosCompletos.map((t) => TURNOS[t].toLowerCase()).join(' y el de la ')}.
+            Ese día no tomamos reservas {horasBloqueadas.length === 1 ? 'a las' : 'en estos horarios:'}{' '}
+            {horasBloqueadas.join(', ')}.
           </p>
         )}
 

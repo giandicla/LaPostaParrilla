@@ -15,11 +15,14 @@ export async function obtenerFranjas(idLocal) {
   return filas.map((fila) => fila.hora.slice(0, 5));
 }
 
-// Días bloqueados desde una fecha:
-// [{ fecha, local_id (null = los dos), turno (null = todo el día), motivo }]
+// Bloqueos que todavía no terminaron a esa fecha (ver src/validacion/bloqueos.js):
+// [{ fecha, fecha_hasta, local_id (null = los dos), hora_desde, hora_hasta (null = todo el día), motivo }]
 export const obtenerDiasBloqueados = async (desde) =>
   resultado(
-    await supabase.from('dias_bloqueados').select('fecha, local_id, turno, motivo').gte('fecha', desde)
+    await supabase
+      .from('dias_bloqueados')
+      .select('fecha, fecha_hasta, local_id, hora_desde, hora_hasta, motivo')
+      .gte('fecha_hasta', desde)
   );
 
 export const crearReserva = async (idUsuario, reserva) =>

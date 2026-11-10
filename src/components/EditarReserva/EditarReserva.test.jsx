@@ -94,10 +94,10 @@ describe('EditarReserva (panel)', () => {
   });
 
   test('si la base rechaza el cambio, muestra su mensaje y deja reintentar', async () => {
-    admin.editarReserva.mockRejectedValue(new Error('Ese turno ya está completo.'));
+    admin.editarReserva.mockRejectedValue(new Error('Ese horario no está disponible para reservar.'));
     const { alGuardar } = abrir();
     await guardar();
-    expect(screen.getByRole('alert').textContent).toBe('Ese turno ya está completo.');
+    expect(screen.getByRole('alert').textContent).toBe('Ese horario no está disponible para reservar.');
     expect(screen.getByRole('button', { name: 'Guardar cambios' }).disabled).toBe(false);
     expect(alGuardar).not.toHaveBeenCalled();
   });

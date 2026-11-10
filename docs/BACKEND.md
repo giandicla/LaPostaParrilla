@@ -219,6 +219,7 @@ Migraciones (aplicadas a producción el **2026-10-18**):
 | `20261015110000_estados_sena` | Estados `esperando_pago` y `vencida` (archivo propio: Postgres no deja usar un valor de enum en la misma transacción en que se agrega) |
 | `20261015120000_sena_reservas` | `locales.sena`, tabla `pagos` con RLS, `acreditar_pago()`, `cancelar_reserva(id, motivo)`, trigger de reintegro pendiente, `vencer_reservas_sin_pagar()` y el job de `pg_cron` |
 | `20261015130000_bloqueo_por_turno` | `dias_bloqueados.turno` (mediodía / noche / todo el día) y su chequeo en `validar_reserva()` |
+| `20261110120000_bloqueos_por_rango` | Bloqueos de una fecha a otra y entre dos horas: `fecha_hasta`, `hora_desde`, `hora_hasta` (las dos nulas = todo el día). Los bloqueos por turno que había pasan a rango de horas; `turno` queda sin uso (el trigger `completar_bloqueo` lo traduce si llega). `validar_reserva()` rechaza con "Ese día no tomamos reservas en ese local." o "Ese horario no está disponible para reservar." |
 | `20261018120000_sena_ajustes` | `creada_en` fijada por la base al insertar; `acreditar_pago()` devuelve `'duplicado'` ante un segundo cobro de la misma preferencia |
 | `20261104120000_reembolso_de_sena` | El trigger `marcar_reintegro` vuelve a actuar en cualquier cancelación; se borra `marcar_sena_devuelta` (el reembolso lo confirma el webhook) |
 | `20261101120000_sena_no_reembolsable` | El trigger `marcar_reintegro` solo actúa si cancela el admin; `marcar_sena_devuelta(id)` (solo admin) pasa una seña de `reintegro_pendiente` a `reintegrado` |

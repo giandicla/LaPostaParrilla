@@ -56,12 +56,12 @@ set local request.jwt.claims to '{"sub":"11111111-1111-1111-1111-111111111111","
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
   values ('11111111-1111-1111-1111-111111111111', 'parrilla', current_date + 20, '20:00', 2, 'Ana', '2944111111')
-$$, 'P0001', 'Ese turno ya está completo.', 'el bloqueo de los dos locales frena la noche de la parrilla');
+$$, 'P0001', 'Ese horario no está disponible para reservar.', 'el bloqueo de los dos locales frena la noche de la parrilla');
 
 select throws_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)
   values ('11111111-1111-1111-1111-111111111111', 'restaurante', current_date + 20, '21:00', 2, 'Ana', '2944111111')
-$$, 'P0001', 'Ese turno ya está completo.', 'y la del restaurante');
+$$, 'P0001', 'Ese horario no está disponible para reservar.', 'y la del restaurante');
 
 select lives_ok($$
   insert into public.reservas (usuario_id, local_id, fecha, hora, personas, nombre, telefono)

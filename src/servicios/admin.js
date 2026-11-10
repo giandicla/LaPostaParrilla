@@ -74,17 +74,24 @@ export const listarBloqueos = async (desde) =>
   resultado(
     await supabase
       .from('dias_bloqueados')
-      .select('id, fecha, local_id, turno, motivo')
-      .gte('fecha', desde)
+      .select('id, fecha, fecha_hasta, local_id, hora_desde, hora_hasta, motivo')
+      .gte('fecha_hasta', desde)
       .order('fecha')
+      .order('hora_desde', { nullsFirst: true })
   );
 
-// turno: 'mediodia' | 'noche' | '' (todo el día)
-export const bloquearDia = async ({ fecha, idLocal, turno, motivo }) =>
+// bloqueo: { fecha, fecha_hasta, local_id (null = los dos), hora_desde,
+// hora_hasta (las dos null = todo el día), motivo }
+export const bloquear = async ({ fecha, fecha_hasta, local_id, hora_desde, hora_hasta, motivo }) =>
   resultado(
-    await supabase
-      .from('dias_bloqueados')
-      .insert({ fecha, local_id: idLocal || null, turno: turno || null, motivo: motivo?.trim() || null })
+    await supabase.from('dias_bloqueados').insert({
+      fecha,
+      fecha_hasta,
+      local_id: local_id || null,
+      hora_desde: hora_desde || null,
+      hora_hasta: hora_hasta || null,
+      motivo: motivo?.trim() || null,
+    })
   );
 
 // Señas con la devolución pedida a Mercado Pago y todavía sin confirmar por el

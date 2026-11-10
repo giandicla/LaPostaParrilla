@@ -4,6 +4,26 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-10 — Bloqueos por rango de fechas y de horas
+
+Rama `feat/bloqueos-por-rango`. Pedido del usuario: bloquear de una fecha a otra y entre
+dos horas (vacaciones, un horario que se deja de tomar por un mes), en vez de un día y
+un turno por vez.
+
+- **Base** (migración `20261110120000_bloqueos_por_rango`): `dias_bloqueados` suma
+  `fecha_hasta`, `hora_desde` y `hora_hasta` (las dos horas nulas = todo el día). Los
+  bloqueos por turno que había se convierten a rango de horas. `validar_reserva()`
+  rechaza una reserva cuya fecha y hora caen en un bloqueo. La migración se puede
+  aplicar antes de publicar el front: el anterior sigue andando.
+- **Panel** (`/admin/bloqueos`): Desde, Hasta (opcional), local, "Desde las" y "Hasta
+  las" (los horarios de reserva del local elegido; del primero al último es todo el
+  día) y motivo.
+- **`/reservas` y "Nueva reserva" del panel:** no ofrecen los horarios bloqueados; si
+  quedan todos tapados, el día figura cerrado con su motivo.
+- Lógica en `src/validacion/bloqueos.js` (10 tests); pgTAP `16_bloqueos_por_rango` (16).
+- El mensaje "Ese turno ya está completo." pasa a "Ese horario no está disponible para
+  reservar.".
+
 ## 2026-11-10 — Aviso del panel, títulos por página, robots, sitemap e imagen al compartir
 
 Rama `feat/aviso-del-panel-y-metadatos`. Pedidos del usuario después de la prueba.

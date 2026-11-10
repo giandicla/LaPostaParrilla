@@ -199,7 +199,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: var(--sp-3);
-  align-items: center;
+  /* Cada campo lleva su etiqueta arriba: el botón se alinea con los controles */
+  align-items: end;
 }
 
 .listaBloqueos {

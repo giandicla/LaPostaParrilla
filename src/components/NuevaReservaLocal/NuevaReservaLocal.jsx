@@ -6,6 +6,7 @@ import Campo from '../Campo/Campo.jsx';
 import { LOCALES, getLocal } from '../../data/locales.js';
 import { faltaParaReserva, formatearFecha, hoyEnArgentina, obtenerDiasBloqueados, obtenerFranjas } from '../../servicios/reservas.js';
 import { crearReservaLocal } from '../../servicios/admin.js';
+import { bloqueosDelDia, cierreDelDia, horaBloqueada } from '../../validacion/bloqueos.js';
 import { LIMITES, hayErrores, limpiarTelefono, validarReserva } from '../../validacion/reservas.js';
 import formulario from '../../styles/formulario.module.css';
 import estilos from './NuevaReservaLocal.module.css';
@@ -58,12 +59,14 @@ export default function NuevaReservaLocal({ idLocalInicial, alGuardar, alCerrar 
     };
   }, [hoy]);
 
-  // Si es hoy, solo los horarios que todavía no pasaron
+  // Si es hoy, solo los horarios que todavía no pasaron; y nunca los bloqueados
+  // (la base tampoco deja cargar una reserva del local en un horario bloqueado)
+  const delDia = useMemo(() => bloqueosDelDia(bloqueos, fecha, idLocal), [bloqueos, fecha, idLocal]);
   const franjasDisponibles = useMemo(
-    () => franjas.filter((h) => !fecha || faltaParaReserva({ fecha, hora: h }) > 0),
-    [franjas, fecha]
+    () => franjas.filter((h) => (!fecha || faltaParaReserva({ fecha, hora: h }) > 0) && !horaBloqueada(delDia, h)),
+    [franjas, fecha, delDia]
   );
-  const bloqueo = bloqueos.find((b) => b.fecha === fecha && (!b.local_id || b.local_id === idLocal));
+  const bloqueo = cierreDelDia(delDia, franjas);
 
   const errores = validarReserva(valores, {
     hoy,

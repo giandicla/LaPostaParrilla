@@ -13,7 +13,7 @@
 | `/mis-reservas` | Cuenta | Próximas (todas) y anteriores y canceladas (de a 5, con "Ver más"); `esperando_pago` con "Pagar seña" y el tiempo que falta; modificar fecha, hora y personas (`ModificarReserva`) y cancelar hasta 1 h antes (pide el reembolso de la seña y muestra "Devolución de la seña en curso" hasta que el webhook la confirma), después WhatsApp. El admin no la usa: lo lleva al panel |
 | `/admin` | Admin | Nueva reserva (del local: sin cuenta, confirmada, hasta 40 personas, mail opcional); reservas por fecha, local y estado, con el estado de la seña; cancelar (pide el motivo, "No hay lugar" por defecto) y editar (fecha, hora, personas, nombre, teléfono, comentarios y, en las del local, mail: `EditarReserva`); "Devoluciones de seña en curso" (reembolsos pedidos sin confirmar por el webhook, o que fallaron) con "Reintentar"; notas internas; las confirmadas de días pasados se ven "Terminada"; tiempo real. `?local=<id>` abre "Nueva reserva" con ese salón |
 | `/admin/dia` | Admin | Lista del día para imprimir. Acepta `?fecha=` y `?local=` |
-| `/admin/bloqueos` | Admin | Pestaña "Días bloqueados": bloquear un día o un turno, en un local o en los dos, y desbloquear |
+| `/admin/bloqueos` | Admin | Pestaña "Días bloqueados": bloquear de una fecha a otra y, si hace falta, entre dos horas, en un local o en los dos, y desbloquear |
 | `/admin/carta` | Admin | Pestañas Reservas · Días bloqueados · Carta. Selector Parrilla · Vinos · Restaurante. Una caja arriba (`CajaCarta`): sin nada elegido agrega (va último en su categoría); con un producto elegido (Editar o el buscador) lo edita, incluida la categoría. Abajo la carta (`ListaCarta`) con ⠿ para arrastrar, Editar y Eliminar. Cubierto en la vista de un local. Acepta `?vista=<id del local o vinos>` |
 | `/nosotros` | Nosotros | Historia + un bloque por local + contacto |
 | `/api/v1/pagos` | API | `POST`: crea el pago y la preferencia de Checkout Pro de la seña y devuelve el `initPoint`. Requiere sesión (token de Supabase) |
@@ -92,7 +92,7 @@ La única capa que habla con Supabase. Detalle en `docs/BACKEND.md`.
 | `config.js` | `backendDisponible` sin cargar supabase-js (la usan la navbar y la sesión en todas las páginas) |
 | `auth.js` | Ingresar con Google o con mail, crear cuenta, pedir y cambiar la contraseña, salir, escuchar la sesión, leer y actualizar el perfil |
 | `reservas.js` | Franjas, días bloqueados, crear / listar / cancelar reservas, utilidades de fecha en hora argentina |
-| `admin.js` | Listar y filtrar reservas, editar, notas, bloqueos (por día o por turno), devoluciones de seña en curso, suscripción en tiempo real |
+| `admin.js` | Listar y filtrar reservas, editar, notas, bloqueos (por rango de fechas y de horas), devoluciones de seña en curso, suscripción en tiempo real |
 | `pagos.js` | `iniciarPago`, `cancelarReserva`: llaman a las rutas de `app/api/` con el token de la sesión (el Access Token de Mercado Pago nunca llega al navegador) |
 | `carta.js` | `leerCarta(idLocal, { fresca })` y `leerVinos({ fresca })` (públicas) y, para el admin, `crearItem`, `editarItem`, `borrarItem`, `ubicarItem`, `ubicarBodega`, `cambiarCubierto`: llaman a `app/api/v1/carta` |
 

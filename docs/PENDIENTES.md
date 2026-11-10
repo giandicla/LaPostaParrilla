@@ -173,9 +173,10 @@ queda la estética, que la marca él.
     está: el usuario lo vio bien.
 - **Sigue abierto:**
   - [ ] **Estética del resto del sitio**: el usuario la va marcando navegando.
-  - [ ] **Bloqueos por rango**: fecha desde y hasta, hora desde y hasta (pedido del
-        usuario, 2026-11-10). Hoy se bloquea de a un día, por turno. Cambia la tabla
-        `dias_bloqueados` y el trigger de las reservas: migración + pgTAP + `db push`.
+  - [x] **Bloqueos por rango**: fecha desde y hasta, hora desde y hasta (pedido del
+        usuario, 2026-11-10). Hecho el mismo día (migración
+        `20261110120000_bloqueos_por_rango`). La columna `turno` quedó sin uso: se puede
+        borrar en una migración posterior.
   - [ ] **Limpiar los datos de prueba de producción** antes de la presentación. Se suman
         dos reservas canceladas a nombre de "Prueba Claude" (20/11 y 25/11).
   - [ ] **Probar pagando en producción**: seña aprobada y rechazada, modificar una reserva
