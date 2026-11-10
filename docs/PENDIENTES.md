@@ -178,14 +178,16 @@ queda la estética, que la marca él.
         `20261110120000_bloqueos_por_rango`). La columna `turno` quedó sin uso: se puede
         borrar en una migración posterior.
   - [ ] **Limpiar los datos de prueba de producción** antes de la presentación. Se suman
-        dos reservas canceladas a nombre de "Prueba Claude" (20/11 y 25/11).
+        tres reservas canceladas a nombre de "Prueba Claude" (20/11, 25/11 20:30 y 25/11
+        12:45).
   - [ ] **Probar pagando en producción**: seña aprobada y rechazada, modificar una reserva
         paga, cancelar con reembolso (cliente y local) y pago tardío. Lo paga el usuario.
   - [ ] Menores de la prueba que no se tocaron (`docs/PRUEBA-DE-USUARIO.md`):
-    - el panel no salta a la fecha de la reserva recién cargada, y los avisos de la
-      acción anterior quedan arriba;
-    - todas las páginas comparten el título de la pestaña; faltan `robots.txt`,
-      `sitemap.xml` e imagen para compartir el link.
+    - editar, cancelar o eliminar en el panel no muestran un aviso propio (el de
+      "Reserva guardada" ya trae los datos y se va solo, PR #46);
+    - con menos de unos 370 px de ancho, las pestañas del panel se pasan del ancho;
+    - ~~título de la pestaña, `robots.txt`, `sitemap.xml` e imagen para compartir~~
+      (hecho, PR #46).
   - [ ] Guion de la demo: **solo cuando lo pida el usuario**.
 
 ## Abiertos al 2026-11-05 (reemplazado por la lista de arriba)
