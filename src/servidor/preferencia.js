@@ -24,8 +24,13 @@ export function esUrlPublica(url) {
   }
 }
 
-// "2026-10-18" + "20:30:00" → "18/10 20:30"
-const cuando = (fecha, hora) => `${fecha.slice(8, 10)}/${fecha.slice(5, 7)} ${hora.slice(0, 5)}`;
+const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto',
+  'septiembre', 'octubre', 'noviembre', 'diciembre'];
+
+// "2026-10-18" + "20:30:00" → "18 de octubre 20:30". Sin barra: Mercado Pago la
+// saca del concepto y "20/11" se leía "2011".
+const cuando = (fecha, hora) =>
+  `${Number(fecha.slice(8, 10))} de ${MESES[Number(fecha.slice(5, 7)) - 1]} ${hora.slice(0, 5)}`;
 
 export function armarPreferencia({ pago, reserva, nombreLocal, appUrl }) {
   const base = String(appUrl ?? '').replace(/\/+$/, '');

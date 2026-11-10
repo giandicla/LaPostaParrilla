@@ -4,6 +4,18 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-10 — Fecha de la seña en Mercado Pago y hora del vencimiento
+
+Rama `fix/fecha-mp-y-hora-vencimiento`. Dos errores de texto que vio el cliente en la
+prueba de usuario contra producción:
+
+- **Concepto de la seña en Mercado Pago:** decía "2011 12:30" por "20/11 12:30";
+  Mercado Pago saca la barra. Ahora va "20 de noviembre 12:30"
+  (`src/servidor/preferencia.js`).
+- **Hora en que vence el pago:** decía "hasta las 12:57 a. m..". Ahora "hasta las
+  00:57." con `horaDeVencimiento` (`src/servicios/reservas.js`), que usan Mis reservas
+  y la página del pago.
+
 ## 2026-11-10 — Google muestra siempre el selector de cuentas
 
 Rama `fix/google-selector-de-cuenta`. Con una sola cuenta de Google abierta, "Ingresar

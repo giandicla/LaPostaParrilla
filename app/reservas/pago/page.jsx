@@ -18,16 +18,13 @@ import {
   estadoDelPago,
   estadoSena,
   formatearFecha,
+  horaDeVencimiento,
   obtenerReserva,
   puedePagar,
   sigueMirandoElPago,
-  venceElPago,
 } from '../../../src/servicios/reservas.js';
 import formulario from '../../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
-
-const hora = (fecha) =>
-  new Intl.DateTimeFormat('es-AR', { hour: '2-digit', minute: '2-digit', timeZone: 'America/Argentina/Buenos_Aires' }).format(fecha);
 
 function EstadoDelPago() {
   const id = useSearchParams().get('reserva');
@@ -125,7 +122,7 @@ function EstadoDelPago() {
           <p>Si ya pagaste, esta página se actualiza sola en unos segundos.</p>
         )}
         <p className={formulario.ayuda}>
-          {rechazado ? 'Tenés' : 'Si el pago no se completó, podés intentarlo de nuevo'} hasta las {hora(venceElPago(reserva))}.
+          {rechazado ? 'Tenés' : 'Si el pago no se completó, podés intentarlo de nuevo'} hasta las {horaDeVencimiento(reserva)}.
         </p>
         {errorPago && <p className={formulario.error} role="alert">{errorPago}</p>}
         <Boton onClick={reintentar} disabled={abriendo}>{abriendo ? 'Abriendo Mercado Pago…' : 'Reintentar pago'}</Boton>

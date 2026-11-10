@@ -13,7 +13,7 @@ test('el monto sale del pago (de la base) y es un número', () => {
   assert.equal(item.unit_price, 10000);
   assert.equal(item.quantity, 1);
   assert.equal(item.currency_id, 'ARS');
-  assert.equal(item.title, 'Seña reserva La Posta Parrilla · 18/10 20:30');
+  assert.equal(item.title, 'Seña reserva La Posta Parrilla · 18 de octubre 20:30');
 });
 
 test('external_reference es el id del pago', () => {
