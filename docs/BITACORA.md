@@ -6,7 +6,8 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ## 2026-11-07 — Captcha en los formularios con mail
 
-Rama `feat/captcha-turnstile`. Cierra el último punto de la auditoría: el cupo de 30
+Rama `feat/captcha-turnstile` (PR #38). Prendido en producción el 2026-11-08; el
+ingreso con mail lo probó el usuario. Cierra el último punto de la auditoría: el cupo de 30
 mails de Auth por hora, para todo el sitio, se podía agotar sin cuenta.
 
 - Componente `Captcha` (Cloudflare Turnstile, modo "Managed": casi siempre pasa solo).
@@ -19,7 +20,8 @@ mails de Auth por hora, para todo el sitio, se podía agotar sin cuenta.
 ## 2026-11-06 — Arreglos de la auditoría de seguridad
 
 Rama `fix/seguridad-auditoria` (PR #37). Arregla lo que encontró la auditoría de
-seguridad (skill `security-audit` de Cloudflare, perfil deep; sesión 12).
+seguridad (skill `security-audit` de Cloudflare, perfil deep; sesión 12). En producción
+desde el 2026-11-07, con `db push` y `config push` (sesión 13).
 
 - **Redirect abierto en `/ingresar`:** `?volver=/\otro-sitio.com` llevaba a otro sitio.
   `destinoSeguro` pasa a `src/validacion/destino.js`, resuelve la ruta con `URL` y solo

@@ -679,6 +679,18 @@ que el navegador, y acepta solo el origen propio. Ahora tiene un test con las va
 Lección: un control de seguridad hecho comparando texto, sin un test con los casos de
 ataque conocidos, da una falsa tranquilidad. El comentario lo presentaba como resuelto.
 
+### 1.39 La IA dijo que no manejaba la clave secreta, y una captura suya la mostró (sesión 13)
+
+Al crear el widget de Turnstile, la IA le dijo al usuario que la clave secreta la cargaba
+él, porque ella no maneja claves secretas. Pero para encontrar la clave pública sacó una
+captura de la pantalla de Cloudflare, y en esa captura se veía parte de la secreta,
+cortada. No la copió ni la guardó en ningún archivo, pero quedó en el historial de la
+sesión. La IA lo avisó en el mensaje siguiente y le sugirió al usuario rotar la clave.
+
+Lección: decir "no toco el secreto" no alcanza si la herramienta que se usa lo muestra en
+pantalla. Para leer un dato al lado de un secreto, conviene leer solo ese elemento de la
+página en vez de sacar una captura.
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -902,6 +914,19 @@ armó en la copia de prueba una foto que se arrastra con el mouse y muestra su p
 El usuario eligió las tres posiciones (`54% 81%`, `64% 30%`, `100% 20%`) y la IA solo
 las pasó al sitio (`app/page.jsx`). Lección: cuando el criterio es del usuario y es
 visual, darle la herramienta para decidir rinde más que otra ronda de propuestas.
+
+### 2.16 Los frenos automáticos de la herramienta pararon a la IA en producción (sesiones 12 y 13)
+
+El usuario dijo "si lo podés hacer todo vos, hacelo" y se fue a dormir. La IA intentó
+mergear el PR #37 y la herramienta (Claude Code en modo automático) lo bloqueó: "merge
+sin revisión". Después del OK explícito del usuario para el merge, bloqueó el
+`db push`: "despliegue a producción". Cada paso a producción terminó necesitando su
+propio OK. Lo mismo pasó con el captcha: la IA no tocó la casilla de Cloudflare en
+producción, y la prueba real del ingreso la hizo el usuario.
+
+Lección: una autorización general ("hacé todo") no se trató como permiso para cada paso
+irreversible. El costo fue esperar al usuario. A cambio, nada llegó a producción sin que
+él lo supiera.
 
 ---
 

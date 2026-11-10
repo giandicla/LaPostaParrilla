@@ -23,7 +23,9 @@ donde no se esperaba, y las decisiones que hubo que tomar a mitad de camino.
 | `sesion-08-2026-11-02.md` | Octava sesión (continuación de la 07): mails con Brevo y con la marca, rendimiento en el celular, las tres cartas con la misma estética |
 | `sesion-09-2026-11-03.md` | Novena sesión: editar reservas desde el panel, ingreso con mail y contraseña, mails solo al cliente con remitente Gmail |
 | `sesion-10-2026-11-04.md` | Décima sesión: el reembolso de la seña vuelve (pista de la ayudante), con las credenciales de prueba de la aplicación, confirmado por webhook y probado en producción |
+| `sesion-11-2026-11-05.md` | Undécima sesión: tests de rutas y componentes, menores del ingreso y de la seña, estética del inicio |
 | `sesion-12-2026-11-06.md` | Duodécima sesión: auditoría de seguridad (skill de Cloudflare, perfil deep) y sus arreglos |
+| `sesion-13-2026-11-08.md` | Decimotercera sesión: los arreglos a producción y el captcha de Cloudflare Turnstile |
 | `hallazgos.md` | Lo analítico: dónde falló la IA, dónde sorprendió, qué se aprendió |
 | `metodo.md` | Cómo se organizó el trabajo y por qué |
 | `ledger-sesion-01.md` | El registro crudo de la sesión, sin editar: las decisiones tal como se tomaron |
