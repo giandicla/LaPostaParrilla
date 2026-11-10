@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import Boton from '../Boton/Boton.jsx';
 import Campo from '../Campo/Campo.jsx';
 import { LOCALES, getLocal } from '../../data/locales.js';
-import { faltaParaReserva, hoyEnArgentina, obtenerDiasBloqueados, obtenerFranjas } from '../../servicios/reservas.js';
+import { faltaParaReserva, formatearFecha, hoyEnArgentina, obtenerDiasBloqueados, obtenerFranjas } from '../../servicios/reservas.js';
 import { crearReservaLocal } from '../../servicios/admin.js';
 import { bloqueosDelDia, cierreDelDia, horaBloqueada } from '../../validacion/bloqueos.js';
 import { LIMITES, hayErrores, limpiarTelefono, validarReserva } from '../../validacion/reservas.js';
@@ -103,8 +103,10 @@ export default function NuevaReservaLocal({ idLocalInicial, alGuardar, alCerrar 
         mail: mail || null,
         comentarios: valores.comentarios.trim() || null,
       });
+      const personas = Number(valores.personas);
       alGuardar(
-        `Reserva de ${valores.nombre.trim()} guardada y confirmada.` +
+        `Reserva guardada y confirmada: ${valores.nombre.trim()}, ${formatearFecha(fecha, { conAnio: true })} ` +
+          `a las ${valores.hora}, ${personas} ${personas === 1 ? 'persona' : 'personas'}, ${getLocal(idLocal)?.nombre}.` +
           (mail ? ` Le avisamos por mail a ${mail}.` : '')
       );
     } catch (e) {
