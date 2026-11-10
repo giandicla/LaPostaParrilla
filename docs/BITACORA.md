@@ -4,6 +4,14 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-10 — Google muestra siempre el selector de cuentas
+
+Rama `fix/google-selector-de-cuenta`. Con una sola cuenta de Google abierta, "Ingresar
+con Google" entraba directo y no dejaba elegir otra: en una computadora compartida, o
+para pasar de la cuenta de cliente a la del local. Apareció en la prueba de usuario
+contra producción. `ingresarConGoogle` (`src/servicios/auth.js`) ahora manda
+`prompt=select_account`.
+
 ## 2026-11-07 — Captcha en los formularios con mail
 
 Rama `feat/captcha-turnstile` (PR #38). Prendido en producción el 2026-11-08; el
