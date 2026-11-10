@@ -159,7 +159,35 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] Si Mercado Pago pasa a credenciales reales: revisar los topes de mails (hoy pagar
       la seña en modo de prueba no cuesta plata, así que no frena a nadie).
 
-## Abiertos al 2026-11-05 (resumen para la próxima sesión)
+## Abiertos al 2026-11-10 (después de la prueba de usuario)
+
+Decisiones del usuario del 2026-11-10: **el sitio está terminado en funcionalidad**;
+queda la estética, que la marca él.
+
+- **Decidido:**
+  - **Gift cards: no se hacen.** Era lo único que la rúbrica tenía abierto en Funcionalidad.
+  - **Mercado Pago queda con las credenciales `TEST-`** (se paga sin sesión de Mercado
+    Pago, en incógnito, con tarjeta de prueba). Con cuentas de prueba en los dos lados el
+    reembolso da 401. Se comenta en la presentación.
+  - El título de `/reservas/pago` al volver sin pagar ("Falta pagar la seña") queda como
+    está: el usuario lo vio bien.
+- **Sigue abierto:**
+  - [ ] **Estética del resto del sitio**: el usuario la va marcando navegando.
+  - [ ] **Bloqueos por rango**: fecha desde y hasta, hora desde y hasta (pedido del
+        usuario, 2026-11-10). Hoy se bloquea de a un día, por turno. Cambia la tabla
+        `dias_bloqueados` y el trigger de las reservas: migración + pgTAP + `db push`.
+  - [ ] **Limpiar los datos de prueba de producción** antes de la presentación. Se suman
+        dos reservas canceladas a nombre de "Prueba Claude" (20/11 y 25/11).
+  - [ ] **Probar pagando en producción**: seña aprobada y rechazada, modificar una reserva
+        paga, cancelar con reembolso (cliente y local) y pago tardío. Lo paga el usuario.
+  - [ ] Menores de la prueba que no se tocaron (`docs/PRUEBA-DE-USUARIO.md`):
+    - el panel no salta a la fecha de la reserva recién cargada, y los avisos de la
+      acción anterior quedan arriba;
+    - todas las páginas comparten el título de la pestaña; faltan `robots.txt`,
+      `sitemap.xml` e imagen para compartir el link.
+  - [ ] Guion de la demo: **solo cuando lo pida el usuario**.
+
+## Abiertos al 2026-11-05 (reemplazado por la lista de arriba)
 
 Decisiones del usuario del 2026-11-05. Criterio: al profesor le importa que el sitio se
 vea bien y que cumpla en funcionalidad y seguridad, no el contenido.
@@ -237,8 +265,8 @@ vea bien y que cumpla en funcionalidad y seguridad, no el contenido.
       firmado, conciliación, vencimiento a los 15 minutos, bloqueo por turno. Spec:
       `docs/superpowers/specs/2026-10-15-sena-reservas-mercadopago-design.md`;
       detalle en `docs/BACKEND.md`; probada en la preview (PR #8).
-- [ ] Gift cards (spec propio)
-- [ ] Pedido para llevar (spec propio)
+- [x] ~~Gift cards~~ (descartadas por el usuario, 2026-11-10)
+- [x] ~~Pedido para llevar~~ (descartado por el usuario, 2026-11-01)
 
 **Pendientes que dejó la seña**
 

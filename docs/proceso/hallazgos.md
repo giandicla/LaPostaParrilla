@@ -691,6 +691,39 @@ Lección: decir "no toco el secreto" no alcanza si la herramienta que se usa lo 
 pantalla. Para leer un dato al lado de un secreto, conviene leer solo ese elemento de la
 página en vez de sacar una captura.
 
+### 1.40 La IA arregló el sitio cuando el usuario solo quería cambiar de cuenta (sesión 14)
+
+Durante la prueba de usuario, el usuario escribió que al tocar "Ingresar con Google" se
+ponía sola la cuenta de cliente. Quería una cosa concreta: entrar con la cuenta de admin
+en el navegador de la IA. La IA lo leyó como un error del sitio (lo era: `auth.js` no
+pedía el selector de cuentas), propuso el arreglo y el usuario lo aceptó con un botón.
+Con el PR #40 ya abierto preguntó: "¿pero para qué hiciste? yo solo quería poder
+loguearme acá con otra cuenta".
+
+El arreglo servía para las dos cosas y quedó. Pero la IA no dijo, antes de tocar código,
+que el pedido se podía resolver sin cambiar el sitio (abriendo la otra cuenta en Google)
+y que el arreglo era aparte. Lo mencionó como alternativa al final de un mensaje largo.
+
+Lección: cuando el usuario cuenta un síntoma mientras prueba, primero se responde lo que
+necesita en ese momento, y el arreglo del sitio se ofrece como decisión separada.
+
+### 1.41 La IA empezó la prueba en local cuando el usuario la quería contra producción (sesión 14)
+
+El pedido fue "un test simulando ser un usuario". La IA asumió local y perdió un rato
+con Docker, que no arrancaba (un socket viejo; llegó a renombrar una carpeta de Docker
+para destrabarlo). El usuario la interrumpió: la prueba iba contra el link real. La IA
+no había preguntado dónde probar, y en producción tampoco podía crear cuentas ni pasar
+el captcha: el usuario ingresó en el navegador y la IA siguió desde su sesión.
+
+### 1.42 La IA reportó como defecto un título que el usuario veía bien (sesión 14)
+
+El informe marcó que al volver de Mercado Pago sin pagar el título decía "Estamos
+confirmando tu pago…". El usuario abrió la misma página y vio "Falta pagar la seña",
+que está bien. La IA había mirado la página justo al volver (con `status=null` en la
+dirección) y lo anotó como defecto sin volver a mirarla. No se investigó por qué las
+dos vistas difieren; lo más probable es que la IA haya anotado un estado de paso. No se
+cambió nada.
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -929,6 +962,18 @@ irreversible. El costo fue esperar al usuario. A cambio, nada llegó a producci�
 él lo supiera.
 
 ---
+
+### 2.17 Probar como usuario encontró lo que 279 tests no miran (sesión 14)
+
+Con 156 + 123 tests en verde, la prueba contra producción encontró en una tarde dos
+errores que veía cualquier cliente: el concepto de la seña en Mercado Pago decía "2011
+12:30" (Mercado Pago saca la barra de "20/11") y el plazo decía "hasta las 12:57 a. m..".
+El test de la preferencia existía y pasaba: comprobaba el texto que mandaba el sitio, no
+lo que Mercado Pago muestra. Los dos se arreglaron el mismo día (PR #41).
+
+La misma prueba sirvió para la seguridad: en vez de releer las políticas, la IA pidió
+los datos como lo haría un atacante, sin sesión y como cliente, y la base devolvió cero
+filas ajenas.
 
 ## Parte 3 — Lo que se aprendió sobre el método
 

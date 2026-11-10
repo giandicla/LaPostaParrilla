@@ -162,7 +162,16 @@ incógnito, sin sesión de Mercado Pago**, con tarjeta de prueba (titular `APRO`
 cualquier mail que no sea de una cuenta de prueba. Pagar con la sesión de una cuenta de
 prueba da "Una de las partes con la que intentás hacer el pago es de prueba". La
 búsqueda de pagos (`/v1/payments/search`) no devuelve nada en sandbox: un pago se
-consulta por su número de operación. Lo que sigue es cómo era antes.
+consulta por su número de operación.
+
+**Por qué no cuentas de prueba en los dos lados** (pregunta del usuario, 2026-11-10):
+Mercado Pago tiene dos formas de probar que no se mezclan. Las credenciales `TEST-` son
+de una cuenta real en modo sandbox; las cuentas de prueba (vendedor y comprador) son
+usuarios ficticios con credenciales `APP_USR-` que solo operan entre ellos. Con vendedor
+y comprador de prueba el pago anda, pero el reembolso da 401 (`hallazgos.md` 1.18 y
+1.35). Por eso el sitio usa `TEST-`, y por eso un comprador de prueba no le puede pagar.
+
+Lo que sigue es cómo era antes.
 
 
 No hay entorno Sandbox: se prueba **sobre la API real, con cuentas de prueba** y

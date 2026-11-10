@@ -9,7 +9,7 @@ pendiente vive en `docs/PENDIENTES.md`; acá va el mapa contra la rúbrica.
 
 Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis) · ❌ falta
 
-Última revisión: **2026-11-05** (sesión 11: tests de rutas y componentes; franjas y horarios descartados).
+Última revisión: **2026-11-10** (sesión 14: prueba de usuario contra producción; gift cards descartadas).
 
 ---
 
@@ -38,13 +38,13 @@ Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis)
 | E3 | Formularios dinámicos con fetch + validación | 15% | ✅ (a confirmar en la preview, ya conectada a la base) | `/reservas`: franjas y días bloqueados pedidos a la base, horarios filtrados en vivo, errores de la base traducidos, pantalla de éxito. **Validación propia** (`src/validacion/reservas.js`, con tests en `node --test`): mensaje por campo al salir de él, revalida mientras se corrige, resumen y foco al primer error al enviar, `aria-invalid` + `aria-describedby`, contador de caracteres. Admin: editar reserva, bloquear días y **nueva reserva del local** validados igual. Más de 6 personas: "Reservar por WhatsApp" con el mensaje armado. **La base repite las reglas** (trigger `validar_contacto`, tests pgTAP 03 y 04) | Probarlo a mano con sesión en la preview |
 | E4 | Catálogo navegable + API básica | 20% | ✅ (en producción desde el 2026-10-29, probado por el usuario) | Criterio Excelente de la grilla, textual: **"Catálogo + API interna, lógica funcional y checklist en PRs"**. La carta vive en la base y se sirve por una **API propia**: `GET /api/v1/carta?local=` (pública, cacheada) y escrituras del admin (`POST/PATCH/DELETE` en `items`, bodegas y cubierto) con Zod, códigos HTTP y errores en castellano. **Lógica:** armado de la carta (secciones propias + compartidas, vinos por bodega, orden), validación en front, API y base, permisos de admin. `/carta` lee la API con la estética de la carta impresa; índice por sección y toggle de local. PRs con plantilla y checklist | Probarlo en la preview. **Nota (sesión 06):** la versión anterior de esta fila decía que faltaban "búsqueda, filtros, agotado". Esa lista la había escrito la IA, no la cátedra; el usuario decidió no hacerlos (`hallazgos.md` 1.25) |
 | E5 | CRUD en Supabase + admin | 20% | ✅ (en producción desde el 2026-10-29, probado por el usuario) | Reservas: crear (cliente y admin, con reservas del local sin cuenta; una por turno), listar (Mis reservas paginada), **modificar desde la web** (fecha, hora y personas, hasta 1 hora antes), cancelar, confirmar/rechazar; **editar desde el panel** (fecha, hora, personas y contacto); notas; días bloqueados; tiempo real. **Carta (sesión 06):** tablas `carta_secciones` y `carta_items` con RLS, trigger de reglas y funciones de orden; `/admin/carta` (editor v2): una caja para agregar o editar, con buscador y categoría desplegable; la carta abajo con arrastre (mouse, dedo y teclado), Editar y Eliminar; los vinos como carta aparte, compartida. pgTAP: 9 archivos, 150 asserts | Mantenerlo. "Editar franjas y horarios desde el panel" figuraba acá como faltante: venía del spec del backend (parte 3), no de la grilla. Descartado por el usuario el 2026-11-05 (`hallazgos.md` 1.37) |
-| E6 | Checkout + webhook | 20% | ✅ (seña de la reserva) | **Seña de la reserva con Mercado Pago** (Checkout Pro): la preferencia se crea en el servidor (`POST /api/v1/pagos`, monto leído de la base, nunca del navegador); **webhook firmado** (`POST /api/webhooks/mercadopago`, HMAC-SHA256 de `x-signature`); el estado real sale de `GET /v1/payments/:id`; **conciliación** por `external_reference` con `acreditar_pago()`, idempotente (Mercado Pago repite avisos) y con manejo de pago tardío y de cobro doble; **cancelación con reembolso** (`POST /api/v1/reservas/:id/cancelacion`, desde 2026-11-04): cancele el cliente o el local, o si el pago llega tarde, se pide el reembolso con `PaymentRefund` (idempotente) y el **webhook confirma** cuando el pago vuelve `refunded`; probado de punta a punta con Checkout Pro en sandbox (pago, cancelación, reembolso acreditado en Mercado Pago); vencimiento a los 15 minutos con `pg_cron`. Tests: pgTAP 7 archivos / 97 asserts, `node --test` 64, Deno 13. **Probado de punta a punta en la preview de Vercel** el 2026-10-18 (pago aprobado y rechazado con reintento, cancelación del cliente y del admin). Detalle en `docs/BACKEND.md` | Reembolsos: del 01 al 04/11 se sacaron porque con las credenciales del vendedor de prueba Mercado Pago responde 401 (`hallazgos.md` 1.18); con la sugerencia de la ayudante se encontró que con las credenciales `TEST-` de la aplicación sí funcionan (1.35) y volvieron. Pedido para llevar: descartado. Gift cards: en evaluación |
+| E6 | Checkout + webhook | 20% | ✅ (seña de la reserva) | **Seña de la reserva con Mercado Pago** (Checkout Pro): la preferencia se crea en el servidor (`POST /api/v1/pagos`, monto leído de la base, nunca del navegador); **webhook firmado** (`POST /api/webhooks/mercadopago`, HMAC-SHA256 de `x-signature`); el estado real sale de `GET /v1/payments/:id`; **conciliación** por `external_reference` con `acreditar_pago()`, idempotente (Mercado Pago repite avisos) y con manejo de pago tardío y de cobro doble; **cancelación con reembolso** (`POST /api/v1/reservas/:id/cancelacion`, desde 2026-11-04): cancele el cliente o el local, o si el pago llega tarde, se pide el reembolso con `PaymentRefund` (idempotente) y el **webhook confirma** cuando el pago vuelve `refunded`; probado de punta a punta con Checkout Pro en sandbox (pago, cancelación, reembolso acreditado en Mercado Pago); vencimiento a los 15 minutos con `pg_cron`. Tests: pgTAP 7 archivos / 97 asserts, `node --test` 64, Deno 13. **Probado de punta a punta en la preview de Vercel** el 2026-10-18 (pago aprobado y rechazado con reintento, cancelación del cliente y del admin). Detalle en `docs/BACKEND.md` | Reembolsos: del 01 al 04/11 se sacaron porque con las credenciales del vendedor de prueba Mercado Pago responde 401 (`hallazgos.md` 1.18); con la sugerencia de la ayudante se encontró que con las credenciales `TEST-` de la aplicación sí funcionan (1.35) y volvieron. Pedido para llevar: descartado (2026-11-01). Gift cards: descartadas (decisión del usuario, 2026-11-10) |
 
 ## Criterios transversales (todos tienen que ser Excelente)
 
 | Criterio | Peso | Estado | Qué hay | Qué falta |
 |---|---|---|---|---|
-| Funcionalidad | 40% | 🟡 | Reservas reales en producción, login con Google **o con mail y contraseña** (crear cuenta con confirmación por mail y recuperación de contraseña, 2026-11-03), admin con tiempo real, **seña con Mercado Pago** (2026-10-18), **carta editable desde el panel** con API propia y vinos compartidos (2026-10-29) | Gift cards (en evaluación). Los mails de reservas salen desde el 2026-11-02 (Brevo) |
+| Funcionalidad | 40% | ✅ (2026-11-10) | Reservas reales en producción, login con Google **o con mail y contraseña** (crear cuenta con confirmación por mail y recuperación de contraseña, 2026-11-03), admin con tiempo real, **seña con Mercado Pago** (2026-10-18), **carta editable desde el panel** con API propia y vinos compartidos (2026-10-29) | Mantenerlo. Gift cards: **descartadas** por el usuario el 2026-11-10 (era lo único abierto). **Prueba de usuario contra producción** el 2026-11-10 (`docs/PRUEBA-DE-USUARIO.md`): visitante, cliente y panel del local, sin errores de funcionamiento; lo que apareció se arregló el mismo día (PRs #40 a #44). Los mails de reservas salen desde el 2026-11-02 (Brevo) |
 | Código / Estructura | 20% | ✅ (2026-11-05) | Componentes por carpeta, capa `src/servicios/`, datos separados, migraciones, lint limpio. Tests en cuatro niveles (al 2026-11-08): funciones puras del front y del servidor (`node --test`, 156), **rutas de `app/api/` y componentes React** (Vitest + Testing Library, 123 en total: cada ruta con su código HTTP de éxito y de error, la firma del webhook, el caché de la carta; los formularios con su validación, foco y `aria-*`, el menú mobile y la sesión), base (pgTAP, 203 en 15 archivos) y Edge Function (Deno, 21). El código de servidor de pagos y de la carta vive aparte, en `src/servidor/`, y recibe la base (y Mercado Pago) por parámetro para testearse sin red | Mantenerlo |
 | Interfaz / Accesibilidad | 15% | ✅ | Marca real, contraste calculado y verificado con axe, teclado y foco atrapado en el menú, Lighthouse Accesibilidad 100 en las páginas públicas | LCP en celular (ver `QA-MANUAL.md`) |
 | Despliegue | 15% | ✅ | https://lapostaparrilla.vercel.app, estable, deploy automático; previews por PR conectadas a la base; migraciones aplicadas con `supabase db push` | Mantener |
@@ -61,6 +61,10 @@ decisión del usuario del 2026-11-05). Al 2026-11-08:
   - topes de reservas, cambios y pagos (PR #37);
   - captcha de Cloudflare Turnstile en los formularios con mail (PR #38).
 - Cabeceras contra el clickjacking.
+- **Prueba desde las herramientas de desarrollador** (2026-11-10, contra producción, solo
+  lecturas): sin claves secretas en el JavaScript, sin mapas de código, y la base no
+  devuelve filas ajenas ni sin sesión ni como cliente. Detalle en
+  `docs/PRUEBA-DE-USUARIO.md`, sección 2 bis.
 
 Detalle en `docs/proceso/sesion-12-2026-11-06.md` y `sesion-13-2026-11-08.md`.
 
@@ -72,8 +76,9 @@ Tomadas por el usuario el 2026-10-08 (sesión 03):
 
 1. **Qué se cobra con Mercado Pago: las tres cosas.** El local hace take away.
    - **Seña de la reserva.**
-   - **Gift cards** (voucher de regalo).
+   - **Gift cards** (voucher de regalo). Descartadas el 2026-11-10.
    - **Pedido para llevar** (carrito sobre la carta) — refuerza también E4.
+     Descartado el 2026-11-01.
 2. **Flujo rama + PR + CI desde ahora.** Cada tarea en su rama, PR con el checklist
    de `.github/pull_request_template.md`, CI en GitHub Actions y preview de Vercel.
    No se mergea sin el OK del usuario.
@@ -88,8 +93,8 @@ Tomadas por el usuario el 2026-10-08 (sesión 03):
 3. ~~E4 — API de la carta + lógica del catálogo~~ (sesión 06).
 4. ~~E3 — validación propia y accesible en los formularios~~ (sesión 03, PR #2).
 5. E6 — Mercado Pago: checkout + webhook + pruebas, en este orden: ~~seña de la
-   reserva~~ (sesión 05, 2026-10-18), gift cards (en evaluación), ~~pedido para
-   llevar~~ (descartado por el usuario, 2026-11-01).
+   reserva~~ (sesión 05, 2026-10-18), ~~gift cards~~ (descartadas por el usuario,
+   2026-11-10), ~~pedido para llevar~~ (descartado por el usuario, 2026-11-01).
 6. ~~E5 — carta editable desde el admin~~ (sesión 06; editor v2 el mismo día, sin PDF).
 7. ~~E2 — pase de accesibilidad (foco del menú, Lighthouse/axe)~~ (sesión 07); QA manual.
 8. Demo — guion de la demo y preparación de la defensa técnica. **Lo pide el usuario

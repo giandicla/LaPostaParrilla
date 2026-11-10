@@ -61,8 +61,8 @@ modificar la reserva desde "Mis reservas", una reserva por turno, seña no
 reembolsable si cancela el cliente, días bloqueados en su propia pestaña del panel,
 accesibilidad (Lighthouse 100) y rendimiento en el celular.
 
-Pendiente: gift cards (en evaluación). El pedido para llevar se descartó (decisión del
-usuario, 2026-11-01). El mapa completo contra la rúbrica de corrección está en
+Las gift cards y el pedido para llevar se descartaron (decisiones del usuario,
+2026-11-10 y 2026-11-01). El mapa completo contra la rúbrica de corrección está en
 `docs/RUBRICA.md`; lo que falta, en `docs/PENDIENTES.md`.
 
 ## Cómo se trabaja
