@@ -1,7 +1,12 @@
 // node --test "src/**/*.test.js"
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { estadoSena, estadoVisible, horaDeVencimiento, puedePagar, sePuedeCancelar, sePuedeModificar, sigueMirandoElPago, turnoDe } from './reservas.js';
+import { estadoSena, estadoVisible, formatearFecha, horaDeVencimiento, puedePagar, sePuedeCancelar, sePuedeModificar, sigueMirandoElPago, turnoDe } from './reservas.js';
+
+test('la fecha se escribe con el día de la semana; el año, solo si se pide', () => {
+  assert.equal(formatearFecha('2027-03-10'), 'miércoles, 10 de marzo');
+  assert.equal(formatearFecha('2027-03-10', { conAnio: true }), 'miércoles, 10 de marzo de 2027');
+});
 
 test('la hora en que vence el pago va en 24 horas, hora de Argentina, sin "a. m."', () => {
   // 03:42 UTC + 15 minutos = 00:57 en Argentina

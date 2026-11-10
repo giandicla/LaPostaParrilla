@@ -223,6 +223,9 @@ function FormularioReserva({ idInicial }) {
 
   const cambiar = (campo, valor, { tocar = false } = {}) => {
     setValores((anteriores) => ({ ...anteriores, [campo]: valor }));
+    // El error del envío ("Ya tenés una reserva en ese turno…") habla de la fecha
+    // y la hora de antes: al cambiarlas deja de valer
+    if (campo === 'fecha' || campo === 'hora') setError('');
     if (tocar) setTocados((anteriores) => ({ ...anteriores, [campo]: true }));
   };
   const alSalir = (campo) => () => setTocados((anteriores) => ({ ...anteriores, [campo]: true }));

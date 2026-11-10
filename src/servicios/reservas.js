@@ -172,11 +172,14 @@ export const turnoDe = (hora) => (hora.slice(0, 5) < '17:00' ? 'mediodia' : 'noc
 
 export const TURNOS = { mediodia: 'Mediodía', noche: 'Noche' };
 
-export const formatearFecha = (fecha) =>
+// "2027-03-10" → "miércoles, 10 de marzo"; con conAnio, "… de 2027" (los días
+// bloqueados se cargan con meses de anticipación)
+export const formatearFecha = (fecha, { conAnio = false } = {}) =>
   new Intl.DateTimeFormat('es-AR', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
+    ...(conAnio && { year: 'numeric' }),
     timeZone: 'UTC',
   }).format(new Date(`${fecha}T00:00:00Z`));
 

@@ -103,7 +103,7 @@ function DiasBloqueados({ alError }) {
           {bloqueos.map((b) => (
             <li key={b.id}>
               <span>
-                <strong>{formatearFecha(b.fecha)}</strong> · {b.local_id ? getLocal(b.local_id)?.nombre : 'los dos locales'}
+                <strong>{formatearFecha(b.fecha, { conAnio: true })}</strong> · {b.local_id ? getLocal(b.local_id)?.nombre : 'los dos locales'}
                 {b.turno ? ` · ${TURNOS[b.turno].toLowerCase()}` : ' · todo el día'}
                 {b.motivo && ` · ${b.motivo}`}
               </span>

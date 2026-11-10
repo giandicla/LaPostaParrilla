@@ -4,6 +4,15 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-10 — Aviso viejo en /reservas y año en los días bloqueados
+
+Rama `fix/aviso-de-turno-y-anio-en-bloqueos`. Dos menores de la prueba de usuario:
+
+- **`/reservas`:** el error del envío ("Ya tenés una reserva en ese turno…") quedaba en
+  pantalla después de cambiar la fecha o la hora. Ahora se borra al cambiarlas.
+- **Días bloqueados:** la lista muestra el año ("miércoles, 10 de marzo de 2027");
+  `formatearFecha` acepta `{ conAnio: true }`.
+
 ## 2026-11-10 — El panel arranca en las confirmadas
 
 Rama `feat/admin-confirmadas-por-defecto`. Pedido del usuario: al abrir `/admin`, el
