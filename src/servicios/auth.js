@@ -9,12 +9,18 @@ import { normalizarMail } from '../validacion/cuenta.js';
 const urlDeVuelta = (ruta = '/') =>
   typeof window === 'undefined' ? undefined : `${window.location.origin}${ruta}`;
 
+// prompt=select_account: Google muestra siempre el selector de cuentas. Sin
+// eso, con una sola cuenta abierta entra directo y no deja elegir otra (en una
+// computadora compartida, o para pasar de la cuenta de cliente a la del local).
+// Exportada solo para las pruebas.
+export const opcionesDeGoogle = (volverA) => ({
+  redirectTo: urlDeVuelta(volverA),
+  queryParams: { prompt: 'select_account' },
+});
+
 export const ingresarConGoogle = async (volverA) =>
   resultado(
-    await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: { redirectTo: urlDeVuelta(volverA) },
-    })
+    await supabase.auth.signInWithOAuth({ provider: 'google', options: opcionesDeGoogle(volverA) })
   );
 
 // Supabase limita los mails a uno por minuto **por cuenta** ("you can only

@@ -1,6 +1,11 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { esEsperaDeLaCuenta, guardarTelefonoDelPerfil, resultadoDeRegistro } from './auth.js';
+import { esEsperaDeLaCuenta, guardarTelefonoDelPerfil, opcionesDeGoogle, resultadoDeRegistro } from './auth.js';
+
+test('ingresar con Google pide siempre el selector de cuentas', () => {
+  // Sin esto, con una sola cuenta abierta Google entra directo y no deja elegir otra
+  assert.deepEqual(opcionesDeGoogle('/admin').queryParams, { prompt: 'select_account' });
+});
 
 test('si guardar el teléfono falla, no corta la reserva: devuelve false sin lanzar', async () => {
   // En los tests no hay cliente de Supabase: la llamada falla adentro
