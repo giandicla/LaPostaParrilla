@@ -2,6 +2,7 @@ import { Libre_Baskerville, Cabin } from 'next/font/google';
 import Navbar from '../src/components/Navbar/Navbar.jsx';
 import Footer from '../src/components/Footer/Footer.jsx';
 import SesionProvider from '../src/components/SesionProvider/SesionProvider.jsx';
+import { MARCA } from '../src/data/marca.js';
 import '../src/styles/tokens.css';
 import '../src/styles/global.css';
 
@@ -22,10 +23,26 @@ const cabin = Cabin({
   variable: '--fuente-cuerpo',
 });
 
+const TITULO = 'La Posta · Parrilla & Restaurante · Villa La Angostura';
+const DESCRIPCION =
+  'La Posta — Parrilla y Restaurante en Villa La Angostura. Dos salones, cocina patagónica y reservas online.';
+
+// El título de cada sección lo pone su layout.jsx ("Carta · La Posta"); el inicio
+// usa el completo. La imagen es la que muestran WhatsApp y las redes al pegar el
+// link (public/img/compartir.jpg, 1200 × 630).
 export const metadata = {
-  title: 'La Posta · Parrilla & Restaurante · Villa La Angostura',
-  description:
-    'La Posta — Parrilla y Restaurante en Villa La Angostura. Dos salones, cocina patagónica y reservas online.',
+  metadataBase: new URL(MARCA.sitio),
+  title: { default: TITULO, template: '%s · La Posta' },
+  description: DESCRIPCION,
+  openGraph: {
+    type: 'website',
+    siteName: MARCA.nombreCompleto,
+    locale: 'es_AR',
+    title: TITULO,
+    description: DESCRIPCION,
+    images: [{ url: '/img/compartir.jpg', width: 1200, height: 630, alt: 'Cordero patagónico y una copa de vino en La Posta' }],
+  },
+  twitter: { card: 'summary_large_image' },
 };
 
 export const viewport = {

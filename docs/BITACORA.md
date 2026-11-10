@@ -4,6 +4,22 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-10 — Aviso del panel, títulos por página, robots, sitemap e imagen al compartir
+
+Rama `feat/aviso-del-panel-y-metadatos`. Pedidos del usuario después de la prueba.
+
+- **Panel:** el aviso de una reserva cargada por el local trae sus datos ("Reserva
+  guardada y confirmada: nombre, fecha, hora, personas, local") y se va solo a los 8
+  segundos; "Ok" lo cierra antes. El aviso de una reserva que entró por la web no se va
+  solo.
+- **Título de la pestaña por sección** ("Carta · La Posta", "Reservas · La Posta"…): un
+  `layout.jsx` por carpeta, porque las páginas son componentes de cliente. El panel, la
+  cuenta y el pago llevan `noindex`.
+- **`app/robots.js` y `app/sitemap.js`**: `/robots.txt` y `/sitemap.xml` con las cuatro
+  páginas públicas. La dirección sale de `MARCA.sitio`.
+- **Imagen al compartir el link** (`public/img/compartir.jpg`, 1200 × 630: el cordero del
+  inicio y el logo sobre bordo), por Open Graph.
+
 ## 2026-11-10 — Aviso viejo en /reservas y año en los días bloqueados
 
 Rama `fix/aviso-de-turno-y-anio-en-bloqueos`. Dos menores de la prueba de usuario:

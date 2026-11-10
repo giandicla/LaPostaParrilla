@@ -33,6 +33,8 @@ import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
 const MOTIVO_SUGERIDO = 'No hay lugar';
+// Cuánto queda en pantalla el aviso de "Reserva guardada…"
+const SEGUNDOS_DEL_AVISO = 8;
 
 // ---------------------------------------------------------------------
 // Una reserva en el panel: datos, acciones según el estado, editar, nota
@@ -266,10 +268,20 @@ function Panel() {
   const [reservas, setReservas] = useState(null);
   const [franjas, setFranjas] = useState({});
   const [error, setError] = useState('');
-  const [novedad, setNovedad] = useState('');
+  // { texto, seVa }: seVa es true para el aviso de una acción propia
+  const [novedad, setNovedad] = useState(null);
   // Subirlo vuelve a pedir la lista: después de una acción o de un aviso en tiempo real
   const [version, setVersion] = useState(0);
   const cargar = useCallback(() => setVersion((v) => v + 1), []);
+
+  // El aviso de una acción propia ("Reserva guardada…") se va solo: si queda,
+  // parece hablar de lo que se hace después. "Ok" lo cierra antes. El de una
+  // reserva que entró por la web se queda hasta que alguien lo vea.
+  useEffect(() => {
+    if (!novedad?.seVa) return undefined;
+    const reloj = setTimeout(() => setNovedad(null), SEGUNDOS_DEL_AVISO * 1000);
+    return () => clearTimeout(reloj);
+  }, [novedad]);
 
   useEffect(() => {
     // Si los filtros cambian antes de que llegue la respuesta, esa respuesta
@@ -302,7 +314,7 @@ function Panel() {
       escucharReservas((cambio) => {
         const { id, estado, nombre } = cambio.new ?? {};
         if (cambio.eventType === 'UPDATE' && estado === 'confirmada' && estadosEnPantalla.current[id] === 'esperando_pago') {
-          setNovedad(`Entró una reserva nueva de ${nombre}, con la seña paga.`);
+          setNovedad({ texto: `Entró una reserva nueva de ${nombre}, con la seña paga.`, seVa: false });
         }
         cargar();
       }),
@@ -330,7 +342,7 @@ function Panel() {
           idLocalInicial={nueva}
           alGuardar={(mensaje) => {
             setNueva(null);
-            setNovedad(mensaje);
+            setNovedad({ texto: mensaje, seVa: true });
             cargar();
           }}
           alCerrar={() => setNueva(null)}
@@ -339,8 +351,8 @@ function Panel() {
 
       {novedad && (
         <p className={formulario.exito} role="status">
-          {novedad}{' '}
-          <button type="button" className={estilos.botonTexto} onClick={() => setNovedad('')}>Ok</button>
+          {novedad.texto}{' '}
+          <button type="button" className={estilos.botonTexto} onClick={() => setNovedad(null)}>Ok</button>
         </p>
       )}
       {error && (
