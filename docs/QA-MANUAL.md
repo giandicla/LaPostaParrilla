@@ -248,8 +248,11 @@ locales bajo una marca" — es lo más importante de probar):**
 > pagada queda confirmada; solo cancela, con motivo, o mueve).
 >
 > Se prueba **en la preview de la rama** (Mercado Pago no llega a `localhost`),
-> con una ventana de **incógnito** y la **cuenta compradora de prueba** de
-> Mercado Pago (ids y credenciales en `docs/BACKEND.md`). Es plata ficticia, pero
+> con una ventana de **incógnito y sin iniciar sesión en Mercado Pago**: se paga como
+> invitado, con tarjeta de prueba. Con la sesión de una cuenta de prueba (o cualquier
+> sesión de Mercado Pago abierta en ese navegador) falla con "Una de las partes con la
+> que intentás hacer el pago es de prueba" (le pasó al usuario el 2026-11-10; el porqué,
+> en `docs/BACKEND.md`, "Cuentas de prueba y modo de prueba"). Es plata ficticia, pero
 > **la preview usa la base de producción**: las reservas que se creen quedan como
 > filas reales; cancelarlas o anotarlas en la bitácora al terminar. Con la
 > protección de Vercel prendida el webhook no llega: ver `docs/BACKEND.md`.

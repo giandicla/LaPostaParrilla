@@ -26,6 +26,7 @@ donde no se esperaba, y las decisiones que hubo que tomar a mitad de camino.
 | `sesion-11-2026-11-05.md` | Undécima sesión: tests de rutas y componentes, menores del ingreso y de la seña, estética del inicio |
 | `sesion-12-2026-11-06.md` | Duodécima sesión: auditoría de seguridad (skill de Cloudflare, perfil deep) y sus arreglos |
 | `sesion-13-2026-11-08.md` | Decimotercera sesión: los arreglos a producción y el captcha de Cloudflare Turnstile |
+| `sesion-14-2026-11-10.md` | Decimocuarta sesión: prueba de usuario contra producción (visitante, cliente, admin y herramientas de desarrollador) y los arreglos que salieron de ahí |
 | `hallazgos.md` | Lo analítico: dónde falló la IA, dónde sorprendió, qué se aprendió |
 | `metodo.md` | Cómo se organizó el trabajo y por qué |
 | `ledger-sesion-01.md` | El registro crudo de la sesión, sin editar: las decisiones tal como se tomaron |
