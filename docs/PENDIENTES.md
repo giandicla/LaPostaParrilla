@@ -144,6 +144,21 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] **Falta textura humana**: no hay gente, familia, reseñas, Instagram, ni detalles
       de la carta impresa (papel, tipografía de menú). Todo es foto de producto.
 
+## Seguridad (2026-11-06 al 08)
+
+- [x] Auditoría de seguridad (skill `security-audit` de Cloudflare, perfil deep): 6 puntos,
+      los 6 arreglados y en producción (PR #37 y #38). Informe fuera del repo, en
+      `~/security-audit-skill/LaPostaParrilla/run-1/`.
+- [ ] Endurecimientos menores que el informe deja anotados y no se tocaron:
+  - frescura de la firma del webhook (`ts`);
+  - comparación en tiempo constante del secreto en la Edge Function;
+  - bloque `permissions:` y versiones fijas en CI;
+  - una política de contenido (CSP) completa.
+
+  Ninguno es un hallazgo.
+- [ ] Si Mercado Pago pasa a credenciales reales: revisar los topes de mails (hoy pagar
+      la seña en modo de prueba no cuesta plata, así que no frena a nadie).
+
 ## Abiertos al 2026-11-05 (resumen para la próxima sesión)
 
 Decisiones del usuario del 2026-11-05. Criterio: al profesor le importa que el sitio se

@@ -29,9 +29,14 @@ restaurante.
   (http://127.0.0.1:54324). El servidor de mails de fábrica de Supabase no le entrega a
   clientes: no apagar el SMTP de producción. Antes de un `config push`, mirar
   `npx supabase config diff`.
+- **Los formularios con mail llevan captcha** (Cloudflare Turnstile, desde 2026-11-08):
+  componente `Captcha`, bloque `[auth.captcha]` de `supabase/config.toml`, secreto
+  `TURNSTILE_SECRET` en `supabase/.env`. En local van las claves de prueba de Cloudflare;
+  en las previews no valida (ahí se ingresa con Google). Producción solo acepta volver
+  a su propio dominio después de Auth (`[remotes.produccion.auth]`). Ver `docs/BACKEND.md`.
 - **Toda llamada a Supabase pasa por `src/servicios/`.** Ningún componente
   importa `@supabase/supabase-js`. Las reglas de negocio (6 personas, 1 hora para cancelar,
-  franjas, una reserva por turno, modificar hasta 1 hora antes, seña y vencimiento) viven en la base, no en los componentes.
+  franjas, una reserva por turno, modificar hasta 1 hora antes, seña y vencimiento, y los topes de uso: 10 reservas web por cliente cada 24 h, 3 cambios por reserva, 5 pagos por reserva) viven en la base, no en los componentes.
   **Única excepción: `src/servidor/`**, el código que usan solo las rutas de
   `app/api/`. Ahí se crean clientes propios, incluido uno con la clave secreta
   (`SUPABASE_SECRET_KEY`, se saltea la RLS) para la tabla `pagos`. Ningún componente
@@ -49,7 +54,7 @@ base de pruebas): lo que se haga en una preview queda en los datos reales.
 
 - Las rutas son carpetas en `app/`. Cada página es `app/<ruta>/page.jsx`.
 - **Server Components por defecto.** `'use client'` va en `Navbar`,
-  `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `SelloMercadoPago`,
+  `SelectorLocal`, `SesionProvider`, `RequiereSesion`, `SelloMercadoPago`, `Captcha`,
   `app/carta`, y en las páginas que usan la sesión: `reservas`, `reservas/pago`,
   `ingresar`, `ingresar/contrasena`, `mis-reservas`, `admin`, `admin/dia`, `admin/bloqueos`, `admin/carta`. Todas las páginas
   siguen prerenderizándose como estáticas; las únicas rutas dinámicas son las de

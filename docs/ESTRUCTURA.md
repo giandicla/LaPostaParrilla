@@ -62,7 +62,8 @@
 | `ModificarReserva` | `reserva`, `alGuardar`, `alCerrar` | Formulario de "Mis reservas" para cambiar fecha, hora y personas (`modificar_reserva`) |
 | `SelloMercadoPago` | — | Cartel oficial de Mercado Pago (Brand Brick de `@mercadopago/sdk-react`) bajo el botón de pagar la seña: Mercado Pago dibuja su logo y los medios de pago. Necesita `NEXT_PUBLIC_MP_PUBLIC_KEY`; sin ella no se muestra |
 | `PestanasCuenta` | `pestanas`, `activa`, `alCambiar`, `children` | Pestañas accesibles de `/ingresar` (flechas, Inicio y Fin) |
-| `FormularioCuenta` | `modo` (`ingresar` / `crear` / `olvide`), `volver`, `alCambiarModo` | Los formularios con mail de `/ingresar`. Nunca dice si un mail ya tiene cuenta |
+| `FormularioCuenta` | `modo` (`ingresar` / `crear` / `olvide`), `volver`, `alCambiarModo` | Los formularios con mail de `/ingresar`. Nunca dice si un mail ya tiene cuenta. No manda nada sin el token del captcha |
+| `Captcha` | `alCambiar(token)`, `ref` (`reiniciar()`) | Cloudflare Turnstile para los formularios con mail. En `localhost`, las claves de prueba de Cloudflare. Cada token sirve para un intento |
 | `Icono` | `nombre` (`google` / `instagram` / `whatsapp`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
 | `SeccionCarta` | `seccion`, `idAncla` | Una sección de la carta: platos (nombre, descripción, traducción EN/PT, uno o más precios) o vinos agrupados por bodega. La fuente y el filete del título los toma de la hoja que la contiene |

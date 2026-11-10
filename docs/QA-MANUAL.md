@@ -189,6 +189,13 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] Ingresar con mail y contraseña; con la contraseña mal dice "El mail o la contraseña no son correctos."; con la cuenta sin confirmar pide revisar el mail.
 - [ ] "Olvidé mi contraseña": llega "Elegí una contraseña nueva"; el link lleva a `/ingresar/contrasena`; después de guardar queda en "Mis reservas". El mismo link usado otra vez dice que venció.
 - [ ] Crear cuenta con un mail que ya tiene cuenta muestra el mismo aviso que una nueva.
+- [ ] Captcha (desde 2026-11-08): en los tres formularios con mail aparece el recuadro de
+      Cloudflare arriba del botón. A veces pasa solo y a veces pide tocar la casilla; las
+      dos cosas son normales. Tocar el botón antes de que termine avisa "Esperá a que
+      termine la verificación". En una preview de Vercel el captcha no valida: ahí se
+      prueba con Google.
+- [ ] `/ingresar?volver=%2F%5Cexample.com` con la sesión iniciada lleva a Mis reservas, no
+      a example.com.
 - [ ] Al reservar, el teléfono queda guardado (no hay casilla) y la próxima reserva lo trae escrito.
 - [ ] Lleva a la pantalla de Google y vuelve al sitio, a la página de la que venía.
 - [ ] La primera vez crea la cuenta: el nombre de Google aparece precargado al reservar.

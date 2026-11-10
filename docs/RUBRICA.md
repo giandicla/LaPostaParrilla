@@ -45,10 +45,24 @@ Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis)
 | Criterio | Peso | Estado | Qué hay | Qué falta |
 |---|---|---|---|---|
 | Funcionalidad | 40% | 🟡 | Reservas reales en producción, login con Google **o con mail y contraseña** (crear cuenta con confirmación por mail y recuperación de contraseña, 2026-11-03), admin con tiempo real, **seña con Mercado Pago** (2026-10-18), **carta editable desde el panel** con API propia y vinos compartidos (2026-10-29) | Gift cards (en evaluación). Los mails de reservas salen desde el 2026-11-02 (Brevo) |
-| Código / Estructura | 20% | ✅ (2026-11-05) | Componentes por carpeta, capa `src/servicios/`, datos separados, migraciones, lint limpio. Tests en cuatro niveles: funciones puras del front y del servidor (`node --test`, 148), **rutas de `app/api/` y componentes React** (Vitest + Testing Library, 59 + 63: cada ruta con su código HTTP de éxito y de error, la firma del webhook, el caché de la carta; los formularios con su validación, foco y `aria-*`, el menú mobile y la sesión), base (pgTAP, 191 en 14 archivos) y Edge Function (Deno, 21). El código de servidor de pagos y de la carta vive aparte, en `src/servidor/`, y recibe la base (y Mercado Pago) por parámetro para testearse sin red | Mantenerlo |
+| Código / Estructura | 20% | ✅ (2026-11-05) | Componentes por carpeta, capa `src/servicios/`, datos separados, migraciones, lint limpio. Tests en cuatro niveles (al 2026-11-08): funciones puras del front y del servidor (`node --test`, 156), **rutas de `app/api/` y componentes React** (Vitest + Testing Library, 123 en total: cada ruta con su código HTTP de éxito y de error, la firma del webhook, el caché de la carta; los formularios con su validación, foco y `aria-*`, el menú mobile y la sesión), base (pgTAP, 203 en 15 archivos) y Edge Function (Deno, 21). El código de servidor de pagos y de la carta vive aparte, en `src/servidor/`, y recibe la base (y Mercado Pago) por parámetro para testearse sin red | Mantenerlo |
 | Interfaz / Accesibilidad | 15% | ✅ | Marca real, contraste calculado y verificado con axe, teclado y foco atrapado en el menú, Lighthouse Accesibilidad 100 en las páginas públicas | LCP en celular (ver `QA-MANUAL.md`) |
 | Despliegue | 15% | ✅ | https://lapostaparrilla.vercel.app, estable, deploy automático; previews por PR conectadas a la base; migraciones aplicadas con `supabase db push` | Mantener |
-| Documentación | 10% | ✅ | `CLAUDE.md`, `README.md` y `docs/` al día, registro del proceso con IA (hasta la sesión 08, con lo que hubo que pedir de nuevo), specs por feature, pagos y variables de entorno documentados en `docs/BACKEND.md`, checklist de QA de la seña | Mantenerlo |
+| Documentación | 10% | ✅ (2026-11-08) | `CLAUDE.md`, `README.md` y `docs/` al día, registro del proceso con IA (hasta la sesión 13, con lo que hubo que pedir de nuevo), specs por feature, pagos y variables de entorno documentados en `docs/BACKEND.md`, checklist de QA de la seña | Mantenerlo |
+
+**Seguridad** (no es un criterio aparte de la grilla, pero el profesor la evalúa;
+decisión del usuario del 2026-11-05). Al 2026-11-08:
+- RLS en todas las tablas y reglas de negocio en la base.
+- Webhook de Mercado Pago firmado e idempotente, y claves secretas solo en el servidor.
+- **Auditoría de seguridad** (2026-11-06, skill `security-audit` de Cloudflare, perfil
+  deep). Encontró 6 puntos y los 6 están arreglados en producción:
+  - redirect abierto de `/ingresar`;
+  - comodín de previews en los redirects de Auth;
+  - topes de reservas, cambios y pagos (PR #37);
+  - captcha de Cloudflare Turnstile en los formularios con mail (PR #38).
+- Cabeceras contra el clickjacking.
+
+Detalle en `docs/proceso/sesion-12-2026-11-06.md` y `sesion-13-2026-11-08.md`.
 
 ---
 
