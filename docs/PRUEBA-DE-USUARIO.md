@@ -17,6 +17,9 @@ sigue abajo, tal como se anotó durante la prueba):
 | El aviso "Ya tenés una reserva en ese turno…" quedaba al cambiar la fecha | Arreglado, PR #44 |
 | La lista de días bloqueados no mostraba el año | Arreglado, PR #44 |
 | Título al volver de Mercado Pago sin pagar | Queda como está: el usuario lo vio y dice "Falta pagar la seña" |
+| El aviso "Reserva guardada" quedaba arriba | Ahora trae los datos y se va solo, PR #46 |
+| Mismo título en todas las pestañas; sin `robots.txt`, `sitemap.xml` ni imagen al compartir | Hecho, PR #46 |
+| Bloqueos de a un día y un turno | Bloqueos por rango de fechas y de horas, PR #47 |
 | Resto de las observaciones | Sin tocar; en `docs/PENDIENTES.md` |
 
 Leyenda: ✅ anda como se espera · ⚠️ anda, con una observación · ❌ falla · ⏳ sin probar todavía
