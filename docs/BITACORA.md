@@ -4,6 +4,12 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-10 — El panel arranca en las confirmadas
+
+Rama `feat/admin-confirmadas-por-defecto`. Pedido del usuario: al abrir `/admin`, el
+filtro de estado arranca en "Confirmada" (antes "Todos"), porque es lo que el local
+quiere ver primero. El resto de los estados sigue en el mismo desplegable.
+
 ## 2026-11-10 — Diálogos con el estilo del sitio
 
 Rama `feat/dialogos-del-sitio`. Lo pidió el usuario después de la prueba del panel:

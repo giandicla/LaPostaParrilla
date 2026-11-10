@@ -260,7 +260,9 @@ function Panel() {
   const parametros = useSearchParams();
   const localPedido = parametros.get('local');
   const [nueva, setNueva] = useState(esIdDeLocal(localPedido) ? localPedido : null);
-  const [filtros, setFiltros] = useState({ fecha: hoyEnArgentina(), idLocal: '', estado: '' });
+  // Arranca en las confirmadas de hoy: es lo que el local quiere ver primero.
+  // Las canceladas, vencidas y sin pagar siguen a un cambio de filtro.
+  const [filtros, setFiltros] = useState({ fecha: hoyEnArgentina(), idLocal: '', estado: 'confirmada' });
   const [reservas, setReservas] = useState(null);
   const [franjas, setFranjas] = useState({});
   const [error, setError] = useState('');
