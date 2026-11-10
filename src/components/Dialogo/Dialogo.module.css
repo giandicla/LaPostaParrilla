@@ -1,0 +1,52 @@
+/* El <dialog> ocupa solo su caja; el fondo oscuro es ::backdrop. Sin padding
+   propio para que un clic en el borde no cuente como "afuera". */
+.dialogo {
+  width: min(92vw, 30rem);
+  max-height: 90vh;
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  background-color: var(--blanco);
+  color: var(--carbon);
+  border: none;
+  border-top: 4px solid var(--bordo-900);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+}
+
+.dialogo::backdrop {
+  background-color: var(--chip-oscuro);
+}
+
+.caja {
+  display: grid;
+  gap: var(--sp-4);
+  padding: var(--sp-6);
+}
+
+.titulo {
+  font-family: var(--font-titulo);
+  font-size: var(--fs-h3);
+  line-height: var(--lh-titulo);
+  letter-spacing: var(--tracking-titulo);
+  text-transform: uppercase;
+  color: var(--bordo-900);
+}
+
+.cuerpo {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+/* En celular los botones van uno debajo del otro, a todo el ancho */
+.acciones {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+@media (min-width: 600px) {
+  .acciones {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

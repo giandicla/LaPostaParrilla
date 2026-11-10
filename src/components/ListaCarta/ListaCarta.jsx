@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import { borrarItem, ubicarBodega, ubicarItem } from '../../servicios/carta.js';
 import { posicionTrasArrastre } from '../../data/editorCarta.js';
 import { formatearPrecio } from '../../data/carta.js';
+import Dialogo from '../Dialogo/Dialogo.jsx';
 import estilos from './ListaCarta.module.css';
 
 // La carta en el panel: una fila por producto, con ⠿ para cambiarlo de lugar
@@ -25,6 +26,8 @@ export default function ListaCarta({ carta, idEditando, alEditar, alCambiar, alE
     setArrastreEstado(valor);
   };
   const [ocupado, setOcupado] = useState(false);
+  // El producto por el que se está preguntando "¿eliminar?"
+  const [porEliminar, setPorEliminar] = useState(null);
   // Después de mover con el teclado, el foco vuelve al asa de esa fila
   const focoPendiente = useRef(null);
 
@@ -122,9 +125,7 @@ export default function ListaCarta({ carta, idEditando, alEditar, alCambiar, alE
           type="button"
           className={`${estilos.accion} ${estilos.eliminar}`}
           disabled={ocupado}
-          onClick={() => {
-            if (window.confirm(`¿Eliminar «${item.nombre}» de la carta?`)) hacer(() => borrarItem(item.id));
-          }}
+          onClick={() => setPorEliminar(item)}
         >
           Eliminar<span className="visualmente-oculto"> {item.nombre}</span>
         </button>
@@ -137,6 +138,22 @@ export default function ListaCarta({ carta, idEditando, alEditar, alCambiar, alE
       <p id="lista-ayuda-mover" className="visualmente-oculto">
         Arrastrá para cambiarlo de lugar, o usá las flechas arriba y abajo.
       </p>
+
+      {porEliminar && (
+        <Dialogo
+          titulo="Eliminar de la carta"
+          confirmar="Eliminar"
+          volver="No, volver"
+          alConfirmar={() => {
+            const { id } = porEliminar;
+            setPorEliminar(null);
+            hacer(() => borrarItem(id));
+          }}
+          alCerrar={() => setPorEliminar(null)}
+        >
+          <p>¿Eliminar «{porEliminar.nombre}» de la carta? Deja de verse en la carta del sitio.</p>
+        </Dialogo>
+      )}
 
       {carta.secciones.map((seccion) => {
         const nombresBodegas = (seccion.bodegas ?? []).map((b) => b.bodega);
