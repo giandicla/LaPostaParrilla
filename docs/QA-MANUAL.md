@@ -294,7 +294,13 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] El cliente ve la reserva cancelada con el motivo; el mail de cancelación lo incluye.
 - [ ] Hasta que llega el webhook, la seña aparece en "Devoluciones de seña en curso" con el monto y el número de operación; después sale sola y el cliente la ve como "Seña devuelta". "Reintentar" vuelve a pedirla sin devolver dos veces.
 
-**Bloqueo por turno**
+**Bloqueo por rango (desde el 2026-11-10; reemplaza al bloqueo por turno)**
+- [ ] En el panel, bloquear con "Desde" y "Hasta" distintos y todos los horarios: la lista dice "del … al … · todo el día". En `/reservas`, cualquier día del rango avisa que no se toman reservas, con el motivo.
+- [ ] Bloquear un día de 20:00 a 20:30: en `/reservas` esos horarios no aparecen y el aviso los nombra; 20:45 y el mediodía siguen.
+- [ ] "Hasta" anterior a "Desde", o "Hasta las" anterior a "Desde las": error en el campo, no se guarda.
+- [ ] Cargar dos veces el mismo bloqueo: "Ese bloqueo ya está cargado."
+
+**Bloqueo por turno (cómo era antes)**
 - [ ] En el panel, bloquear un día con turno "Noche" (o "Mediodía"); la lista muestra el turno.
 - [ ] En `/reservas`, ese día y ese turno rechazan reservas nuevas ("Ese turno ya está completo."); el otro turno sigue disponible.
 - [ ] Las reservas ya hechas de ese turno no se tocan. Antes de las 17:00 es mediodía; desde las 17:00, noche.
