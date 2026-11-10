@@ -4,6 +4,21 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-10 — Diálogos con el estilo del sitio
+
+Rama `feat/dialogos-del-sitio`. Lo pidió el usuario después de la prueba del panel:
+cancelar una reserva y eliminar un producto preguntaban con los cuadros del navegador
+(`window.confirm`, `window.prompt`).
+
+- Componente `Dialogo`: `<dialog>` modal con la marca (título en Baskerville, botones
+  del sitio). Atrapa el foco, cierra con Escape o con un clic afuera y devuelve el foco
+  al botón que lo abrió.
+- **Mis reservas:** "¿Seguro que querés cancelar tu reserva del … ?", con el aviso de
+  que se devuelve la seña si estaba paga.
+- **Panel, cancelar:** pide el motivo en un campo (propone "No hay lugar", hasta 120
+  caracteres, igual que la base) y marca el error en el campo si queda vacío.
+- **Panel, carta:** "¿Eliminar «…» de la carta?".
+
 ## 2026-11-10 — Fecha de la seña en Mercado Pago y hora del vencimiento
 
 Rama `fix/fecha-mp-y-hora-vencimiento`. Dos errores de texto que vio el cliente en la

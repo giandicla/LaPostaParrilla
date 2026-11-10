@@ -56,6 +56,7 @@
 | `SesionProvider` | `children` | Contexto de sesión: `useSesion()` → `sesion`, `perfil`, `cargando`, `esAdmin`, `recargarPerfil()` |
 | `RequiereSesion` | `admin?`, `soloClientes?`, `mensaje?`, `sinSesion?`, `children` | Muestra `children` solo con sesión (y rol admin si se pide); si no, explica y ofrece ingresar, o muestra `sinSesion`. Con `soloClientes`, al admin lo lleva a `/admin` con la misma query. Comodidad, no seguridad |
 | `NuevaReservaLocal` | `idLocalInicial`, `alGuardar(mensaje)`, `alCerrar` | Formulario del panel para cargar una reserva que tomó el local |
+| `Dialogo` | `titulo`, `confirmar`, `volver`, `alConfirmar`, `alCerrar`, `children` | Pregunta antes de una acción que no se deshace (cancelar una reserva, eliminar un producto). `<dialog>` modal con el estilo del sitio: atrapa el foco, cierra con Escape o con un clic afuera y devuelve el foco. Reemplaza a `window.confirm` y `window.prompt` |
 | `Campo` | `id`, `etiqueta`, `opcional?`, `ayuda?`, `error?`, `children(props)` | Etiqueta + control + error + ayuda. `children` es una función que recibe `id`, `aria-invalid` y `aria-describedby` para conectar el control con sus mensajes |
 | `EstadoReserva` | `reserva` | Etiqueta de esperando pago / confirmada / terminada (confirmada de un día pasado) / cancelada / vencida |
 | `EditarReserva` | `reserva`, `franjas`, `avisaPorMail`, `alGuardar`, `alCerrar` | Formulario del panel para corregir una reserva: fecha, hora, personas y contacto (el mail, solo en las del local) |

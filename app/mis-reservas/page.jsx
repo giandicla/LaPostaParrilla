@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from 'react';
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
+import Dialogo from '../../src/components/Dialogo/Dialogo.jsx';
 import ModificarReserva from '../../src/components/ModificarReserva/ModificarReserva.jsx';
 import Icono from '../../src/components/Icono/Icono.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
@@ -106,6 +107,8 @@ function ListaReservas() {
   const [aviso, setAviso] = useState('');
   // Subirlo vuelve a pedir las listas (después de cancelar o modificar)
   const [version, setVersion] = useState(0);
+  // La reserva por la que se está preguntando "¿seguro que querés cancelar?"
+  const [porCancelar, setPorCancelar] = useState(null);
   const idUsuario = sesion.user.id;
 
   useEffect(() => {
@@ -142,11 +145,9 @@ function ListaReservas() {
     setVersion((v) => v + 1);
   };
 
-  const alCancelar = async (reserva) => {
-    const pregunta = estadoSena(reserva) === 'aprobado'
-      ? '¿Seguro que querés cancelar esta reserva? Te devolvemos la seña por Mercado Pago.'
-      : '¿Seguro que querés cancelar esta reserva?';
-    if (!window.confirm(pregunta)) return;
+  const cancelar = async () => {
+    const reserva = porCancelar;
+    setPorCancelar(null);
     setError('');
     setAviso('');
     try {
@@ -178,7 +179,7 @@ function ListaReservas() {
       {proximas?.length ? (
         <ul className={estilos.lista}>
           {proximas.map((r) => (
-            <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} alPagar={alPagar} alModificar={alModificar} />
+            <TarjetaReserva key={r.id} reserva={r} alCancelar={setPorCancelar} alPagar={alPagar} alModificar={alModificar} />
           ))}
         </ul>
       ) : (
@@ -191,11 +192,27 @@ function ListaReservas() {
           <h2 className={estilos.subtitulo}>Anteriores y canceladas</h2>
           <ul className={`${estilos.lista} ${estilos.listaAnteriores}`}>
             {anteriores.map((r) => (
-              <TarjetaReserva key={r.id} reserva={r} alCancelar={alCancelar} alPagar={alPagar} alModificar={alModificar} />
+              <TarjetaReserva key={r.id} reserva={r} alCancelar={setPorCancelar} alPagar={alPagar} alModificar={alModificar} />
             ))}
           </ul>
           {hayMas && <Boton variante="secundario" onClick={verMas}>Ver más</Boton>}
         </>
+      )}
+
+      {porCancelar && (
+        <Dialogo
+          titulo="Cancelar la reserva"
+          confirmar="Sí, cancelar"
+          volver="No, volver"
+          alConfirmar={cancelar}
+          alCerrar={() => setPorCancelar(null)}
+        >
+          <p>
+            ¿Seguro que querés cancelar tu reserva del {formatearFecha(porCancelar.fecha)} a
+            las {porCancelar.hora.slice(0, 5)} en {getLocal(porCancelar.local_id)?.nombre}?
+          </p>
+          {estadoSena(porCancelar) === 'aprobado' && <p>Te devolvemos la seña por Mercado Pago.</p>}
+        </Dialogo>
       )}
     </div>
   );

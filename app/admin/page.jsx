@@ -4,6 +4,8 @@ import { Suspense, useCallback, useEffect, useRef, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Section from '../../src/components/Section/Section.jsx';
 import Boton from '../../src/components/Boton/Boton.jsx';
+import Campo from '../../src/components/Campo/Campo.jsx';
+import Dialogo from '../../src/components/Dialogo/Dialogo.jsx';
 import RequiereSesion from '../../src/components/RequiereSesion/RequiereSesion.jsx';
 import EstadoReserva from '../../src/components/EstadoReserva/EstadoReserva.jsx';
 import NuevaReservaLocal from '../../src/components/NuevaReservaLocal/NuevaReservaLocal.jsx';
@@ -30,11 +32,17 @@ import { cancelarReserva } from '../../src/servicios/pagos.js';
 import formulario from '../../src/styles/formulario.module.css';
 import estilos from './page.module.css';
 
+const MOTIVO_SUGERIDO = 'No hay lugar';
+
 // ---------------------------------------------------------------------
 // Una reserva en el panel: datos, acciones según el estado, editar, nota
 // ---------------------------------------------------------------------
 function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   const [editando, setEditando] = useState(false);
+  // El diálogo que pide el motivo antes de cancelar
+  const [cancelando, setCancelando] = useState(false);
+  const [motivo, setMotivo] = useState(MOTIVO_SUGERIDO);
+  const [errorMotivo, setErrorMotivo] = useState('');
   // Borrador de la nota mientras se escribe; null = se muestra la guardada.
   // Así una recarga (por tiempo real) no pisa lo que se está escribiendo.
   const [borradorNota, setBorradorNota] = useState(null);
@@ -56,17 +64,12 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
     }
   };
 
-  const alCancelar = () => {
-    const motivo = window.prompt(
-      `Motivo de la cancelación${avisoMail ? ' (le llega al cliente por mail)' : ''}:` +
-        (estadoSena(reserva) === 'aprobado' ? ' La seña se le devuelve por Mercado Pago.' : ''),
-      'No hay lugar'
-    );
-    if (motivo === null) return;
+  const cancelar = () => {
     if (!motivo.trim()) {
-      alError('Escribí el motivo de la cancelación.');
+      setErrorMotivo('Escribí el motivo de la cancelación.');
       return;
     }
+    setCancelando(false);
     ejecutar(() => cancelarReserva(reserva.id, motivo.trim()));
   };
 
@@ -141,9 +144,54 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
           <button type="button" className={estilos.botonTexto} onClick={() => setEditando(true)}>Editar</button>
         )}
         {activa && (
-          <button type="button" className={estilos.botonTexto} onClick={alCancelar}>Cancelar</button>
+          <button
+            type="button"
+            className={estilos.botonTexto}
+            onClick={() => {
+              setMotivo(MOTIVO_SUGERIDO);
+              setErrorMotivo('');
+              setCancelando(true);
+            }}
+          >
+            Cancelar
+          </button>
         )}
       </div>
+
+      {cancelando && (
+        <Dialogo
+          titulo={`Cancelar la reserva de ${reserva.nombre}`}
+          confirmar="Cancelar la reserva"
+          volver="No cancelar"
+          alConfirmar={cancelar}
+          alCerrar={() => setCancelando(false)}
+        >
+          <p>
+            {formatearFecha(reserva.fecha)}, {reserva.hora.slice(0, 5)} · {reserva.personas}{' '}
+            {reserva.personas === 1 ? 'persona' : 'personas'}
+            {estadoSena(reserva) === 'aprobado' && '. La seña se le devuelve por Mercado Pago.'}
+          </p>
+          <Campo
+            id={`motivo-${reserva.id}`}
+            etiqueta="Motivo de la cancelación"
+            ayuda={avisoMail ? 'Le llega al cliente por mail.' : undefined}
+            error={errorMotivo}
+          >
+            {(props) => (
+              <input
+                {...props}
+                className={formulario.control}
+                value={motivo}
+                maxLength={120}
+                onChange={(evento) => {
+                  setMotivo(evento.target.value);
+                  setErrorMotivo('');
+                }}
+              />
+            )}
+          </Campo>
+        </Dialogo>
+      )}
     </li>
   );
 }
