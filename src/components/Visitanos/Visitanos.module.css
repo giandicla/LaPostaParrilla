@@ -52,7 +52,7 @@
 }
 
 .enlace {
-  margin-top: var(--sp-1);
+  padding-block: var(--sp-2);
   font-weight: 600;
   font-size: var(--fs-small);
   color: var(--bordo-900);
@@ -62,6 +62,7 @@
 
 .enlaceIcono {
   display: inline-flex;
+  padding-block: var(--sp-2);
   align-items: center;
   gap: var(--sp-2);
   font-weight: 600;
@@ -108,6 +109,7 @@
 }
 
 .telefono {
+  padding-block: var(--sp-2);
   font-size: var(--fs-small);
   color: var(--gris-600);
 }

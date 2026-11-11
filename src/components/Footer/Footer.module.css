@@ -1,7 +1,7 @@
 .footer {
   background-color: var(--bordo-900);
   color: var(--crema);
-  padding: var(--sp-12) var(--sp-4) var(--sp-6);
+  padding: var(--sp-8) var(--sp-4) var(--sp-4);
 }
 
 .contenedor {
@@ -9,21 +9,24 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--sp-8);
+  /* En el celular el pie es corto: menos espacio entre bloques */
+  gap: var(--sp-6);
 }
 
 .columnaMarca,
 .columna {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  /* Sin espacio entre líneas: los links llevan su propio relleno, para que en el
+     celular se puedan tocar (unos 40 px de alto) */
+  gap: 0;
   align-items: flex-start;
 }
 
 .logo {
-  width: 132px;
+  width: 112px;
   height: auto;
-  margin-bottom: var(--sp-2);
+  margin-bottom: var(--sp-3);
 }
 
 .bajada {
@@ -31,8 +34,27 @@
   opacity: 0.85;
 }
 
+/* Instagram y mail: uno al lado del otro en el celular */
+.redes {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--sp-6);
+}
+
+/* Los dos teléfonos lado a lado en el celular */
+.contactos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+}
+
+.secciones {
+  display: none;
+}
+
 .instagram {
   display: inline-flex;
+  padding-block: var(--sp-2);
   align-items: center;
   gap: var(--sp-2);
   color: var(--arena);
@@ -49,7 +71,7 @@
   text-transform: uppercase;
   letter-spacing: var(--tracking-titulo);
   color: var(--crema);
-  margin-bottom: var(--sp-1);
+  margin-bottom: var(--sp-2);
 }
 
 .direccion {
@@ -62,6 +84,7 @@
   display: flex;
   flex-direction: column;
   font-size: var(--fs-small);
+  margin-bottom: var(--sp-2);
 }
 
 .nombreLocal {
@@ -69,6 +92,7 @@
 }
 
 .enlace {
+  padding-block: var(--sp-2);
   font-size: var(--fs-small);
   opacity: 0.85;
   transition: opacity var(--transicion), color var(--transicion);
@@ -81,7 +105,7 @@ a.enlace:hover {
 
 .credito {
   max-width: var(--ancho-max);
-  margin: var(--sp-8) auto 0;
+  margin: var(--sp-6) auto 0;
   padding-top: var(--sp-4);
   border-top: 1px solid var(--linea-clara);
   font-size: var(--fs-small);
@@ -90,8 +114,32 @@ a.enlace:hover {
 }
 
 @media (min-width: 600px) {
+  .footer {
+    padding: var(--sp-12) var(--sp-4) var(--sp-6);
+  }
+
   .contenedor {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-8);
+  }
+
+  .logo {
+    width: 132px;
+  }
+
+  .redes,
+  .contactos {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .secciones {
+    display: flex;
+  }
+
+  .credito {
+    margin-top: var(--sp-8);
   }
 }
 

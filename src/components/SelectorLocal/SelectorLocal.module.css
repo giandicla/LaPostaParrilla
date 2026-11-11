@@ -51,9 +51,12 @@
     border-radius: var(--radio-lg);
   }
 
+  /* Menos relleno a los costados: "La Posta II Restaurante" entra en dos líneas
+     y la barra fija ocupa menos alto de la pantalla */
   .opcion {
+    padding: var(--sp-2) var(--sp-1);
     white-space: normal;
-    line-height: 1.25;
+    line-height: 1.2;
     border-radius: var(--radio-md);
   }
 }

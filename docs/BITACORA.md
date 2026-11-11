@@ -4,6 +4,25 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-11 — Último chequeo en celular
+
+Rama `fix/celular-ultimo-chequeo`. Revisión de todas las páginas a 360 px (públicas,
+cliente y admin) con un script que busca desbordes, zonas táctiles chicas, letra chica e
+inputs de menos de 16 px (que hacen zoom en iPhone). No hubo desbordes ni inputs con
+zoom. Arreglos:
+
+- **"Parrilla & Restaurante · Villa La Angostura"** (portada del inicio, de reservas y
+  pie): en el celular el punto quedaba al principio de la segunda línea. Componente
+  `Separados`: en el celular cada parte va en su línea, sin el punto; desde 600 px, en
+  una.
+- **Zonas táctiles:** los links del pie, de "Visitanos" y del índice de la carta medían
+  24 px de alto; ahora unos 40. En la compu el índice de la carta queda como estaba.
+- **Selector de carta (fijo arriba):** menos relleno en el celular; "La Posta II
+  Restaurante" entra en dos líneas y la barra pasa de ~90 a 69 px de alto.
+- **Pie en el celular** (al usuario le parecía enorme): de 867 a 484 px de alto. Menos
+  relleno, logo más chico, Instagram y mail en una fila, los dos teléfonos lado a lado y
+  sin la columna "Secciones" (están en el menú de arriba). En la compu queda igual.
+
 ## 2026-11-11 — Aviso de la seña en /reservas y tarjeta de Días bloqueados
 
 Rama `feat/ultimos-retoques`. Últimos cambios visuales pedidos por el usuario.
