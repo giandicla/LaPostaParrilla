@@ -10,7 +10,7 @@ Rama `feat/fondo-carta-vinos`. La vista Vinos de `/carta` usaba la portada de la
 el usuario pidió una foto de vinos. Probó dos fotos suyas (`Vinosfondo.jpg`, una
 estantería de madera, y `vinosfondo2.jpg`, una pared con botellas acostadas) y eligió la
 segunda. Queda en `public/img/vinos/hero-pared.webp` (con sus variantes) y
-`CARTA_VINOS.imagenes.hero` en `src/data/carta.js`. La foto original no está en la
+`CARTA_VINOS.imagenes.hero` en `src/data/carta.js`. También se sacó, a pedido del usuario, la nota del pie de la carta ("La carta puede cambiar según la temporada…"). La foto original no está en la
 carpeta `Branding y fotos/`: el usuario la pasó por Descargas.
 
 ## 2026-11-11 — Estética del inicio y del pie

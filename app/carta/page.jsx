@@ -140,9 +140,6 @@ function CartaContenido() {
               ))}
             </HojaCarta>
 
-            <p className={estilos.pie}>
-              La carta puede cambiar según la temporada y lo que consigamos en la zona.
-            </p>
           </>
         )}
       </Section>
