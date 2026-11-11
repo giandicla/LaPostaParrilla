@@ -103,13 +103,13 @@ function DiasBloqueados({ alError }) {
   const conError = (campo) => atributosDeError(errorBloqueo, campo, 'bloqueo-error');
 
   return (
-    <section className={estilos.bloque} aria-labelledby="titulo-bloqueos">
+    <section className={estilos.seccionBloqueos} aria-labelledby="titulo-bloqueos">
       <h1 id="titulo-bloqueos" className={estilos.titulo}>Días bloqueados</h1>
       <p className={formulario.ayuda}>
         En los días y horarios bloqueados no se puede reservar. Las reservas que ya existían no se tocan.
         Para un solo día, dejá “Hasta” vacío. Del primer horario al último es todo el día.
       </p>
-      <form className={estilos.formBloqueo} onSubmit={alBloquear} noValidate>
+      <form className={`${estilos.formBloqueo} ${estilos.tarjetaForm}`} onSubmit={alBloquear} noValidate>
         <label className={formulario.campo}>
           <span className={formulario.etiqueta}>Desde</span>
           <input name="desde" type="date" required min={hoy} className={formulario.control} {...conError('desde')} />

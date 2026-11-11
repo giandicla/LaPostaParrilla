@@ -4,6 +4,16 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-11 — Aviso de la seña en /reservas y tarjeta de Días bloqueados
+
+Rama `feat/ultimos-retoques`. Últimos cambios visuales pedidos por el usuario.
+
+- **`/reservas`:** el aviso junto al botón no dejaba claro que con menos de 1 hora no se
+  puede cancelar y la seña se pierde (la base no deja cancelar al cliente con menos de
+  1 hora). Textos nuevos del usuario: `TEXTOS.avisoReserva` y `TEXTOS.avisoSena`.
+- **`/admin/bloqueos`:** el formulario va en una tarjeta blanca, como los filtros de
+  Reservas, y se sacó la línea de más que quedaba debajo de las pestañas.
+
 ## 2026-11-11 — Nosotros: las empanadas en la galería del restaurante
 
 Pedido del usuario: la primera foto de la galería de La Posta II Restaurante en

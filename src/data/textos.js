@@ -46,8 +46,14 @@ export const TEXTOS = {
       'Dos espacios diferentes, unidos por el gusto de recibir y hacerte sentir como en casa.',
     ],
   },
-  // Va junto al botón de /reservas. Redacción del usuario (2026-10-08); la primera oración se ajustó al flujo con seña (2026-10-18).
+  // Van junto al botón de /reservas. Redacción del usuario (2026-11-11): deja claro que
+  // con menos de 1 hora no se puede cancelar y la seña no se devuelve
   avisoReserva:
-    'La reserva queda confirmada cuando se acredita la seña. ' +
-    'Podés gestionarla desde la sección "Mis reservas" hasta 1 hora antes.',
+    'La reserva se confirma una vez que se realiza el pago de la seña. ' +
+    'Podés gestionarla desde la sección "Mis reservas" hasta una hora antes.',
+  avisoSena:
+    'Podés pagar con cualquier medio de pago a través de la redirección a la página ' +
+    'oficial de Mercado Pago. Si cancelás la reserva hasta una hora antes, te devolvemos ' +
+    'la seña al mismo medio de pago. Con menos de una hora de anticipación no se puede ' +
+    'cancelar y la seña no será devuelta.',
 };

@@ -283,7 +283,7 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] El vencimiento no manda mail.
 
 **Cancelación del cliente (la seña se reembolsa, desde 2026-11-04)**
-- [ ] `/reservas` avisa antes de pagar: "…Si cancelás desde “Mis reservas” (hasta 1 hora antes) o cancelamos nosotros, te la devolvemos al mismo medio de pago."
+- [ ] `/reservas` avisa antes de pagar: "…Si cancelás la reserva hasta una hora antes, te devolvemos la seña al mismo medio de pago. Con menos de una hora de anticipación no se puede cancelar y la seña no será devuelta."
 - [ ] El pago se hace en incógnito, sin sesión de Mercado Pago, con tarjeta de prueba titular `APRO`.
 - [ ] Con 1 hora o más de anticipación, "Cancelar reserva" pregunta "…Te devolvemos la seña por Mercado Pago." y cancela. Aviso: "…Ya pedimos la devolución de la seña a Mercado Pago…". La reserva muestra "Devolución de la seña en curso" y, cuando llega el webhook, "Seña devuelta". En Mercado Pago el pago figura *refunded*.
 - [ ] Con menos de 1 hora, en vez de cancelar aparece el link a WhatsApp.
