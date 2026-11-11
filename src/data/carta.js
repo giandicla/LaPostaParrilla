@@ -10,6 +10,8 @@ export const CARTA_VINOS = {
   nombre: 'Vinos',
   nota: 'De los dos locales',
   carta: { bajada: 'Carta de vinos' },
+  // Foto de la portada de la carta de vinos (pedido del usuario, 2026-11-11)
+  imagenes: { hero: '/img/vinos/hero-pared.webp' },
 };
 
 export const formatearPrecio = (precio) =>

@@ -33,10 +33,10 @@ function CartaContenido() {
   const idPedido = parametros.get('local');
   const esVinos = idPedido === CARTA_VINOS.id;
   const idActivo = esVinos || esIdDeLocal(idPedido) ? idPedido : ID_LOCAL_POR_DEFECTO;
-  // Vinos no tiene local: la portada usa la foto del local por defecto
   const local = esVinos ? null : getLocal(idActivo);
   const vista = esVinos ? CARTA_VINOS : local;
-  const portada = (local ?? getLocal(ID_LOCAL_POR_DEFECTO)).imagenes.hero;
+  // Vinos tiene su propia foto de portada
+  const portada = vista.imagenes.hero;
   const { esAdmin } = useSesion();
 
   // Un link viejo a los vinos de un local va a la vista Vinos, a esa sección

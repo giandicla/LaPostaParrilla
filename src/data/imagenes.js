@@ -130,6 +130,11 @@ const ANCHOS = {
     480,
     960,
     1200
+  ],
+  "/img/vinos/hero-pared.webp": [
+    480,
+    960,
+    1363
   ]
 };
 
