@@ -4,6 +4,15 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-11 — Foto propia en la portada de la carta de vinos
+
+Rama `feat/fondo-carta-vinos`. La vista Vinos de `/carta` usaba la portada de la parrilla;
+el usuario pidió una foto de vinos. Probó dos fotos suyas (`Vinosfondo.jpg`, una
+estantería de madera, y `vinosfondo2.jpg`, una pared con botellas acostadas) y eligió la
+segunda. Queda en `public/img/vinos/hero-pared.webp` (con sus variantes) y
+`CARTA_VINOS.imagenes.hero` en `src/data/carta.js`. También se sacó, a pedido del usuario, la nota del pie de la carta ("La carta puede cambiar según la temporada…"). La foto original no está en la
+carpeta `Branding y fotos/`: el usuario la pasó por Descargas.
+
 ## 2026-11-11 — Estética del inicio y del pie
 
 Rama `feat/estetica-inicio-y-footer`. Pedidos del usuario mirando el sitio.

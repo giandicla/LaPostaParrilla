@@ -32,13 +32,6 @@
   border-bottom-color: currentColor;
 }
 
-.pie {
-  max-width: 720px;
-  margin: var(--sp-8) auto 0;
-  text-align: center;
-  font-size: var(--fs-small);
-  color: var(--gris-600);
-}
 
 /* Mientras llega la carta, el lugar que va a ocupar: sin esto el pie subía
    hasta el selector y bajaba de golpe al llegar la carta (CLS de 1). */
