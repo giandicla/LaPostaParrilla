@@ -124,7 +124,15 @@ escribe registro de prompts** en `docs/proceso/` (decisión del usuario); lo hec
   temporada…".
 - **Nosotros:** "La familia detrás de La Posta" habla del **equipo como familia**, no de
   quienes abrieron el restaurante. Cada salón tiene un texto propio
-  (`descripcionNosotros`), distinto del corto del inicio.
+  (`descripcionNosotros`), distinto del corto del inicio. La galería del restaurante
+  muestra vinos, fogón y empanadas (la foto del salón quedó sin uso).
+- **`/reservas`:** el aviso junto al botón (textos del usuario) dice que con menos de una
+  hora no se puede cancelar y la seña no se devuelve, y que si cancela el local se
+  devuelve en cualquier caso.
+- **Panel:** Días bloqueados con su formulario en tarjeta blanca, como los filtros de
+  Reservas.
+- **El usuario dio por terminados los cambios visuales** el 2026-11-11 (víspera de la
+  presentación).
 
 ## Las etapas
 
