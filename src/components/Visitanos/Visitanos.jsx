@@ -38,14 +38,10 @@ export default function Visitanos() {
             ))}
           </div>
           <div className={estilos.bloque}>
-            <h3 className={estilos.subtitulo}>Instagram y mail</h3>
+            <h3 className={estilos.subtitulo}>Instagram</h3>
             <a href={MARCA.instagramUrl} target="_blank" rel="noreferrer" className={estilos.enlaceIcono}>
               <Icono nombre="instagram" />
               {MARCA.instagram}
-            </a>
-            <a href={`mailto:${MARCA.email}`} className={estilos.enlaceIcono}>
-              <Icono nombre="mail" />
-              {MARCA.email}
             </a>
           </div>
         </div>
