@@ -724,6 +724,21 @@ dirección) y lo anotó como defecto sin volver a mirarla. No se investigó por 
 dos vistas difieren; lo más probable es que la IA haya anotado un estado de paso. No se
 cambió nada.
 
+### 1.43 La IA culpó a la configuración antes de mirar de cuándo era el pago (sesión 15)
+
+Una reserva cancelada quedó en "Devolución de la seña en curso". Con el número de
+operación, Mercado Pago respondió "Payment not found" con las credenciales del sitio, y
+la IA escribió que lo más probable era que en Vercel hubiera quedado la credencial del
+vendedor de prueba, y le pidió al usuario que la revisara. El mismo mensaje ya decía que
+el número se parecía al de un pago viejo, pero no sacó la conclusión. El usuario
+preguntó: "¿es porque es una reserva vieja o porque están mal cargadas las
+credenciales?". Recién ahí la IA comparó: 187309105492 es menor que 187310622248, un pago
+del 2/11 hecho con las credenciales viejas. Era una reserva vieja. Una prueba nueva lo
+confirmó: la devolución se completó sola en segundos.
+
+Lección: antes de mandar al usuario a revisar una configuración, agotar lo que ya dicen
+los datos que se tienen.
+
 ## Parte 2 — Dónde funcionó mejor de lo esperado
 
 ### 2.1 Los implementadores se negaron a "arreglar" el código que recibían
@@ -974,6 +989,18 @@ lo que Mercado Pago muestra. Los dos se arreglaron el mismo día (PR #41).
 La misma prueba sirvió para la seguridad: en vez de releer las políticas, la IA pidió
 los datos como lo haría un atacante, sin sesión y como cliente, y la base devolvió cero
 filas ajenas.
+
+### 2.18 Probar en local el script que borra producción atrapó un error (sesión 15)
+
+Para limpiar producción antes de la presentación, la IA escribió un script que borra
+reservas, pagos, bloqueos y cuentas, y crea dos cuentas nuevas. Antes de dárselo al
+usuario lo corrió en la base local, con datos armados como los de producción (la cuenta
+admin real, una reserva paga y un bloqueo). Falló: la función que crea cada cuenta
+estaba dentro de un `where`, así que Postgres la llamaba una vez por fila. El admin
+nuevo quedaba sin rol y la segunda cuenta chocaba por mail repetido. Como todo iba en una
+transacción no habría quedado a medias, pero en producción el usuario habría visto un
+error. Se pasó a variables, se volvió a probar (incluido el ingreso de las dos cuentas
+con su contraseña) y recién ahí lo corrió el usuario.
 
 ## Parte 3 — Lo que se aprendió sobre el método
 

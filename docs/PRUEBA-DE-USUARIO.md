@@ -20,6 +20,8 @@ sigue abajo, tal como se anotó durante la prueba):
 | El aviso "Reserva guardada" quedaba arriba | Ahora trae los datos y se va solo, PR #46 |
 | Mismo título en todas las pestañas; sin `robots.txt`, `sitemap.xml` ni imagen al compartir | Hecho, PR #46 |
 | Bloqueos de a un día y un turno | Bloqueos por rango de fechas y de horas, PR #47 |
+| Avisos viejos al editar, cancelar o eliminar | Cada acción muestra su aviso, PR #49 (2026-11-11) |
+| Pestañas del panel a menos de 370 px | Bajan a una segunda línea, PR #49 (2026-11-11) |
 | Resto de las observaciones | Sin tocar; en `docs/PENDIENTES.md` |
 
 Leyenda: ✅ anda como se espera · ⚠️ anda, con una observación · ❌ falla · ⏳ sin probar todavía
