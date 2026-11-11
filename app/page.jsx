@@ -3,7 +3,7 @@ import Section from '../src/components/Section/Section.jsx';
 import Boton from '../src/components/Boton/Boton.jsx';
 import LocalCard from '../src/components/LocalCard/LocalCard.jsx';
 import PlatoCard from '../src/components/PlatoCard/PlatoCard.jsx';
-import InfoLocal from '../src/components/InfoLocal/InfoLocal.jsx';
+import Visitanos from '../src/components/Visitanos/Visitanos.jsx';
 import { MARCA } from '../src/data/marca.js';
 import { TEXTOS } from '../src/data/textos.js';
 import { LOCALES } from '../src/data/locales.js';
@@ -83,7 +83,7 @@ export default function Inicio() {
         id="salones"
         fondo="arena"
         titulo="Nuestros dos salones"
-        bajada="Dos propuestas de la misma familia. Elegí con cuál tenés ganas hoy."
+        bajada="Dos propuestas únicas. Elegí con cuál te quedás hoy."
       >
         <div className={estilos.grillaLocales}>
           {LOCALES.map((local) => (
@@ -95,7 +95,7 @@ export default function Inicio() {
       <Section
         fondo="bordo"
         titulo="Algunos de nuestros platos"
-        bajada="Una probadita de cada salón. Los precios y todo lo demás, en la carta."
+        bajada="Una selección de cada salón. Conocé nuestra propuesta completa ingresando al menú."
       >
         <div className={estilos.grillaPlatos}>
           {PLATOS.map((plato) => (
@@ -121,11 +121,7 @@ export default function Inicio() {
         titulo="Visitanos"
         bajada="Horarios, dirección y contacto de cada salón."
       >
-        <div className={estilos.grillaInfo}>
-          {LOCALES.map((local) => (
-            <InfoLocal key={local.id} local={local} />
-          ))}
-        </div>
+        <Visitanos />
       </Section>
     </main>
   );

@@ -1,11 +1,14 @@
 import Link from 'next/link';
 import { MARCA } from '../../data/marca.js';
-import { LOCALES } from '../../data/locales.js';
+import { LOCALES, datosEnComun, enlaceComoLlegar } from '../../data/locales.js';
 import Icono from '../Icono/Icono.jsx';
+import Telefono from '../Telefono/Telefono.jsx';
 import estilos from './Footer.module.css';
 
 export default function Footer() {
   const anio = new Date().getFullYear();
+  // Los salones están uno al lado del otro: la dirección va una sola vez
+  const direccionComun = datosEnComun()?.direccion;
 
   return (
     <footer className={estilos.footer}>
@@ -24,17 +27,33 @@ export default function Footer() {
           </a>
         </div>
 
-        {LOCALES.map((local) => (
-          <div key={local.id} className={estilos.columna}>
-            <h3 className={estilos.tituloColumna}>{local.nombre}</h3>
-            <address className={estilos.direccion}>{local.direccion}</address>
-            {local.telefono && (
-              <a href={`tel:${local.telefono.replace(/\s|-/g, '')}`} className={estilos.enlace}>
-                {local.telefono}
+        <div className={estilos.columna}>
+          <h3 className={estilos.tituloColumna}>Dónde estamos</h3>
+          {direccionComun ? (
+            <>
+              <address className={estilos.direccion}>{direccionComun}</address>
+              <a href={enlaceComoLlegar(direccionComun)} className={estilos.enlace} target="_blank" rel="noreferrer">
+                Cómo llegar
               </a>
-            )}
-          </div>
-        ))}
+            </>
+          ) : (
+            LOCALES.map((local) => (
+              <address key={local.id} className={estilos.direccion}>
+                {local.nombre}: {local.direccion}
+              </address>
+            ))
+          )}
+        </div>
+
+        <div className={estilos.columna}>
+          <h3 className={estilos.tituloColumna}>Contacto</h3>
+          {LOCALES.filter((local) => local.telefono).map((local) => (
+            <p key={local.id} className={estilos.contacto}>
+              <span className={estilos.nombreLocal}>{local.nombre}</span>
+              <Telefono numero={local.telefono} className={estilos.enlace} />
+            </p>
+          ))}
+        </div>
 
         <nav className={estilos.columna} aria-label="Navegación del pie">
           <h3 className={estilos.tituloColumna}>Secciones</h3>

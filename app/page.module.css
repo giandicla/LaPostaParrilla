@@ -130,15 +130,3 @@
 }
 
 /* ---------- Visitanos ---------- */
-.grillaInfo {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--sp-8);
-  align-items: stretch;
-}
-
-@media (min-width: 900px) {
-  .grillaInfo {
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-  }
-}

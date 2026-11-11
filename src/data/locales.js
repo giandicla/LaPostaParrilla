@@ -22,9 +22,8 @@ export const LOCALES = [
     id: 'parrilla',
     nombre: 'La Posta Parrilla',
     tagline: 'Parrilla patagónica',
-    descripcion:
-      'Cordero al asador, cortes a la parrilla y una carta de vinos larga. ' +
-      'El lugar para una mesa larga, sin apuro, frente al fuego.',
+    // Texto del usuario (2026-11-11)
+    descripcion: 'Cordero al asador, especialidad en cortes a la parrilla y vinos de la región.',
     direccion: DIRECCION,
     mapaEmbedUrl: MAPA_EMBED_URL,
     telefono: '+54 9 2944 96-6199',
@@ -54,9 +53,8 @@ export const LOCALES = [
     nombre: 'La Posta II Restaurante',
     // Es lo que dice el cartel de la entrada
     tagline: 'Pizzas, pastas y cocina de montaña',
-    descripcion:
-      'Una cabaña de troncos con fogón a leña y la pared llena de vinos. ' +
-      'Pastas caseras rellenas, pizzas y platos de olla para las noches frías.',
+    // Texto del usuario (2026-11-11)
+    descripcion: 'Ambiente cálido y una propuesta culinaria volcada en los productos de la región.',
     direccion: DIRECCION,
     mapaEmbedUrl: MAPA_EMBED_URL,
     telefono: '+54 9 2944 86-1339',
@@ -78,6 +76,26 @@ export const LOCALES = [
 ];
 
 export const ID_LOCAL_POR_DEFECTO = LOCALES[0].id;
+
+// Lo que todos los locales tienen igual (hoy están uno al lado del otro), o
+// null si alguno difiere: así "Visitanos" y el pie muestran la dirección, el
+// mapa y los horarios una sola vez, y si un día se separan vuelven a ir por local.
+export function datosEnComun() {
+  const [primero, ...resto] = LOCALES;
+  const igual = resto.every(
+    (local) =>
+      local.direccion === primero.direccion &&
+      local.mapaEmbedUrl === primero.mapaEmbedUrl &&
+      JSON.stringify(local.horarios) === JSON.stringify(primero.horarios)
+  );
+  return igual
+    ? { direccion: primero.direccion, mapaEmbedUrl: primero.mapaEmbedUrl, horarios: primero.horarios }
+    : null;
+}
+
+// Link a Google Maps con el recorrido hasta una dirección
+export const enlaceComoLlegar = (direccion) =>
+  `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(direccion)}`;
 
 export const getLocal = (id) => LOCALES.find((local) => local.id === id);
 

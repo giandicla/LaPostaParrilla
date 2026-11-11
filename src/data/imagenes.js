@@ -94,7 +94,7 @@ const ANCHOS = {
   "/img/restaurante/plato-albondigas.webp": [
     480,
     960,
-    1000
+    983
   ],
   "/img/restaurante/plato-pizza.webp": [
     480,
