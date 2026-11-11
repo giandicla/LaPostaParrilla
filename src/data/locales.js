@@ -74,10 +74,11 @@ export const LOCALES = [
       hero: '/img/restaurante/hero.webp',
       reserva: '/img/restaurante/reserva.webp',
       galeria: [
-        // Pedido del usuario (2026-11-11): las empanadas en vez de la foto del salón
-        { src: '/img/restaurante/empanadas.webp', alt: 'Cuatro platos de empanadas vistos desde arriba, con salsas para acompañar' },
-        { src: '/img/restaurante/fogon.webp', alt: 'Fogón a leña encendido en una chimenea de piedra' },
+        // Orden pedido por el usuario (2026-11-11): los vinos arriba, las empanadas
+        // (en lugar de la foto del salón) abajo
         { src: '/img/restaurante/vinos.webp', alt: 'Mueble de madera con botellas de vino junto a las mesas' },
+        { src: '/img/restaurante/fogon.webp', alt: 'Fogón a leña encendido en una chimenea de piedra' },
+        { src: '/img/restaurante/empanadas.webp', alt: 'Cuatro platos de empanadas vistos desde arriba, con salsas para acompañar' },
       ],
     },
   },

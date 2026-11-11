@@ -9,7 +9,8 @@ Log de cambios. **Lo más nuevo arriba.**
 Pedido del usuario: la primera foto de la galería de La Posta II Restaurante en
 `/nosotros` pasa a ser "Cuatro tipos empanadas plano arriba.jpg"
 (`public/img/restaurante/empanadas.webp`, sumada a `scripts/procesar-assets.py`). La foto
-del salón (`salon.webp`) queda en el repo pero sin uso.
+del salón (`salon.webp`) queda en el repo pero sin uso. Después el usuario pidió otro orden: arriba los
+vinos y el fogón, abajo las empanadas.
 
 ## 2026-11-11 — Nosotros: el equipo como familia y un texto propio por salón
 
