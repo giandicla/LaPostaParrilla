@@ -100,6 +100,32 @@ hasta 40 personas. Ver `docs/superpowers/specs/2026-10-08-reservas-admin-design.
 *(Hasta la sesión 02, esta sección explicaba por qué el formulario era una maqueta
 que no guardaba nada.)*
 
+## Estética al 2026-11-11
+
+Pase de estética guiado por el usuario: marca lo que no le gusta navegando el sitio,
+la IA lo arma en la copia local, él lo mira y se publica por PR. En este pase **no se
+escribe registro de prompts** en `docs/proceso/` (decisión del usuario); lo hecho va en
+`docs/BITACORA.md`.
+
+- **Textos del restaurante: los escribe o aprueba el usuario.** La IA había inventado
+  detalles (una "cabaña de troncos", "la mesa larga"). Ahora propone y pregunta antes.
+- **Inicio:** descripciones de los salones y bajadas del usuario; foto de las albóndigas
+  recortada sobre la cazuela.
+- **"Visitanos" (inicio) y "Contacto" (Nosotros) son el mismo componente** (`Visitanos`):
+  como los salones comparten dirección, mapa y horarios (`datosEnComun()` en
+  `locales.js`), van una sola vez, con "Cómo llegar" (Google Maps), el Instagram y una
+  tarjetita por salón con teléfono y WhatsApp. Si un día los locales difieren, vuelve a
+  una tarjeta por local (`InfoLocal`).
+- **Teléfonos** (componente `Telefono`): link para llamar solo en pantallas táctiles; con
+  mouse, texto.
+- **Pie:** compacto; dirección una vez, columna de contacto, Instagram y mail.
+- **Carta:** la vista Vinos tiene foto propia (`/img/vinos/hero-pared.webp`, elegida por
+  el usuario entre dos suyas); se sacó la nota "La carta puede cambiar según la
+  temporada…".
+- **Nosotros:** "La familia detrás de La Posta" habla del **equipo como familia**, no de
+  quienes abrieron el restaurante. Cada salón tiene un texto propio
+  (`descripcionNosotros`), distinto del corto del inicio.
+
 ## Las etapas
 
 | Etapa | Qué | Estado |
