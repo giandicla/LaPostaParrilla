@@ -24,7 +24,7 @@ export default function Nosotros() {
         bajada={MARCA.ciudad}
       />
 
-      {/* Historia: es de la familia, común a los dos salones */}
+      {/* El equipo como familia, común a los dos salones */}
       <Section ancho="angosto" titulo={TEXTOS.historia.titulo}>
         <div className={estilos.historia}>
           {TEXTOS.historia.parrafos.map((parrafo, i) => (
@@ -49,7 +49,8 @@ export default function Nosotros() {
               <div className={estilos.textoLocal}>
                 <h3 className={estilos.nombreLocal}>{local.nombre}</h3>
                 <p className={estilos.taglineLocal}>{local.tagline}</p>
-                <p>{local.descripcion}</p>
+                {/* Texto propio de Nosotros; si un local no lo tiene, va el del inicio */}
+                <p>{local.descripcionNosotros ?? local.descripcion}</p>
               </div>
 
               <div className={estilos.galeria}>

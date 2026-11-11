@@ -33,16 +33,17 @@ export const TEXTOS = {
         'en cocinar sin apuros, y en ofrecer un plato que refleje cuidado y oficio.',
     },
   ],
+  // Idea y frases del usuario (2026-11-11), redactadas por la IA a su pedido: el
+  // equipo como familia, no la familia que abrió el restaurante
   historia: {
     titulo: 'La familia detrás de La Posta',
     parrafos: [
-      // PENDIENTE: historia real y nombres de la familia (abrieron en diciembre
-      // de 2020, ver MARCA.apertura)
-      'Empezamos con un solo salón y la idea simple de cocinar como cocinábamos en casa: ' +
-        'producto de la zona, cocciones largas y nada apurado.',
-      'Con los años abrimos el segundo local, pared de por medio con el primero, para darle ' +
-        'lugar propio a la cocina de olla sin sacarle espacio a La Posta Parrilla.',
-      'Seguimos siendo los mismos: una familia, dos salones y la misma manera de recibir.',
+      'La Posta reúne dos propuestas gastronómicas en Villa La Angostura, cada una con su ' +
+        'propia identidad. Detrás de cada mesa hay un equipo que trabaja como una familia: ' +
+        'en la cocina, en el salón y en cada detalle.',
+      'Compartimos una misma dedicación por la buena gastronomía, la calidad de nuestros ' +
+        'productos y la atención a quienes nos visitan.',
+      'Dos espacios diferentes, unidos por el gusto de recibir y hacerte sentir como en casa.',
     ],
   },
   // Va junto al botón de /reservas. Redacción del usuario (2026-10-08); la primera oración se ajustó al flujo con seña (2026-10-18).
