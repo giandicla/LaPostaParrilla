@@ -17,19 +17,21 @@ export default function Footer() {
         <div className={estilos.columnaMarca}>
           <img src={MARCA.logo} alt={MARCA.nombre} className={estilos.logo} />
           <p className={estilos.bajada}><Separados texto={MARCA.bajada} /></p>
-          <a
-            href={MARCA.instagramUrl}
-            className={estilos.instagram}
-            target="_blank"
-            rel="noreferrer"
-          >
-            <Icono nombre="instagram" />
-            {MARCA.instagram}
-          </a>
-          <a href={`mailto:${MARCA.email}`} className={estilos.instagram}>
-            <Icono nombre="mail" />
-            {MARCA.email}
-          </a>
+          <div className={estilos.redes}>
+            <a
+              href={MARCA.instagramUrl}
+              className={estilos.instagram}
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Icono nombre="instagram" />
+              {MARCA.instagram}
+            </a>
+            <a href={`mailto:${MARCA.email}`} className={estilos.instagram}>
+              <Icono nombre="mail" />
+              {MARCA.email}
+            </a>
+          </div>
         </div>
 
         <div className={estilos.columna}>
@@ -52,15 +54,18 @@ export default function Footer() {
 
         <div className={estilos.columna}>
           <h3 className={estilos.tituloColumna}>Contacto</h3>
-          {LOCALES.filter((local) => local.telefono).map((local) => (
-            <p key={local.id} className={estilos.contacto}>
-              <span className={estilos.nombreLocal}>{local.nombre}</span>
-              <Telefono numero={local.telefono} className={estilos.enlace} />
-            </p>
-          ))}
+          <div className={estilos.contactos}>
+            {LOCALES.filter((local) => local.telefono).map((local) => (
+              <p key={local.id} className={estilos.contacto}>
+                <span className={estilos.nombreLocal}>{local.nombre}</span>
+                <Telefono numero={local.telefono} className={estilos.enlace} />
+              </p>
+            ))}
+          </div>
         </div>
 
-        <nav className={estilos.columna} aria-label="Navegación del pie">
+        {/* En el celular no va: las mismas secciones están en el menú de arriba */}
+        <nav className={`${estilos.columna} ${estilos.secciones}`} aria-label="Navegación del pie">
           <h3 className={estilos.tituloColumna}>Secciones</h3>
           <Link href="/" className={estilos.enlace}>Inicio</Link>
           <Link href="/carta" className={estilos.enlace}>Carta</Link>

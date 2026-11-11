@@ -19,6 +19,9 @@ zoom. Arreglos:
   24 px de alto; ahora unos 40. En la compu el índice de la carta queda como estaba.
 - **Selector de carta (fijo arriba):** menos relleno en el celular; "La Posta II
   Restaurante" entra en dos líneas y la barra pasa de ~90 a 69 px de alto.
+- **Pie en el celular** (al usuario le parecía enorme): de 867 a 484 px de alto. Menos
+  relleno, logo más chico, Instagram y mail en una fila, los dos teléfonos lado a lado y
+  sin la columna "Secciones" (están en el menú de arriba). En la compu queda igual.
 
 ## 2026-11-11 — Aviso de la seña en /reservas y tarjeta de Días bloqueados
 

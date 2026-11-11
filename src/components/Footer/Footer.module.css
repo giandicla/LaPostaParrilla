@@ -1,7 +1,7 @@
 .footer {
   background-color: var(--bordo-900);
   color: var(--crema);
-  padding: var(--sp-12) var(--sp-4) var(--sp-6);
+  padding: var(--sp-8) var(--sp-4) var(--sp-4);
 }
 
 .contenedor {
@@ -9,7 +9,8 @@
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--sp-8);
+  /* En el celular el pie es corto: menos espacio entre bloques */
+  gap: var(--sp-6);
 }
 
 .columnaMarca,
@@ -23,7 +24,7 @@
 }
 
 .logo {
-  width: 132px;
+  width: 112px;
   height: auto;
   margin-bottom: var(--sp-3);
 }
@@ -31,6 +32,24 @@
 .bajada {
   font-size: var(--fs-small);
   opacity: 0.85;
+}
+
+/* Instagram y mail: uno al lado del otro en el celular */
+.redes {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--sp-6);
+}
+
+/* Los dos teléfonos lado a lado en el celular */
+.contactos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-4);
+}
+
+.secciones {
+  display: none;
 }
 
 .instagram {
@@ -86,7 +105,7 @@ a.enlace:hover {
 
 .credito {
   max-width: var(--ancho-max);
-  margin: var(--sp-8) auto 0;
+  margin: var(--sp-6) auto 0;
   padding-top: var(--sp-4);
   border-top: 1px solid var(--linea-clara);
   font-size: var(--fs-small);
@@ -95,8 +114,32 @@ a.enlace:hover {
 }
 
 @media (min-width: 600px) {
+  .footer {
+    padding: var(--sp-12) var(--sp-4) var(--sp-6);
+  }
+
   .contenedor {
     grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-8);
+  }
+
+  .logo {
+    width: 132px;
+  }
+
+  .redes,
+  .contactos {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .secciones {
+    display: flex;
+  }
+
+  .credito {
+    margin-top: var(--sp-8);
   }
 }
 
