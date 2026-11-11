@@ -4,6 +4,13 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-11 — Nosotros: las empanadas en la galería del restaurante
+
+Pedido del usuario: la primera foto de la galería de La Posta II Restaurante en
+`/nosotros` pasa a ser "Cuatro tipos empanadas plano arriba.jpg"
+(`public/img/restaurante/empanadas.webp`, sumada a `scripts/procesar-assets.py`). La foto
+del salón (`salon.webp`) queda en el repo pero sin uso.
+
 ## 2026-11-11 — Nosotros: el equipo como familia y un texto propio por salón
 
 Rama `feat/nosotros-equipo`. Pedido del usuario: "La familia detrás de La Posta" tiene que

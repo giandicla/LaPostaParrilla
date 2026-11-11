@@ -61,6 +61,7 @@ FOTOS = [
     (R, 'Plano mesa comida.jpg', 'restaurante/hero.webp', 1638),
     (R, 'Entrada restaurante.jpg', 'restaurante/card.webp', 1200),
     (R, 'Salon.jpg', 'restaurante/salon.webp', 1200),
+    (R, 'Cuatro tipos empanadas plano arriba.jpg', 'restaurante/empanadas.webp', 1200),
     (R, 'Fogon chimenea.jpg', 'restaurante/fogon.webp', 1200),
     (R, 'Muebles con vinos.jpg', 'restaurante/vinos.webp', 1200),
     (R, 'plano mesa con fondo rustico.jpg', 'restaurante/reserva.webp', 1200),  # /reservas

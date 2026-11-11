@@ -81,6 +81,11 @@ const ANCHOS = {
     960,
     1200
   ],
+  "/img/restaurante/empanadas.webp": [
+    480,
+    960,
+    1200
+  ],
   "/img/restaurante/fogon.webp": [
     480,
     960,
