@@ -5,7 +5,7 @@ import estilos from './Icono.module.css';
 //
 //   google     el "G" oficial, con los colores de Google (lo piden sus pautas
 //              para el botón de inicio de sesión)
-//   instagram  y whatsapp: de un solo color, toman el del texto (currentColor)
+//   instagram, whatsapp y mail: de un solo color, toman el del texto (currentColor)
 const ICONOS = {
   google: (
     <svg viewBox="0 0 48 48">
@@ -20,6 +20,12 @@ const ICONOS = {
       <rect x="3" y="3" width="18" height="18" rx="5" />
       <circle cx="12" cy="12" r="4" />
       <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none" />
+    </svg>
+  ),
+  mail: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m3 7 9 6 9-6" />
     </svg>
   ),
   whatsapp: (

@@ -1,4 +1,5 @@
 import { LOCALES, datosEnComun, enlaceComoLlegar } from '../../data/locales.js';
+import { MARCA } from '../../data/marca.js';
 import InfoLocal from '../InfoLocal/InfoLocal.jsx';
 import Icono from '../Icono/Icono.jsx';
 import Telefono from '../Telefono/Telefono.jsx';
@@ -20,42 +21,56 @@ export default function Visitanos() {
   return (
     <article className={estilos.tarjeta}>
       <div className={estilos.datos}>
-        <dl className={estilos.resumen}>
-          <div>
-            <dt className={estilos.subtitulo}>Dónde estamos</dt>
-            <dd>
-              <address className={estilos.direccion}>{comun.direccion}</address>
-            </dd>
+        <div className={estilos.resumen}>
+          <div className={estilos.bloque}>
+            <h3 className={estilos.subtitulo}>Dónde estamos</h3>
+            <address className={estilos.direccion}>{comun.direccion}</address>
+            <a href={enlaceComoLlegar(comun.direccion)} className={estilos.enlace} target="_blank" rel="noreferrer">
+              Cómo llegar →
+            </a>
           </div>
-          {comun.horarios.map((horario) => (
-            <div key={horario.dia}>
-              <dt className={estilos.subtitulo}>{horario.dia}</dt>
-              <dd>{horario.franja}</dd>
-            </div>
-          ))}
-        </dl>
-        <a href={enlaceComoLlegar(comun.direccion)} className={estilos.comoLlegar} target="_blank" rel="noreferrer">
-          Cómo llegar →
-        </a>
+          <div className={estilos.bloque}>
+            <h3 className={estilos.subtitulo}>Horarios</h3>
+            {comun.horarios.map((horario) => (
+              <p key={horario.dia}>
+                {horario.dia}: {horario.franja}
+              </p>
+            ))}
+          </div>
+          <div className={estilos.bloque}>
+            <h3 className={estilos.subtitulo}>Instagram y mail</h3>
+            <a href={MARCA.instagramUrl} target="_blank" rel="noreferrer" className={estilos.enlaceIcono}>
+              <Icono nombre="instagram" />
+              {MARCA.instagram}
+            </a>
+            <a href={`mailto:${MARCA.email}`} className={estilos.enlaceIcono}>
+              <Icono nombre="mail" />
+              {MARCA.email}
+            </a>
+          </div>
+        </div>
 
         <ul className={estilos.salones}>
           {LOCALES.map((local) => (
             <li key={local.id} className={estilos.salon}>
               <h3 className={estilos.nombre}>{local.nombre}</h3>
-              {local.telefono && <Telefono numero={local.telefono} className={estilos.telefono} />}
-              {local.whatsapp && (
-                <a
-                  href={`https://wa.me/${local.whatsapp}?text=${encodeURIComponent(
-                    `Hola! Quería consultar por una reserva en ${local.nombre}.`
-                  )}`}
-                  className={estilos.whatsapp}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Icono nombre="whatsapp" />
-                  WhatsApp<span className="visualmente-oculto"> de {local.nombre}</span>
-                </a>
-              )}
+              {/* Abajo de todo en las dos tarjetas, aunque un nombre ocupe más líneas */}
+              <div className={estilos.pie}>
+                {local.telefono && <Telefono numero={local.telefono} className={estilos.telefono} />}
+                {local.whatsapp && (
+                  <a
+                    href={`https://wa.me/${local.whatsapp}?text=${encodeURIComponent(
+                      `Hola! Quería consultar por una reserva en ${local.nombre}.`
+                    )}`}
+                    className={estilos.whatsapp}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    <Icono nombre="whatsapp" />
+                    WhatsApp<span className="visualmente-oculto"> de {local.nombre}</span>
+                  </a>
+                )}
+              </div>
             </li>
           ))}
         </ul>
