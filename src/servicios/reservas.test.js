@@ -1,7 +1,7 @@
 // node --test "src/**/*.test.js"
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { estadoSena, estadoVisible, formatearFecha, horaDeVencimiento, puedePagar, sePuedeCancelar, sePuedeModificar, sigueMirandoElPago, turnoDe } from './reservas.js';
+import { estadoSena, estadoVisible, montoSena, textoMontoSena, formatearFecha, horaDeVencimiento, puedePagar, sePuedeCancelar, sePuedeModificar, sigueMirandoElPago, turnoDe } from './reservas.js';
 
 test('la fecha se escribe con el día de la semana; el año, solo si se pide', () => {
   assert.equal(formatearFecha('2027-03-10'), 'miércoles, 10 de marzo');
@@ -87,4 +87,15 @@ test('la pantalla de pago sigue mirando 10 minutos después de vencer, por si el
   assert.equal(sigueMirandoElPago({ ...vencida, pagos: [{ estado: 'reintegro_pendiente' }] }, a('20:20')), true);
   assert.equal(sigueMirandoElPago({ ...vencida, pagos: [{ estado: 'reintegrado' }] }, a('20:16')), false);
   assert.equal(sigueMirandoElPago({ ...vencida, estado: 'confirmada' }, a('20:05')), false);
+});
+
+test('montoSena: el monto del pago que cuenta, o null', () => {
+  assert.equal(montoSena({ pagos: [{ estado: 'rechazado', monto: 10000 }, { estado: 'aprobado', monto: '20000' }] }), 20000);
+  assert.equal(montoSena({ pagos: [{ estado: 'iniciado', monto: 10000 }] }), null);
+  assert.equal(montoSena({ pagos: [{ estado: 'aprobado' }] }), null);
+});
+
+test('textoMontoSena: con el monto si vino', () => {
+  assert.match(textoMontoSena({ pagos: [{ estado: 'aprobado', monto: 10000 }] }), /^El monto de la seña \(\$\s?10\.000\)$/);
+  assert.equal(textoMontoSena({ pagos: [] }), 'El monto de la seña');
 });

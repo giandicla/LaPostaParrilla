@@ -20,11 +20,8 @@ select is(
   (select fecha_hasta from public.dias_bloqueados where fecha = current_date + 60),
   current_date + 60, 'sin fecha_hasta, el bloqueo es de un solo día');
 
-insert into public.dias_bloqueados (fecha, local_id, turno) values (current_date + 61, 'parrilla', 'noche');
-select is(
-  (select hora_desde::text || ' a ' || hora_hasta::text || ' ' || coalesce(turno, 'sin turno')
-   from public.dias_bloqueados where fecha = current_date + 61),
-  '17:00:00 a 23:59:00 sin turno', 'un turno (front anterior) se guarda como su rango de horas');
+-- La columna turno ya no existe (migración 20261111120000)
+select hasnt_column('public', 'dias_bloqueados', 'turno', 'dias_bloqueados ya no tiene la columna turno');
 
 -- ---------- Lo que la base no acepta ----------
 select throws_ok($$

@@ -14,6 +14,7 @@ import { getLocal, enlaceWhatsapp } from '../../src/data/locales.js';
 import { cancelarReserva, iniciarPago } from '../../src/servicios/pagos.js';
 import {
   ETIQUETAS_SENA,
+  textoMontoSena,
   esActiva,
   estadoSena,
   faltaParaReserva,
@@ -31,7 +32,7 @@ import estilos from './page.module.css';
 
 // Qué le decimos según lo que pasó con la seña (respuesta de la cancelación)
 const MENSAJE_CANCELADA = {
-  pedido: 'Listo, cancelamos tu reserva. Ya pedimos la devolución de la seña a Mercado Pago: vuelve al mismo medio de pago.',
+  pedido: 'Listo, cancelamos tu reserva. El monto de la seña será devuelto al mismo medio de pago.',
   fallo: 'Listo, cancelamos tu reserva. La devolución de la seña no salió todavía; la reintentamos desde el local.',
   no_corresponde: 'Listo, cancelamos tu reserva.',
 };
@@ -211,7 +212,7 @@ function ListaReservas() {
             ¿Seguro que querés cancelar tu reserva del {formatearFecha(porCancelar.fecha)} a
             las {porCancelar.hora.slice(0, 5)} en {getLocal(porCancelar.local_id)?.nombre}?
           </p>
-          {estadoSena(porCancelar) === 'aprobado' && <p>Te devolvemos la seña por Mercado Pago.</p>}
+          {estadoSena(porCancelar) === 'aprobado' && <p>{textoMontoSena(porCancelar)} será devuelto al mismo medio de pago.</p>}
         </Dialogo>
       )}
     </div>

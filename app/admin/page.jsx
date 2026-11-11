@@ -15,6 +15,7 @@ import { LOCALES, getLocal, esIdDeLocal, ID_LOCAL_POR_DEFECTO } from '../../src/
 import {
   ESTADOS,
   ETIQUETAS_SENA,
+  textoMontoSena,
   estadoSena,
   estadoVisible,
   formatearFecha,
@@ -35,11 +36,15 @@ import estilos from './page.module.css';
 const MOTIVO_SUGERIDO = 'No hay lugar';
 // Cuánto queda en pantalla el aviso de "Reserva guardada…"
 const SEGUNDOS_DEL_AVISO = 8;
+const AVISO_REINTEGRO = {
+  pedido: ' El monto de la seña será devuelto al mismo medio de pago.',
+  fallo: ' La devolución de la seña no salió: reintentala en "Devoluciones de seña en curso".',
+};
 
 // ---------------------------------------------------------------------
 // Una reserva en el panel: datos, acciones según el estado, editar, nota
 // ---------------------------------------------------------------------
-function FilaReserva({ reserva, franjas, alCambiar, alError }) {
+function FilaReserva({ reserva, franjas, alCambiar, alError, alAviso }) {
   const [editando, setEditando] = useState(false);
   // El diálogo que pide el motivo antes de cancelar
   const [cancelando, setCancelando] = useState(false);
@@ -57,10 +62,12 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
   // Una reserva del local sin mail no recibe avisos: no se le promete uno
   const avisoMail = delLocal && !reserva.mail ? '' : ' Le avisamos al cliente por mail.';
 
-  const ejecutar = async (accion) => {
+  // aviso: texto, o función del resultado de la acción
+  const ejecutar = async (accion, aviso) => {
     try {
-      await accion();
+      const resultado = await accion();
       alCambiar();
+      if (aviso) alAviso(typeof aviso === 'function' ? aviso(resultado) : aviso);
     } catch (e) {
       alError(e.message);
     }
@@ -72,7 +79,8 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
       return;
     }
     setCancelando(false);
-    ejecutar(() => cancelarReserva(reserva.id, motivo.trim()));
+    ejecutar(() => cancelarReserva(reserva.id, motivo.trim()), ({ reintegro } = {}) =>
+      `Reserva de ${reserva.nombre} cancelada.${avisoMail}${AVISO_REINTEGRO[reintegro] ?? ''}`);
   };
 
   return (
@@ -120,7 +128,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
               onClick={() => ejecutar(async () => {
                 await guardarNota(reserva.id, borradorNota);
                 setBorradorNota(null);
-              })}
+              }, `Nota de ${reserva.nombre} guardada.`)}
             >
               Guardar nota
             </button>
@@ -135,6 +143,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
             alGuardar={() => {
               setEditando(false);
               alCambiar();
+              alAviso(`Reserva de ${reserva.nombre} guardada.${avisoMail}`);
             }}
             alCerrar={() => setEditando(false)}
           />
@@ -171,7 +180,7 @@ function FilaReserva({ reserva, franjas, alCambiar, alError }) {
           <p>
             {formatearFecha(reserva.fecha)}, {reserva.hora.slice(0, 5)} · {reserva.personas}{' '}
             {reserva.personas === 1 ? 'persona' : 'personas'}
-            {estadoSena(reserva) === 'aprobado' && '. La seña se le devuelve por Mercado Pago.'}
+            {estadoSena(reserva) === 'aprobado' && `. ${textoMontoSena(reserva)} se le devuelve al mismo medio de pago.`}
           </p>
           <Campo
             id={`motivo-${reserva.id}`}
@@ -323,6 +332,11 @@ function Panel() {
 
   const filtrar = (cambio) => setFiltros((anteriores) => ({ ...anteriores, ...cambio }));
   const alError = useCallback((mensaje) => setError(mensaje), []);
+  // Aviso de una acción propia: se va solo, y borra un error viejo
+  const alAviso = useCallback((texto) => {
+    setError('');
+    setNovedad({ texto, seVa: true });
+  }, []);
 
   return (
     <div className={estilos.panel}>
@@ -409,6 +423,7 @@ function Panel() {
               franjas={franjas[r.local_id] ?? []}
               alCambiar={cargar}
               alError={alError}
+              alAviso={alAviso}
             />
           ))}
         </ul>

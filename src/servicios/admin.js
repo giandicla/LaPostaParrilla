@@ -5,7 +5,7 @@ import { supabase, resultado } from './supabase.js';
 import { hoyEnArgentina } from './reservas.js';
 
 const COLUMNAS =
-  'id, usuario_id, origen, mail, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, motivo_cancelacion, creada_en, notas_reserva(nota), pagos(estado)';
+  'id, usuario_id, origen, mail, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, motivo_cancelacion, creada_en, notas_reserva(nota), pagos(estado, monto)';
 
 // PostgREST devuelve como mucho max_rows filas por pedido (1000): se piden
 // de a páginas hasta traer todas. Con el orden por id, ninguna se repite ni

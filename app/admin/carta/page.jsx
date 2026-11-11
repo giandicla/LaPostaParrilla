@@ -110,6 +110,7 @@ function EditorCarta() {
             alEditar={editar}
             alCambiar={cargar}
             alError={setAviso}
+            alAviso={setAviso}
           />
         </>
       )}
