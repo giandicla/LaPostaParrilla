@@ -5,7 +5,7 @@
 import { supabase, resultado } from './supabase.js';
 
 const COLUMNAS =
-  'id, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, motivo_cancelacion, creada_en, pagos(estado)';
+  'id, local_id, fecha, hora, personas, nombre, telefono, comentarios, estado, cancelada_por, motivo_cancelacion, creada_en, pagos(estado, monto)';
 
 // Horarios reservables de un local, como 'HH:MM'
 export async function obtenerFranjas(idLocal) {
@@ -141,6 +141,19 @@ const COBRADOS = ['aprobado', 'reintegro_pendiente', 'reintegrado'];
 export const estadoSena = (reserva) => {
   const estado = estadoDelPago(reserva);
   return COBRADOS.includes(estado) ? estado : null;
+};
+
+// Monto de la seña cobrada (el del pago que cuenta), o null si no hay
+export const montoSena = (reserva) => {
+  const estado = estadoSena(reserva);
+  const pago = estado && (reserva.pagos ?? []).find((p) => p.estado === estado);
+  return pago?.monto != null ? Number(pago.monto) : null;
+};
+
+// "El monto de la seña ($20.000)", o sin el monto si no vino
+export const textoMontoSena = (reserva) => {
+  const monto = montoSena(reserva);
+  return monto != null ? `El monto de la seña (${formatearMonto(monto)})` : 'El monto de la seña';
 };
 
 export const ETIQUETAS_SENA = {

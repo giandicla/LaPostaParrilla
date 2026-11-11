@@ -149,7 +149,7 @@ function EstadoDelPago() {
         <h2 className={estilos.titulo}>Llegó tarde el pago</h2>
         {resumen}
         <p>
-          El plazo para pagar ya se había vencido y el lugar se liberó, así que te devolvemos la seña por Mercado Pago, al mismo medio de pago.
+          El plazo para pagar ya se había vencido y el lugar se liberó, así que el monto de la seña será devuelto al mismo medio de pago.
           Si querés, hacé la reserva de nuevo.
         </p>
         <p className={formulario.ayuda}>{ETIQUETAS_SENA[sena]}.</p>

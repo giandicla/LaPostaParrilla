@@ -47,8 +47,8 @@ select is((select cancelada_por::text from public.reservas where id = 'bbbbbbbb-
   'admin', 'la cancelación directa queda a nombre del admin');
 
 -- ---------- Un turno bloqueado en los dos locales (local_id null) ----------
-insert into public.dias_bloqueados (fecha, local_id, turno, motivo)
-values (current_date + 20, null, 'noche', 'Evento');
+insert into public.dias_bloqueados (fecha, local_id, hora_desde, hora_hasta, motivo)
+values (current_date + 20, null, '17:00', '23:59', 'Evento');
 
 set local role authenticated;
 set local request.jwt.claims to '{"sub":"11111111-1111-1111-1111-111111111111","role":"authenticated"}';

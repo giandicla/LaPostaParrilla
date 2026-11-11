@@ -12,8 +12,9 @@ insert into public.reservas (id, usuario_id, local_id, fecha, hora, personas, no
 values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', '22222222-2222-2222-2222-222222222222',
         'parrilla', current_date + 20, '20:30', 2, 'Beto', '2944222222');
 
-insert into public.dias_bloqueados (fecha, local_id, turno, motivo)
-values (current_date + 20, 'parrilla', 'noche', 'Completo');
+-- La noche, como rango de horas (la columna turno se sacó en 20261111120000)
+insert into public.dias_bloqueados (fecha, local_id, hora_desde, hora_hasta, motivo)
+values (current_date + 20, 'parrilla', '17:00', '23:59', 'Completo');
 
 select is(public.turno_de('12:30'), 'mediodia', 'antes de las 17 es mediodía');
 select is(public.turno_de('20:00'), 'noche', 'desde las 17 es noche');
@@ -36,7 +37,7 @@ select is((select estado::text from public.reservas where id = 'bbbbbbbb-bbbb-bb
   'esperando_pago', 'la reserva que ya existía no se toca');
 
 select lives_ok($$
-  insert into public.dias_bloqueados (fecha, local_id, turno) values (current_date + 20, 'parrilla', 'mediodia')
+  insert into public.dias_bloqueados (fecha, local_id, hora_desde, hora_hasta) values (current_date + 20, 'parrilla', '00:00', '16:59')
 $$, 'se puede bloquear también el otro turno del mismo día');
 
 select * from finish();

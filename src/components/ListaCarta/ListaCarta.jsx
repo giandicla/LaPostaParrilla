@@ -15,7 +15,7 @@ import estilos from './ListaCarta.module.css';
 //   carta: la carta de la vista, como la da la API
 //   idEditando: el producto que está en la caja (su fila se resalta)
 //   alEditar({ item, seccion, bodega? }), alCambiar(), alError(mensaje)
-export default function ListaCarta({ carta, idEditando, alEditar, alCambiar, alError }) {
+export default function ListaCarta({ carta, idEditando, alEditar, alCambiar, alError, alAviso }) {
   // { tipo: 'item' | 'bodega', id, grupo, destino } mientras se arrastra. El
   // estado dibuja; la ref la leen los eventos, que con un arrastre rápido llegan
   // antes del render siguiente.
@@ -37,11 +37,13 @@ export default function ListaCarta({ carta, idEditando, alEditar, alCambiar, alE
     focoPendiente.current = null;
   }, [carta]);
 
-  const hacer = async (accion) => {
+  // aviso: lo que se muestra arriba cuando salió bien (si no, se borra el anterior)
+  const hacer = async (accion, aviso = '') => {
     setOcupado(true);
     try {
       await accion();
       await alCambiar();
+      alAviso?.(aviso);
     } catch (error) {
       alError(error.message);
     } finally {
@@ -145,9 +147,9 @@ export default function ListaCarta({ carta, idEditando, alEditar, alCambiar, alE
           confirmar="Eliminar"
           volver="No, volver"
           alConfirmar={() => {
-            const { id } = porEliminar;
+            const { id, nombre } = porEliminar;
             setPorEliminar(null);
-            hacer(() => borrarItem(id));
+            hacer(() => borrarItem(id), `Eliminado: ${nombre}.`);
           }}
           alCerrar={() => setPorEliminar(null)}
         >
