@@ -11,7 +11,7 @@ hablar del equipo como familia, no de la familia que abrió el restaurante. El b
 anterior ("Empezamos con un solo salón…") estaba inventado. Texto nuevo armado con
 frases e ideas del usuario, que lo aprobó. "Los salones por dentro" repetía las frases
 de las tarjetas del inicio: cada local suma `descripcionNosotros` (texto del usuario), y
-la página usa la corta si un local no la tiene.
+la página usa la corta si un local no la tiene. Las bajadas de "Los salones por dentro" y "Contacto" son del usuario, y Contacto usa la misma tarjeta que "Visitanos" del inicio en vez de una tarjeta por local.
 
 ## 2026-11-11 — Foto propia en la portada de la carta de vinos
 

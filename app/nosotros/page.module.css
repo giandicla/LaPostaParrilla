@@ -37,13 +37,6 @@
   font-weight: 500;
 }
 
-.grillaInfo {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: var(--sp-8);
-  align-items: stretch;
-}
-
 .contactoComun {
   display: flex;
   flex-wrap: wrap;
@@ -84,9 +77,5 @@
 
   .localInvertido .galeria {
     order: 1;
-  }
-
-  .grillaInfo {
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   }
 }

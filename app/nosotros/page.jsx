@@ -1,7 +1,7 @@
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import GaleriaGrid from '../../src/components/GaleriaGrid/GaleriaGrid.jsx';
-import InfoLocal from '../../src/components/InfoLocal/InfoLocal.jsx';
+import Visitanos from '../../src/components/Visitanos/Visitanos.jsx';
 import { LOCALES } from '../../src/data/locales.js';
 import { TEXTOS } from '../../src/data/textos.js';
 import { MARCA } from '../../src/data/marca.js';
@@ -36,7 +36,7 @@ export default function Nosotros() {
       <Section
         fondo="arena"
         titulo="Los salones por dentro"
-        bajada="Cada uno con su clima. Elegí el que vaya con la noche que tenés en mente."
+        bajada="Dos salones con identidad propia. Elegí el que mejor se ajuste a lo que buscás disfrutar hoy."
       >
         <div className={estilos.locales}>
           {LOCALES.map((local, indice) => (
@@ -64,13 +64,10 @@ export default function Nosotros() {
       <Section
         id="contacto"
         titulo="Contacto"
-        bajada="Escribinos o pasá a vernos. Los dos salones están uno al lado del otro."
+        bajada="Contactanos o pasá a visitarnos. Nuestros restaurantes te esperan juntos, puerta con puerta."
       >
-        <div className={estilos.grillaInfo}>
-          {LOCALES.map((local) => (
-            <InfoLocal key={local.id} local={local} />
-          ))}
-        </div>
+        {/* La misma tarjeta que "Visitanos" del inicio */}
+        <Visitanos />
 
         <div className={estilos.contactoComun}>
           <p>Para cualquiera de los dos salones:</p>
