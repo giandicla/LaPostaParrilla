@@ -15,6 +15,8 @@ const ES_VARIANTE = /-\d+\.webp$/;
 
 const anchos = {};
 for (const carpeta of fs.readdirSync(RAIZ)) {
+  // En la raíz también hay archivos sueltos (compartir.jpg): solo carpetas
+  if (!fs.statSync(path.join(RAIZ, carpeta)).isDirectory()) continue;
   for (const archivo of fs.readdirSync(path.join(RAIZ, carpeta))) {
     if (!archivo.endsWith('.webp') || ES_VARIANTE.test(archivo)) continue;
     const origen = path.join(RAIZ, carpeta, archivo);

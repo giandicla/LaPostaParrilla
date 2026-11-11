@@ -1,7 +1,7 @@
 .footer {
   background-color: var(--bordo-900);
   color: var(--crema);
-  padding: var(--sp-16) var(--sp-4) var(--sp-8);
+  padding: var(--sp-12) var(--sp-4) var(--sp-6);
 }
 
 .contenedor {
@@ -21,15 +21,14 @@
 }
 
 .logo {
-  width: 168px;
+  width: 132px;
   height: auto;
-  margin-bottom: var(--sp-4);
+  margin-bottom: var(--sp-2);
 }
 
 .bajada {
   font-size: var(--fs-small);
   opacity: 0.85;
-  max-width: 28ch;
 }
 
 .instagram {
@@ -38,7 +37,7 @@
   gap: var(--sp-2);
   color: var(--arena);
   font-weight: 500;
-  margin-top: var(--sp-2);
+  font-size: var(--fs-small);
 }
 
 .instagram:hover {
@@ -50,12 +49,22 @@
   text-transform: uppercase;
   letter-spacing: var(--tracking-titulo);
   color: var(--crema);
-  margin-bottom: var(--sp-2);
+  margin-bottom: var(--sp-1);
 }
 
 .direccion {
   font-style: normal;
   font-size: var(--fs-small);
+  opacity: 0.85;
+}
+
+.contacto {
+  display: flex;
+  flex-direction: column;
+  font-size: var(--fs-small);
+}
+
+.nombreLocal {
   opacity: 0.85;
 }
 
@@ -65,33 +74,31 @@
   transition: opacity var(--transicion), color var(--transicion);
 }
 
-.enlace:hover {
+a.enlace:hover {
   opacity: 1;
   color: var(--arena);
 }
 
 .credito {
   max-width: var(--ancho-max);
-  margin: var(--sp-12) auto 0;
-  padding-top: var(--sp-6);
+  margin: var(--sp-8) auto 0;
+  padding-top: var(--sp-4);
   border-top: 1px solid var(--linea-clara);
   font-size: var(--fs-small);
   opacity: 0.7;
   text-align: center;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 600px) {
   .contenedor {
     grid-template-columns: repeat(2, 1fr);
-    gap: var(--sp-12);
   }
 }
 
-@media (min-width: 1100px) {
+@media (min-width: 900px) {
   .contenedor {
-    /* La marca mantiene su columna más ancha de forma explícita; las columnas
-       de local + la de navegación son fluidas, para que un tercer local sume
-       una columna más en la misma fila en vez de partirse a una fila aparte. */
-    grid-template-columns: minmax(240px, 1.4fr) repeat(auto-fit, minmax(180px, 1fr));
+    /* La marca, más ancha; dirección, contacto y secciones, iguales */
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: var(--sp-8);
   }
 }

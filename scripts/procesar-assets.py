@@ -65,7 +65,7 @@ FOTOS = [
     (R, 'Muebles con vinos.jpg', 'restaurante/vinos.webp', 1200),
     (R, 'plano mesa con fondo rustico.jpg', 'restaurante/reserva.webp', 1200),  # /reservas
     (R, 'Pizza rucula tomates secos.jpg', 'restaurante/plato-pizza.webp', 1000),
-    (R, 'Albondigas y vino.jpg', 'restaurante/plato-albondigas.webp', 1000),
+    (R, 'Albondigas y vino.jpg', 'restaurante/plato-albondigas.webp', 1000),  # luego recortada a la cazuela (2026-11-11, ver BITACORA)
     (R, 'Trucha con salsa.jpg', 'restaurante/plato-trucha.webp', 1000),
     (R, 'Volcan de chocolate con helado.jpg', 'restaurante/plato-volcan.webp', 1000),
 ]

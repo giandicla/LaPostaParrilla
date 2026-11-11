@@ -1,0 +1,137 @@
+.grilla {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-8);
+}
+
+.tarjeta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-6);
+  background-color: var(--blanco);
+  border-radius: var(--radio-lg);
+  padding: var(--sp-6);
+  box-shadow: var(--sombra-sm);
+  border-top: 4px solid var(--bordo-900);
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+/* Dirección y horarios, uno al lado del otro */
+.resumen {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-4) var(--sp-8);
+  margin: 0;
+}
+
+.resumen dd {
+  margin: var(--sp-1) 0 0;
+}
+
+.subtitulo {
+  font-family: var(--font-cuerpo);
+  font-size: var(--fs-small);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-etiqueta);
+  color: var(--gris-600);
+}
+
+.direccion {
+  font-style: normal;
+}
+
+.comoLlegar {
+  align-self: flex-start;
+  font-weight: 600;
+  font-size: var(--fs-small);
+  color: var(--bordo-900);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Una tarjetita por salón */
+.salones {
+  list-style: none;
+  margin: var(--sp-2) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--sp-4);
+}
+
+.salon {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  padding: var(--sp-4);
+  border: 1px solid var(--gris-300);
+  border-radius: var(--radio-md);
+}
+
+.nombre {
+  font-size: var(--fs-h3);
+  color: var(--bordo-900);
+}
+
+.telefono {
+  font-size: var(--fs-small);
+  color: var(--gris-600);
+}
+
+.whatsapp {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: auto;
+  background-color: var(--bordo-900);
+  color: var(--crema);
+  font-weight: 600;
+  font-size: var(--fs-small);
+  padding: var(--sp-2) var(--sp-4);
+  border-radius: var(--radio-md);
+  transition: background-color var(--transicion);
+}
+
+.whatsapp:hover {
+  background-color: var(--bordo-700);
+}
+
+.marcoMapa {
+  border-radius: var(--radio-md);
+  overflow: hidden;
+  border: 1px solid var(--gris-300);
+  min-height: 280px;
+}
+
+.mapa {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 280px;
+  border: 0;
+}
+
+@media (min-width: 420px) {
+  .salones {
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  }
+}
+
+@media (min-width: 900px) {
+  .grilla {
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  }
+
+  .tarjeta {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    gap: var(--sp-8);
+    padding: var(--sp-8);
+  }
+}

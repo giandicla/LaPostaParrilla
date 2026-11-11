@@ -4,6 +4,26 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-11 — Estética del inicio y del pie
+
+Rama `feat/estetica-inicio-y-footer`. Pedidos del usuario mirando el sitio.
+
+- **Textos del usuario:** descripciones de los dos salones, la bajada de "Nuestros dos
+  salones" y la de "Algunos de nuestros platos". Los anteriores tenían detalles
+  inventados por la IA.
+- **Albóndigas:** la foto se recortó desde la original, sobre la cazuela (era 4:5 como la
+  tarjeta, así que correr el encuadre no cambiaba nada). Se regeneraron sus variantes.
+- **Visitanos:** una sola tarjeta, porque los salones comparten dirección, mapa y
+  horarios (`datosEnComun()` en `locales.js`; si un día difieren, vuelve a una tarjeta
+  por local). Arriba la dirección, los horarios y "Cómo llegar" (Google Maps); abajo una
+  tarjetita por salón con teléfono y WhatsApp; el mapa al costado.
+- **Teléfono** (componente `Telefono`): link para llamar en pantallas táctiles, texto con
+  mouse.
+- **Pie:** más bajo (de ~570 a ~290 px en la compu), dirección una sola vez, columna de
+  contacto, columnas que se acomodan en 1, 2 o 4.
+- `scripts/variantes-img.mjs` saltea los archivos sueltos de `public/img/` (se trababa con
+  `compartir.jpg`).
+
 ## 2026-11-11 — Textos de la devolución, avisos del panel, sin columna `turno` y limpieza
 
 PR #49 (rama `fix/textos-reembolso-y-panel`) y limpieza de producción.

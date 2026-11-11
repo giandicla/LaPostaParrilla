@@ -1,0 +1,14 @@
+/* Por defecto (táctil o sin datos del puntero) se puede llamar */
+.texto {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .llamar {
+    display: none;
+  }
+
+  .texto {
+    display: inline;
+  }
+}
