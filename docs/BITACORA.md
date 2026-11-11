@@ -4,6 +4,25 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-11 — Textos de la devolución, avisos del panel, sin columna `turno` y limpieza
+
+PR #49 (rama `fix/textos-reembolso-y-panel`) y limpieza de producción.
+
+- **Devolución de la seña:** el diálogo de cancelar, el aviso de después y la página de
+  pago tardío dicen "El monto de la seña ($10.000) será devuelto al mismo medio de pago"
+  (pedido del usuario). `pagos(estado, monto)` en los embeds; `montoSena()` y
+  `textoMontoSena()` en `src/servicios/reservas.js`, con tests.
+- **Panel:** editar, cancelar y guardar la nota muestran su aviso (se va a los 8 s); si el
+  reembolso falla, lo dice. En la carta, "Eliminado: …". Las pestañas bajan de línea a
+  menos de unos 400 px.
+- **Base:** migración `20261111120000_sin_columna_turno` (borra `dias_bloqueados.turno`);
+  pgTAP 06, 14 y 16 actualizados.
+- **Producción probada pagando:** pago aprobado, cancelación y devolución confirmada por
+  el webhook.
+- **Limpieza de producción** (script corrido por el usuario en el editor SQL): sin
+  reservas, pagos, notas ni bloqueos; quedan la cuenta admin del usuario y dos cuentas
+  de prueba nuevas (`admin@laposta.test`, `cliente@laposta.test`). Carta intacta.
+
 ## 2026-11-10 — Bloqueos por rango de fechas y de horas
 
 Rama `feat/bloqueos-por-rango`. Pedido del usuario: bloquear de una fecha a otra y entre

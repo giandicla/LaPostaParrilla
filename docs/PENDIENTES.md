@@ -159,7 +159,30 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
 - [ ] Si Mercado Pago pasa a credenciales reales: revisar los topes de mails (hoy pagar
       la seña en modo de prueba no cuesta plata, así que no frena a nadie).
 
-## Abiertos al 2026-11-10 (después de la prueba de usuario)
+## Abiertos al 2026-11-11 (víspera de la presentación)
+
+- **Hecho el 2026-11-11:**
+  - [x] **Probar pagando en producción:** modificar una reserva paga y cancelar con
+        reembolso, hechos por el usuario. La devolución se confirma sola (webhook). Una
+        reserva vieja quedó trabada en "en curso": la había cobrado el vendedor de prueba
+        con las credenciales de antes del 2026-11-04 y no se podía devolver.
+  - [x] **Texto de la devolución**: "El monto de la seña ($…) será devuelto al mismo medio
+        de pago" (pedido del usuario), PR #49.
+  - [x] Menores de la prueba: avisos propios del panel y de la carta, y pestañas a menos
+        de 400 px, PR #49.
+  - [x] Columna `dias_bloqueados.turno` borrada (migración `20261111120000`), PR #49.
+  - [x] **Datos de prueba de producción borrados**: reservas, pagos, notas, bloqueos y
+        las cuentas de prueba del usuario (queda su admin). Cuentas nuevas
+        `admin@laposta.test` y `cliente@laposta.test`; las contraseñas, en
+        `cuentas-de-prueba.local` (no se sube). La carta no se tocó.
+- **Sigue abierto:**
+  - [ ] **Estética del resto del sitio**: el usuario la va marcando navegando.
+  - [ ] Después de la corrección: cambiar la contraseña de las cuentas de prueba o
+        borrarlas.
+  - [ ] Rama `feat/diseno-propio`: un commit viejo sin mergear; decidir si se borra.
+  - [ ] Guion de la demo: **solo cuando lo pida el usuario**.
+
+## Abiertos al 2026-11-10 (reemplazado por la lista de arriba)
 
 Decisiones del usuario del 2026-11-10: **el sitio está terminado en funcionalidad**;
 queda la estética, que la marca él.
