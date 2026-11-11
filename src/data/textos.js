@@ -55,5 +55,6 @@ export const TEXTOS = {
     'Podés pagar con cualquier medio de pago a través de la redirección a la página ' +
     'oficial de Mercado Pago. Si cancelás la reserva hasta una hora antes, te devolvemos ' +
     'la seña al mismo medio de pago. Con menos de una hora de anticipación no se puede ' +
-    'cancelar y la seña no será devuelta.',
+    'cancelar y la seña no será devuelta. Si cancelamos nosotros, te la devolvemos en ' +
+    'cualquier caso.',
 };
