@@ -195,6 +195,21 @@
   color: var(--bordo-900);
 }
 
+.seccionBloqueos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+  margin-top: var(--sp-6);
+}
+
+/* La misma tarjeta blanca que los filtros de Reservas */
+.tarjetaForm {
+  padding: var(--sp-4);
+  background-color: var(--blanco);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-sm);
+}
+
 .formBloqueo {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
