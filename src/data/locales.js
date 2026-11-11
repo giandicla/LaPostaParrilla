@@ -24,6 +24,10 @@ export const LOCALES = [
     tagline: 'Parrilla patagónica',
     // Texto del usuario (2026-11-11)
     descripcion: 'Cordero al asador, especialidad en cortes a la parrilla y vinos de la región.',
+    // Más largo, para "Los salones por dentro" de /nosotros. Texto del usuario (2026-11-11)
+    descripcionNosotros:
+      'El fuego es el centro: cordero patagónico al asador y cortes a la parrilla, ' +
+      'acompañados por una carta extensa con vinos de la región.',
     direccion: DIRECCION,
     mapaEmbedUrl: MAPA_EMBED_URL,
     telefono: '+54 9 2944 96-6199',
@@ -55,6 +59,9 @@ export const LOCALES = [
     tagline: 'Pizzas, pastas y cocina de montaña',
     // Texto del usuario (2026-11-11)
     descripcion: 'Ambiente cálido y una propuesta culinaria volcada en los productos de la región.',
+    descripcionNosotros:
+      'Un salón de madera con ventanales y un fogón a leña encendido en la chimenea de ' +
+      'piedra. Pastas caseras, pizzas y cocina de montaña para compartir un momento inolvidable.',
     direccion: DIRECCION,
     mapaEmbedUrl: MAPA_EMBED_URL,
     telefono: '+54 9 2944 86-1339',

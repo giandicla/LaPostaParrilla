@@ -21,16 +21,21 @@
   gap: var(--sp-4);
 }
 
-/* Dirección y horarios, uno al lado del otro */
+
+
+/* Dirección, horarios y redes: cada bloque baja entero cuando no entra, así
+   "Cómo llegar" queda siempre debajo de la dirección */
 .resumen {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-4) var(--sp-8);
-  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: var(--sp-6);
 }
 
-.resumen dd {
-  margin: var(--sp-1) 0 0;
+.bloque {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-1);
 }
 
 .subtitulo {
@@ -46,14 +51,28 @@
   font-style: normal;
 }
 
-.comoLlegar {
-  align-self: flex-start;
+.enlace {
+  margin-top: var(--sp-1);
   font-weight: 600;
   font-size: var(--fs-small);
   color: var(--bordo-900);
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+.enlaceIcono {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-weight: 600;
+  color: var(--bordo-900);
+  overflow-wrap: anywhere;
+}
+
+.enlaceIcono:hover {
+  text-decoration: underline;
+}
+
 
 /* Una tarjetita por salón */
 .salones {
@@ -75,6 +94,14 @@
   border-radius: var(--radio-md);
 }
 
+.pie {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--sp-2);
+  margin-top: auto;
+}
+
 .nombre {
   font-size: var(--fs-h3);
   color: var(--bordo-900);
@@ -89,7 +116,6 @@
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
-  margin-top: auto;
   background-color: var(--bordo-900);
   color: var(--crema);
   font-weight: 600;

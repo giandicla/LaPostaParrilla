@@ -1,11 +1,10 @@
 import Hero from '../../src/components/Hero/Hero.jsx';
 import Section from '../../src/components/Section/Section.jsx';
 import GaleriaGrid from '../../src/components/GaleriaGrid/GaleriaGrid.jsx';
-import InfoLocal from '../../src/components/InfoLocal/InfoLocal.jsx';
+import Visitanos from '../../src/components/Visitanos/Visitanos.jsx';
 import { LOCALES } from '../../src/data/locales.js';
 import { TEXTOS } from '../../src/data/textos.js';
 import { MARCA } from '../../src/data/marca.js';
-import Icono from '../../src/components/Icono/Icono.jsx';
 import estilos from './page.module.css';
 
 export const metadata = {
@@ -24,7 +23,7 @@ export default function Nosotros() {
         bajada={MARCA.ciudad}
       />
 
-      {/* Historia: es de la familia, común a los dos salones */}
+      {/* El equipo como familia, común a los dos salones */}
       <Section ancho="angosto" titulo={TEXTOS.historia.titulo}>
         <div className={estilos.historia}>
           {TEXTOS.historia.parrafos.map((parrafo, i) => (
@@ -36,7 +35,7 @@ export default function Nosotros() {
       <Section
         fondo="arena"
         titulo="Los salones por dentro"
-        bajada="Cada uno con su clima. Elegí el que vaya con la noche que tenés en mente."
+        bajada="Dos salones con identidad propia. Elegí el que mejor se ajuste a lo que buscás disfrutar hoy."
       >
         <div className={estilos.locales}>
           {LOCALES.map((local, indice) => (
@@ -49,7 +48,8 @@ export default function Nosotros() {
               <div className={estilos.textoLocal}>
                 <h3 className={estilos.nombreLocal}>{local.nombre}</h3>
                 <p className={estilos.taglineLocal}>{local.tagline}</p>
-                <p>{local.descripcion}</p>
+                {/* Texto propio de Nosotros; si un local no lo tiene, va el del inicio */}
+                <p>{local.descripcionNosotros ?? local.descripcion}</p>
               </div>
 
               <div className={estilos.galeria}>
@@ -63,24 +63,10 @@ export default function Nosotros() {
       <Section
         id="contacto"
         titulo="Contacto"
-        bajada="Escribinos o pasá a vernos. Los dos salones están uno al lado del otro."
+        bajada="Contactanos o pasá a visitarnos. Nuestros restaurantes te esperan juntos, puerta con puerta."
       >
-        <div className={estilos.grillaInfo}>
-          {LOCALES.map((local) => (
-            <InfoLocal key={local.id} local={local} />
-          ))}
-        </div>
-
-        <div className={estilos.contactoComun}>
-          <p>Para cualquiera de los dos salones:</p>
-          <a href={MARCA.instagramUrl} target="_blank" rel="noreferrer" className={estilos.enlaceComun}>
-            <Icono nombre="instagram" />
-            {MARCA.instagram}
-          </a>
-          <a href={`mailto:${MARCA.email}`} className={estilos.enlaceComun}>
-            {MARCA.email}
-          </a>
-        </div>
+        {/* La misma tarjeta que "Visitanos" del inicio */}
+        <Visitanos />
       </Section>
     </main>
   );

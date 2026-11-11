@@ -4,6 +4,15 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-11 — Nosotros: el equipo como familia y un texto propio por salón
+
+Rama `feat/nosotros-equipo`. Pedido del usuario: "La familia detrás de La Posta" tiene que
+hablar del equipo como familia, no de la familia que abrió el restaurante. El borrador
+anterior ("Empezamos con un solo salón…") estaba inventado. Texto nuevo armado con
+frases e ideas del usuario, que lo aprobó. "Los salones por dentro" repetía las frases
+de las tarjetas del inicio: cada local suma `descripcionNosotros` (texto del usuario), y
+la página usa la corta si un local no la tiene. Las bajadas de "Los salones por dentro" y "Contacto" son del usuario, y Contacto usa la misma tarjeta que "Visitanos" del inicio en vez de una tarjeta por local. La tarjeta suma el Instagram; el mail va al pie, con un ícono nuevo (`mail`), "Cómo llegar" queda siempre debajo de la dirección (cada bloque baja entero al achicar) y el teléfono y WhatsApp de cada salón van al pie de su tarjetita, alineados aunque un nombre ocupe dos líneas.
+
 ## 2026-11-11 — Foto propia en la portada de la carta de vinos
 
 Rama `feat/fondo-carta-vinos`. La vista Vinos de `/carta` usaba la portada de la parrilla;

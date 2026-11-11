@@ -25,6 +25,10 @@ export default function Footer() {
             <Icono nombre="instagram" />
             {MARCA.instagram}
           </a>
+          <a href={`mailto:${MARCA.email}`} className={estilos.instagram}>
+            <Icono nombre="mail" />
+            {MARCA.email}
+          </a>
         </div>
 
         <div className={estilos.columna}>
