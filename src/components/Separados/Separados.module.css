@@ -1,0 +1,19 @@
+.parte {
+  display: block;
+}
+
+.separador {
+  display: none;
+}
+
+@media (min-width: 600px) {
+  .parte {
+    display: inline;
+    white-space: nowrap;
+  }
+
+  .separador {
+    display: inline;
+    margin-inline: 0.5em;
+  }
+}

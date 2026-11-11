@@ -9,7 +9,8 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: var(--sp-2) var(--sp-6);
+  /* Los links llevan relleno arriba y abajo para poder tocarlos en el celular */
+  gap: 0 var(--sp-6);
   max-width: 820px;
   margin: 0 auto var(--sp-16);
   padding-bottom: var(--sp-6);
@@ -22,7 +23,7 @@
   text-transform: uppercase;
   letter-spacing: var(--tracking-etiqueta);
   color: var(--oliva-700);
-  padding-bottom: 2px;
+  padding-block: var(--sp-3) calc(var(--sp-3) - 2px);
   border-bottom: 1px solid transparent;
   transition: color var(--transicion), border-color var(--transicion);
 }
@@ -49,4 +50,15 @@
   margin: var(--sp-8) auto;
   text-align: center;
   color: var(--gris-600);
+}
+
+/* Con mouse el índice vuelve a ser compacto, con el subrayado pegado al texto */
+@media (min-width: 768px) {
+  .indice {
+    gap: var(--sp-2) var(--sp-6);
+  }
+
+  .enlaceIndice {
+    padding-block: 0 2px;
+  }
 }

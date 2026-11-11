@@ -16,14 +16,16 @@
 .columna {
   display: flex;
   flex-direction: column;
-  gap: var(--sp-2);
+  /* Sin espacio entre líneas: los links llevan su propio relleno, para que en el
+     celular se puedan tocar (unos 40 px de alto) */
+  gap: 0;
   align-items: flex-start;
 }
 
 .logo {
   width: 132px;
   height: auto;
-  margin-bottom: var(--sp-2);
+  margin-bottom: var(--sp-3);
 }
 
 .bajada {
@@ -33,6 +35,7 @@
 
 .instagram {
   display: inline-flex;
+  padding-block: var(--sp-2);
   align-items: center;
   gap: var(--sp-2);
   color: var(--arena);
@@ -49,7 +52,7 @@
   text-transform: uppercase;
   letter-spacing: var(--tracking-titulo);
   color: var(--crema);
-  margin-bottom: var(--sp-1);
+  margin-bottom: var(--sp-2);
 }
 
 .direccion {
@@ -62,6 +65,7 @@
   display: flex;
   flex-direction: column;
   font-size: var(--fs-small);
+  margin-bottom: var(--sp-2);
 }
 
 .nombreLocal {
@@ -69,6 +73,7 @@
 }
 
 .enlace {
+  padding-block: var(--sp-2);
   font-size: var(--fs-small);
   opacity: 0.85;
   transition: opacity var(--transicion), color var(--transicion);

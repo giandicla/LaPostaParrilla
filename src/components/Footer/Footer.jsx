@@ -3,6 +3,7 @@ import { MARCA } from '../../data/marca.js';
 import { LOCALES, datosEnComun, enlaceComoLlegar } from '../../data/locales.js';
 import Icono from '../Icono/Icono.jsx';
 import Telefono from '../Telefono/Telefono.jsx';
+import Separados from '../Separados/Separados.jsx';
 import estilos from './Footer.module.css';
 
 export default function Footer() {
@@ -15,7 +16,7 @@ export default function Footer() {
       <div className={estilos.contenedor}>
         <div className={estilos.columnaMarca}>
           <img src={MARCA.logo} alt={MARCA.nombre} className={estilos.logo} />
-          <p className={estilos.bajada}>{MARCA.bajada}</p>
+          <p className={estilos.bajada}><Separados texto={MARCA.bajada} /></p>
           <a
             href={MARCA.instagramUrl}
             className={estilos.instagram}

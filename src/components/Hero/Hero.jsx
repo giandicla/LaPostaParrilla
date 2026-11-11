@@ -1,4 +1,5 @@
 import { MARCA } from '../../data/marca.js';
+import Separados from '../Separados/Separados.jsx';
 import estilos from './Hero.module.css';
 import { srcSetDe } from '../../data/imagenes.js';
 
@@ -40,12 +41,12 @@ export default function Hero({
           <div className={estilos.marco}>
             <h1 className="visualmente-oculto">{titulo}</h1>
             <img src={MARCA.logo} alt="" className={estilos.logo} />
-            {bajada && <p className={estilos.bajadaMarco}>{bajada}</p>}
+            {bajada && <p className={estilos.bajadaMarco}><Separados texto={bajada} /></p>}
           </div>
         ) : (
           <>
             <h1 className={compacto ? estilos.tituloCompacto : estilos.titulo}>{titulo}</h1>
-            {bajada && <p className={estilos.bajada}>{bajada}</p>}
+            {bajada && <p className={estilos.bajada}><Separados texto={bajada} /></p>}
           </>
         )}
         {acciones && <div className={estilos.acciones}>{acciones}</div>}
