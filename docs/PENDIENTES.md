@@ -175,8 +175,14 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
         las cuentas de prueba del usuario (queda su admin). Cuentas nuevas
         `admin@laposta.test` y `cliente@laposta.test`; las contraseñas, en
         `cuentas-de-prueba.local` (no se sube). La carta no se tocó.
+  - **Pase de estética del 2026-11-11** (el usuario marca, la IA arma en local y se
+    publica por PR): inicio y pie (#51), portada de la carta de vinos y sin la nota del
+    pie de la carta (#52), Nosotros (#53). Detalle en `docs/BITACORA.md` y en
+    `docs/CONTEXTO.md` ("Estética al 2026-11-11").
 - **Sigue abierto:**
-  - [ ] **Estética del resto del sitio**: el usuario la va marcando navegando.
+  - [ ] **Estética del resto del sitio**: el usuario la sigue marcando navegando. Ya
+        pasadas: inicio, pie, carta (portada de vinos) y Nosotros. Faltan, si las marca:
+        reservas, Mis reservas, ingresar y el panel.
   - [ ] Después de la corrección: cambiar la contraseña de las cuentas de prueba o
         borrarlas.
   - [ ] Rama `feat/diseno-propio`: un commit viejo sin mergear; decidir si se borra.
