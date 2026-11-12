@@ -61,6 +61,11 @@ modificar la reserva desde "Mis reservas", una reserva por turno, seña no
 reembolsable si cancela el cliente, días bloqueados en su propia pestaña del panel,
 accesibilidad (Lighthouse 100) y rendimiento en el celular.
 
+El 10 y 11 de noviembre: prueba de usuario contra producción, bloqueos por rango de
+fechas y de horas, reembolso de la seña probado pagando en producción, datos de prueba
+borrados (quedan dos cuentas de prueba para la corrección), pase de estética con el
+usuario y chequeo en celular.
+
 Las gift cards y el pedido para llevar se descartaron (decisiones del usuario,
 2026-11-10 y 2026-11-01). El mapa completo contra la rúbrica de corrección está en
 `docs/RUBRICA.md`; lo que falta, en `docs/PENDIENTES.md`.

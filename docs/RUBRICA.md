@@ -9,7 +9,7 @@ pendiente vive en `docs/PENDIENTES.md`; acá va el mapa contra la rúbrica.
 
 Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis) · ❌ falta
 
-Última revisión: **2026-11-10** (sesión 14: prueba de usuario contra producción; gift cards descartadas).
+Última revisión: **2026-11-11** (sesión 15: reembolso probado pagando en producción, datos de prueba borrados, pase de estética y chequeo en celular).
 
 ---
 
@@ -45,10 +45,10 @@ Leyenda: ✅ cumple Excelente · 🟡 parcial (nivel probable entre paréntesis)
 | Criterio | Peso | Estado | Qué hay | Qué falta |
 |---|---|---|---|---|
 | Funcionalidad | 40% | ✅ (2026-11-10) | Reservas reales en producción, login con Google **o con mail y contraseña** (crear cuenta con confirmación por mail y recuperación de contraseña, 2026-11-03), admin con tiempo real, **seña con Mercado Pago** (2026-10-18), **carta editable desde el panel** con API propia y vinos compartidos (2026-10-29) | Mantenerlo. Gift cards: **descartadas** por el usuario el 2026-11-10 (era lo único abierto). **Prueba de usuario contra producción** el 2026-11-10 (`docs/PRUEBA-DE-USUARIO.md`): visitante, cliente y panel del local, sin errores de funcionamiento; lo que apareció se arregló el mismo día (PRs #40 a #47). Los mails de reservas salen desde el 2026-11-02 (Brevo) |
-| Código / Estructura | 20% | ✅ (2026-11-05) | Componentes por carpeta, capa `src/servicios/`, datos separados, migraciones, lint limpio. Tests en cuatro niveles (al 2026-11-08): funciones puras del front y del servidor (`node --test`, 156), **rutas de `app/api/` y componentes React** (Vitest + Testing Library, 123 en total: cada ruta con su código HTTP de éxito y de error, la firma del webhook, el caché de la carta; los formularios con su validación, foco y `aria-*`, el menú mobile y la sesión), base (pgTAP, 203 en 15 archivos) y Edge Function (Deno, 21). El código de servidor de pagos y de la carta vive aparte, en `src/servidor/`, y recibe la base (y Mercado Pago) por parámetro para testearse sin red | Mantenerlo |
-| Interfaz / Accesibilidad | 15% | ✅ | Marca real, contraste calculado y verificado con axe, teclado y foco atrapado en el menú, Lighthouse Accesibilidad 100 en las páginas públicas | LCP en celular (ver `QA-MANUAL.md`) |
+| Código / Estructura | 20% | ✅ (2026-11-05) | Componentes por carpeta, capa `src/servicios/`, datos separados, migraciones, lint limpio. Tests en cuatro niveles (al 2026-11-11): funciones puras del front y del servidor (`node --test`, 171), **rutas de `app/api/` y componentes React** (Vitest + Testing Library, 127 en total: cada ruta con su código HTTP de éxito y de error, la firma del webhook, el caché de la carta; los formularios con su validación, foco y `aria-*`, el menú mobile y la sesión), base (pgTAP, 219 en 16 archivos) y Edge Function (Deno, 21). El código de servidor de pagos y de la carta vive aparte, en `src/servidor/`, y recibe la base (y Mercado Pago) por parámetro para testearse sin red | Mantenerlo |
+| Interfaz / Accesibilidad | 15% | ✅ (2026-11-11) | Marca real, contraste calculado y verificado con axe, teclado y foco atrapado en el menú, Lighthouse Accesibilidad 100 en las páginas públicas. **Pase de estética con el usuario** y **chequeo en celular** de todas las páginas a 360 px (2026-11-11): sin desbordes, inputs sin zoom en iPhone, zonas táctiles de ~40 px, pie compacto | LCP en celular (ver `QA-MANUAL.md`) |
 | Despliegue | 15% | ✅ | https://lapostaparrilla.vercel.app, estable, deploy automático; previews por PR conectadas a la base; migraciones aplicadas con `supabase db push` | Mantener |
-| Documentación | 10% | ✅ (2026-11-08) | `CLAUDE.md`, `README.md` y `docs/` al día, registro del proceso con IA (hasta la sesión 13, con lo que hubo que pedir de nuevo), specs por feature, pagos y variables de entorno documentados en `docs/BACKEND.md`, checklist de QA de la seña | Mantenerlo |
+| Documentación | 10% | ✅ (2026-11-11) | `CLAUDE.md`, `README.md` y `docs/` al día, registro del proceso con IA (hasta la sesión 15, con lo que hubo que pedir de nuevo; el pase de estética queda en `BITACORA.md` y `CONTEXTO.md`, sin registro de prompts, por decisión del usuario), specs por feature, pagos y variables de entorno documentados en `docs/BACKEND.md`, checklist de QA de la seña | Mantenerlo |
 
 **Seguridad** (no es un criterio aparte de la grilla, pero el profesor la evalúa;
 decisión del usuario del 2026-11-05). Al 2026-11-08:

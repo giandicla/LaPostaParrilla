@@ -75,8 +75,10 @@ de la lista y en qué página apareció.
       cada una con la etiqueta de su local) y un botón "Ver las cartas".
 - [ ] **Ningún plato con foto muestra precio.** Es intencional: lo pidió el
       usuario, los precios están solo en la carta.
-- [ ] Una sección "Visitanos" con la info completa de los dos salones:
-      horarios, dirección, mapa embebido, y contacto.
+- [ ] Una sección "Visitanos" con una sola tarjeta: dirección y "Cómo llegar",
+      horarios, Instagram, una tarjetita por salón (teléfono y WhatsApp, a la misma
+      altura) y el mapa. En el celular el teléfono es un link para llamar; en la
+      compu, texto.
 
 **Qué tiene que pasar al hacer clic (esto es el comportamiento de "dos
 locales bajo una marca" — es lo más importante de probar):**
@@ -93,8 +95,8 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] El botón "Reservar mesa" del hero va a `/reservas` (sin salón
       preseleccionado en la URL: se elige el primero por defecto).
 - [ ] El botón "Ver la carta" del hero va a `/carta`.
-- [ ] El mapa de cada salón, en "Visitanos", carga y muestra un mapa real (no
-      un rectángulo vacío ni un error).
+- [ ] El mapa de "Visitanos" carga y muestra un mapa real (no un rectángulo vacío
+      ni un error), y "Cómo llegar" abre Google Maps.
 
 ---
 
@@ -218,9 +220,10 @@ locales bajo una marca" — es lo más importante de probar):**
 - [ ] Con menos de 1 h, en vez de cancelar aparece el link a WhatsApp.
 
 **Logos**
-- [ ] Instagram con su logo en el footer, en `/nosotros` y al final de `/reservas`.
-- [ ] WhatsApp con su logo en "Escribir por WhatsApp" (Inicio), "Consultar por WhatsApp"
-      y en los avisos de `/reservas` y `/mis-reservas`.
+- [ ] Instagram con su logo en el footer, en la tarjeta de "Visitanos" / Contacto y al
+      final de `/reservas`; el mail con su sobre en el footer.
+- [ ] WhatsApp con su logo en los botones de "Visitanos" / Contacto, "Consultar por
+      WhatsApp" y en los avisos de `/reservas` y `/mis-reservas`.
 
 **Panel de admin** (con una cuenta con rol admin)
 - [ ] Un cliente que entra a `/admin` ve "Sección para el equipo de La Posta".

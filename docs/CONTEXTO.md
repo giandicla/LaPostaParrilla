@@ -131,6 +131,10 @@ escribe registro de prompts** en `docs/proceso/` (decisión del usuario); lo hec
   devuelve en cualquier caso.
 - **Panel:** Días bloqueados con su formulario en tarjeta blanca, como los filtros de
   Reservas.
+- **Celular:** revisadas todas las páginas a 360 px. El subtítulo de la marca va en dos
+  líneas (`Separados`), los links miden ~40 px de alto, el pie mide la mitad en el
+  celular (sin la columna de secciones, que está en el menú) y la barra de la carta es
+  una píldora de una fila con las tres opciones del mismo ancho, separada del menú.
 - **El usuario dio por terminados los cambios visuales** el 2026-11-11 (víspera de la
   presentación).
 
