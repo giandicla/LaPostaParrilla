@@ -15,7 +15,7 @@
 | `/admin/dia` | Admin | Lista del día para imprimir. Acepta `?fecha=` y `?local=` |
 | `/admin/bloqueos` | Admin | Pestaña "Días bloqueados": bloquear de una fecha a otra y, si hace falta, entre dos horas, en un local o en los dos, y desbloquear |
 | `/admin/carta` | Admin | Pestañas Reservas · Días bloqueados · Carta. Selector Parrilla · Vinos · Restaurante. Una caja arriba (`CajaCarta`): sin nada elegido agrega (va último en su categoría); con un producto elegido (Editar o el buscador) lo edita, incluida la categoría. Abajo la carta (`ListaCarta`) con ⠿ para arrastrar, Editar y Eliminar. Cubierto en la vista de un local. Acepta `?vista=<id del local o vinos>` |
-| `/nosotros` | Nosotros | Historia + un bloque por local + contacto |
+| `/nosotros` | Nosotros | "La familia detrás de La Posta" (el equipo como familia) + "Los salones por dentro" (texto propio de cada salón, `descripcionNosotros`, y su galería) + Contacto (la misma tarjeta que "Visitanos") |
 | `/api/v1/pagos` | API | `POST`: crea el pago y la preferencia de Checkout Pro de la seña y devuelve el `initPoint`. Requiere sesión (token de Supabase) |
 | `/api/v1/reservas/[id]/cancelacion` | API | `POST`: cancela la reserva (cliente o admin, con la sesión de quien llama) pide el reembolso de la seña y responde `reintegro`: `pedido`, `fallo` o `no_corresponde`. Sobre una reserva ya cancelada, reintenta el reembolso |
 | `/api/webhooks/mercadopago` | API | `POST`: avisos de Mercado Pago. Valida la firma, consulta el pago real y concilia en la base |
@@ -39,15 +39,18 @@
 5. **Nuestros dos salones** — fondo arena, dos `LocalCard`. El bloque que resuelve la división.
 6. **Algunos de nuestros platos** — 8 `PlatoCard` con foto sobre fondo bordo, cuatro
    de cada local. **Sin precio**: los precios están en la carta.
-7. **Visitanos** — dos `InfoLocal` con horarios, mapa y contacto.
-8. **Footer** — bordo. Las dos direcciones, Instagram una vez.
+7. **Visitanos** — una tarjeta (`Visitanos`): dirección y "Cómo llegar", horarios,
+   Instagram, una tarjetita por salón con teléfono y WhatsApp, y el mapa. Los salones
+   comparten dirección, mapa y horarios, así que van una vez.
+8. **Footer** — bordo y compacto. Marca, Instagram y mail; dirección una vez; contacto
+   de cada salón; secciones (en el celular no: están en el menú).
 
 ## Componentes
 
 | Componente | Props | Qué hace |
 |---|---|---|
 | `Navbar` | — | Navegación, estado de scroll, menú mobile |
-| `Footer` | — | Links, redes, las dos direcciones |
+| `Footer` | — | Marca, Instagram y mail, dirección (una vez si es común) con "Cómo llegar", teléfono de cada salón y secciones (desde 600 px) |
 | `Hero` | `titulo`, `bajada`, `imagen`, `alt`, `conLogo`, `compacto`, `acciones` | Portada. Completa en el Inicio, compacta en el resto |
 | `Section` | `id`, `fondo` (`crema`/`arena`/`bordo`/`oliva`), `titulo`, `bajada`, `ancho`, `children` | Ancho máximo, padding vertical, color de fondo. El título lleva el fogón del logo encima |
 | `Boton` | `variante` (`primario`/`claro`/`contorno`/`secundario`/`texto`; `claro` y `contorno` son para fondos oscuros, `secundario` es el contorno para fondos claros), `tamano`, `to`, `href`, `onClick`, `children` | Link interno, externo o botón según las props |
@@ -65,22 +68,25 @@
 | `PestanasCuenta` | `pestanas`, `activa`, `alCambiar`, `children` | Pestañas accesibles de `/ingresar` (flechas, Inicio y Fin) |
 | `FormularioCuenta` | `modo` (`ingresar` / `crear` / `olvide`), `volver`, `alCambiarModo` | Los formularios con mail de `/ingresar`. Nunca dice si un mail ya tiene cuenta. No manda nada sin el token del captcha |
 | `Captcha` | `alCambiar(token)`, `ref` (`reiniciar()`) | Cloudflare Turnstile para los formularios con mail. En `localhost`, las claves de prueba de Cloudflare. Cada token sirve para un intento |
-| `Icono` | `nombre` (`google` / `instagram` / `whatsapp`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |
+| `Icono` | `nombre` (`google` / `instagram` / `whatsapp` / `mail`), `className?` | Logo de marca en SVG inline, decorativo (`aria-hidden`). Google con sus colores oficiales; los otros toman el color del texto |
 | `PlatoCard` | `nombre`, `descripcion`, `imagen`, `etiquetaLocal?` | Foto de plato en retrato con el nombre encima. Sin precio, a propósito |
 | `SeccionCarta` | `seccion`, `idAncla` | Una sección de la carta: platos (nombre, descripción, traducción EN/PT, uno o más precios) o vinos agrupados por bodega. La fuente y el filete del título los toma de la hoja que la contiene |
 | `HojaCarta` | `local`, `cubierto`, `children` | La hoja con la estética de la carta impresa de la parrilla, igual en las tres cartas: doble marco, logo, ornamento con rombos, `local.carta.bajada` y el cubierto al pie. `local` puede ser `CARTA_VINOS` |
 | `CajaCarta` | `carta`, `esVinos`, `edicion`, `alElegir`, `alTerminar`, `alCambiar` | La caja única del editor: buscador, categoría ("Tipo de vino" en vinos), precio o precios por tamaño, textos; en cepas, bodega, región y detalle |
-| `ListaCarta` | `carta`, `idEditando`, `alEditar`, `alCambiar`, `alError` | La carta en el panel: filas con ⠿ (arrastre con puntero y flechas del teclado), Editar y Eliminar; bodegas con su propia asa |
+| `ListaCarta` | `carta`, `idEditando`, `alEditar`, `alCambiar`, `alError`, `alAviso?` | La carta en el panel: filas con ⠿ (arrastre con puntero y flechas del teclado), Editar y Eliminar; bodegas con su propia asa |
 | `PestanasAdmin` | — | Las secciones del panel (Reservas · Días bloqueados · Carta), con la actual marcada (`aria-current`). Una sección nueva es una pestaña más |
 | `GaleriaGrid` | `imagenes[]` | Grilla de 3 fotos, la del medio vertical |
-| `InfoLocal` | `local` | Horarios, mapa y contacto de UN local |
+| `Visitanos` | — | La tarjeta de "Visitanos" (inicio) y Contacto (Nosotros). Con `datosEnComun()` muestra dirección, mapa y horarios una vez; si los locales difieren, una `InfoLocal` por local |
+| `InfoLocal` | `local` | Horarios, mapa y contacto de UN local (respaldo de `Visitanos`) |
+| `Telefono` | `numero`, `className?` | Link para llamar en pantallas táctiles; texto con mouse |
+| `Separados` | `texto` | Un texto con partes separadas por " · ": una por línea en el celular, en una línea desde 600 px |
 
-**Regla:** ningún componente importa `locales.js` salvo `Footer`, que muestra las dos
-direcciones en todas las páginas. Todos los demás reciben el local por props, y por eso
+**Regla:** ningún componente importa `locales.js` salvo `Footer` y `Visitanos`, que
+muestran los datos de los dos salones juntos. Todos los demás reciben el local por props, y por eso
 sumar un tercer local no obliga a tocarlos.
 
 Aparte de eso, algunos componentes importan constantes que no son de local:
-`Navbar`, `Footer` y `Hero` leen `MARCA` (logo y nombre de la marca).
+`Navbar`, `Footer`, `Hero` y `Visitanos` leen `MARCA` (logo, nombre, Instagram y mail).
 
 ## Servicios (`src/servicios/`)
 

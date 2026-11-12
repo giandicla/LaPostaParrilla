@@ -178,7 +178,8 @@ quedan como referencia; no se trabajan sin que el usuario lo pida.
   - **Pase de estética del 2026-11-11** (el usuario marca, la IA arma en local y se
     publica por PR): inicio y pie (#51), portada de la carta de vinos y sin la nota del
     pie de la carta (#52), Nosotros (#53 y #55), aviso de la seña en `/reservas` y
-    tarjeta de Días bloqueados (#56). Detalle en `docs/BITACORA.md` y en
+    tarjeta de Días bloqueados (#56), chequeo en celular y pie compacto (#58), barra de
+    la carta redonda y pareja (#59). Detalle en `docs/BITACORA.md` y en
     `docs/CONTEXTO.md` ("Estética al 2026-11-11").
 - **Sigue abierto:**
   - [x] **Estética**: el usuario dio por terminados los cambios visuales el 2026-11-11.

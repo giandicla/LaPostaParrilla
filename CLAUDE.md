@@ -94,6 +94,8 @@ variables y despliegue en `docs/BACKEND.md`; diseño en
 - Colores **solo** desde las custom properties de `src/styles/tokens.css`.
   La paleta sale del manual de marca: bordo `#600003`, arena `#CBC1B1`,
   oliva `#757036`. Tipografías: Baskerville (títulos, en mayúsculas) y Gill Sans.
+- **Los textos sobre el restaurante los escribe o aprueba el usuario.** La IA propone y
+  pregunta antes de escribirlos (inventó detalles una vez, 2026-11-11).
 - **Los platos con foto no llevan precio.** Los precios viven solo en la carta, que
   desde la sesión 06 está en la base (tablas `carta_secciones` y `carta_items`; los
   vinos son secciones compartidas por los dos locales) y se edita en `/admin/carta`.

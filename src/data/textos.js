@@ -1,5 +1,5 @@
 // Copys largos, separados del JSX para que se puedan cambiar sin tocar componentes.
-// PENDIENTE: la familia tiene que revisar y corregir estos textos — son un borrador.
+// Textos del usuario o del manual de marca, revisados por él al 2026-11-11: ya no son borrador.
 
 export const TEXTOS = {
   // Redacción del usuario (2026-11-05), con retoques de estilo
