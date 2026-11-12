@@ -4,6 +4,15 @@ Log de cambios. **Lo más nuevo arriba.**
 
 ---
 
+## 2026-11-11 — Barra de la carta: siempre una píldora de una fila
+
+Rama `fix/barra-carta-redonda`. Pedido del usuario: la barra Parrilla · Vinos ·
+Restaurante solo era redonda en pantalla completa. En el celular era un rectángulo, y
+entre 600 y ~900 px tomaba el tamaño de la compu, "La Posta II Restaurante" bajaba a otra
+fila y quedaba una forma rara. Ahora es una píldora de una fila en todos los anchos (tres
+columnas parejas en el celular, ajustada al contenido desde 600 px, letra grande desde
+900 px), con las tres opciones del mismo ancho para que la elegida no quede corrida, y al bajar queda separada del menú. Medido a 360, 615, 700, 900 y 1200 px.
+
 ## 2026-11-11 — Último chequeo en celular
 
 Rama `fix/celular-ultimo-chequeo`. Revisión de todas las páginas a 360 px (públicas,
