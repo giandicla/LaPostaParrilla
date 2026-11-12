@@ -42,20 +42,24 @@
   color: var(--crema);
 }
 
-/* Desde 600 px los nombres entran enteros: la píldora se ajusta al contenido */
+/* Desde 600 px los nombres entran enteros: la píldora se ajusta al contenido.
+   Todas las opciones miden lo mismo (el ancho de la más larga), así la elegida
+   no queda corrida hacia un costado (pedido del usuario). */
 @media (min-width: 600px) {
   .selector {
-    display: flex;
-    flex-wrap: nowrap;
-    justify-content: center;
+    grid-template-columns: none;
+    grid-auto-flow: column;
+    /* minmax(0, 1fr): partes iguales aunque la más larga no entre entera */
+    grid-auto-columns: minmax(0, 1fr);
     width: fit-content;
+    max-width: 100%;
     gap: var(--sp-2);
     padding: var(--sp-2);
   }
 
   .opcion {
-    padding: var(--sp-3) var(--sp-4);
-    white-space: nowrap;
+    padding: var(--sp-3);
+    text-wrap: balance;
   }
 }
 
